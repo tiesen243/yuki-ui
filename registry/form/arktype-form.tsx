@@ -24,7 +24,7 @@ const useForm = <TValue = unknown, TData = void>({
   const [values, setValues] = React.useState<TValue>(defaultValues)
   const [isPending, startTransition] = React.useTransition()
   const [errors, setErrors] = React.useState<
-    Record<string, string | string[] | undefined>
+    Record<string, string | undefined>
   >({})
 
   const handleSubmit = React.useCallback(
