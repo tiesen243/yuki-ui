@@ -20,7 +20,7 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from '@/registry/form/zod'
+} from '@/registry/form/zod-form'
 
 const signUpSchema = z
   .object({

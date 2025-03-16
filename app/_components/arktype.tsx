@@ -20,7 +20,7 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from '@/registry/form/arktype'
+} from '@/registry/form/arktype-form'
 
 const signUpSchema = type({
   name: 'string >= 4',

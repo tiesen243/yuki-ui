@@ -28,7 +28,7 @@
       "registryDependencies": ["button", "input", "label"],
       "files": [
         {
-          "path": "registry/form/arktype.tsx",
+          "path": "registry/form/arktype-form.tsx",
           "type": "registry:component"
         }
       ]
@@ -44,7 +44,7 @@
       "registryDependencies": ["button", "input", "label"],
       "files": [
         {
-          "path": "registry/form/zod.tsx",
+          "path": "registry/form/zod-form.tsx",
           "type": "registry:component"
         }
       ]
