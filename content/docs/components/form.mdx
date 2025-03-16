@@ -1,0 +1,682 @@
+---
+title: Form
+description: Building your forms with Yuki UI and Standard Schema.
+---
+
+## Features
+
+The `<Form>` component is a flexible and accessible form builder that allows you to create forms with minimal boilerplate. It is built on top of the [shadcn/ui](https://ui.shadcn.com/) component system and is fully customizable with CSS variables and Tailwind CSS.
+
+- Composable form components for building complex forms.
+- A `<FormField>` component for building controlled form fields.
+- Form validation using the [Standard Schema](https://standardschema.dev/) library so you can validate your form data with `Arktype`, `Zod` and `Valibot` schemas.
+- Handles accessibility and error messages out of the box.
+- Use `React.useId()` to generate unique IDs for form fields.
+- Applies the correct `aria` attributes to form fields based on states.
+- You have full control over the form layout and styling.
+
+## Anatomy of a Form
+
+A form is a collection of form fields that are grouped together. Each form field is a controlled component that can be used to collect user input. The `<Form>` component is a wrapper that contains all the form fields and handles form submission.
+
+```tsx
+<Form>
+  <FormField
+    name="..."
+    render={({ name, value, onChange, onBlur }) => (
+      <FormItem>
+        <FormLabel />
+        <FormControl>{/* Form field component */}</FormControl>
+        <FormDescription />
+        <FormMessage />
+      </FormItem>
+    )}
+  />
+</Form>
+```
+
+## Example
+
+Here is an example of a simple form that collects a user's name and email address.
+
+```tsx
+const Example: React.FC = () => {
+  const form = useForm(/* options */)
+
+  return (
+    <Form form={form}>
+      <FormField
+        name="name"
+        render={(field) => (
+          <FormItem>
+            <FormLabel>Name</FormLabel>
+            <FormControl {...field}>
+              <Input placeholder="Yuki" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        name="email"
+        render={(field) => (
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <FormControl {...field}>
+              <Input placeholder="yuki@gmail.com" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <Button disabled={form.isPending}>Submit</Button>
+    </Form>
+  )
+}
+```
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+<Tab value="CLI">
+<Steps>
+<Step>
+### Command
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+
+<Tab value="npm">
+
+```bash
+npx shadcn@latest add https://yuki-ui.vercel.app/r/form.json
+```
+
+</Tab>
+
+<Tab value="yarn">
+
+```bash
+npx shadcn@latest add https://yuki-ui.vercel.app/r/form.json
+```
+
+</Tab>
+
+<Tab value="pnpm">
+
+```bash
+pnpm dlx shadcn@latest add https://yuki-ui.vercel.app/r/form.json
+```
+
+</Tab>
+
+<Tab value="bun">
+
+```bash
+bunx --bun add https://yuki-ui.vercel.app/r/form.json
+```
+
+</Tab>
+
+</Tabs>
+
+</Step>
+
+<Step>
+### Install your favorite schema library
+
+```package-install
+arktype #or zod or valibot
+```
+
+</Step>
+
+</Steps>
+
+</Tab>
+
+<Tab value="Manual">
+
+<Steps>
+
+<Step>
+### Install the following dependencies:
+
+```package-install
+@radix-ui/react-slot @standard-schema/spec arktype #or zod or valibot
+```
+
+</Step>
+
+<Step>
+
+### Copy and paste the following code into your project.
+
+```tsx
+import type { StandardSchemaV1 } from '@standard-schema/spec'
+import * as React from 'react'
+import { Slot } from '@radix-ui/react-slot'
+
+import { cn } from '@/lib/utils'
+
+const useForm = <TSchema extends StandardSchemaV1, TData = unknown>({
+  schema,
+  defaultValues,
+  submitFn,
+  onSuccess,
+  onError,
+  isReset,
+}: {
+  schema: TSchema
+  defaultValues: StandardSchemaV1.InferInput<TSchema>
+  submitFn: (
+    values: StandardSchemaV1.InferInput<TSchema>,
+  ) => Promise<TData> | TData
+  onSuccess?: (data: TData) => void
+  onError?: (error: string) => void
+  isReset?: boolean
+}) => {
+  const [values, setValues] = React.useState(defaultValues)
+  const [isPending, startTransition] = React.useTransition()
+  const [errors, setErrors] = React.useState<{
+    message?: string
+    fieldErrors?: Record<keyof StandardSchemaV1.InferInput<TSchema>, string>
+  }>({})
+
+  const handleSubmit = React.useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      startTransition(async () => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const parsed = await standardValidate(schema, values)
+
+        if (!parsed.success) {
+          setErrors({
+            message: 'Validation error',
+            fieldErrors: parsed.fieldErrors,
+          })
+          if (onError) onError('Validation error')
+          return
+        }
+
+        try {
+          const data = await submitFn(parsed.data)
+          if (onSuccess) onSuccess(data)
+          if (isReset) setValues(defaultValues)
+          setErrors({})
+        } catch (error) {
+          if (error instanceof Error) {
+            setErrors({ message: error.message })
+            if (onError) onError(error.message)
+          } else {
+            setErrors({ message: 'Unknown error' })
+            if (onError) onError('Unknown error')
+          }
+        }
+      })
+    },
+    [defaultValues, isReset, onError, onSuccess, schema, submitFn, values],
+  )
+
+  const handleChange = (key: string, value: unknown) => {
+    setValues((prev) => ({
+      ...(prev as Record<string, unknown>),
+      [key]: value,
+    }))
+  }
+
+  const handleBlur = React.useCallback(
+    async (event: React.FocusEvent<HTMLInputElement>) => {
+      const parsed = await standardValidate(schema, values)
+
+      if (!parsed.success) {
+        setErrors((prev) => ({
+          ...prev,
+          fieldErrors: {
+            ...(prev.fieldErrors as unknown as Record<
+              keyof StandardSchemaV1.InferInput<TSchema>,
+              string
+            >),
+            [event.target.name]: parsed.fieldErrors[event.target.name as never],
+          },
+        }))
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          fieldErrors: {
+            ...(prev.fieldErrors as unknown as Record<
+              keyof StandardSchemaV1.InferInput<TSchema>,
+              string
+            >),
+            [event.target.name]: undefined,
+          },
+        }))
+      }
+    },
+    [schema, values],
+  )
+
+  return {
+    handleSubmit,
+    handleChange,
+    handleBlur,
+    isPending,
+    values,
+    errors,
+  }
+}
+
+type FormContextValue<T extends StandardSchemaV1> = ReturnType<
+  typeof useForm<T>
+>
+const FormContext = React.createContext<FormContextValue<StandardSchemaV1>>(
+  {} as FormContextValue<StandardSchemaV1>,
+)
+
+function Form<T extends StandardSchemaV1>({
+  className,
+  form,
+  ...props
+}: React.ComponentProps<'form'> & { form: FormContextValue<T> }) {
+  return (
+    <FormContext.Provider value={form}>
+      <form
+        {...props}
+        data-slot="form"
+        className={cn('flex flex-col gap-4', className)}
+        onSubmit={form.handleSubmit}
+      />
+    </FormContext.Provider>
+  )
+}
+
+interface FormFieldContextValue {
+  name: string
+  value?: string
+  error?: string
+  isPending?: boolean
+  formItemId?: string
+  formDescriptionId?: string
+  formMessageId?: string
+}
+const FormFieldContext = React.createContext<FormFieldContextValue>(
+  {} as FormFieldContextValue,
+)
+
+function FormField({
+  name,
+  render,
+}: {
+  name: string
+  render: (props: {
+    name: string
+    value: string
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+    onBlur: (e: React.FocusEvent<HTMLInputElement>) => Promise<void>
+  }) => React.ReactNode
+}) {
+  const form = React.use(FormContext)
+
+  return (
+    <FormFieldContext.Provider value={{ name }}>
+      {render({
+        name,
+        value: (form.values as never)[name],
+        onChange: React.useCallback(
+          (
+            event:
+              | React.ChangeEvent<HTMLInputElement>
+              | string
+              | number
+              | boolean,
+          ) => {
+            if (event && typeof event === 'object') {
+              let newValue: unknown = event.target.value
+              if (event.target.type === 'number')
+                newValue = event.target.valueAsNumber
+              else if (event.target.type === 'checkbox')
+                newValue = event.target.checked
+              else if (event.target.type === 'date')
+                newValue = event.target.valueAsDate
+
+              form.handleChange(name, newValue)
+            } else {
+              form.handleChange(name, event)
+            }
+          },
+          [form, name],
+        ),
+        onBlur: form.handleBlur,
+      })}
+    </FormFieldContext.Provider>
+  )
+}
+
+interface FormItemContextValue {
+  id: string
+}
+const FormItemContext = React.createContext<FormItemContextValue>(
+  {} as FormItemContextValue,
+)
+
+function FormItem({ className, ...props }: React.ComponentProps<'fieldset'>) {
+  const { isPending } = React.use(FormContext)
+  const id = React.useId()
+
+  return (
+    <FormItemContext.Provider value={{ id }}>
+      <fieldset
+        data-slot="form-item"
+        className={cn('grid gap-2', className)}
+        disabled={isPending}
+        {...props}
+      />
+    </FormItemContext.Provider>
+  )
+}
+
+const useFormField = () => {
+  const formContext = React.use(FormContext)
+  const fieldContext = React.use(FormFieldContext)
+  const itemContext = React.use(FormItemContext)
+
+  return {
+    id: itemContext.id,
+    name: fieldContext.name,
+    value: (formContext.values as never)[fieldContext.name],
+    error: formContext.errors.fieldErrors?.[fieldContext.name as never],
+    isPending: formContext.isPending,
+    formItemId: `${itemContext.id}-form-item`,
+    formDescriptionId: `${itemContext.id}-form-item-description`,
+    formMessageId: `${itemContext.id}-form-item-message`,
+  }
+}
+
+function FormLabel({ className, ...props }: React.ComponentProps<'label'>) {
+  const { formItemId, error } = useFormField()
+
+  return (
+    <label
+      data-slot="form-label"
+      data-error={!!error}
+      htmlFor={formItemId}
+      className={cn(
+        'flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50',
+        'data-[error=true]:text-destructive',
+        className,
+      )}
+      {...props}
+    />
+  )
+}
+
+function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
+  const { error, isPending, formItemId, formDescriptionId, formMessageId } =
+    useFormField()
+
+  return (
+    <Slot
+      data-slot="form-control"
+      id={formItemId}
+      aria-describedby={
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        !error ? formDescriptionId : `${formDescriptionId} ${formMessageId}`
+      }
+      aria-invalid={!!error}
+      aria-disabled={isPending}
+      {...props}
+    />
+  )
+}
+
+function FormDescription({
+  className,
+  ...props
+}: React.ComponentProps<'span'>) {
+  const { formDescriptionId } = useFormField()
+
+  return (
+    <span
+      data-slot="form-description"
+      id={formDescriptionId}
+      className={cn('text-muted-foreground text-sm', className)}
+      {...props}
+    />
+  )
+}
+
+function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {
+  const { formMessageId, error } = useFormField()
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const body = error ? String(error) : props.children
+
+  if (!body) {
+    return null
+  }
+
+  return (
+    <p
+      data-slot="form-message"
+      id={formMessageId}
+      className={cn('text-destructive text-sm', className)}
+      {...props}
+    >
+      {body}
+    </p>
+  )
+}
+
+export {
+  useForm,
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+}
+
+const standardValidate = async <TSchema extends StandardSchemaV1>(
+  schema: TSchema,
+  input: StandardSchemaV1.InferInput<TSchema>,
+): Promise<
+  | {
+      success: false
+      data: null
+      fieldErrors: Record<keyof StandardSchemaV1.InferOutput<TSchema>, string>
+    }
+  | {
+      success: true
+      data: StandardSchemaV1.InferOutput<TSchema>
+      fieldErrors: null
+    }
+> => {
+  let result = schema['~standard'].validate(input)
+  if (result instanceof Promise) result = await result
+
+  if (result.issues)
+    return {
+      success: false,
+      data: null,
+      fieldErrors: result.issues.reduce<Record<string, string>>(
+        (acc, issue) => ({
+          ...acc,
+          [issue.path as never]: issue.message,
+        }),
+        {},
+      ) as Record<keyof StandardSchemaV1.InferOutput<TSchema>, string>,
+    }
+
+  return {
+    success: true,
+    data: result.value,
+    fieldErrors: null,
+  }
+}
+```
+
+</Step>
+
+<Step>
+
+### Update the import paths to match your project setup.
+
+</Step>
+
+</Steps>
+
+</Tab>
+
+</Tabs>
+
+## Usage
+
+<Steps>
+
+<Step>
+### Create a form schema
+
+#### Arktype
+
+```tsx
+const loginSchema = type({
+  email: type('string.email').configure({ message: 'Invalid email' }),
+  password: type(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+  ).configure({
+    message:
+      'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character',
+  }),
+})
+```
+
+#### Zod
+
+```tsx
+const loginSchema = z.object({
+  email: z.string().email('Invalid email'),
+  password: z
+    .string()
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+      'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character',
+    ),
+})
+```
+
+#### Valibot
+
+```tsx
+const loginSchema = valibot({
+  email: valibot.email('Invalid email'),
+  password: valibot.pipe(
+    valibot.string(),
+    valibot.regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+      'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character',
+    ),
+  ),
+})
+```
+
+</Step>
+
+<Step>
+### Define the form
+
+```tsx
+export const LoginForm: React.FC = () => {
+  // 1. Define your form.
+  const form = useForm({
+    schema: loginSchema,
+    defaultValues: { email: '', password: '' },
+    // 2. Define a submit handler.
+    submitFn: (values) => {
+      // Do something with the form values.
+      // ✅ This will be type-safe and validated.
+      toast.success('Logged in successfully', {
+        description: <pre>{JSON.stringify(data, null, 2)}</pre>,
+      })
+    },
+  })
+}
+```
+
+</Step>
+
+<Step>
+### Build your form
+
+We can now use the `<Form />` components to build our form.
+
+```tsx
+export const LoginForm: React.FC = () => {
+  // ...
+
+  return (
+    <Form form={form}>
+      <FormField
+        name="email"
+        render={(props) => (
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <FormControl {...props}>
+              <Input type="email" placeholder="yuki@gmail.com" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        name="password"
+        render={(props) => (
+          <FormItem>
+            <div className="flex items-center justify-between">
+              <FormLabel>Password</FormLabel>
+
+              <a
+                href="#"
+                className="text-sm underline-offset-4 hover:underline"
+              >
+                Forgot your password?
+              </a>
+            </div>
+            <FormControl {...props}>
+              <Input type="password" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <Button disabled={form.isPending} type="submit">
+        Sign Up
+      </Button>
+    </Form>
+  )
+}
+```
+
+</Step>
+
+<Step>
+### Done
+
+That's it. You now have a fully accessible form that is type-safe with client-side validation.
+
+</Step>
+
+</Steps>
+
+## Example
+
+import { LoginForm } from '@/registry/blocks/login-form'
+
+<div className="flex justify-center">
+  <LoginForm />
+</div>

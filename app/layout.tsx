@@ -1,9 +1,12 @@
 import '@/app/globals.css'
 
 import { Geist } from 'next/font/google'
-import { ThemeProvider } from 'next-themes'
+import Image from 'next/image'
+import { DocsLayout } from 'fumadocs-ui/layouts/docs'
+import { RootProvider } from 'fumadocs-ui/provider'
 
 import { Toaster } from '@/components/ui/sonner'
+import { source } from '@/content'
 import { cn, getBaseUrl } from '@/lib/utils'
 
 const geistSans = Geist({
@@ -21,10 +24,28 @@ export default function RootLayout({
       <body
         className={cn('min-h-dvh font-sans antialiased', geistSans.variable)}
       >
-        <ThemeProvider attribute="class" disableTransitionOnChange>
-          {children}
+        <RootProvider>
+          <DocsLayout
+            tree={source.pageTree}
+            nav={{
+              title: (
+                <>
+                  <Image
+                    src="/logo.svg"
+                    alt="Yuki UI"
+                    width={32}
+                    height={32}
+                    className="dark:invert"
+                  />
+                  <span className="text-xl font-bold">Yuki UI</span>
+                </>
+              ),
+            }}
+          >
+            {children}
+          </DocsLayout>
           <Toaster />
-        </ThemeProvider>
+        </RootProvider>
       </body>
     </html>
   )
