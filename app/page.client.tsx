@@ -1,7 +1,7 @@
 'use client'
 
+import { type } from 'arktype'
 import { toast } from 'sonner'
-import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -20,29 +20,32 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from '@/registry/form/zod-form'
+} from '@/registry/form'
 
-const signUpSchema = z
-  .object({
-    name: z.string().min(4, { message: 'Name must be at least 4 characters' }),
-    email: z.string().email(),
-    password: z
-      .string()
-      .min(8, { message: 'Password must be at least 8 characters' })
-      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/, {
-        message:
-          'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character',
-      }),
-    confirmPassword: z
-      .string()
-      .min(8, { message: 'Password must be at least 8 characters' }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  })
+const signUpSchema = type({
+  name: type('string >= 4').configure({
+    message: 'Name must be at least 4 characters long',
+  }),
+  email: type('string.email').configure({ message: 'Invalid email' }),
+  password: type(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+  ).configure({
+    message:
+      'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character',
+  }),
+  confirmPassword: type('string >= 8').configure({
+    message: 'Invalid password',
+  }),
+}).narrow((data, ctx) => {
+  if (data.password !== data.confirmPassword)
+    return ctx.reject({
+      path: ['confirmPassword'],
+      message: 'Passwords do not match',
+    })
+  return true
+})
 
-export const ZodSignUpForm: React.FC = () => {
+export const SignUpForm: React.FC = () => {
   const form = useForm({
     schema: signUpSchema,
     defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
@@ -53,13 +56,15 @@ export const ZodSignUpForm: React.FC = () => {
       toast.success('Sign up success', {
         description: <pre>{JSON.stringify(data, null, 2)}</pre>,
       }),
+
+    onError: (e) => toast.error(e),
   })
 
   return (
     <Card className="w-svh max-w-md">
       <CardHeader>
-        <CardTitle>Zod Form Demo</CardTitle>
-        <CardDescription>Validate form with Zod</CardDescription>
+        <CardTitle>Arktype Form Demo</CardTitle>
+        <CardDescription>Validate form with Arktype</CardDescription>
       </CardHeader>
       <CardContent>
         <Form form={form}>

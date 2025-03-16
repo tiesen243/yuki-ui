@@ -1,11 +1,10 @@
-import type { Schema } from 'zod'
+import type { StandardSchemaV1 } from '@standard-schema/spec'
 import * as React from 'react'
-import { Label } from '@radix-ui/react-label'
 import { Slot } from '@radix-ui/react-slot'
 
 import { cn } from '@/lib/utils'
 
-const useForm = <TValue = unknown, TData = void>({
+const useForm = <TSchema extends StandardSchemaV1, TData = unknown>({
   schema,
   defaultValues,
   submitFn,
@@ -13,18 +12,21 @@ const useForm = <TValue = unknown, TData = void>({
   onError,
   isReset,
 }: {
-  schema: Schema<TValue>
-  defaultValues: TValue
-  submitFn: (values: TValue) => Promise<TData> | TData
+  schema: TSchema
+  defaultValues: StandardSchemaV1.InferInput<TSchema>
+  submitFn: (
+    values: StandardSchemaV1.InferInput<TSchema>,
+  ) => Promise<TData> | TData
   onSuccess?: (data: TData) => void
-  onError?: (error: unknown) => void
+  onError?: (error: string) => void
   isReset?: boolean
 }) => {
-  const [values, setValues] = React.useState<TValue>(defaultValues)
+  const [values, setValues] = React.useState(defaultValues)
   const [isPending, startTransition] = React.useTransition()
-  const [errors, setErrors] = React.useState<
-    Record<string, string[] | undefined>
-  >({})
+  const [errors, setErrors] = React.useState<{
+    message?: string
+    fieldErrors?: Record<keyof StandardSchemaV1.InferInput<TSchema>, string>
+  }>({})
 
   const handleSubmit = React.useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,18 +34,31 @@ const useForm = <TValue = unknown, TData = void>({
         e.preventDefault()
         e.stopPropagation()
 
-        const parsed = schema.safeParse(values)
+        const parsed = await standardValidate(schema, values)
 
-        if (!parsed.success) setErrors(parsed.error.flatten().fieldErrors)
-        else
-          try {
-            const data = await submitFn(values)
-            if (onSuccess) onSuccess(data)
-            if (isReset) setValues(defaultValues)
-            setErrors({})
-          } catch (error) {
-            if (onError) onError(error)
+        if (!parsed.success) {
+          setErrors({
+            message: 'Validation error',
+            fieldErrors: parsed.fieldErrors,
+          })
+          if (onError) onError('Validation error')
+          return
+        }
+
+        try {
+          const data = await submitFn(parsed.data)
+          if (onSuccess) onSuccess(data)
+          if (isReset) setValues(defaultValues)
+          setErrors({})
+        } catch (error) {
+          if (error instanceof Error) {
+            setErrors({ message: error.message })
+            if (onError) onError(error.message)
+          } else {
+            setErrors({ message: 'Unknown error' })
+            if (onError) onError('Unknown error')
           }
+        }
       })
     },
     [defaultValues, isReset, onError, onSuccess, schema, submitFn, values],
@@ -51,21 +66,25 @@ const useForm = <TValue = unknown, TData = void>({
 
   const handleChange = (key: string, value: unknown) => {
     setValues((prev) => ({
-      ...prev,
+      ...(prev as Record<string, unknown>),
       [key]: value,
     }))
   }
 
   const handleBlur = React.useCallback(
-    (event: React.FocusEvent<HTMLInputElement>) => {
-      const parsed = schema.safeParse(values)
+    async (event: React.FocusEvent<HTMLInputElement>) => {
+      const parsed = await standardValidate(schema, values)
 
       if (!parsed.success) {
         setErrors((prev) => ({
           ...prev,
-          [event.target.name]: (parsed.error.flatten().fieldErrors as never)[
-            event.target.name
-          ],
+          fieldErrors: {
+            ...(prev.fieldErrors as unknown as Record<
+              keyof StandardSchemaV1.InferInput<TSchema>,
+              string
+            >),
+            [event.target.name]: parsed.fieldErrors[event.target.name as never],
+          },
         }))
       } else {
         setErrors((prev) => ({ ...prev, [event.target.name]: undefined }))
@@ -84,13 +103,14 @@ const useForm = <TValue = unknown, TData = void>({
   }
 }
 
-type FormContextValue<T> = ReturnType<typeof useForm<T>>
-
-const FormContext = React.createContext<FormContextValue<unknown>>(
-  {} as FormContextValue<unknown>,
+type FormContextValue<T extends StandardSchemaV1> = ReturnType<
+  typeof useForm<T>
+>
+const FormContext = React.createContext<FormContextValue<StandardSchemaV1>>(
+  {} as FormContextValue<StandardSchemaV1>,
 )
 
-function Form<T>({
+function Form<T extends StandardSchemaV1>({
   className,
   form,
   ...props
@@ -116,7 +136,6 @@ interface FormFieldContextValue {
   formDescriptionId?: string
   formMessageId?: string
 }
-
 const FormFieldContext = React.createContext<FormFieldContextValue>(
   {} as FormFieldContextValue,
 )
@@ -129,7 +148,7 @@ function FormField({
   render: (props: {
     value: string
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void
+    onBlur: (e: React.FocusEvent<HTMLInputElement>) => Promise<void>
   }) => React.ReactNode
 }) {
   const form = React.use(FormContext)
@@ -171,7 +190,6 @@ function FormField({
 interface FormItemContextValue {
   id: string
 }
-
 const FormItemContext = React.createContext<FormItemContextValue>(
   {} as FormItemContextValue,
 )
@@ -201,7 +219,7 @@ const useFormField = () => {
     id: itemContext.id,
     name: fieldContext.name,
     value: (formContext.values as never)[fieldContext.name],
-    error: formContext.errors[fieldContext.name],
+    error: formContext.errors.fieldErrors?.[fieldContext.name as never],
     isPending: formContext.isPending,
     formItemId: `${itemContext.id}-form-item`,
     formDescriptionId: `${itemContext.id}-form-item-description`,
@@ -209,14 +227,11 @@ const useFormField = () => {
   }
 }
 
-function FormLabel({
-  className,
-  ...props
-}: React.ComponentProps<typeof Label>) {
+function FormLabel({ className, ...props }: React.ComponentProps<'label'>) {
   const { formItemId, error } = useFormField()
 
   return (
-    <Label
+    <label
       data-slot="form-label"
       data-error={!!error}
       htmlFor={formItemId}
@@ -239,6 +254,7 @@ function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
       data-slot="form-control"
       id={formItemId}
       aria-describedby={
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         !error ? formDescriptionId : `${formDescriptionId} ${formMessageId}`
       }
       aria-invalid={!!error}
@@ -267,6 +283,7 @@ function FormDescription({
 function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {
   const { formMessageId, error } = useFormField()
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const body = error ? String(error) : props.children
 
   if (!body) {
@@ -294,4 +311,42 @@ export {
   FormControl,
   FormDescription,
   FormMessage,
+}
+
+const standardValidate = async <TSchema extends StandardSchemaV1>(
+  schema: TSchema,
+  input: StandardSchemaV1.InferInput<TSchema>,
+): Promise<
+  | {
+      success: false
+      data: null
+      fieldErrors: Record<keyof StandardSchemaV1.InferOutput<TSchema>, string>
+    }
+  | {
+      success: true
+      data: StandardSchemaV1.InferOutput<TSchema>
+      fieldErrors: null
+    }
+> => {
+  let result = schema['~standard'].validate(input)
+  if (result instanceof Promise) result = await result
+
+  if (result.issues)
+    return {
+      success: false,
+      data: null,
+      fieldErrors: result.issues.reduce<Record<string, string>>(
+        (acc, issue) => ({
+          ...acc,
+          [issue.path as never]: issue.message,
+        }),
+        {},
+      ) as Record<keyof StandardSchemaV1.InferOutput<TSchema>, string>,
+    }
+
+  return {
+    success: true,
+    data: result.value,
+    fieldErrors: null,
+  }
 }
