@@ -1,5 +1,5 @@
 import { Typography } from '@/registry/typography'
-import { SignUpForm } from './page.client'
+import { LoginForm } from './page.client'
 
 export default function Home() {
   return (
@@ -10,7 +10,7 @@ export default function Home() {
 
       <section className="mt-8 flex flex-col items-center justify-center gap-6">
         <Typography variant="h2">Form Components</Typography>
-        <SignUpForm />
+        <LoginForm />
       </section>
     </main>
   )

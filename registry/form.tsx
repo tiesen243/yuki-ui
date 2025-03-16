@@ -87,7 +87,16 @@ const useForm = <TSchema extends StandardSchemaV1, TData = unknown>({
           },
         }))
       } else {
-        setErrors((prev) => ({ ...prev, [event.target.name]: undefined }))
+        setErrors((prev) => ({
+          ...prev,
+          fieldErrors: {
+            ...(prev.fieldErrors as unknown as Record<
+              keyof StandardSchemaV1.InferInput<TSchema>,
+              string
+            >),
+            [event.target.name]: undefined,
+          },
+        }))
       }
     },
     [schema, values],
@@ -146,6 +155,7 @@ function FormField({
 }: {
   name: string
   render: (props: {
+    name: string
     value: string
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     onBlur: (e: React.FocusEvent<HTMLInputElement>) => Promise<void>
@@ -156,6 +166,7 @@ function FormField({
   return (
     <FormFieldContext.Provider value={{ name }}>
       {render({
+        name,
         value: (form.values as never)[name],
         onChange: React.useCallback(
           (
