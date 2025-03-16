@@ -589,6 +589,10 @@ const loginSchema = valibot({
 ### Define the form
 
 ```tsx
+import { toast } from 'sonner'
+
+import { useForm } from '@/components/ui/form'
+
 export const LoginForm: React.FC = () => {
   // 1. Define your form.
   const form = useForm({
@@ -614,6 +618,26 @@ export const LoginForm: React.FC = () => {
 We can now use the `<Form />` components to build our form.
 
 ```tsx
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useForm,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+
 export const LoginForm: React.FC = () => {
   // ...
 
