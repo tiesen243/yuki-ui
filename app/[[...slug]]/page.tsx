@@ -10,6 +10,7 @@ import {
 } from 'fumadocs-ui/page'
 
 import { source } from '@/content'
+import { createMetadata } from '@/lib/metadata'
 
 export default async function Page({
   params,
@@ -42,12 +43,12 @@ export function generateStaticParams() {
 export async function generateMetadata(props: {
   params: Promise<{ slug?: string[] }>
 }) {
-  const params = await props.params
-  const page = source.getPage(params.slug)
+  const { slug } = await props.params
+  const page = source.getPage(slug)
   if (!page) notFound()
 
-  return {
-    title: page.data.title,
+  return createMetadata(slug ?? [], {
+    title: slug ? page.data.title : '',
     description: page.data.description,
-  }
+  })
 }
