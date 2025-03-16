@@ -58,9 +58,7 @@ const useForm = <TValue = unknown, TData = void>({
 
   const handleBlur = React.useCallback(
     (event: React.FocusEvent<HTMLInputElement>) => {
-      const parsed = schema.safeParse({
-        [event.target.name]: event.target.value,
-      })
+      const parsed = schema.safeParse(values)
 
       if (!parsed.success) {
         setErrors((prev) => ({
@@ -73,7 +71,7 @@ const useForm = <TValue = unknown, TData = void>({
         setErrors((prev) => ({ ...prev, [event.target.name]: undefined }))
       }
     },
-    [schema],
+    [schema, values],
   )
 
   return {

@@ -14,11 +14,19 @@ export default function Home() {
 
         <section className="flex flex-col gap-4 pl-6">
           <Typography variant="h3">Using Arktype</Typography>
+          <Typography variant="code">
+            bunx --bun shadcn add https://yuki-ui.vercel.app/r/arktype-form.json
+          </Typography>
+
           <ArktypeSignUpForm />
         </section>
 
         <section className="flex flex-col gap-4 pl-6">
           <Typography variant="h3">Using Zod</Typography>
+          <Typography variant="code">
+            bunx --bun shadcn add https://yuki-ui.vercel.app/r/zod-form.json
+          </Typography>
+
           <ZodSignUpForm />
         </section>
       </section>

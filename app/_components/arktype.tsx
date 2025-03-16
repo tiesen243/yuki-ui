@@ -52,7 +52,7 @@ export const ArktypeSignUpForm: React.FC = () => {
   return (
     <Card className="w-svh max-w-md">
       <CardHeader>
-        <CardTitle>Arktype Demo</CardTitle>
+        <CardTitle>Arktype Form Demo</CardTitle>
         <CardDescription>Validate form with Arktype</CardDescription>
       </CardHeader>
       <CardContent>

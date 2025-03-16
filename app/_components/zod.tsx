@@ -58,7 +58,7 @@ export const ZodSignUpForm: React.FC = () => {
   return (
     <Card className="w-svh max-w-md">
       <CardHeader>
-        <CardTitle>Zod Demo</CardTitle>
+        <CardTitle>Zod Form Demo</CardTitle>
         <CardDescription>Validate form with Zod</CardDescription>
       </CardHeader>
       <CardContent>

@@ -4,10 +4,28 @@
   "homepage": "https://yuki-ui.vercel.app",
   "items": [
     {
+      "name": "typography",
+      "type": "registry:block",
+      "title": "Typography",
+      "description": "A typography component.",
+      "categories": ["text"],
+      "author": "tiesen243",
+      "files": [
+        {
+          "path": "registry/typography.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "arktype-form",
       "type": "registry:block",
       "title": "Arktype Form",
       "description": "A form component using Arktype to validate the form.",
+      "categories": ["form"],
+      "author": "tiesen243",
+      "dependencies": ["arktype"],
+      "registryDependencies": ["button", "input", "label"],
       "files": [
         {
           "path": "registry/form/arktype.tsx",
@@ -20,6 +38,10 @@
       "type": "registry:block",
       "title": "Zod Form",
       "description": "A form component using Zod to validate the form.",
+      "categories": ["form"],
+      "author": "tiesen243",
+      "dependencies": ["zod"],
+      "registryDependencies": ["button", "input", "label"],
       "files": [
         {
           "path": "registry/form/zod.tsx",
