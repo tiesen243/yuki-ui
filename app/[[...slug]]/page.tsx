@@ -50,5 +50,8 @@ export async function generateMetadata(props: {
   return createMetadata(slug ?? [], {
     title: slug ? page.data.title : '',
     description: page.data.description,
+    openGraph: {
+      url: page.url,
+    },
   })
 }
