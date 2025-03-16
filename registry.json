@@ -1,6 +1,31 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "acme",
-  "homepage": "https://yuki-form.vercel.app",
-  "items": []
+  "name": "Yuki UI",
+  "homepage": "https://yuki-ui.vercel.app",
+  "items": [
+    {
+      "name": "arktype-form",
+      "type": "registry:block",
+      "title": "Arktype Form",
+      "description": "A form component using Arktype to validate the form.",
+      "files": [
+        {
+          "path": "registry/form/arktype.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "zod-form",
+      "type": "registry:block",
+      "title": "Zod Form",
+      "description": "A form component using Zod to validate the form.",
+      "files": [
+        {
+          "path": "registry/form/zod.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
 }

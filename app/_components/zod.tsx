@@ -1,6 +1,7 @@
 'use client'
 
 import { toast } from 'sonner'
+import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -10,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import {
   Form,
   FormControl,
@@ -18,13 +20,31 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { zodSignUp } from '@/validators/auth'
+} from '@/registry/form/zod'
 
-export const SignUpForm: React.FC = () => {
+const signUpSchema = z
+  .object({
+    name: z.string().min(4, { message: 'Name must be at least 4 characters' }),
+    email: z.string().email(),
+    password: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters' })
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/, {
+        message:
+          'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character',
+      }),
+    confirmPassword: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters' }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  })
+
+export const ZodSignUpForm: React.FC = () => {
   const form = useForm({
-    schema: zodSignUp,
+    schema: signUpSchema,
     defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
     submitFn: (values) => {
       return values
@@ -38,8 +58,8 @@ export const SignUpForm: React.FC = () => {
   return (
     <Card className="w-svh max-w-md">
       <CardHeader>
-        <CardTitle>Sign Up</CardTitle>
-        <CardDescription>Sign up for an account</CardDescription>
+        <CardTitle>Zod Demo</CardTitle>
+        <CardDescription>Validate form with Zod</CardDescription>
       </CardHeader>
       <CardContent>
         <Form form={form}>

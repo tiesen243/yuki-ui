@@ -1,5 +1,6 @@
 'use client'
 
+import { type } from 'arktype'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -10,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import {
   Form,
   FormControl,
@@ -18,13 +20,25 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { arktypeSignUp } from '@/validators/auth'
+} from '@/registry/form/arktype'
 
-export const SignUpForm: React.FC = () => {
+const signUpSchema = type({
+  name: 'string >= 4',
+  email: 'string.email',
+  password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+  confirmPassword: 'string >= 8',
+}).narrow((data, ctx) => {
+  if (data.password !== data.confirmPassword)
+    return ctx.reject({
+      path: ['confirmPassword'],
+      message: 'Passwords do not match',
+    })
+  return true
+})
+
+export const ArktypeSignUpForm: React.FC = () => {
   const form = useForm({
-    schema: arktypeSignUp,
+    schema: signUpSchema,
     defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
     submitFn: (values) => {
       return values
@@ -38,8 +52,8 @@ export const SignUpForm: React.FC = () => {
   return (
     <Card className="w-svh max-w-md">
       <CardHeader>
-        <CardTitle>Sign Up</CardTitle>
-        <CardDescription>Sign up for an account</CardDescription>
+        <CardTitle>Arktype Demo</CardTitle>
+        <CardDescription>Validate form with Arktype</CardDescription>
       </CardHeader>
       <CardContent>
         <Form form={form}>
