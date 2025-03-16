@@ -12,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import {
   Form,
   FormControl,
@@ -21,7 +20,8 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from '@/registry/form'
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 const loginSchema = type({
   email: type('string.email').configure({ message: 'Invalid email' }),

@@ -29,14 +29,9 @@
       "description": "A login form component using Arktype to validate.",
       "categories": ["form"],
       "dependencies": ["arktype"],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "sonner",
-        "https://yuki-ui.vercel.app/r/form.json"
-      ],
+      "registryDependencies": ["button", "card", "input", "sonner"],
       "files": [
+        { "path": "registry/form.tsx", "type": "registry:ui" },
         { "path": "registry/blocks/login-form.tsx", "type": "registry:block" }
       ]
     }
