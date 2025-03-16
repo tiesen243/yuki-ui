@@ -18,13 +18,13 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from '@/components/ui/form.arktype'
+} from '@/components/ui/form.zod'
 import { Input } from '@/components/ui/input'
-import { arktypeSignUp } from '@/validators/auth'
+import { zodSignUp } from '@/validators/auth'
 
 export const SignUpForm: React.FC = () => {
   const form = useForm({
-    schema: arktypeSignUp,
+    schema: zodSignUp,
     defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
     submitFn: (values) => {
       return values
