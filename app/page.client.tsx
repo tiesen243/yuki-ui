@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from '@/components/ui/form.arktype'
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { arktypeSignUp } from '@/validators/auth'
 

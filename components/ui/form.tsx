@@ -1,9 +1,32 @@
-import type { Schema } from 'zod'
+import type { ArkError } from 'arktype'
 import * as React from 'react'
 import { Label } from '@radix-ui/react-label'
 import { Slot } from '@radix-ui/react-slot'
+import { Type, type } from 'arktype'
+import { Schema } from 'zod'
 
 import { cn } from '@/lib/utils'
+
+const parseSchema = <TValues = unknown,>(
+  schema: Type<TValues> | Schema<TValues>,
+  values: TValues,
+) => {
+  if (schema instanceof Type) {
+    const parsed = schema(values)
+    if (parsed instanceof type.errors) {
+      return {
+        errors: formatErrors(parsed.byPath),
+      }
+    }
+  } else if (schema instanceof Schema) {
+    const parsed = schema.safeParse(values)
+    if (!parsed.success) {
+      return {
+        errors: parsed.error.flatten().fieldErrors,
+      }
+    }
+  }
+}
 
 const useForm = <TValue = unknown, TData = void>({
   schema,
@@ -13,7 +36,7 @@ const useForm = <TValue = unknown, TData = void>({
   onError,
   isReset,
 }: {
-  schema: Schema<TValue>
+  schema: Type<TValue> | Schema<TValue>
   defaultValues: TValue
   submitFn: (values: TValue) => Promise<TData> | TData
   onSuccess?: (data: TData) => void
@@ -23,7 +46,7 @@ const useForm = <TValue = unknown, TData = void>({
   const [values, setValues] = React.useState<TValue>(defaultValues)
   const [isPending, startTransition] = React.useTransition()
   const [errors, setErrors] = React.useState<
-    Record<string, string[] | undefined>
+    Record<string, string | string[] | undefined>
   >({})
 
   const handleSubmit = React.useCallback(
@@ -32,12 +55,11 @@ const useForm = <TValue = unknown, TData = void>({
         e.preventDefault()
         e.stopPropagation()
 
-        const parsed = schema.safeParse(values)
-
-        if (!parsed.success) setErrors(parsed.error.flatten().fieldErrors)
+        const parsed = parseSchema(schema, values)
+        if (parsed?.errors) setErrors(parsed.errors)
         else
           try {
-            const data = await submitFn(parsed.data)
+            const data = await submitFn(values)
             if (onSuccess) onSuccess(data)
             if (isReset) setValues(defaultValues)
             setErrors({})
@@ -58,12 +80,11 @@ const useForm = <TValue = unknown, TData = void>({
 
   const handleBlur = React.useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
-      const parsed = schema.safeParse(values)
-      if (!parsed.success) {
-        const errors = parsed.error.flatten().fieldErrors
+      const parsed = parseSchema(schema, values)
+      if (parsed?.errors) {
         setErrors((prev) => ({
           ...prev,
-          [e.target.name]: (errors as never)[e.target.name],
+          [e.target.name]: (parsed.errors as never)[e.target.name],
         }))
       } else {
         setErrors((prev) => ({ ...prev, [e.target.name]: undefined }))
@@ -119,11 +140,6 @@ const FormFieldContext = React.createContext<FormFieldContextValue>(
   {} as FormFieldContextValue,
 )
 
-type ChangeEvent =
-  | React.ChangeEvent<HTMLInputElement>
-  | string
-  | number
-  | boolean
 function FormField({
   name,
   render,
@@ -131,8 +147,8 @@ function FormField({
   name: string
   render: (props: {
     value: string
-    onChange: (event: ChangeEvent) => void
-    onBlur: (event: React.FocusEvent<HTMLInputElement>) => void
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void
   }) => React.ReactNode
 }) {
   const form = React.use(FormContext)
@@ -142,7 +158,13 @@ function FormField({
       {render({
         value: (form.values as never)[name],
         onChange: React.useCallback(
-          (event: ChangeEvent) => {
+          (
+            event:
+              | React.ChangeEvent<HTMLInputElement>
+              | string
+              | number
+              | boolean,
+          ) => {
             if (event && typeof event === 'object') {
               let newValue: unknown = event.target.value
               if (event.target.type === 'number')
@@ -292,3 +314,18 @@ export {
   FormDescription,
   FormMessage,
 }
+
+const formatErrors = (errors: Record<string, ArkError>) =>
+  Object.entries(errors).reduce<Record<string, string>>((acc, [key, value]) => {
+    switch (value.code) {
+      case 'pattern':
+        acc[key] = `${key} is invalid`
+        break
+      case 'required':
+        acc[key] = `${key} is required`
+        break
+      default:
+        acc[key] = value.description ?? value.message
+    }
+    return acc
+  }, {})
