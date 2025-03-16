@@ -52,19 +52,12 @@ const useForm = <TValue = unknown, TData = void>({
     [defaultValues, isReset, onError, onSuccess, schema, submitFn, values],
   )
 
-  const handleChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement> | string) => {
-      if (typeof e === 'string') {
-        return
-      } else {
-        setValues((prev) => ({
-          ...prev,
-          [e.target.name]: e.target.value,
-        }))
-      }
-    },
-    [],
-  )
+  const handleChange = (key: string, value: unknown) => {
+    setValues((prev) => ({
+      ...prev,
+      [key]: value,
+    }))
+  }
 
   const handleBlur = React.useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
@@ -146,7 +139,30 @@ function FormField({
     <FormFieldContext.Provider value={{ name }}>
       {render({
         value: (form.values as never)[name],
-        onChange: form.handleChange,
+        onChange: React.useCallback(
+          (
+            event:
+              | React.ChangeEvent<HTMLInputElement>
+              | string
+              | number
+              | boolean,
+          ) => {
+            if (event && typeof event === 'object') {
+              let newValue: unknown = event.target.value
+              if (event.target.type === 'number')
+                newValue = event.target.valueAsNumber
+              else if (event.target.type === 'checkbox')
+                newValue = event.target.checked
+              else if (event.target.type === 'date')
+                newValue = event.target.valueAsDate
+
+              form.handleChange(name, newValue)
+            } else {
+              form.handleChange(name, event)
+            }
+          },
+          [form, name],
+        ),
         onBlur: form.handleBlur,
       })}
     </FormFieldContext.Provider>
