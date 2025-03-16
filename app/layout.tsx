@@ -51,7 +51,9 @@ export const metadata = {
   ],
   openGraph: {
     url,
-    image: `https://tiesen.id.vn/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`,
+    images: [
+      `https://tiesen.id.vn/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`,
+    ],
     siteName: title,
     type: 'website',
   },
