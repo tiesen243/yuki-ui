@@ -1,5 +1,5 @@
+import { LoginForm } from '@/registry/blocks/login-form'
 import { Typography } from '@/registry/typography'
-import { LoginForm } from './page.client'
 
 export default function Home() {
   return (
@@ -8,8 +8,7 @@ export default function Home() {
         Yuki UI
       </Typography>
 
-      <section className="mt-8 flex flex-col items-center justify-center gap-6">
-        <Typography variant="h2">Form Components</Typography>
+      <section className="my-8 grid place-items-center">
         <LoginForm />
       </section>
     </main>

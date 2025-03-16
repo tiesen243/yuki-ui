@@ -72,7 +72,16 @@ export const LoginForm: React.FC = () => {
             name="password"
             render={(props) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel>Password</FormLabel>
+
+                  <a
+                    href="#"
+                    className="text-sm underline-offset-4 hover:underline"
+                  >
+                    Forgot your password?
+                  </a>
+                </div>
                 <FormControl {...props}>
                   <Input type="password" />
                 </FormControl>

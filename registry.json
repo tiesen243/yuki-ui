@@ -9,7 +9,6 @@
       "title": "Typography",
       "description": "A typography component.",
       "categories": ["text"],
-      "author": "tiesen243",
       "dependencies": ["@radix-ui/react-slot"],
       "files": [{ "path": "registry/typography.tsx", "type": "registry:ui" }]
     },
@@ -19,10 +18,27 @@
       "title": "Arktype Form",
       "description": "A form component using standard schema to validate. It support Arktype, Valibot, and Zod.",
       "categories": ["form"],
-      "author": "tiesen243",
       "dependencies": ["@radix-ui/react-slot", "@standard-schema/spec"],
       "registryDependencies": ["button", "input"],
       "files": [{ "path": "registry/form.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "login-form",
+      "type": "registry:block",
+      "title": "Login Form",
+      "description": "A login form component using Arktype to validate.",
+      "categories": ["form"],
+      "dependencies": ["arktype"],
+      "registryDependencies": [
+        "button",
+        "card",
+        "input",
+        "sonner",
+        "https://yuki-ui.vercel.app/r/form.json"
+      ],
+      "files": [
+        { "path": "registry/blocks/login-form.tsx", "type": "registry:block" }
+      ]
     }
   ]
 }

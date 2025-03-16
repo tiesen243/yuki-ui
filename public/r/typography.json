@@ -3,7 +3,6 @@
   "name": "typography",
   "type": "registry:ui",
   "title": "Typography",
-  "author": "tiesen243",
   "description": "A typography component.",
   "dependencies": [
     "@radix-ui/react-slot"

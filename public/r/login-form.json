@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "login-form",
+  "type": "registry:block",
+  "title": "Login Form",
+  "description": "A login form component using Arktype to validate.",
+  "dependencies": [
+    "arktype"
+  ],
+  "registryDependencies": [
+    "button",
+    "card",
+    "input",
+    "sonner",
+    "https://yuki-ui.vercel.app/r/form.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/login-form.tsx",
+      "content": "'use client'\n\nimport { type } from 'arktype'\nimport { toast } from 'sonner'\n\nimport { Button } from '@/components/ui/button'\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardFooter,\n  CardHeader,\n  CardTitle,\n} from '@/components/ui/card'\nimport { Input } from '@/components/ui/input'\nimport {\n  Form,\n  FormControl,\n  FormField,\n  FormItem,\n  FormLabel,\n  FormMessage,\n  useForm,\n} from '@/registry/form'\n\nconst loginSchema = type({\n  email: type('string.email').configure({ message: 'Invalid email' }),\n  password: type(\n    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$/,\n  ).configure({\n    message:\n      'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character',\n  }),\n})\n\nexport const LoginForm: React.FC = () => {\n  const form = useForm({\n    schema: loginSchema,\n    defaultValues: { email: '', password: '' },\n    submitFn: (values) => values,\n    onError: (e) => toast.error(e),\n    onSuccess: (data) =>\n      toast.success('Logged in successfully', {\n        description: <pre>{JSON.stringify(data, null, 2)}</pre>,\n      }),\n  })\n\n  return (\n    <Card className=\"w-svh max-w-md\">\n      <CardHeader>\n        <CardTitle>Log in</CardTitle>\n        <CardDescription>\n          Enter your email below to login to your account\n        </CardDescription>\n      </CardHeader>\n      <CardContent>\n        <Form form={form}>\n          <FormField\n            name=\"email\"\n            render={(props) => (\n              <FormItem>\n                <FormLabel>Email</FormLabel>\n                <FormControl {...props}>\n                  <Input type=\"email\" placeholder=\"yuki@gmail.com\" />\n                </FormControl>\n                <FormMessage />\n              </FormItem>\n            )}\n          />\n\n          <FormField\n            name=\"password\"\n            render={(props) => (\n              <FormItem>\n                <div className=\"flex items-center justify-between\">\n                  <FormLabel>Password</FormLabel>\n\n                  <a\n                    href=\"#\"\n                    className=\"text-sm underline-offset-4 hover:underline\"\n                  >\n                    Forgot your password?\n                  </a>\n                </div>\n                <FormControl {...props}>\n                  <Input type=\"password\" />\n                </FormControl>\n                <FormMessage />\n              </FormItem>\n            )}\n          />\n\n          <Button disabled={form.isPending} type=\"submit\">\n            Sign Up\n          </Button>\n        </Form>\n      </CardContent>\n\n      <CardFooter className=\"flex-col\">\n        <Button variant=\"outline\" className=\"w-full\">\n          Login with Google\n        </Button>\n\n        <p>\n          Don&apos;t have an account?{' '}\n          <Button variant=\"link\" className=\"p-0\">\n            Sign Up\n          </Button>\n        </p>\n      </CardFooter>\n    </Card>\n  )\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "categories": [
+    "form"
+  ]
+}
