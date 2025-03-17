@@ -1,14 +1,21 @@
 import { getBaseUrl } from '@/lib/utils'
+import { storedV0 } from '@/registry/stored-v0'
 import { Button } from './ui/button'
 
 export const OpenInV0: React.FC<{ name: string }> = ({ name }) => {
+  const storedId = storedV0[name as keyof typeof storedV0]
+
   return (
     <Button
       className="absolute top-1 right-1 z-50 h-[calc(theme(spacing.7)_-_1px)] gap-1 rounded-[6px] px-3 text-xs"
       asChild
     >
       <a
-        href={`https://v0.dev/chat/api/open?url=${getBaseUrl()}/r/${name}.json`}
+        href={
+          storedId
+            ? `https://v0.dev/chat/${name}-${storedId}`
+            : `https://v0.dev/chat/api/open?url=${getBaseUrl()}/r/${name}.json`
+        }
         target="_blank"
         rel="noopener noreferrer"
       >
