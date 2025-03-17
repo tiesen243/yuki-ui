@@ -15,12 +15,38 @@
     {
       "name": "form",
       "type": "registry:ui",
-      "title": "Arktype Form",
+      "title": "Form",
       "description": "A form component using standard schema to validate. It support Arktype, Valibot, and Zod.",
       "categories": ["form"],
       "dependencies": ["@radix-ui/react-slot", "@standard-schema/spec"],
       "registryDependencies": ["button", "input"],
       "files": [{ "path": "registry/ui/form.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "login-form",
+      "type": "registry:block",
+      "title": "Login Form",
+      "description": "A simple login form.",
+      "categories": ["form", "athentication"],
+      "dependencies": ["arktype"],
+      "registryDependencies": [
+        "button",
+        "card",
+        "input",
+        "sonner",
+        "https://yuki-ui.vercel.app/r/form.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/login-form/login-form.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/blocks/login-form/page.tsx",
+          "type": "registry:page",
+          "target": "app/login/page.tsx"
+        }
+      ]
     }
   ]
 }

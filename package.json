@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "bun build:registry && next build",
-    "build:registry": "shadcn build",
+    "build:registry": "shadcn build && bun ./scripts/fix-regestry.ts",
     "check": "bun lint && bun format && bun typecheck",
     "dev": "next dev --turbopack",
     "format": "prettier --check . --cache",
