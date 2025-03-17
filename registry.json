@@ -10,7 +10,7 @@
       "description": "A typography component.",
       "categories": ["text"],
       "dependencies": ["@radix-ui/react-slot"],
-      "files": [{ "path": "registry/typography.tsx", "type": "registry:ui" }]
+      "files": [{ "path": "registry/ui/typography.tsx", "type": "registry:ui" }]
     },
     {
       "name": "form",
@@ -20,23 +20,7 @@
       "categories": ["form"],
       "dependencies": ["@radix-ui/react-slot", "@standard-schema/spec"],
       "registryDependencies": ["button", "input"],
-      "files": [{ "path": "registry/form.tsx", "type": "registry:ui" }]
-    },
-    {
-      "name": "login-form",
-      "type": "registry:block",
-      "title": "Login Form",
-      "description": "A login form component using Arktype to validate.",
-      "categories": ["form"],
-      "dependencies": ["arktype"],
-      "registryDependencies": [
-        "button",
-        "card",
-        "input",
-        "sonner",
-        "https://yuki-ui.vercel.app/r/form.json"
-      ],
-      "files": [{ "path": "registry/form.tsx", "type": "registry:ui" }]
+      "files": [{ "path": "registry/ui/form.tsx", "type": "registry:ui" }]
     }
   ]
 }
