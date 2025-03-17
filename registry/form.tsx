@@ -127,10 +127,10 @@ function Form<T extends StandardSchemaV1>({
   return (
     <FormContext.Provider value={form}>
       <form
-        {...props}
         data-slot="form"
-        className={cn('flex flex-col gap-4', className)}
+        className={cn('grid gap-4', className)}
         onSubmit={form.handleSubmit}
+        {...props}
       />
     </FormContext.Provider>
   )
@@ -213,7 +213,8 @@ function FormItem({ className, ...props }: React.ComponentProps<'fieldset'>) {
     <FormItemContext.Provider value={{ id }}>
       <fieldset
         data-slot="form-item"
-        className={cn('grid gap-2', className)}
+        data-disabled={isPending}
+        className={cn('group grid gap-2', className)}
         disabled={isPending}
         {...props}
       />
@@ -275,14 +276,11 @@ function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
   )
 }
 
-function FormDescription({
-  className,
-  ...props
-}: React.ComponentProps<'span'>) {
+function FormDescription({ className, ...props }: React.ComponentProps<'p'>) {
   const { formDescriptionId } = useFormField()
 
   return (
-    <span
+    <p
       data-slot="form-description"
       id={formDescriptionId}
       className={cn('text-muted-foreground text-sm', className)}
@@ -297,9 +295,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const body = error ? String(error) : props.children
 
-  if (!body) {
-    return null
-  }
+  if (!body) return null
 
   return (
     <p

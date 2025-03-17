@@ -37,7 +37,10 @@ export const LoginForm: React.FC = () => {
   const form = useForm({
     schema: loginSchema,
     defaultValues: { email: '', password: '' },
-    submitFn: (values) => values,
+    submitFn: async (values) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      return values
+    },
     onError: (e) => toast.error(e),
     onSuccess: (data) =>
       toast.success('Logged in successfully', {
@@ -91,7 +94,7 @@ export const LoginForm: React.FC = () => {
           />
 
           <Button disabled={form.isPending} type="submit">
-            Sign Up
+            Login
           </Button>
         </Form>
       </CardContent>

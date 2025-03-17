@@ -9,6 +9,7 @@ import {
   DocsTitle,
 } from 'fumadocs-ui/page'
 
+import { ComponentSource } from '@/components/component-source'
 import { source } from '@/content'
 import { createMetadata } from '@/lib/metadata'
 
@@ -30,7 +31,16 @@ export default async function Page({
       <DocsDescription>{page.data.description}</DocsDescription>
 
       <DocsBody>
-        <MDX components={{ ...defaultMdxComponents, Step, Steps, Tab, Tabs }} />
+        <MDX
+          components={{
+            ...defaultMdxComponents,
+            ComponentSource,
+            Step,
+            Steps,
+            Tab,
+            Tabs,
+          }}
+        />
       </DocsBody>
     </DocsPage>
   )
