@@ -1,0 +1,153 @@
+---
+title: Installation
+description: Install and configure the Shadcn UI library in your project.
+---
+
+## Create a new project
+
+<Callout type="info">
+  This UI library is designed to work with any React project. You can use it
+  with your favorite framework or build tool.
+</Callout>
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+
+<Tab value="npm">
+
+```bash
+# React
+npm create vite@latest my-app --template react
+
+# React router
+npm create react-router@latest my-app
+
+# Next.js
+npm create next-app@latest my-app
+```
+
+</Tab>
+
+<Tab value="yarn">
+
+```bash
+# React
+yarn create vite@latest my-app --template react
+
+# React router
+yarn create react-router@latest my-app
+
+# Next.js
+yarn create next-app@latest my-app
+```
+
+</Tab>
+
+<Tab value="pnpm">
+
+```bash
+# React
+pnpm create vite@latest my-app --template react
+
+# React router
+pnpm create react-router@latest my-app
+
+# Next.js
+pnpm create next-app@latest my-app
+```
+
+</Tab>
+
+<Tab value="bun">
+
+```bash
+# React
+bun create vite@latest my-app --template react
+
+# React router
+bun create react-router@latest my-app
+
+# Next.js
+bun create next-app@latest my-app
+```
+
+</Tab>
+
+</Tabs>
+
+### Initalize the Shadcn UI library
+
+To add the Shadcn UI library to your project, run the following command:
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+<Tab value="npm">
+
+```bash
+npx shadcn@latest init
+```
+
+</Tab>
+
+<Tab value="yarn">
+
+```bash
+npx shadcn@latest init
+```
+
+</Tab>
+
+<Tab value="pnpm">
+
+```bash
+pnpm dlx shadcn@latest init
+```
+
+</Tab>
+
+<Tab value="bun">
+
+```bash
+bunx --bun shadcn@latest init
+```
+
+</Tab>
+
+</Tabs>
+
+## Add a components
+
+You can add components to your project using the `shadcn add` command.
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+<Tab value="npm">
+
+```bash
+npx shadcn@latest add https://yuki-ui.vercel.app/r/[component-name].json
+```
+
+</Tab>
+
+<Tab value="yarn">
+
+```bash
+npx shadcn@latest add https://yuki-ui.vercel.app/r/[component-name].json
+```
+
+</Tab>
+
+<Tab value="pnpm">
+
+```bash
+pnpm dlx shadcn@latest add https://yuki-ui.vercel.app/r/[component-name].json
+```
+
+</Tab>
+
+<Tab value="bun">
+
+```bash
+bunx --bun shadcn@latest add https://yuki-ui.vercel.app/r/[component-name].json
+```
+
+</Tab>
+
+</Tabs>

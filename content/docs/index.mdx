@@ -10,78 +10,16 @@ description: A collection of reusable React components built with a focus on cus
 - Fully customizable with CSS variables and Tailwind CSS
 - TypeScript support for improved developer experience
 
-## Installation
+import Link from 'next/link'
 
-Initialize your project with the shadcn CLI:
+import { Button } from '@/components/ui/button'
 
-<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
-<Tab value="npm">
+<div className="flex not-prose items-center gap-4">
+  <Button asChild>
+    <Link href="/installation">Get Started</Link>
+  </Button>
 
-```bash
-npx shadcn init
-```
-
-</Tab>
-
-<Tab value="yarn">
-
-```bash
-yarn shadcn init
-```
-
-</Tab>
-
-<Tab value="pnpm">
-
-```bash
-pnpx shadcn init
-```
-
-</Tab>
-
-<Tab value="bun">
-
-```bash
-bunx --bun shadcn init
-```
-
-</Tab>
-
-</Tabs>
-
-Install components using the shadcn CLI:
-
-<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
-<Tab value="npm">
-
-```bash
-npx shadcn add https://yuki-ui.vercel.app/r/[component-name].json
-```
-
-</Tab>
-
-<Tab value="yarn">
-
-```bash
-yarn shadcn add https://yuki-ui.vercel.app/r/[component-name].json
-```
-
-</Tab>
-
-<Tab value="pnpm">
-
-```bash
-pnpx shadcn add https://yuki-ui.vercel.app/r/[component-name].json
-```
-
-</Tab>
-
-<Tab value="bun">
-
-```bash
-bunx --bun shadcn add https://yuki-ui.vercel.app/r/[component-name].json
-```
-
-</Tab>
-
-</Tabs>
+  <Button variant="ghost" asChild>
+    <Link href="/blocks/auth">Browse Blocks</Link>
+  </Button>
+</div>
