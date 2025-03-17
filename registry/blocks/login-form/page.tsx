@@ -1,4 +1,4 @@
-import { LoginForm } from '@/registry/blocks/login-form'
+import { LoginForm } from '@/registry/blocks/login-form/components/login-form'
 
 export default function LoginPage() {
   return (

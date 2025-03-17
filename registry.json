@@ -38,7 +38,7 @@
       ],
       "files": [
         {
-          "path": "registry/blocks/login-form/login-form.tsx",
+          "path": "registry/blocks/login-form/components/login-form.tsx",
           "type": "registry:component"
         },
         {
