@@ -21,7 +21,7 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from '@/registry/ui/ui/form'
+} from '@/registry/ui/form'
 
 const loginSchema = type({
   email: type('string.email').configure({ message: 'Invalid email' }),
