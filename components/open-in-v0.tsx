@@ -7,7 +7,7 @@ export const OpenInV0: React.FC<{ name: string }> = ({ name }) => {
 
   return (
     <Button
-      className="absolute top-1 right-1 z-50 h-[calc(theme(spacing.7)_-_1px)] gap-1 rounded-[6px] px-3 text-xs"
+      className="absolute top-1 right-1 z-10 h-[calc(theme(spacing.7)_-_1px)] gap-1 rounded-[6px] px-3 text-xs"
       asChild
     >
       <a
