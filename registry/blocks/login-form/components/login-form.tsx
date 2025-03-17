@@ -24,13 +24,10 @@ import {
 } from '@/registry/ui/form'
 
 const loginSchema = type({
-  email: type('string.email').configure({ message: 'Invalid email' }),
+  email: type('string.email'),
   password: type(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
-  ).configure({
-    message:
-      'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character',
-  }),
+  ).describe('valid password'),
 })
 
 export const LoginForm: React.FC = () => {
