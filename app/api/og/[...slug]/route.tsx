@@ -23,7 +23,3 @@ export const GET = metadataImage.createAPI((page) => {
     primaryTextColor: '#fafafa',
   })
 })
-
-export function generateStaticParams() {
-  return metadataImage.generateParams()
-}
