@@ -10,7 +10,9 @@ const main = async () => {
       path.resolve(__dirname, `../public/r/${file}`),
       'utf-8',
     )
-    const newContent = content.replace(/@\/registry\/ui/g, '@/registry/ui/ui')
+    const newContent = content
+      .replace(/@\/registry\/ui/g, '@/registry/ui/ui')
+      .replace(/@\/components\/ui/g, '@/registry/ui')
     await fs.writeFile(
       path.resolve(__dirname, `../public/r/${file}`),
       newContent,
