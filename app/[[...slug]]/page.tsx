@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import Link from 'fumadocs-core/link'
 import { Step, Steps } from 'fumadocs-ui/components/steps'
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
@@ -10,6 +11,7 @@ import {
 } from 'fumadocs-ui/page'
 
 import { ComponentSource } from '@/components/component-source'
+import { Button } from '@/components/ui/button'
 import { source } from '@/content'
 import { createMetadata } from '@/lib/metadata'
 
@@ -34,7 +36,9 @@ export default async function Page({
         <MDX
           components={{
             ...defaultMdxComponents,
+            Button,
             ComponentSource,
+            Link,
             Step,
             Steps,
             Tab,

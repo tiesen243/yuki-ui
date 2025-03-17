@@ -17,3 +17,19 @@ import { LoginForm } from '@/registry/blocks/login-form'
 </Tab>
 
 </Tabs>
+
+<div className="flex items-center justify-between [&>:first-child]:grow gap-4">
+
+```bash
+bunx --bun shadcn@latest add https://yuki-ui.vercel.app/r/login-form.json
+```
+
+<Button size="sm" asChild>
+  <Link
+    href={`https://v0.dev/chat/api/open?url=${encodeURIComponent('https://yuki-ui.vercel.app/r/login-form.json')}`}
+  >
+    Open in v0
+  </Link>
+</Button>
+
+</div>
