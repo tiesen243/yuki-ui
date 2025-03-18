@@ -10,16 +10,14 @@ const useForm = <TSchema extends StandardSchemaV1, TData = unknown>({
   submitFn,
   onSuccess,
   onError,
-  isReset,
 }: {
   schema: TSchema
   defaultValues: StandardSchemaV1.InferInput<TSchema>
   submitFn: (
     values: StandardSchemaV1.InferInput<TSchema>,
   ) => Promise<TData> | TData
-  onSuccess?: (data: TData) => void
-  onError?: (error: string) => void
-  isReset?: boolean
+  onSuccess?: (data: TData) => Promise<void> | void
+  onError?: (error: string) => Promise<void> | void
 }) => {
   const [values, setValues] = React.useState(defaultValues)
   const [isPending, startTransition] = React.useTransition()
@@ -41,27 +39,26 @@ const useForm = <TSchema extends StandardSchemaV1, TData = unknown>({
             message: 'Validation error',
             fieldErrors: parsed.fieldErrors,
           })
-          if (onError) onError('Validation error')
+          if (onError) void onError('Validation error')
           return
         }
 
         try {
           const data = await submitFn(parsed.data)
-          if (onSuccess) onSuccess(data)
-          if (isReset) setValues(defaultValues)
+          if (onSuccess) void onSuccess(data)
           setErrors({})
         } catch (error) {
           if (error instanceof Error) {
             setErrors({ message: error.message })
-            if (onError) onError(error.message)
+            if (onError) void onError(error.message)
           } else {
             setErrors({ message: 'Unknown error' })
-            if (onError) onError('Unknown error')
+            if (onError) void onError('Unknown error')
           }
         }
       })
     },
-    [defaultValues, isReset, onError, onSuccess, schema, submitFn, values],
+    [onError, onSuccess, schema, submitFn, values],
   )
 
   const handleChange = (key: string, value: unknown) => {
@@ -102,10 +99,16 @@ const useForm = <TSchema extends StandardSchemaV1, TData = unknown>({
     [schema, values],
   )
 
+  const reset = React.useCallback(() => {
+    setValues(defaultValues)
+    setErrors({})
+  }, [defaultValues])
+
   return {
     handleSubmit,
     handleChange,
     handleBlur,
+    reset,
     isPending,
     values,
     errors,
