@@ -218,7 +218,7 @@ function FormField({
   }) => React.ReactNode
 }) {
   const { getFieldValue, setFieldValue } = React.use(FieldValueContext)
-  const { handleBlur } = React.useContext(FormStateContext)
+  const { handleBlur } = React.use(FormStateContext)
   const [localValue, setLocalValue] = React.useState(() =>
     getFieldValue(name as never),
   )
@@ -276,7 +276,7 @@ const FormItemContext = React.createContext<FormItemContextValue>(
 
 function FormItem({ className, ...props }: React.ComponentProps<'fieldset'>) {
   const id = React.useId()
-  const { isPending } = React.useContext(FormStateContext)
+  const { isPending } = React.use(FormStateContext)
 
   return (
     <FormItemContext.Provider value={{ id }}>
@@ -291,9 +291,9 @@ function FormItem({ className, ...props }: React.ComponentProps<'fieldset'>) {
 }
 
 function useFormField() {
-  const formState = React.useContext(FormStateContext)
-  const formField = React.useContext(FormFieldContext)
-  const formItem = React.useContext(FormItemContext)
+  const formState = React.use(FormStateContext)
+  const formField = React.use(FormFieldContext)
+  const formItem = React.use(FormItemContext)
 
   const { id } = formItem
 
