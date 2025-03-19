@@ -38,11 +38,14 @@ export const LoginForm: React.FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 1000))
       return values
     },
-    onError: (e) => toast.error(e),
-    onSuccess: (data) =>
+    onError: (e) => {
+      toast.error(e)
+    },
+    onSuccess: (data) => {
       toast.success('Logged in successfully', {
         description: <pre>{JSON.stringify(data, null, 2)}</pre>,
-      }),
+      })
+    },
   })
 
   return (
