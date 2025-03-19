@@ -7,10 +7,7 @@ import { cn } from '@/lib/utils'
 interface FormStateContextValue {
   isPending: boolean
   data: unknown
-  error: {
-    message?: string
-    fieldErrors: Record<string, string>
-  }
+  error: { message?: string; fieldErrors: Record<string, string> }
   handleBlur: (
     event: React.FocusEvent<HTMLInputElement>,
   ) => Promise<void> | void
@@ -23,7 +20,7 @@ interface FieldValueContextValue<TSchema extends StandardSchemaV1> {
   getFieldValue: (name: keyof StandardSchemaV1.InferInput<TSchema>) => unknown
   setFieldValue: (
     name: keyof StandardSchemaV1.InferInput<TSchema>,
-    value: unknown,
+    value: StandardSchemaV1.InferInput<TSchema>[keyof StandardSchemaV1.InferInput<TSchema>],
   ) => void
   handleBlur: (
     event: React.FocusEvent<HTMLInputElement>,
@@ -55,12 +52,15 @@ function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
   const getFieldValues = React.useMemo(() => () => formValuesRef.current, [])
   const getFieldValue = React.useMemo(
     () => (name: keyof StandardSchemaV1.InferInput<TSchema>) =>
-      (formValuesRef.current as never)[name],
+      formValuesRef.current[name] as never,
     [],
   )
   const setFieldValue = React.useMemo(
     () =>
-      (name: keyof StandardSchemaV1.InferInput<TSchema>, value: unknown) => {
+      (
+        name: keyof StandardSchemaV1.InferInput<TSchema>,
+        value: StandardSchemaV1.InferInput<TSchema>[keyof StandardSchemaV1.InferInput<TSchema>],
+      ) => {
         ;(formValuesRef.current as never)[name] = value as never
       },
     [],
@@ -179,16 +179,16 @@ function Form<T extends StandardSchemaV1>({
   )
 
   return (
-    <FormStateContext.Provider value={formStateContextValue}>
-      <FieldValueContext.Provider value={fieldValueContextValue}>
+    <FormStateContext value={formStateContextValue}>
+      <FieldValueContext value={fieldValueContextValue}>
         <form
           data-slot="form"
           className={cn('grid gap-4', className)}
           onSubmit={handleSubmit}
           {...props}
         />
-      </FieldValueContext.Provider>
-    </FormStateContext.Provider>
+      </FieldValueContext>
+    </FormStateContext>
   )
 }
 
@@ -249,21 +249,21 @@ function FormField({
           else newValue = event.target.value
         } else newValue = event
 
-        setFieldValue(name as never, newValue)
-        setLocalValue(newValue)
+        setFieldValue(name as never, newValue as never)
+        setLocalValue(newValue as never)
       },
     [name, setFieldValue],
   )
 
   return (
-    <FormFieldContext.Provider value={{ name }}>
+    <FormFieldContext value={{ name }}>
       {render({
         name,
         value: localValue as string,
         onChange: handleChange,
         onBlur: handleBlur,
       })}
-    </FormFieldContext.Provider>
+    </FormFieldContext>
   )
 }
 
@@ -279,14 +279,14 @@ function FormItem({ className, ...props }: React.ComponentProps<'fieldset'>) {
   const { isPending } = React.use(FormStateContext)
 
   return (
-    <FormItemContext.Provider value={{ id }}>
+    <FormItemContext value={{ id }}>
       <fieldset
         data-slot="form-item"
         className={cn('grid gap-2', className)}
         disabled={isPending}
         {...props}
       />
-    </FormItemContext.Provider>
+    </FormItemContext>
   )
 }
 

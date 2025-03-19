@@ -27,36 +27,11 @@ const loginSchema = z.object({
   email: z.string().email(),
   password: z
     .string()
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/)
-    .describe('valid password'),
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+      'Password is too weak',
+    ),
 })
-
-export const LoginForm: React.FC = () => (
-  <Card className="w-svh max-w-md overflow-hidden">
-    <CardHeader>
-      <CardTitle>Log in</CardTitle>
-      <CardDescription>
-        Enter your email below to login to your account
-      </CardDescription>
-    </CardHeader>
-    <CardContent>
-      <LForm />
-    </CardContent>
-
-    <CardFooter className="flex-col">
-      <Button variant="outline" className="w-full">
-        Login with Google
-      </Button>
-
-      <p>
-        Don&apos;t have an account?{' '}
-        <Button variant="link" className="p-0">
-          Sign Up
-        </Button>
-      </p>
-    </CardFooter>
-  </Card>
-)
 
 const LForm = () => {
   const form = useForm({
@@ -116,3 +91,30 @@ const LForm = () => {
     </Form>
   )
 }
+
+export const LoginForm: React.FC = () => (
+  <Card className="w-svh max-w-md overflow-hidden">
+    <CardHeader>
+      <CardTitle>Log in</CardTitle>
+      <CardDescription>
+        Enter your email below to login to your account
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      <LForm />
+    </CardContent>
+
+    <CardFooter className="flex-col">
+      <Button variant="outline" className="w-full">
+        Login with Google
+      </Button>
+
+      <p>
+        Don&apos;t have an account?{' '}
+        <Button variant="link" className="p-0">
+          Sign Up
+        </Button>
+      </p>
+    </CardFooter>
+  </Card>
+)
