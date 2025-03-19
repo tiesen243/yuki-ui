@@ -32,19 +32,25 @@ const useForm = <TSchema extends StandardSchemaV1, TData = unknown>({
         e.preventDefault()
         e.stopPropagation()
 
-        const parsed = await standardValidate(schema, values)
+        const parsed = await schema['~standard'].validate(values)
 
-        if (!parsed.success) {
+        if (parsed.issues) {
           setErrors({
             message: 'Validation error',
-            fieldErrors: parsed.fieldErrors,
+            fieldErrors: parsed.issues.reduce<Record<string, string>>(
+              (acc, issue) => ({
+                ...acc,
+                [issue.path as never]: issue.message,
+              }),
+              {},
+            ) as Record<keyof StandardSchemaV1.InferInput<TSchema>, string>,
           })
           if (onError) void onError('Validation error')
           return
         }
 
         try {
-          const data = await submitFn(parsed.data)
+          const data = await submitFn(parsed.value)
           if (onSuccess) void onSuccess(data)
           setErrors({})
         } catch (error) {
@@ -70,19 +76,24 @@ const useForm = <TSchema extends StandardSchemaV1, TData = unknown>({
 
   const handleBlur = React.useCallback(
     async (event: React.FocusEvent<HTMLInputElement>) => {
-      const parsed = await standardValidate(schema, values)
+      const parsed = await schema['~standard'].validate({
+        ...(values as Record<string, unknown>),
+        [event.target.name]: event.target.value,
+      })
 
-      if (!parsed.success) {
-        setErrors((prev) => ({
-          ...prev,
-          fieldErrors: {
-            ...(prev.fieldErrors as unknown as Record<
-              keyof StandardSchemaV1.InferInput<TSchema>,
-              string
-            >),
-            [event.target.name]: parsed.fieldErrors[event.target.name as never],
-          },
-        }))
+      if (parsed.issues) {
+        parsed.issues.forEach((issue) => {
+          setErrors((prev) => ({
+            ...prev,
+            fieldErrors: {
+              ...(prev.fieldErrors as unknown as Record<
+                keyof StandardSchemaV1.InferInput<TSchema>,
+                string
+              >),
+              [issue.path as never]: issue.message,
+            },
+          }))
+        })
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -321,42 +332,4 @@ export {
   FormControl,
   FormDescription,
   FormMessage,
-}
-
-const standardValidate = async <TSchema extends StandardSchemaV1>(
-  schema: TSchema,
-  input: StandardSchemaV1.InferInput<TSchema>,
-): Promise<
-  | {
-      success: false
-      data: null
-      fieldErrors: Record<keyof StandardSchemaV1.InferOutput<TSchema>, string>
-    }
-  | {
-      success: true
-      data: StandardSchemaV1.InferOutput<TSchema>
-      fieldErrors: null
-    }
-> => {
-  let result = schema['~standard'].validate(input)
-  if (result instanceof Promise) result = await result
-
-  if (result.issues)
-    return {
-      success: false,
-      data: null,
-      fieldErrors: result.issues.reduce<Record<string, string>>(
-        (acc, issue) => ({
-          ...acc,
-          [issue.path as never]: issue.message,
-        }),
-        {},
-      ) as Record<keyof StandardSchemaV1.InferOutput<TSchema>, string>,
-    }
-
-  return {
-    success: true,
-    data: result.value,
-    fieldErrors: null,
-  }
 }
