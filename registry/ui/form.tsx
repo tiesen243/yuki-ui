@@ -4,45 +4,6 @@ import { Slot } from '@radix-ui/react-slot'
 
 import { cn } from '@/lib/utils'
 
-interface FormStateContextValue {
-  isPending: boolean
-  data: unknown
-  error: { message?: string; fieldErrors: Record<string, string> }
-  handleBlur: (
-    event: React.FocusEvent<HTMLInputElement>,
-  ) => Promise<void> | void
-}
-const FormStateContext = React.createContext<FormStateContextValue | null>(null)
-function useFormStateContext() {
-  const context = React.useContext(FormStateContext)
-  if (!context)
-    throw new Error(
-      'useFormStateContext must be used within FormStateContext.Provider',
-    )
-  return context
-}
-
-interface FieldValueContextValue<TSchema extends StandardSchemaV1> {
-  getFieldValue: (name: keyof StandardSchemaV1.InferInput<TSchema>) => unknown
-  setFieldValue: (
-    name: keyof StandardSchemaV1.InferInput<TSchema>,
-    value: StandardSchemaV1.InferInput<TSchema>[keyof StandardSchemaV1.InferInput<TSchema>],
-  ) => void
-  handleBlur: (
-    event: React.FocusEvent<HTMLInputElement>,
-  ) => Promise<void> | void
-}
-const FieldValueContext =
-  React.createContext<FieldValueContextValue<StandardSchemaV1> | null>(null)
-function useFieldValueContext() {
-  const context = React.useContext(FieldValueContext)
-  if (!context)
-    throw new Error(
-      'useFieldValueContext must be used within FieldValueContext.Provider',
-    )
-  return context
-}
-
 function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
   schema: TSchema
   defaultValues: StandardSchemaV1.InferInput<TSchema>
@@ -172,6 +133,34 @@ function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
   }
 }
 
+interface FormStateContextValue {
+  isPending: boolean
+  data: unknown
+  error: { message?: string; fieldErrors: Record<string, string> }
+  handleBlur: (
+    event: React.FocusEvent<HTMLInputElement>,
+  ) => Promise<void> | void
+}
+
+const FormStateContext = React.createContext<FormStateContextValue>(
+  {} as FormStateContextValue,
+)
+
+interface FieldValueContextValue<TSchema extends StandardSchemaV1> {
+  getFieldValue: (name: keyof StandardSchemaV1.InferInput<TSchema>) => unknown
+  setFieldValue: (
+    name: keyof StandardSchemaV1.InferInput<TSchema>,
+    value: StandardSchemaV1.InferInput<TSchema>[keyof StandardSchemaV1.InferInput<TSchema>],
+  ) => void
+  handleBlur: (
+    event: React.FocusEvent<HTMLInputElement>,
+  ) => Promise<void> | void
+}
+
+const FieldValueContext = React.createContext<
+  FieldValueContextValue<StandardSchemaV1>
+>({} as FieldValueContextValue<StandardSchemaV1>)
+
 function Form<T extends StandardSchemaV1>({
   className,
   form,
@@ -216,6 +205,7 @@ interface FormFieldContextValue {
   formDescriptionId?: string
   formMessageId?: string
 }
+
 const FormFieldContext = React.createContext<FormFieldContextValue>(
   {} as FormFieldContextValue,
 )
@@ -234,8 +224,8 @@ function FormField({
     onBlur: (event: React.FocusEvent<HTMLInputElement>) => Promise<void> | void
   }) => React.ReactNode
 }) {
-  const fieldValueContext = useFieldValueContext()
-  const formStateContext = useFormStateContext()
+  const fieldValueContext = React.use(FieldValueContext)
+  const formStateContext = React.use(FormStateContext)
   const { getFieldValue, setFieldValue } = fieldValueContext
   const { handleBlur } = formStateContext
 
@@ -291,6 +281,7 @@ function FormField({
 interface FormItemContextValue {
   id: string
 }
+
 const FormItemContext = React.createContext<FormItemContextValue>(
   {} as FormItemContextValue,
 )
@@ -312,7 +303,7 @@ function FormItem({ className, ...props }: React.ComponentProps<'fieldset'>) {
 }
 
 function useFormField() {
-  const formState = useFormStateContext()
+  const formState = React.use(FormStateContext)
   const formField = React.use(FormFieldContext)
   const formItem = React.use(FormItemContext)
 
