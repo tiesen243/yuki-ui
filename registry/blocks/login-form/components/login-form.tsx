@@ -45,8 +45,14 @@ const LForm = () => {
       toast.error(e)
     },
     onSuccess: (data) => {
-      toast.success('Logged in successfully', {
-        description: <pre>{JSON.stringify(data, null, 2)}</pre>,
+      toast('Login successful', {
+        description: (
+          <pre className="bg-background mt-2 w-[calc(100svh-37rem)] overflow-x-auto rounded-md p-4 md:w-[320px]">
+            <code className="text-foreground">
+              {JSON.stringify(data, null, 2)}
+            </code>
+          </pre>
+        ),
       })
     },
   })

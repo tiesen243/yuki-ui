@@ -12,9 +12,15 @@ interface FormStateContextValue {
     event: React.FocusEvent<HTMLInputElement>,
   ) => Promise<void> | void
 }
-const FormStateContext = React.createContext<FormStateContextValue>(
-  {} as FormStateContextValue,
-)
+const FormStateContext = React.createContext<FormStateContextValue | null>(null)
+function useFormStateContext() {
+  const context = React.useContext(FormStateContext)
+  if (!context)
+    throw new Error(
+      'useFormStateContext must be used within FormStateContext.Provider',
+    )
+  return context
+}
 
 interface FieldValueContextValue<TSchema extends StandardSchemaV1> {
   getFieldValue: (name: keyof StandardSchemaV1.InferInput<TSchema>) => unknown
@@ -26,9 +32,16 @@ interface FieldValueContextValue<TSchema extends StandardSchemaV1> {
     event: React.FocusEvent<HTMLInputElement>,
   ) => Promise<void> | void
 }
-const FieldValueContext = React.createContext<
-  FieldValueContextValue<StandardSchemaV1>
->({} as FieldValueContextValue<StandardSchemaV1>)
+const FieldValueContext =
+  React.createContext<FieldValueContextValue<StandardSchemaV1> | null>(null)
+function useFieldValueContext() {
+  const context = React.useContext(FieldValueContext)
+  if (!context)
+    throw new Error(
+      'useFieldValueContext must be used within FieldValueContext.Provider',
+    )
+  return context
+}
 
 function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
   schema: TSchema
@@ -42,6 +55,7 @@ function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
   const { schema, defaultValues, submitFn, onSuccess, onError } = params
 
   const formValuesRef = React.useRef(defaultValues)
+  const prevValidatedValuesRef = React.useRef<Record<string, unknown>>({})
   const [isPending, startTransition] = React.useTransition()
   const [data, setData] = React.useState<TData | undefined>(undefined)
   const [error, setError] = React.useState<FormStateContextValue['error']>({
@@ -55,20 +69,26 @@ function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
       formValuesRef.current[name] as never,
     [],
   )
-  const setFieldValue = React.useMemo(
-    () =>
-      (
-        name: keyof StandardSchemaV1.InferInput<TSchema>,
-        value: StandardSchemaV1.InferInput<TSchema>[keyof StandardSchemaV1.InferInput<TSchema>],
-      ) => {
-        ;(formValuesRef.current as never)[name] = value as never
-      },
+  const setFieldValue = React.useCallback(
+    (
+      name: keyof StandardSchemaV1.InferInput<TSchema>,
+      value: StandardSchemaV1.InferInput<TSchema>[keyof StandardSchemaV1.InferInput<TSchema>],
+    ) => {
+      ;(formValuesRef.current as never)[name] = value as never
+    },
     [],
   )
 
-  const handleBlur = React.useMemo(
-    () => async (event: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = React.useCallback(
+    async (event: React.FocusEvent<HTMLInputElement>) => {
       const { name } = event.target
+      const currentValue =
+        formValuesRef.current[name as keyof typeof formValuesRef.current]
+
+      if (prevValidatedValuesRef.current[name] === currentValue) return
+
+      prevValidatedValuesRef.current[name] = currentValue
+
       const res = await schema['~standard'].validate(formValuesRef.current)
       if (res.issues)
         setError((prev) => ({
@@ -92,28 +112,28 @@ function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
     [schema],
   )
 
-  const handleSubmit = React.useMemo(
-    () => (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = React.useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
       event.stopPropagation()
 
-      startTransition(async () => {
-        const parsed = await schema['~standard'].validate(formValuesRef.current)
-        if (parsed.issues) {
-          setError({
-            message: 'Validation error',
-            fieldErrors: parsed.issues.reduce<Record<string, string>>(
-              (acc, issue) => ({
-                ...acc,
-                [issue.path as never]: issue.message,
-              }),
-              {},
-            ) as Record<keyof StandardSchemaV1.InferInput<TSchema>, string>,
-          })
-          if (onError) void onError('Validation error')
-          return
-        }
+      const parsed = await schema['~standard'].validate(formValuesRef.current)
+      if (parsed.issues) {
+        setError({
+          message: 'Validation error',
+          fieldErrors: parsed.issues.reduce<Record<string, string>>(
+            (acc, issue) => ({
+              ...acc,
+              [issue.path as never]: issue.message,
+            }),
+            {},
+          ) as Record<keyof StandardSchemaV1.InferInput<TSchema>, string>,
+        })
+        if (onError) void onError('Validation error')
+        return
+      }
 
+      startTransition(async () => {
         try {
           const data = await submitFn(parsed.value)
           setData(data)
@@ -133,13 +153,11 @@ function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
     [onError, onSuccess, schema, submitFn],
   )
 
-  const reset = React.useCallback(
-    () => () => {
-      formValuesRef.current = defaultValues
-      setError({ message: '', fieldErrors: {} })
-    },
-    [defaultValues],
-  )
+  const reset = React.useCallback(() => {
+    formValuesRef.current = defaultValues
+    prevValidatedValuesRef.current = {}
+    setError({ message: '', fieldErrors: {} })
+  }, [defaultValues])
 
   return {
     data,
@@ -179,16 +197,16 @@ function Form<T extends StandardSchemaV1>({
   )
 
   return (
-    <FormStateContext value={formStateContextValue}>
-      <FieldValueContext value={fieldValueContextValue}>
+    <FormStateContext.Provider value={formStateContextValue}>
+      <FieldValueContext.Provider value={fieldValueContextValue}>
         <form
           data-slot="form"
           className={cn('grid gap-4', className)}
           onSubmit={handleSubmit}
           {...props}
         />
-      </FieldValueContext>
-    </FormStateContext>
+      </FieldValueContext.Provider>
+    </FormStateContext.Provider>
   )
 }
 
@@ -198,7 +216,6 @@ interface FormFieldContextValue {
   formDescriptionId?: string
   formMessageId?: string
 }
-
 const FormFieldContext = React.createContext<FormFieldContextValue>(
   {} as FormFieldContextValue,
 )
@@ -217,8 +234,11 @@ function FormField({
     onBlur: (event: React.FocusEvent<HTMLInputElement>) => Promise<void> | void
   }) => React.ReactNode
 }) {
-  const { getFieldValue, setFieldValue } = React.use(FieldValueContext)
-  const { handleBlur } = React.use(FormStateContext)
+  const fieldValueContext = useFieldValueContext()
+  const formStateContext = useFormStateContext()
+  const { getFieldValue, setFieldValue } = fieldValueContext
+  const { handleBlur } = formStateContext
+
   const [localValue, setLocalValue] = React.useState(() =>
     getFieldValue(name as never),
   )
@@ -232,39 +252,40 @@ function FormField({
     }
   }, [getFieldValue, name])
 
-  const handleChange = React.useMemo(
-    () =>
-      (
-        event: React.ChangeEvent<HTMLInputElement> | string | number | boolean,
-      ) => {
-        let newValue: unknown
+  const handleChange = React.useCallback(
+    (
+      event: React.ChangeEvent<HTMLInputElement> | string | number | boolean,
+    ) => {
+      let newValue: unknown
 
-        if (event && typeof event === 'object' && 'target' in event) {
-          if (event.target.type === 'number')
-            newValue = event.target.valueAsNumber
-          else if (event.target.type === 'checkbox')
-            newValue = event.target.checked
-          else if (event.target.type === 'date')
-            newValue = event.target.valueAsDate
-          else newValue = event.target.value
-        } else newValue = event
+      if (event && typeof event === 'object' && 'target' in event) {
+        if (event.target.type === 'number')
+          newValue = event.target.valueAsNumber
+        else if (event.target.type === 'checkbox')
+          newValue = event.target.checked
+        else if (event.target.type === 'date')
+          newValue = event.target.valueAsDate
+        else newValue = event.target.value
+      } else newValue = event
 
-        setFieldValue(name as never, newValue as never)
-        setLocalValue(newValue as never)
-      },
+      setFieldValue(name as never, newValue as never)
+      setLocalValue(newValue as never)
+    },
     [name, setFieldValue],
   )
 
-  return (
-    <FormFieldContext value={{ name }}>
-      {render({
+  const renderedField = React.useMemo(
+    () =>
+      render({
         name,
         value: localValue as string,
         onChange: handleChange,
         onBlur: handleBlur,
-      })}
-    </FormFieldContext>
+      }),
+    [render, name, localValue, handleChange, handleBlur],
   )
+
+  return <FormFieldContext value={{ name }}>{renderedField}</FormFieldContext>
 }
 
 interface FormItemContextValue {
@@ -276,7 +297,7 @@ const FormItemContext = React.createContext<FormItemContextValue>(
 
 function FormItem({ className, ...props }: React.ComponentProps<'fieldset'>) {
   const id = React.useId()
-  const { isPending } = React.use(FormStateContext)
+  const { isPending } = useFormField()
 
   return (
     <FormItemContext value={{ id }}>
@@ -291,7 +312,7 @@ function FormItem({ className, ...props }: React.ComponentProps<'fieldset'>) {
 }
 
 function useFormField() {
-  const formState = React.use(FormStateContext)
+  const formState = useFormStateContext()
   const formField = React.use(FormFieldContext)
   const formItem = React.use(FormItemContext)
 
