@@ -23,6 +23,7 @@ function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
     message: '',
     fieldErrors: {},
   })
+  const [resetKey, setResetKey] = React.useState(0)
 
   const getFieldValues = React.useMemo(() => () => formValuesRef.current, [])
   const getFieldValue = React.useMemo(
@@ -118,6 +119,8 @@ function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
     formValuesRef.current = defaultValues
     prevValidatedValuesRef.current = {}
     setError({ message: '', fieldErrors: {} })
+    setData(undefined)
+    setResetKey((prev) => prev + 1)
   }, [defaultValues])
 
   return {
@@ -130,6 +133,7 @@ function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
     handleBlur,
     handleSubmit,
     reset,
+    resetKey,
   }
 }
 
@@ -140,6 +144,7 @@ interface FormStateContextValue {
   handleBlur: (
     event: React.FocusEvent<HTMLInputElement>,
   ) => Promise<void> | void
+  resetKey: number
 }
 
 const FormStateContext = React.createContext<FormStateContextValue>(
@@ -169,33 +174,41 @@ function Form<T extends StandardSchemaV1>({
   const {
     isPending,
     error,
+    data,
     getFieldValue,
     setFieldValue,
     handleBlur,
     handleSubmit,
+    resetKey,
   } = form
 
   const formStateContextValue = React.useMemo(
-    () => ({ isPending, data: form.data, error, handleBlur }),
-    [isPending, form.data, error, handleBlur],
+    () => ({
+      isPending,
+      data,
+      error,
+      handleBlur,
+      resetKey,
+    }),
+    [isPending, data, error, handleBlur, resetKey],
   )
 
   const fieldValueContextValue = React.useMemo(
     () => ({ getFieldValue, setFieldValue, handleBlur }),
-    [getFieldValue, handleBlur, setFieldValue],
+    [getFieldValue, setFieldValue, handleBlur],
   )
 
   return (
-    <FormStateContext.Provider value={formStateContextValue}>
-      <FieldValueContext.Provider value={fieldValueContextValue}>
+    <FormStateContext value={formStateContextValue}>
+      <FieldValueContext value={fieldValueContextValue}>
         <form
           data-slot="form"
           className={cn('grid gap-4', className)}
           onSubmit={handleSubmit}
           {...props}
         />
-      </FieldValueContext.Provider>
-    </FormStateContext.Provider>
+      </FieldValueContext>
+    </FormStateContext>
   )
 }
 
@@ -227,7 +240,7 @@ function FormField({
   const fieldValueContext = React.use(FieldValueContext)
   const formStateContext = React.use(FormStateContext)
   const { getFieldValue, setFieldValue } = fieldValueContext
-  const { handleBlur } = formStateContext
+  const { handleBlur, resetKey } = formStateContext
 
   const [localValue, setLocalValue] = React.useState(() =>
     getFieldValue(name as never),
@@ -236,11 +249,12 @@ function FormField({
   const prevNameRef = React.useRef(name)
 
   React.useEffect(() => {
-    if (prevNameRef.current !== name) {
+    const shouldUpdate = prevNameRef.current !== name || resetKey !== 0
+    if (shouldUpdate) {
       setLocalValue(getFieldValue(name as never))
       prevNameRef.current = name
     }
-  }, [getFieldValue, name])
+  }, [getFieldValue, name, resetKey])
 
   const handleChange = React.useCallback(
     (
@@ -258,8 +272,11 @@ function FormField({
         else newValue = event.target.value
       } else newValue = event
 
-      setFieldValue(name as never, newValue as never)
       setLocalValue(newValue as never)
+
+      requestAnimationFrame(() => {
+        setFieldValue(name as never, newValue as never)
+      })
     },
     [name, setFieldValue],
   )
@@ -308,16 +325,21 @@ function useFormField() {
   const formItem = React.use(FormItemContext)
 
   const { id } = formItem
+  const fieldName = formField.name
+  const fieldError = formState.error.fieldErrors[fieldName]
 
-  return {
-    id,
-    name: formField.name,
-    isPending: formState.isPending,
-    error: formState.error.fieldErrors[formField.name],
-    formItemId: `${id}-form-item`,
-    formDescriptionId: `${id}-form-item-description`,
-    formMessageId: `${id}-form-item-message`,
-  }
+  return React.useMemo(
+    () => ({
+      id,
+      name: fieldName,
+      isPending: formState.isPending,
+      error: fieldError,
+      formItemId: `${id}-form-item`,
+      formDescriptionId: `${id}-form-item-description`,
+      formMessageId: `${id}-form-item-message`,
+    }),
+    [id, fieldName, fieldError, formState.isPending],
+  )
 }
 
 function FormLabel({ className, ...props }: React.ComponentProps<'label'>) {
@@ -369,10 +391,14 @@ function FormDescription({ className, ...props }: React.ComponentProps<'p'>) {
   )
 }
 
-function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {
+function FormMessage({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<'p'>) {
   const { formMessageId, error } = useFormField()
 
-  const body = error ? String(error) : props.children
+  const body = error ? String(error) : children
 
   if (!body) return null
 
