@@ -3,6 +3,8 @@ title: Form
 description: Building your forms with Yuki UI and Standard Schema.
 ---
 
+import { InstallComponent } from '@/components/install-component'
+
 ## Features
 
 The `<Form>` component is a flexible and accessible form builder that allows you to create forms with minimal boilerplate. It is built on top of the [shadcn/ui](https://ui.shadcn.com/) component system and is fully customizable with CSS variables and Tailwind CSS.
@@ -85,41 +87,7 @@ const Example: React.FC = () => {
 <Step>
 ### Command
 
-<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
-
-<Tab value="npm">
-
-```bash
-npx shadcn@latest add https://yuki-ui.vercel.app/r/form.json
-```
-
-</Tab>
-
-<Tab value="yarn">
-
-```bash
-npx shadcn@latest add https://yuki-ui.vercel.app/r/form.json
-```
-
-</Tab>
-
-<Tab value="pnpm">
-
-```bash
-pnpm dlx shadcn@latest add https://yuki-ui.vercel.app/r/form.json
-```
-
-</Tab>
-
-<Tab value="bun">
-
-```bash
-bunx --bun add https://yuki-ui.vercel.app/r/form.json
-```
-
-</Tab>
-
-</Tabs>
+<InstallComponent name="form" />
 
 </Step>
 

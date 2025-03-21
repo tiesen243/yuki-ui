@@ -3,10 +3,12 @@ title: Typography
 description: Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed.
 ---
 
+import { InstallComponent } from '@/components/install-component'
+import { Typography } from '@/registry/ui/typography'
+
 <Tabs items={['Preview', 'Code']}>
 
 <Tab value='Preview'>
-import { Typography } from '@/registry/ui/typography'
 
 <Typography variant="h1">
   The quick brown fox jumps over the lazy dog
@@ -77,42 +79,7 @@ import { Typography } from '@/components/ui/typography'
 
 <Tab value='CLI'>
 
-<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
-
-<Tab value='npm'>
-
-```bash
-# npm
-npx shadcn@latest add https://yuki-ui.vercel.app/r/typography
-```
-
-</Tab>
-
-<Tab value='yarn'>
-
-```bash
-npx shadcn@latest add https://yuki-ui.vercel.app/r/typography
-```
-
-</Tab>
-
-<Tab value='pnpm'>
-
-```bash
-pnpm dlx shadcn@latest add https://yuki-ui.vercel.app/r/typography
-```
-
-</Tab>
-
-<Tab value='bun'>
-
-```bash
-bunx --bun shadcn@latest add https://yuki-ui.vercel.app/r/typography
-```
-
-</Tab>
-
-</Tabs>
+<InstallComponent name="typography" />
 
 </Tab>
 
