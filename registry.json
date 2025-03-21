@@ -4,15 +4,6 @@
   "homepage": "https://yuki-ui.vercel.app",
   "items": [
     {
-      "name": "avatar",
-      "type": "registry:ui",
-      "title": "Avatar",
-      "description": "A avatar component.",
-      "categories": ["media"],
-      "dependencies": ["@base-ui-components/react"],
-      "files": [{ "path": "registry/ui/avatar.tsx", "type": "registry:ui" }]
-    },
-    {
       "name": "typography",
       "type": "registry:ui",
       "title": "Typography",

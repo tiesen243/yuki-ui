@@ -18,7 +18,6 @@
     "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
-    "@base-ui-components/react": "^1.0.0-alpha.7",
     "@radix-ui/react-slot": "^1.1.2",
     "@standard-schema/spec": "^1.0.0",
     "@t3-oss/env-nextjs": "^0.12.0",
