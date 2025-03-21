@@ -1,0 +1,122 @@
+---
+title: Avatar
+description: The Avatar component is used to represent a user or entity in your application. It can be used to display a user's profile picture, initials, or a custom icon.
+---
+
+<Tabs items={['Preview', 'Code']}>
+
+<Tab value='Preview'>
+import { Avatar,AvatarImage,AvatarFallback } from '@/registry/ui/avatar'
+
+<Avatar>
+  <AvatarImage src="https://github.com/tiesen243.png" />
+  <AvatarFallback>T</AvatarFallback>
+</Avatar>
+</Tab>
+
+<Tab value='Code'>
+
+```tsx
+import { Avatar, AvatarFallback, AvatarImage } from '@/registry/ui/avatar'
+
+function Example() {
+  return (
+    <Avatar>
+      <AvatarImage src="https://github.com/tiesen243.png" />
+      <AvatarFallback>T</AvatarFallback>
+    </Avatar>
+  )
+}
+```
+
+</Tab>
+
+</Tabs>
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+
+<Tab value='CLI'>
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+
+<Tab value='npm'>
+
+```bash
+# npm
+npx shadcn@latest add https://yuki-ui.vercel.app/r/avatar
+```
+
+</Tab>
+
+<Tab value='yarn'>
+
+```bash
+npx shadcn@latest add https://yuki-ui.vercel.app/r/avatar
+```
+
+</Tab>
+
+<Tab value='pnpm'>
+
+```bash
+pnpm dlx shadcn@latest add https://yuki-ui.vercel.app/r/avatar
+```
+
+</Tab>
+
+<Tab value='bun'>
+
+```bash
+bunx --bun shadcn@latest add https://yuki-ui.vercel.app/r/avatar
+```
+
+</Tab>
+
+</Tabs>
+
+</Tab>
+
+<Tab value='Manual'>
+
+<Steps>
+<Step>
+
+### Install the following dependencies:
+
+```package-install
+@base-ui-components/react
+```
+
+</Step>
+
+<Step>
+### Copy and paste the following code into your project.
+
+<ComponentSource name="ui/avatar.tsx" />
+
+</Step>
+
+<Step>
+
+### Update the import paths to match your project setup.
+
+</Step>
+
+</Steps>
+</Tab>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { Typography } from '@/components/ui/typography'
+```
+
+```tsx
+<Typography variant="h1">
+  The quick brown fox jumps over the lazy dog
+</Typography>
+```

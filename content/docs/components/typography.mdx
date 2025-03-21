@@ -77,19 +77,42 @@ import { Typography } from '@/components/ui/typography'
 
 <Tab value='CLI'>
 
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+
+<Tab value='npm'>
+
 ```bash
 # npm
 npx shadcn@latest add https://yuki-ui.vercel.app/r/typography
+```
 
-# yarn
+</Tab>
+
+<Tab value='yarn'>
+
+```bash
 npx shadcn@latest add https://yuki-ui.vercel.app/r/typography
+```
 
-# pnpm
+</Tab>
+
+<Tab value='pnpm'>
+
+```bash
 pnpm dlx shadcn@latest add https://yuki-ui.vercel.app/r/typography
+```
 
-# bun
+</Tab>
+
+<Tab value='bun'>
+
+```bash
 bunx --bun shadcn@latest add https://yuki-ui.vercel.app/r/typography
 ```
+
+</Tab>
+
+</Tabs>
 
 </Tab>
 
