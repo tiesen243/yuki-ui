@@ -18,7 +18,6 @@
       "title": "Typography",
       "description": "A typography component.",
       "categories": ["text"],
-      "dependencies": ["@radix-ui/react-slot"],
       "files": [{ "path": "registry/ui/typography.tsx", "type": "registry:ui" }]
     },
     {
