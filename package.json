@@ -10,12 +10,12 @@
     "dev": "next dev --turbopack",
     "format": "prettier --check . --cache",
     "format:fix": "prettier --check . --write --cache",
+    "postinstall": "fumadocs-mdx",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "preview": "next build && next start",
     "start": "next start",
-    "typecheck": "tsc --noEmit",
-    "postinstall": "fumadocs-mdx"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.2",
