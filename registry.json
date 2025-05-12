@@ -113,11 +113,6 @@
           "target": "server/auth/index.ts"
         },
         {
-          "path": "registry/auth/types.ts.hbs",
-          "type": "registry:lib",
-          "target": "server/auth/types.ts"
-        },
-        {
           "path": "registry/auth/react.tsx.hbs",
           "type": "registry:hook",
           "target": "hooks/use-session.tsx"
