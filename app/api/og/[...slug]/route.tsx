@@ -19,7 +19,7 @@ export const GET = metadataImage.createAPI((page) => {
         }}
       />
     ),
-    primaryColor: '#78a9ff',
+    primaryColor: '#a96249',
     primaryTextColor: '#fafafa',
   })
 })
