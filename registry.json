@@ -102,6 +102,50 @@
           "target": "hooks/use-session.tsx"
         }
       ]
+    },
+    {
+      "name": "auth-discord",
+      "type": "registry:file",
+      "files": [
+        {
+          "path": "registry/auth/providers/discord.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/providers/discord.ts"
+        }
+      ]
+    },
+    {
+      "name": "auth-facebook",
+      "type": "registry:file",
+      "files": [
+        {
+          "path": "registry/auth/providers/facebook.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/providers/facebook.ts"
+        }
+      ]
+    },
+    {
+      "name": "auth-github",
+      "type": "registry:file",
+      "files": [
+        {
+          "path": "registry/auth/providers/github.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/providers/github.ts"
+        }
+      ]
+    },
+    {
+      "name": "auth-google",
+      "type": "registry:file",
+      "file": [
+        {
+          "path": "registry/auth/providers/google.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/providers/google.ts"
+        }
+      ]
     }
   ]
 }
