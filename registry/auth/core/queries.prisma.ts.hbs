@@ -1,0 +1,157 @@
+'use server'
+
+import { cookies } from 'next/headers'
+import { sha256 } from '@oslojs/crypto/sha2'
+import {
+  encodeBase32LowerCaseNoPadding,
+  encodeHexLowerCase,
+} from '@oslojs/encoding'
+
+import type { SessionResult } from '@/server/auth/types'
+import type { User } from '@/server/db'
+import {
+  SESSION_COOKIE_NAME,
+  SESSION_EXPIRATION,
+  SESSION_REFRESH_THRESHOLD,
+  TOKEN_BYTES,
+} from '@/server/auth/config'
+import { verify } from '@/server/auth/core/password'
+import { db } from '@/server/db'
+
+async function createSession(
+  userId: string,
+): Promise<{ sessionToken: string; expires: Date }> {
+  const bytes = new Uint8Array(TOKEN_BYTES)
+  crypto.getRandomValues(bytes)
+  const token = encodeBase32LowerCaseNoPadding(bytes)
+
+  const sessionToken = hashSHA256(token)
+  const expires = new Date(Date.now() + SESSION_EXPIRATION)
+
+  // Store the hashed token in the database
+  const session = await db.session.create({
+    data: { sessionToken, expires, userId },
+  })
+
+  if (!session) throw new Error('Failed to create session')
+
+  // Return the unhashed token to the client along with expiration
+  return { sessionToken: token, expires: session.expires }
+}
+
+async function validateToken(token: string): Promise<SessionResult> {
+  const sessionToken = hashSHA256(token)
+
+  // Lookup the session and associated user in the database
+  const result = await db.session.findUnique({
+    where: { sessionToken },
+    include: { user: true },
+  })
+
+  // Return early if session not found
+  if (!result) return { expires: new Date() }
+
+  const { user, ...session } = result
+  const now = Date.now()
+
+  // Check if session has expired
+  if (now > session.expires.getTime()) {
+    await db.session.delete({ where: { sessionToken } })
+    return { expires: new Date() }
+  }
+
+  // Refresh session if it's beyond the refresh threshold
+  if (now >= session.expires.getTime() - SESSION_REFRESH_THRESHOLD) {
+    const newExpires = new Date(Date.now() + SESSION_EXPIRATION)
+    await db.session.update({
+      where: { sessionToken },
+      data: { expires: newExpires },
+    })
+    session.expires = newExpires
+  }
+
+  return { user, expires: session.expires }
+}
+
+async function invalidateToken(token: string): Promise<void> {
+  await db.session.delete({
+    where: { sessionToken: hashSHA256(token) },
+  })
+}
+
+async function invalidateAllTokens(userId: string): Promise<void> {
+  await db.session.deleteMany({
+    where: { userId },
+  })
+}
+
+async function signIn(input: {
+  email: string
+  password: string
+}): Promise<{ sessionToken: string; expires: Date }> {
+  const user = await db.user.findUnique({
+    where: { email: input.email },
+    select: { id: true, password: true },
+  })
+
+  if (!user?.password || !verify(input.password, user.password))
+    throw new Error('Invalid email or password')
+
+  return createSession(user.id)
+}
+
+async function signOut(request?: Request): Promise<void> {
+  const nextCookies = await cookies()
+
+  const token =
+    nextCookies.get(SESSION_COOKIE_NAME)?.value ??
+    request?.headers.get('Authorization')?.replace('Bearer ', '') ??
+    ''
+
+  if (token) await invalidateToken(token)
+  if (!request) nextCookies.delete(SESSION_COOKIE_NAME)
+}
+
+async function getOrCreateUserFromOAuth(data: {
+  provider: string
+  providerAccountId: string
+  name: string
+  email: string
+  image: string
+}): Promise<User> {
+  const { provider, providerAccountId, email } = data
+
+  const existingAccount = await db.account.findFirst({
+    where: { provider, providerAccountId },
+    include: { user: true },
+  })
+  if (existingAccount?.user) return existingAccount.user
+
+  return await db.$transaction(async (tx) => {
+    let user = await tx.user.findUnique({ where: { email } })
+    if (!user) user = await tx.user.create({ data })
+
+    await tx.account.create({
+      data: {
+        provider: data.provider,
+        providerAccountId: data.providerAccountId,
+        userId: user.id,
+      },
+    })
+    return user
+  })
+}
+
+function hashSHA256(str: string): string {
+  return encodeHexLowerCase(sha256(new TextEncoder().encode(str)))
+}
+
+export {
+  signIn,
+  signOut,
+  getOrCreateUserFromOAuth,
+  createSession,
+  validateToken,
+  invalidateToken,
+  invalidateAllTokens,
+}

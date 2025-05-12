@@ -55,6 +55,27 @@
           "path": "registry/auth/core/queries.drizzle.ts.hbs",
           "type": "registry:lib",
           "target": "server/auth/core/queries.ts"
+        },
+        {
+          "path": "registry/auth/types.drizzle.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/types.ts"
+        }
+      ]
+    },
+    {
+      "name": "auth-with-prisma",
+      "type": "registry:file",
+      "files": [
+        {
+          "path": "registry/auth/core/queries.prisma.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/core/queries.ts"
+        },
+        {
+          "path": "registry/auth/types.prisma.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/types.ts"
         }
       ]
     },
