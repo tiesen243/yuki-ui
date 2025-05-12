@@ -2,8 +2,6 @@
 title: Installation
 ---
 
-import { InstallComponent } from '@/components/install-component'
-
 Follow these steps to install Yuki Auth in your project. The installation process may vary slightly depending on your framework and database choice.
 
 ## Getting Started
@@ -162,7 +160,7 @@ model Account {
 <Step>
 Export your database instance.
 
-```ts title="server/db.ts
+```ts title="server/db.ts"
 import { PrismaClient } from '../prisma/generated/client' // Replace with your actual path to the generated Prisma client
 
 const createPrismaClient = () => new PrismaClient()

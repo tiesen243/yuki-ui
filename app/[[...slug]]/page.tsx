@@ -12,6 +12,7 @@ import {
 } from 'fumadocs-ui/page'
 
 import { ComponentSource } from '@/components/component-source'
+import { InstallComponent } from '@/components/install-component'
 import { Button } from '@/components/ui/button'
 import { source } from '@/content'
 import { createMetadata } from '@/lib/metadata'
@@ -38,8 +39,9 @@ export default async function Page({
           components={{
             ...defaultMdxComponents,
             Button,
-            ComponentSource,
             Callout,
+            ComponentSource,
+            InstallComponent,
             Link,
             Step,
             Steps,
