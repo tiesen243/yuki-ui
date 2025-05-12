@@ -139,7 +139,7 @@
     {
       "name": "auth-google",
       "type": "registry:file",
-      "file": [
+      "files": [
         {
           "path": "registry/auth/providers/google.ts.hbs",
           "type": "registry:lib",
