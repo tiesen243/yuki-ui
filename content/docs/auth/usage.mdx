@@ -1,0 +1,213 @@
+---
+title: Usage
+---
+
+This guide explains how to implement authentication in your application using Yuki Auth. You'll learn how to protect routes, handle user sessions, implement authentication flows, and secure your API endpoints with CSRF protection.
+
+## Server-side
+
+Server-side authentication allows you to protect routes, handle user sessions, and implement authentication flows using server components and server actions. You can retrieve the current session with `auth()` and implement sign-in/sign-out functionality.
+
+```tsx
+import { cookies } from 'next/headers'
+
+import { env } from '@/env'
+import { auth, signIn, signOut } from '@/server/auth'
+
+export default async function SSRPage() {
+  const session = await auth()
+
+  return (
+    <main className="flex min-h-dvh flex-col items-center justify-center gap-4">
+      <div className="max-w-md overflow-hidden">
+        <pre>{JSON.stringify(session, null, 2)}</pre>
+      </div>
+
+      {session.user ? (
+        <form
+          action={async () => {
+            'use server'
+            await signOut()
+          }}
+        >
+          <button>Sign Out</button>
+        </form>
+      ) : (
+        <form
+          action={async (formData: FormData) => {
+            'use server'
+
+            const { sessionToken, expires } = await signIn({
+              email: formData.get('email') as string,
+              password: formData.get('password') as string,
+            })
+            ;(await cookies()).set('auth_token', sessionToken, {
+              path: '/',
+              httpOnly: true,
+              sameSite: 'lax' as const,
+              secure: env.NODE_ENV === 'production',
+              expires,
+            })
+          }}
+        >
+          <input name="email" type="email" placeholder="Email" />
+          <input name="password" type="password" placeholder="Password" />
+          <button>Sign In</button>
+        </form>
+      )}
+    </main>
+  )
+}
+```
+
+## Client-side
+
+Client-side authentication provides access to session data and authentication methods in client components. Start by adding the `SessionProvider` to your root layout, then use the `useSession` hook to access authentication state and functions in any client component.
+
+```tsx
+import { SessionProvider } from '@/hooks/use-session'
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          'flex min-h-dvh flex-col font-sans antialiased',
+          geistSans.variable,
+          geistMono.variable,
+        )}
+      >
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          <SessionProvider>{children}</SessionProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  )
+}
+```
+
+Now, you can use the `useSession` hook to access the session in your components.
+
+```tsx
+'use client'
+
+export const Auth: React.FC = () => {
+  const { session, status, signIn, signOut } = useSession()
+
+  if (status === 'loading') return <div>Loading...</div>
+  if (status === 'unauthenticated')
+    return (
+      <div>
+        <p>Not authenticated</p>
+        <Button onClick={() => signIn('discord')}>Sign In with Discord</Button>
+      </div>
+    )
+
+  return (
+    <div>
+      <div className="max-w-md overflow-x-auto">
+        <pre>{JSON.stringify(session, null, 2)}</pre>
+      </div>
+
+      <Button onClick={signOut}>Logout</Button>
+    </div>
+  )
+}
+```
+
+## Middleware
+
+Middleware authentication enables route protection, automatic redirects, and CSRF protection at the Edge. This allows you to control access to protected routes and enforce security policies before requests reach your application.
+
+<Callout type="warn">
+  To use authentication in middleware, your database must support Edge Runtime
+  (e.g., Neon PostgreSQL, Supabase, Vercel PostgreSQL). Standard database
+  connections may not work in Edge environments.
+</Callout>
+
+```ts title="middleware.ts"
+import type { MiddlewareConfig, NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
+
+import { auth } from '@/server/auth'
+
+const authRoutes: string[] = ['/login', '/register']
+const protectedRoutes: string[] = []
+
+export default async function middleware(req: NextRequest) {
+  const { pathname } = new URL(req.url)
+  const session = await auth(req)
+
+  if (req.method === 'GET') {
+    if (
+      !session.user &&
+      protectedRoutes.some((route) => pathname.startsWith(route))
+    ) {
+      const url = new URL('/login', req.url)
+      url.searchParams.set('redirect_to', pathname)
+      return NextResponse.redirect(url)
+    }
+
+    if (session.user && authRoutes.some((route) => pathname.startsWith(route)))
+      return NextResponse.redirect(new URL('/', req.url))
+
+    return NextResponse.next()
+  }
+
+  /**
+   * CSRF Protection Implementation
+   *
+   * Provides protection against Cross-Site Request Forgery by:
+   * - Comparing Origin header with Host header to verify same-origin requests
+   * - Blocking requests with missing or mismatched headers (403 Forbidden)
+   * - Bypassing protection for authenticated users
+   *
+   * Security approach:
+   * - Validates Origin as proper URL and matches against request host
+   * - Basic protection complemented by CSRF tokens and SameSite cookies
+   *
+   * Note: Consider additional validation for authenticated users or
+   * implementing request-specific CSRF tokens for enhanced security.
+   */
+
+  if (session.user) return NextResponse.next()
+
+  const originHeader = req.headers.get('Origin') ?? ''
+  const hostHeader =
+    req.headers.get('Host') ?? req.headers.get('X-Forwarded-Host') ?? ''
+  if (!originHeader || !hostHeader)
+    return new NextResponse(null, { status: 403 })
+
+  let originUrl: URL
+  try {
+    originUrl = new URL(originHeader)
+  } catch {
+    return new NextResponse(null, { status: 403 })
+  }
+  if (originUrl.host !== hostHeader)
+    return new NextResponse(null, { status: 403 })
+
+  return NextResponse.next()
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
+     */
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    /*
+     * Match all request paths starting with:
+     * - api (API routes)
+     */
+    '/api/(.*)',
+  ],
+} satisfies MiddlewareConfig
+```

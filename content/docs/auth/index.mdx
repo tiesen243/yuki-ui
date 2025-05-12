@@ -1,0 +1,40 @@
+---
+title: Yuki Auth
+description: Authentication from scratch helping you to build your own authentication system.
+---
+
+Yuki Auth is a flexible, lightweight authentication library inspired by [Lucia Auth](https://lucia-auth.com/), designed for developers who want to build secure, custom authentication systems from the ground up.
+
+## Overview
+
+Yuki Auth provides the core building blocks for authentication without dictating your database schema, user flows, or framework choices. It gives you:
+
+- **Framework Agnostic**: Works with any JavaScript framework
+- **Database Agnostic**: Adapters for popular databases with a simple interface to write your own
+- **Typed**: First-class TypeScript support
+- **Session Management**: Secure, stateful sessions
+- **Passwordless Support**: Email links, magic URLs, and more
+- **OAuth**: Simple integration with OAuth providers
+- **Minimal Dependencies**: Lightweight core with modular extensions
+
+## Key Concepts
+
+### Authentication vs. Authorization
+
+- **Authentication**: Verifying who the user is (Yuki Auth's primary focus)
+- **Authorization**: Determining what the user can do (built on top of Yuki Auth)
+
+### Sessions
+
+Yuki Auth uses secure, stateful sessions stored in your database:
+
+- Session tokens are sent as HTTP-only cookies
+- Each session is linked to a specific user
+- Sessions can be invalidated individually or globally for a user
+
+## References
+
+1. Learn more about building your own authentication system with [Lucia Auth](https://lucia-auth.com/)
+2. Example projects:
+   - [Next.js + Drizzle](https://github.com/tiesen243/yuki-auth-example)
+   - [Turborepo with Next.js + React Router + Expo app](https://github.com/tiesen243/create-yuki-turbo)

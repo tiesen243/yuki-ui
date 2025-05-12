@@ -33,7 +33,11 @@ const config = {
   importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
   importOrderTypeScriptVersion: '4.4.0',
 
-  overrides: [{ files: '*.mdx', options: { parser: 'mdx' } }],
+  overrides: [
+    { files: '*.mdx', options: { parser: 'mdx' } },
+    { files: '*.ts.hbs', options: { parser: 'typescript' } },
+    { files: '*.tsx.hbs', options: { parser: 'typescript' } },
+  ],
 }
 
 export default config

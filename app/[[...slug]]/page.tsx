@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'fumadocs-core/link'
+import { Callout } from 'fumadocs-ui/components/callout'
 import { Step, Steps } from 'fumadocs-ui/components/steps'
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
@@ -38,6 +39,7 @@ export default async function Page({
             ...defaultMdxComponents,
             Button,
             ComponentSource,
+            Callout,
             Link,
             Step,
             Steps,

@@ -2,7 +2,7 @@ import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock'
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs'
 
 export const InstallComponent: React.FC<{ name: string }> = ({ name }) => {
-  const code = `shadcn@latest add https://yuki-ui.vercel.app/r/${name}`
+  const code = `shadcn@latest add https://yuki-ui.vercel.app/r/${name}.json`
 
   return (
     <Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>

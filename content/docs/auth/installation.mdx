@@ -1,0 +1,216 @@
+---
+title: Installation
+---
+
+import { InstallComponent } from '@/components/install-component'
+
+Follow these steps to install Yuki Auth in your project. The installation process may vary slightly depending on your framework and database choice.
+
+## Getting Started
+
+To begin, you'll need to create your database schema to store authentication data.
+
+<Tabs items={['Drizzle', 'Prisma']}>
+
+<Tab value="Drizzle">
+
+<Steps>
+
+<Step>
+Create a new table in your database.
+
+```ts title="server/db/schema.ts"
+import { relations } from 'drizzle-orm'
+import { pgTable, primaryKey } from 'drizzle-orm/pg-core'
+
+export const users = pgTable('user', (t) => ({
+  id: t.uuid().primaryKey().defaultRandom().notNull(),
+  name: t.varchar({ length: 255 }).notNull(),
+  email: t.varchar({ length: 255 }).unique().notNull(),
+  password: t.varchar({ length: 255 }),
+  image: t.varchar({ length: 255 }).notNull(),
+  createdAt: t.timestamp().defaultNow().notNull(),
+  updatedAt: t
+    .timestamp({ mode: 'date', withTimezone: true })
+    .$onUpdateFn(() => new Date()),
+}))
+
+export const usersRelations = relations(users, ({ many }) => ({
+  accounts: many(accounts),
+  sessions: many(sessions),
+}))
+
+export const accounts = pgTable(
+  'account',
+  (t) => ({
+    provider: t.varchar({ length: 255 }).notNull(),
+    providerAccountId: t.varchar({ length: 255 }).notNull(),
+    userId: t
+      .uuid()
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+  }),
+  (account) => [
+    primaryKey({ columns: [account.provider, account.providerAccountId] }),
+  ],
+)
+
+export const accountsRelations = relations(accounts, ({ one }) => ({
+  user: one(users, { fields: [accounts.userId], references: [users.id] }),
+}))
+
+export const sessions = pgTable('session', (t) => ({
+  sessionToken: t.varchar({ length: 255 }).primaryKey().notNull(),
+  expires: t.timestamp({ mode: 'date', withTimezone: true }).notNull(),
+  userId: t
+    .uuid()
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+}))
+
+export const sessionRelations = relations(sessions, ({ one }) => ({
+  user: one(users, { fields: [sessions.userId], references: [users.id] }),
+}))
+```
+
+</Step>
+
+<Step>
+Export your database instance.
+
+```ts title="server/db/index.ts"
+import { drizzle } from 'drizzle-orm/neon-serverless'
+
+import { env } from '@/env'
+import * as schema from './schema'
+
+const createDrizzleClient = () =>
+  drizzle(env.DATABASE_URL, {
+    schema,
+    casing: 'snake_case',
+  })
+const globalForDrizzle = globalThis as unknown as {
+  db: ReturnType<typeof createDrizzleClient> | undefined
+}
+export const db = globalForDrizzle.db ?? createDrizzleClient()
+if (env.NODE_ENV !== 'production') globalForDrizzle.db = db
+```
+
+</Step>
+
+</Steps>
+
+</Tab>
+
+<Tab value="Prisma">
+
+<Steps>
+
+<Step>
+Create a new table in your database.
+
+```prisma title="prisma/schema.prisma"
+generator client {
+  provider        = "prisma-client"
+  output          = "./generated" // Change this to your desired output directory
+
+  moduleFormat        = "esm"
+  importFileExtension = ""
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  sessionToken String   @id @map("session_token") @db.VarChar(255)
+  expires      DateTime @db.Timestamptz(6)
+  userId       String   @map("user_id") @db.Uuid
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "session_user_id_user_id_fk")
+
+  @@map("session")
+}
+
+model User {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String   @db.VarChar(255)
+  email     String   @unique(map: "user_email_unique") @db.VarChar(255)
+  password  String?  @db.VarChar(255)
+  image     String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  account Account[]
+  session Session[]
+
+  @@map("user")
+}
+
+model Account {
+  provider          String @db.VarChar(255)
+  providerAccountId String @map("provider_account_id") @db.VarChar(255)
+  userId            String @map("user_id") @db.Uuid
+  user              User   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "account_user_id_user_id_fk")
+
+  @@id([provider, providerAccountId], map: "account_provider_provider_account_id_pk")
+  @@map("account")
+}
+```
+
+</Step>
+
+<Step>
+Export your database instance.
+
+```ts title="server/db.ts
+import { PrismaClient } from '../prisma/generated/client' // Replace with your actual path to the generated Prisma client
+
+const createPrismaClient = () => new PrismaClient()
+const globalForPrisma = globalThis as unknown as {
+  db: ReturnType<typeof createPrismaClient> | undefined
+}
+export const db = globalForPrisma.db ?? createPrismaClient()
+if (env.NODE_ENV !== 'production') globalForPrisma.db = db
+
+export * from '../prisma/generated/client'
+```
+
+</Step>
+
+</Steps>
+
+</Tab>
+
+</Tabs>
+
+## Install the Yuki Auth package.
+
+### Use the CLI
+
+First, install the database adapter for your database.
+
+<InstallComponent name="auth-with-{database}" />
+
+> Replace `{database}` with your database choice (e.g., `auth-with-drizzle`, `auth-with-prisma`).
+
+Then, Install the Yuki Auth package.
+
+<InstallComponent name="auth" />
+
+3. Install OAuth providers.
+
+<InstallComponent name="auth-{provider}" />
+
+Replace `{provider}` with the OAuth provider you want to use. Currently supported providers:
+
+- google
+- discord
+- github
+- facebook
+
+Example: `<InstallComponent name="auth-google" />`
+
+### Manual Installation
+
+You can copy and paste the code snippets below to install Yuki Auth manually. Alternatively, you can find all the necessary code in our GitHub repository: [https://github.com/tiesen243/yuki-ui/tree/main/registry/auth](https://github.com/tiesen243/yuki-ui/tree/main/registry/auth).

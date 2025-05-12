@@ -46,6 +46,62 @@
           "target": "app/login/page.tsx"
         }
       ]
+    },
+    {
+      "name": "auth-with-drizzle",
+      "type": "registry:file",
+      "files": [
+        {
+          "path": "registry/auth/core/queries.drizzle.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/core/queries.ts"
+        }
+      ]
+    },
+    {
+      "name": "auth",
+      "type": "registry:file",
+      "title": "Yuki Auth",
+      "description": "A simple authentication system from scratch.",
+      "categories": ["authentication"],
+      "dependencies": ["@oslojs/crypto", "@oslojs/encoding", "arctic"],
+      "files": [
+        {
+          "path": "registry/auth/core/index.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/core/index.ts"
+        },
+        {
+          "path": "registry/auth/core/password.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/core/password.ts"
+        },
+        {
+          "path": "registry/auth/providers/base.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/providers/base.ts"
+        },
+        {
+          "path": "registry/auth/config.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/config.ts"
+        },
+        {
+          "path": "registry/auth/index.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/index.ts"
+        },
+        {
+          "path": "registry/auth/types.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/types.ts"
+        },
+        {
+          "path": "registry/auth/react.tsx.hbs",
+          "type": "registry:hook",
+          "target": "hooks/use-session.tsx"
+        }
+      ]
     }
   ]
 }
