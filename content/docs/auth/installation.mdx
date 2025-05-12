@@ -227,6 +227,17 @@ GOOGLE_CLIENT_SECRET=your-client-secret
 
 </Callout>
 
+Final, add OAuth providers to your Auth configuration.
+
+```ts title="server/auth/config.ts"
+import type { AuthOptions } from '@/server/auth/types'
+import { GoogleProvider } from '@/server/auth/providers/google'
+
+export const authOptions = {
+  google: new GoogleProvider(),
+} satisfies AuthOptions
+```
+
 ### Manual Installation
 
-You can copy and paste the code snippets below to install Yuki Auth manually. Alternatively, you can find all the necessary code in our GitHub repository: [https://github.com/tiesen243/yuki-ui/tree/main/registry/auth](https://github.com/tiesen243/yuki-ui/tree/main/registry/auth).
+You can copy and paste the code snippets below to install Auth manually. Alternatively, you can find all the necessary code in our GitHub repository: [https://github.com/tiesen243/yuki-ui/tree/main/registry/auth](https://github.com/tiesen243/yuki-ui/tree/main/registry/auth).
