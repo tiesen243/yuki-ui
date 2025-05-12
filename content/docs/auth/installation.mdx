@@ -79,7 +79,7 @@ Export your database instance.
 ```ts title="server/db/index.ts"
 import { drizzle } from 'drizzle-orm/neon-serverless'
 
-import * as schema from './schema'
+import * as schema from '@/server/db/schema'
 
 const createDrizzleClient = () =>
   drizzle(process.env.DATABASE_URL, {
@@ -194,6 +194,18 @@ First, install the database adapter for your database.
 Then, Install the Yuki Auth package.
 
 <InstallComponent name="auth" />
+
+<Callout>
+
+By default, Yuki Auth uses sha3_512 from @oslojs/crypto for password hashing. You can also use other algorithms like:
+
+- bcrypt
+- Argon2
+- scrypt
+
+For enhanced security, consider using Argon2 or scrypt as they're designed specifically for password hashing with stronger resistance against brute-force attacks.
+
+</Callout>
 
 3. Install OAuth providers.
 
