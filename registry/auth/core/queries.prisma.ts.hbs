@@ -127,19 +127,17 @@ async function getOrCreateUserFromOAuth(data: {
   })
   if (existingAccount?.user) return existingAccount.user
 
-  return await db.$transaction(async (tx) => {
-    let user = await tx.user.findUnique({ where: { email } })
-    if (!user) user = await tx.user.create({ data })
+  let user = await db.user.findUnique({ where: { email } })
+  if (!user) user = await db.user.create({ data })
 
-    await tx.account.create({
-      data: {
-        provider: data.provider,
-        providerAccountId: data.providerAccountId,
-        userId: user.id,
-      },
-    })
-    return user
+  await db.account.create({
+    data: {
+      provider: data.provider,
+      providerAccountId: data.providerAccountId,
+      userId: user.id,
+    },
   })
+  return user
 }
 
 function hashSHA256(str: string): string {
