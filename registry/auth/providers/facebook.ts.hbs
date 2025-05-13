@@ -1,6 +1,6 @@
 import { Facebook } from 'arctic'
 
-import { BaseProvider } from './base'
+import { BaseProvider, ProviderUserData } from './base'
 
 interface FacebookUserResponse {
   id: string
@@ -19,11 +19,17 @@ export class FacebookProvider extends BaseProvider {
   protected readonly API_URL = 'https://graph.facebook.com/me'
   protected readonly DEFAULT_SCOPES = ['email', 'public_profile']
 
-  public createAuthorizationURL(state: string, _codeVerifier: string | null) {
+  public createAuthorizationURL(
+    state: string,
+    _codeVerifier: string | null,
+  ): URL {
     return this.provider.createAuthorizationURL(state, this.DEFAULT_SCOPES)
   }
 
-  public async fetchUserData(code: string, _codeVerifier: string | null) {
+  public async fetchUserData(
+    code: string,
+    _codeVerifier: string | null,
+  ): Promise<ProviderUserData> {
     const tokens = await this.provider.validateAuthorizationCode(code)
     const accessToken = tokens.accessToken()
 

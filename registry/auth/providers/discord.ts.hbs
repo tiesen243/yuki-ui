@@ -1,6 +1,6 @@
 import { Discord } from 'arctic'
 
-import { BaseProvider } from '@/server/auth/providers/base'
+import { BaseProvider, ProviderUserData } from '@/server/auth/providers/base'
 
 interface DiscordUserResponse {
   id: string
@@ -19,7 +19,10 @@ export class DiscordProvider extends BaseProvider {
   protected readonly API_URL = 'https://discord.com/api/users/@me'
   protected readonly DEFAULT_SCOPES = ['identify', 'email']
 
-  public createAuthorizationURL(state: string, codeVerifier: string | null) {
+  public createAuthorizationURL(
+    state: string,
+    codeVerifier: string | null,
+  ): URL {
     return this.provider.createAuthorizationURL(
       state,
       codeVerifier,
@@ -27,7 +30,10 @@ export class DiscordProvider extends BaseProvider {
     )
   }
 
-  public async fetchUserData(code: string, codeVerifier: string | null) {
+  public async fetchUserData(
+    code: string,
+    codeVerifier: string | null,
+  ): Promise<ProviderUserData> {
     const tokens = await this.provider.validateAuthorizationCode(
       code,
       codeVerifier,

@@ -1,6 +1,6 @@
 import { GitHub } from 'arctic'
 
-import { BaseProvider } from '@/server/auth/providers/base'
+import { BaseProvider, ProviderUserData } from '@/server/auth/providers/base'
 
 interface GithubUserResponse {
   id: string
@@ -19,11 +19,17 @@ export class GithubProvider extends BaseProvider {
   protected readonly API_URL = 'https://api.github.com/user'
   protected readonly DEFAULT_SCOPES = ['user:email']
 
-  public createAuthorizationURL(state: string, _codeVerifier: string | null) {
+  public createAuthorizationURL(
+    state: string,
+    _codeVerifier: string | null,
+  ): URL {
     return this.provider.createAuthorizationURL(state, this.DEFAULT_SCOPES)
   }
 
-  public async fetchUserData(code: string, _codeVerifier: string | null) {
+  public async fetchUserData(
+    code: string,
+    _codeVerifier: string | null,
+  ): Promise<ProviderUserData> {
     const tokens = await this.provider.validateAuthorizationCode(code)
     const accessToken = tokens.accessToken()
 

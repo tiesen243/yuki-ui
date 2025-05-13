@@ -1,5 +1,3 @@
-import { getBaseUrl } from '@/lib/utils'
-
 export interface ProviderUserData {
   accountId: string
   name: string
