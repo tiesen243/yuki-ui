@@ -1,6 +1,6 @@
+import type { User } from '@/generated/prisma'
 import type { authOptions } from '@/server/auth/config'
 import type { BaseProvider } from '@/server/auth/providers/base'
-import type { User } from '@/server/db'
 
 export type Providers = Record<string, BaseProvider>
 export type AuthOptions<T extends Providers = Providers> = T

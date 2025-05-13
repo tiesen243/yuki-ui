@@ -118,7 +118,7 @@
           "target": "app/api/auth/[[...auth]]/route.ts"
         },
         {
-          "path": "registry/auth/react.tsx.hbs",
+          "path": "registry/auth/use-session.tsx.hbs",
           "type": "registry:hook",
           "target": "hooks/use-session.tsx"
         }

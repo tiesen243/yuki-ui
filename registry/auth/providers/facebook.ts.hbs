@@ -2,6 +2,13 @@ import { Facebook } from 'arctic'
 
 import { BaseProvider } from './base'
 
+interface FacebookUserResponse {
+  id: string
+  name: string
+  email: string
+  picture: { data: { url: string } }
+}
+
 export class FacebookProvider extends BaseProvider {
   protected provider = new Facebook(
     process.env.FACEBOOK_CLIENT_ID ?? '',
@@ -16,15 +23,7 @@ export class FacebookProvider extends BaseProvider {
     return this.provider.createAuthorizationURL(state, this.DEFAULT_SCOPES)
   }
 
-  public async fetchUserData(
-    code: string,
-    _codeVerifier: string | null,
-  ): Promise<{
-    providerAccountId: string
-    name: string
-    email: string
-    image: string
-  }> {
+  public async fetchUserData(code: string, _codeVerifier: string | null) {
     const tokens = await this.provider.validateAuthorizationCode(code)
     const accessToken = tokens.accessToken()
 
@@ -38,19 +37,13 @@ export class FacebookProvider extends BaseProvider {
     }
 
     const user = (await response.json()) as FacebookUserResponse
+    console.log(user)
 
     return {
-      providerAccountId: user.id,
+      accountId: user.id,
       name: user.name,
       email: user.email,
       image: user.picture.data.url,
     }
   }
-}
-
-interface FacebookUserResponse {
-  id: string
-  name: string
-  email: string
-  picture: { data: { url: string } }
 }

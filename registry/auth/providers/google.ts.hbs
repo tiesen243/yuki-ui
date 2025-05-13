@@ -2,6 +2,13 @@ import { Google } from 'arctic'
 
 import { BaseProvider } from '@/server/auth/providers/base'
 
+interface GoogleUserResponse {
+  sub: string
+  email: string
+  name: string
+  picture: string
+}
+
 export class GoogleProvider extends BaseProvider {
   protected provider = new Google(
     process.env.GOOGLE_CLIENT_ID ?? '',
@@ -39,17 +46,10 @@ export class GoogleProvider extends BaseProvider {
     const user = (await response.json()) as GoogleUserResponse
 
     return {
-      providerAccountId: user.sub,
+      accountId: user.sub,
       name: user.name,
       email: user.email,
       image: user.picture,
     }
   }
-}
-
-interface GoogleUserResponse {
-  sub: string
-  email: string
-  name: string
-  picture: string
 }

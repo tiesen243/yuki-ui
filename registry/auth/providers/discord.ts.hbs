@@ -2,6 +2,13 @@ import { Discord } from 'arctic'
 
 import { BaseProvider } from '@/server/auth/providers/base'
 
+interface DiscordUserResponse {
+  id: string
+  username: string
+  email: string
+  avatar: string | null
+}
+
 export class DiscordProvider extends BaseProvider {
   protected provider = new Discord(
     process.env.DISCORD_CLIENT_ID ?? '',
@@ -43,17 +50,10 @@ export class DiscordProvider extends BaseProvider {
       : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.id) % 5}.png`
 
     return {
-      providerAccountId: user.id,
+      accountId: user.id,
       name: user.username,
       email: user.email,
       image: avatarUrl,
     }
   }
-}
-
-interface DiscordUserResponse {
-  id: string
-  username: string
-  email: string
-  avatar: string | null
 }

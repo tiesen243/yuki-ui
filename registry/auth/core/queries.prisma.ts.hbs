@@ -7,36 +7,34 @@ import {
   encodeHexLowerCase,
 } from '@oslojs/encoding'
 
-import type { SessionResult } from '@/server/auth/types'
-import type { User } from '@/server/db'
+import type { SessionResult } from '../types'
+import { User } from '@/generated/prisma'
+import { db } from '@/server/db'
 import {
   SESSION_COOKIE_NAME,
   SESSION_EXPIRATION,
   SESSION_REFRESH_THRESHOLD,
   TOKEN_BYTES,
-} from '@/server/auth/config'
-import { verify } from '@/server/auth/core/password'
-import { db } from '@/server/db'
+} from '../config'
+import { Password } from './password'
 
 async function createSession(
   userId: string,
 ): Promise<{ sessionToken: string; expires: Date }> {
   const bytes = new Uint8Array(TOKEN_BYTES)
   crypto.getRandomValues(bytes)
-  const token = encodeBase32LowerCaseNoPadding(bytes)
+  const sessionToken = encodeBase32LowerCaseNoPadding(bytes)
 
-  const sessionToken = hashSHA256(token)
+  const token = hashSHA256(sessionToken)
   const expires = new Date(Date.now() + SESSION_EXPIRATION)
 
   // Store the hashed token in the database
-  const session = await db.session.create({
-    data: { sessionToken, expires, userId },
-  })
+  const session = await db.session.create({ data: { token, expires, userId } })
 
   if (!session) throw new Error('Failed to create session')
 
   // Return the unhashed token to the client along with expiration
-  return { sessionToken: token, expires: session.expires }
+  return { sessionToken, expires: session.expires }
 }
 
 async function validateToken(token: string): Promise<SessionResult> {
@@ -44,7 +42,7 @@ async function validateToken(token: string): Promise<SessionResult> {
 
   // Lookup the session and associated user in the database
   const result = await db.session.findUnique({
-    where: { sessionToken },
+    where: { token: sessionToken },
     include: { user: true },
   })
 
@@ -56,7 +54,7 @@ async function validateToken(token: string): Promise<SessionResult> {
 
   // Check if session has expired
   if (now > session.expires.getTime()) {
-    await db.session.delete({ where: { sessionToken } })
+    await db.session.delete({ where: { token: sessionToken } })
     return { expires: new Date() }
   }
 
@@ -64,7 +62,7 @@ async function validateToken(token: string): Promise<SessionResult> {
   if (now >= session.expires.getTime() - SESSION_REFRESH_THRESHOLD) {
     const newExpires = new Date(Date.now() + SESSION_EXPIRATION)
     await db.session.update({
-      where: { sessionToken },
+      where: { token: sessionToken },
       data: { expires: newExpires },
     })
     session.expires = newExpires
@@ -74,15 +72,11 @@ async function validateToken(token: string): Promise<SessionResult> {
 }
 
 async function invalidateToken(token: string): Promise<void> {
-  await db.session.delete({
-    where: { sessionToken: hashSHA256(token) },
-  })
+  await db.session.delete({ where: { token: hashSHA256(token) } })
 }
 
 async function invalidateAllTokens(userId: string): Promise<void> {
-  await db.session.deleteMany({
-    where: { userId },
-  })
+  await db.session.deleteMany({ where: { userId } })
 }
 
 async function signIn(input: {
@@ -91,10 +85,14 @@ async function signIn(input: {
 }): Promise<{ sessionToken: string; expires: Date }> {
   const user = await db.user.findUnique({
     where: { email: input.email },
-    select: { id: true, password: true },
+    include: { accounts: { where: { provider: 'credentials' } } },
   })
 
-  if (!user?.password || !verify(input.password, user.password))
+  if (
+    !user ||
+    !user.accounts[0]?.password ||
+    !(await new Password().verify(user.accounts[0].password, input.password))
+  )
     throw new Error('Invalid email or password')
 
   return createSession(user.id)
@@ -102,42 +100,51 @@ async function signIn(input: {
 
 async function signOut(request?: Request): Promise<void> {
   const nextCookies = await cookies()
-
   const token =
     nextCookies.get(SESSION_COOKIE_NAME)?.value ??
     request?.headers.get('Authorization')?.replace('Bearer ', '') ??
     ''
 
-  if (token) await invalidateToken(token)
-  if (!request) nextCookies.delete(SESSION_COOKIE_NAME)
+  if (token) {
+    await invalidateToken(token)
+    if (!request) nextCookies.delete(SESSION_COOKIE_NAME)
+  }
 }
 
 async function getOrCreateUserFromOAuth(data: {
   provider: string
-  providerAccountId: string
+  accountId: string
   name: string
   email: string
   image: string
 }): Promise<User> {
-  const { provider, providerAccountId, email } = data
+  const { provider, accountId, email } = data
 
-  const existingAccount = await db.account.findFirst({
-    where: { provider, providerAccountId },
+  const existingAccount = await db.account.findUnique({
+    where: { provider_accountId: { provider, accountId } },
     include: { user: true },
   })
   if (existingAccount?.user) return existingAccount.user
 
-  let user = await db.user.findUnique({ where: { email } })
-  if (!user) user = await db.user.create({ data })
+  return await db.$transaction(async (tx) => {
+    const existingUser = await tx.user.findUnique({ where: { email } })
 
-  await db.account.create({
-    data: {
-      provider: data.provider,
-      providerAccountId: data.providerAccountId,
-      userId: user.id,
-    },
+    if (existingUser) {
+      await tx.account.create({
+        data: { provider, accountId, userId: existingUser.id },
+      })
+      return existingUser
+    }
+
+    const newUser = await tx.user.create({ data })
+    if (!newUser) throw new Error('Failed to create user')
+
+    await tx.account.create({
+      data: { provider, accountId, userId: newUser.id },
+    })
+
+    return newUser
   })
-  return user
 }
 
 function hashSHA256(str: string): string {
