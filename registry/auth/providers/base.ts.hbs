@@ -24,6 +24,12 @@ export abstract class BaseProvider {
   ): Promise<ProviderUserData>
 
   protected createCallbackUrl(provider: string) {
-    return `${getBaseUrl()}/api/auth/${provider}/callback`
+    let baseUrl = `http://localhost:${process.env.PORT ?? 3000}`
+    if (typeof window !== 'undefined') baseUrl = window.location.origin
+    if (process.env.VERCEL_PROJECT_PRODUCTION_URL)
+      baseUrl = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    if (process.env.VERCEL_URL) baseUrl = `https://${process.env.VERCEL_URL}`
+
+    return `${baseUrl}/api/auth/${provider}/callback`
   }
 }
