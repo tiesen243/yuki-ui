@@ -300,13 +300,7 @@ Then, Install the Yuki Auth package.
 
 <Callout>
 
-By default, Yuki Auth uses sha3_512 from @oslojs/crypto for password hashing. You can also use other algorithms like:
-
-- bcrypt
-- Argon2
-- scrypt
-
-For enhanced security, consider using Argon2 or scrypt as they're designed specifically for password hashing with stronger resistance against brute-force attacks.
+By default, Yuki Auth uses [`Scrypt`](https://github.com/pilcrowonpaper/oslo/blob/main/src/password/scrypt.ts) for hashing passwords. You can change the hashing algorithm by passing a different hashing function to the `hash` and `verify` methods in the `server/auth/core/password.ts` file.
 
 </Callout>
 
