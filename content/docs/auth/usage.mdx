@@ -212,3 +212,38 @@ export const config = {
   ],
 } satisfies MiddlewareConfig
 ```
+
+## React router
+
+### Set up
+
+```ts title="app/routes/api.auth.$.ts"
+import type { Route } from './+types/api.auth.$'
+import { handlers } from '@/server/auth'
+
+const { GET, POST } = handlers
+
+export const loader = ({ request }: Route.LoaderArgs) => GET(request)
+export const action = ({ request }: Route.ActionArgs) => POST(request)
+```
+
+### Get session
+
+```ts title="app/routes/index.tsx"
+import { auth } from '@/server/auth'
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  const session = await auth(request)
+  return { session }
+}
+
+export default function IndexPage({
+  loaderData: { session },
+}: Route.ComponentProps) {
+  return (
+    <main>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
+    </main>
+  )
+}
+```
