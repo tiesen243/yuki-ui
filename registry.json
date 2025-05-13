@@ -80,6 +80,22 @@
       ]
     },
     {
+      "name": "auth-with-mongoose",
+      "type": "registry:file",
+      "files": [
+        {
+          "path": "registry/auth/core/queries.mongoose.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/core/queries.ts"
+        },
+        {
+          "path": "registry/auth/types.mongoose.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/types.ts"
+        }
+      ]
+    },
+    {
       "name": "auth",
       "type": "registry:file",
       "title": "Yuki Auth",

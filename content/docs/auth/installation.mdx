@@ -9,7 +9,7 @@ Follow these steps to install Yuki Auth in your project. The installation proces
 
 To begin, you'll need to create your database schema to store authentication data.
 
-<Tabs items={['Drizzle', 'Prisma']}>
+<Tabs items={['Drizzle', 'Prisma', 'MongoDB']}>
 
 <Tab value="Drizzle">
 
@@ -180,6 +180,104 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.db = db
 
 </Tab>
 
+<Tab value="MongoDB">
+
+<Steps>
+<Step>
+Create a new table in your database.
+
+```ts title="server/db/schema.ts"
+import type { Document, Model } from 'mongoose'
+import { model, models, Schema, Types } from 'mongoose'
+
+export interface User extends Document {
+  _id: string
+  name: string
+  email: string
+  image: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+const userSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    image: { type: String, required: true },
+  },
+  { timestamps: { createdAt: true, updatedAt: true } },
+)
+
+export const user: Model<User> = models.user ?? model<User>('user', userSchema)
+
+export interface Account extends Document {
+  provider: string
+  accountId: string
+  password?: string
+  userId: string
+}
+
+const accountSchema = new Schema(
+  {
+    provider: { type: String, required: true },
+    accountId: { type: String, required: true },
+    password: { type: String, required: false },
+    userId: { type: Types.ObjectId, required: true, ref: 'user' },
+  },
+  { timestamps: false },
+)
+
+accountSchema.index({ provider: 1, account_id: 1 }, { unique: true })
+
+export const account: Model<Account> =
+  models.account ?? model<Account>('account', accountSchema)
+
+export interface Session extends Document {
+  token: string
+  expires: Date
+  userId: string
+}
+
+const sessionSchema = new Schema(
+  {
+    token: { type: String, required: true, unique: true },
+    expires: { type: Date, required: true },
+    userId: { type: Types.ObjectId, required: true, ref: 'user' },
+  },
+  { timestamps: false },
+)
+
+export const session: Model<Session> =
+  models.session ?? model<Session>('session', sessionSchema)
+```
+
+</Step>
+
+<Step>
+Export your database instance.
+
+```ts title="server/db/index.ts"
+import mongoose from 'mongoose'
+
+import * as schema from './schema'
+
+const createMongooseClient = () => {
+  void mongoose.connect(process.env.DATABASE_URL ?? '')
+  return schema
+}
+const globalForMongoose = globalThis as unknown as {
+  db: ReturnType<typeof createMongooseClient> | undefined
+}
+export const db = globalForMongoose.db ?? createMongooseClient()
+if (process.env.NODE_ENV !== 'production') globalForMongoose.db = db
+```
+
+</Step>
+
+</Steps>
+
+</Tab>
+
 </Tabs>
 
 ## Install the Yuki Auth package.
@@ -190,7 +288,7 @@ First, install the database adapter for your database.
 
 <InstallComponent name="auth-with-{database}" />
 
-> Replace `{database}` with your database choice (e.g., `auth-with-drizzle`, `auth-with-prisma`).
+> Replace `{database}` with your database choice (e.g., `auth-with-drizzle`).
 
 Then, Install the Yuki Auth package.
 
