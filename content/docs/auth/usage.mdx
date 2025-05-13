@@ -247,3 +247,89 @@ export default function IndexPage({
   )
 }
 ```
+
+## Server Authentication Actions
+
+### Sign up function example (Drizzle)
+
+```ts title="server/actions.ts"
+'use server'
+
+import { Password } from '@/server/auth/core/password'
+import { db } from '@/server/db'
+import { accounts, users } from '@/server/db/schema'
+
+export const signUp = async (input) => {
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.email, input.email),
+  })
+
+  if (user) throw new Error('User already exists')
+
+  const [newUser] = await db
+    .insert(users)
+    .values({
+      name: input.name,
+      email: input.email,
+      image: '',
+    })
+    .returning({ id: users.id })
+
+  await db
+    .insert(accounts)
+    .values({
+      provider: 'credentials',
+      accountId: newUser?.id ?? '',
+      userId: newUser?.id ?? '',
+      password: await new Password().hash(input.password),
+    })
+    .returning()
+
+  return true
+}
+```
+
+### Change password function example (Drizzle)
+
+```ts title="server/actions.ts"
+'use server'
+
+import { and, eq } from 'drizzle-orm'
+
+import { auth } from '@/server/auth'
+import { Password } from '@/server/auth/core/password'
+import { db } from '@/server/db'
+import { accounts } from '@/server/db/schema'
+
+export const changePassword = async (input) => {
+  const session = await auth()
+  const { currentPassword, newPassword } = input
+  const userId = session.user.id
+
+  const account = await db.query.accounts.findFirst({
+    where: (accounts, { and, eq }) =>
+      and(eq(accounts.provider, 'credentials'), eq(accounts.accountId, userId)),
+  })
+
+  if (
+    !account ||
+    !(await new Password().verify(
+      account.password ?? '',
+      currentPassword ?? '',
+    ))
+  )
+    throw new Error('Current password is incorrect')
+
+  await db
+    .update(accounts)
+    .set({ password: await password.hash(newPassword) })
+    .where(
+      and(
+        eq(accounts.provider, 'credentials'),
+        eq(accounts.accountId, account.accountId),
+      ),
+    )
+
+  return true
+}
+```
