@@ -1,9 +1,8 @@
 ---
 title: Installation
-description: Learn how to install Yuki Auth in your project, including database setup and package installation.
 ---
 
-Follow these steps to install Yuki Auth in your project. The installation process may vary slightly depending on your framework and database choice.
+Follow these steps to install Auth in your project. The installation process may vary slightly depending on your framework and database choice.
 
 ## Getting Started
 
@@ -313,7 +312,7 @@ if (process.env.NODE_ENV !== 'production') globalForMongoose.db = db
 
 </Tabs>
 
-## Install the Yuki Auth package.
+## Install the package.
 
 ### Use the CLI
 
@@ -327,13 +326,13 @@ Replace `{database}` with your database adapter. Currently supported databases:
 - prisma
 - mongoose
 
-Then, Install the Yuki Auth package.
+Then, install the package.
 
 <InstallComponent name="auth" />
 
 <Callout>
 
-By default, Yuki Auth uses [`Scrypt`](https://github.com/pilcrowonpaper/oslo/blob/main/src/password/scrypt.ts) for hashing passwords. You can change the hashing algorithm by passing a different hashing function to the `hash` and `verify` methods in the `server/auth/core/password.ts` file.
+By default, Auth uses [`Scrypt`](https://github.com/pilcrowonpaper/oslo/blob/main/src/password/scrypt.ts) for hashing passwords. You can change the hashing algorithm by passing a different hashing function to the `hash` and `verify` methods in the `server/auth/core/password.ts` file.
 
 </Callout>
 
@@ -392,7 +391,7 @@ You can find all the necessary code in our GitHub repository: [https://github.co
 
 ## Notes
 
-If you're implementing Yuki Auth in a framework other than Next.js, remember to remove any imports of `cookies` from `next/headers` and replace them with the appropriate cookie management solution for your framework.
+If you're implementing Auth in a framework other than Next.js, remember to remove any imports of `cookies` from `next/headers` and replace them with the appropriate cookie management solution for your framework.
 
 Example:
 

@@ -1,19 +1,18 @@
 ---
-title: Yuki Auth
-description: Authentication from scratch helping you to build your own authentication system.
+title: Auth
+description: A flexible, lightweight authentication library for building custom authentication systems.
 ---
 
-Yuki Auth is a flexible, lightweight authentication library inspired by [Lucia Auth](https://lucia-auth.com/), designed for developers who want to build secure, custom authentication systems from the ground up.
+Auth is a flexible, lightweight authentication library inspired by [Lucia Auth](https://lucia-auth.com/), designed for developers who want to build secure, custom authentication systems from the ground up.
 
 ## Overview
 
-Yuki Auth provides the core building blocks for authentication without dictating your database schema, user flows, or framework choices. It gives you:
+Auth provides the core building blocks for authentication without dictating your database schema, user flows, or framework choices. It gives you:
 
 - **Framework Agnostic**: Works with any JavaScript framework
 - **Database Agnostic**: Adapters for popular databases with a simple interface to write your own
 - **Typed**: First-class TypeScript support
 - **Session Management**: Secure, stateful sessions
-- **Passwordless Support**: Email links, magic URLs, and more
 - **OAuth**: Simple integration with OAuth providers
 - **Minimal Dependencies**: Lightweight core with modular extensions
 
@@ -21,12 +20,12 @@ Yuki Auth provides the core building blocks for authentication without dictating
 
 ### Authentication vs. Authorization
 
-- **Authentication**: Verifying who the user is (Yuki Auth's primary focus)
-- **Authorization**: Determining what the user can do (built on top of Yuki Auth)
+- **Authentication**: Verifying who the user is (Auth's primary focus)
+- **Authorization**: Determining what the user can do (built on top of Auth)
 
 ### Sessions
 
-Yuki Auth uses secure, stateful sessions stored in your database:
+Auth uses secure, stateful sessions stored in your database:
 
 - Session tokens are sent as HTTP-only cookies
 - Each session is linked to a specific user

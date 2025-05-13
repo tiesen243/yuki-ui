@@ -1,9 +1,8 @@
 ---
 title: Usage
-description: Learn how to implement authentication in your application using Yuki Auth. This guide covers server-side and client-side authentication, middleware, and CSRF protection.
 ---
 
-This guide explains how to implement authentication in your application using Yuki Auth. You'll learn how to protect routes, handle user sessions, implement authentication flows, and secure your API endpoints with CSRF protection.
+This guide covers authentication implementation across your application. Learn how to handle authentication server-side with server components, client-side with React hooks, using middleware for route protection, and integrating with React Router. Includes practical code examples for common authentication workflows.
 
 ## Server-side
 
@@ -12,7 +11,6 @@ Server-side authentication allows you to protect routes, handle user sessions, a
 ```tsx
 import { cookies } from 'next/headers'
 
-import { env } from '@/env'
 import { auth, signIn, signOut } from '@/server/auth'
 
 export default async function SSRPage() {
@@ -46,7 +44,7 @@ export default async function SSRPage() {
               path: '/',
               httpOnly: true,
               sameSite: 'lax' as const,
-              secure: env.NODE_ENV === 'production',
+              secure: process.env.NODE_ENV === 'production',
               expires,
             })
           }}
