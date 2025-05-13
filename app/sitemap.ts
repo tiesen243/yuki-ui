@@ -9,21 +9,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const url = (path: string): string => new URL(path, getBaseUrl()).toString()
   const docs = source.getPages()
 
-  return [
-    {
-      url: url('/'),
-      changeFrequency: 'monthly',
-      priority: 1,
-    },
-    ...(await Promise.all(
-      docs.map(
-        (page) =>
-          ({
-            url: url(page.url),
-            changeFrequency: 'weekly',
-            priority: 0.8,
-          }) as MetadataRoute.Sitemap[number],
-      ),
-    )),
-  ]
+  return await Promise.all(
+    docs.map(
+      (page) =>
+        ({
+          url: url(page.url),
+          changeFrequency: 'weekly',
+          priority: page.url === '/' ? 1 : 0.8,
+        }) as MetadataRoute.Sitemap[number],
+    ),
+  )
 }
