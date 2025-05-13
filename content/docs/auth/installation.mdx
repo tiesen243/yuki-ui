@@ -402,10 +402,10 @@ Example:
 ```ts title="server/auth/core/cookies.ts"
 async function getCookie(
   key: string,
-  req?: Request,
+  request?: Request,
 ): Promise<string | undefined> {
-  if (req) {
-    const cookies = req.headers
+  if (request) {
+    const cookies = request.headers
       .get('cookie')
       ?.split(';')
       .reduce((acc: Record<string, string>, cookie) => {
@@ -426,9 +426,9 @@ async function getCookie(
 ```ts title="server/auth/core/cookies.ts"
 async function getCookie(
   key: string,
-  req: Request, // make sure the `req` parameter is required
+  request: Request, // make sure the `req` parameter is required
 ): Promise<string | undefined> {
-  const cookies = req.headers
+  const cookies = request.headers
     .get('cookie')
     ?.split(';')
     .reduce((acc: Record<string, string>, cookie) => {
