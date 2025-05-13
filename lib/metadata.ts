@@ -26,7 +26,6 @@ export const createMetadata = (
     title: override.title ? `${override.title} | ${siteName}` : siteName,
     description: override.description ?? description,
     alternates: { canonical: url },
-    facebook: { appId: '523462826928110' },
     manifest: `${getBaseUrl()}/manifest.webmanifest`,
     keywords: [
       'react',
