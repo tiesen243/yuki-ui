@@ -1,6 +1,5 @@
 'use server'
 
-import { cookies } from 'next/headers'
 import { sha256 } from '@oslojs/crypto/sha2'
 import {
   encodeBase32LowerCaseNoPadding,
@@ -8,16 +7,17 @@ import {
 } from '@oslojs/encoding'
 import { and, eq } from 'drizzle-orm'
 
-import type { SessionResult } from '../types'
-import { db } from '@/server/db'
-import { accounts, sessions, users } from '@/server/db/schema'
+import type { SessionResult } from '@/server/auth/types'
 import {
   SESSION_COOKIE_NAME,
   SESSION_EXPIRATION,
   SESSION_REFRESH_THRESHOLD,
   TOKEN_BYTES,
-} from '../config'
-import { Password } from './password'
+} from '@/server/auth/config'
+import { deleteCookie, getCookie } from '@/server/auth/core/cookies'
+import { Password } from '@/server/auth/core/password'
+import { db } from '@/server/db'
+import { accounts, sessions, users } from '@/server/db/schema'
 
 async function createSession(
   userId: string,
@@ -106,15 +106,14 @@ async function signIn(input: {
 }
 
 async function signOut(request?: Request): Promise<void> {
-  const nextCookies = await cookies()
   const token =
-    nextCookies.get(SESSION_COOKIE_NAME)?.value ??
+    (await getCookie(SESSION_COOKIE_NAME, request)) ??
     request?.headers.get('Authorization')?.replace('Bearer ', '') ??
     ''
 
   if (token) {
     await invalidateToken(token)
-    if (!request) nextCookies.delete(SESSION_COOKIE_NAME)
+    if (!request) await deleteCookie(SESSION_COOKIE_NAME)
   }
 }
 

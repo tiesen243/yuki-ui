@@ -88,6 +88,11 @@
       "dependencies": ["@oslojs/crypto", "@oslojs/encoding", "arctic"],
       "files": [
         {
+          "path": "registry/auth/core/cookies.ts.hbs",
+          "type": "registry:lib",
+          "target": "server/auth/core/cookies.ts"
+        },
+        {
           "path": "registry/auth/core/index.ts.hbs",
           "type": "registry:lib",
           "target": "server/auth/core/index.ts"
