@@ -53,12 +53,12 @@
       "files": [
         {
           "path": "registry/auth/core/queries.drizzle.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/core/queries.ts"
         },
         {
           "path": "registry/auth/types.drizzle.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/types.ts"
         }
       ]
@@ -69,12 +69,12 @@
       "files": [
         {
           "path": "registry/auth/core/queries.prisma.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/core/queries.ts"
         },
         {
           "path": "registry/auth/types.prisma.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/types.ts"
         }
       ]
@@ -85,12 +85,12 @@
       "files": [
         {
           "path": "registry/auth/core/queries.mongoose.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/core/queries.ts"
         },
         {
           "path": "registry/auth/types.mongoose.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/types.ts"
         }
       ]
@@ -104,33 +104,38 @@
       "dependencies": ["@oslojs/crypto", "@oslojs/encoding", "arctic"],
       "files": [
         {
+          "path": "registry/auth/core/password/scrypt.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/core/password/scrypt.ts"
+        },
+        {
+          "path": "registry/auth/core/password/index.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/core/password/index.ts"
+        },
+        {
           "path": "registry/auth/core/cookies.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/core/cookies.ts"
         },
         {
           "path": "registry/auth/core/index.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/core/index.ts"
         },
         {
-          "path": "registry/auth/core/password.ts.hbs",
-          "type": "registry:lib",
-          "target": "server/auth/core/password.ts"
-        },
-        {
           "path": "registry/auth/providers/base.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/providers/base.ts"
         },
         {
           "path": "registry/auth/config.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/config.ts"
         },
         {
           "path": "registry/auth/index.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/index.ts"
         },
         {
@@ -151,7 +156,7 @@
       "files": [
         {
           "path": "registry/auth/providers/discord.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/providers/discord.ts"
         }
       ]
@@ -162,7 +167,7 @@
       "files": [
         {
           "path": "registry/auth/providers/facebook.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/providers/facebook.ts"
         }
       ]
@@ -173,7 +178,7 @@
       "files": [
         {
           "path": "registry/auth/providers/github.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/providers/github.ts"
         }
       ]
@@ -184,7 +189,7 @@
       "files": [
         {
           "path": "registry/auth/providers/google.ts.hbs",
-          "type": "registry:lib",
+          "type": "registry:file",
           "target": "server/auth/providers/google.ts"
         }
       ]
