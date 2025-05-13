@@ -23,7 +23,7 @@ Install necessary packages.
 ```
 
 ```package-install
-dizzle-orm
+drizzle-orm
 ```
 
 </Step>
@@ -362,6 +362,9 @@ Remember to add environment variables for your OAuth providers. You can find the
 {PROVIDER}_CLIENT_ID=your-client-id
 {PROVIDER}_CLIENT_SECRET=your-client-secret
 ```
+
+And set callback URLs in your OAuth provider settings: `{base url}/api/auth/{provider}/callback`.
+For example, if your base URL is `https://example.com`, the callback URL for Google would be `https://example.com/api/auth/google/callback`.
 
 Example for Google:
 
