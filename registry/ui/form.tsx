@@ -303,16 +303,14 @@ const FormItemContext = React.createContext<FormItemContextValue>(
   {} as FormItemContextValue,
 )
 
-function FormItem({ className, ...props }: React.ComponentProps<'fieldset'>) {
+function FormItem({ className, ...props }: React.ComponentProps<'div'>) {
   const id = React.useId()
-  const { isPending } = useFormField()
 
   return (
     <FormItemContext value={{ id }}>
-      <fieldset
+      <div
         data-slot="form-item"
         className={cn('grid gap-1', className)}
-        disabled={isPending}
         {...props}
       />
     </FormItemContext>
@@ -368,6 +366,7 @@ function FormControl(props: React.ComponentProps<'input'>) {
     <Slot
       data-slot="form-control"
       id={formItemId}
+      disabled={isPending}
       aria-describedby={
         !error ? formDescriptionId : `${formDescriptionId} ${formMessageId}`
       }
