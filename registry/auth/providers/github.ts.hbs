@@ -1,6 +1,7 @@
 import { GitHub } from 'arctic'
 
-import { BaseProvider, ProviderUserData } from '@/server/auth/providers/base'
+import type { ProviderUserData } from '@/server/auth/providers/base'
+import { BaseProvider } from '@/server/auth/providers/base'
 
 interface GithubUserResponse {
   id: string
