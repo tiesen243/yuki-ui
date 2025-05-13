@@ -36,7 +36,6 @@ export class GithubProvider extends BaseProvider {
     }
 
     const user = (await response.json()) as GithubUserResponse
-    console.log(user)
 
     return {
       accountId: user.id,

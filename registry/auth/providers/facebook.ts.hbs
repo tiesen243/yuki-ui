@@ -37,7 +37,6 @@ export class FacebookProvider extends BaseProvider {
     }
 
     const user = (await response.json()) as FacebookUserResponse
-    console.log(user)
 
     return {
       accountId: user.id,
