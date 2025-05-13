@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
 /* 
@@ -75,7 +76,9 @@ export async function scrypt(
     for (let i = 0; i < blockSize32; i++) V[i] = B32[Pi + i] // V[0] = B[i]
     for (let i = 0, pos = 0; i < N - 1; i++) {
       BlockMix(V, pos, V, (pos += blockSize32), r) // V[i] = BlockMix(V[i-1]);
-      await new Promise<void>((r) => r()) // await next tick
+      await new Promise<void>((r) => {
+        r()
+      }) // await next tick
     }
     BlockMix(V, (N - 1) * blockSize32, B32, Pi, r) // Process last element
     for (let i = 0; i < N; i++) {
@@ -86,7 +89,9 @@ export async function scrypt(
       }
 
       BlockMix(tmp, 0, B32, Pi, r) // B = BlockMix(B ^ V[j])
-      await new Promise<void>((r) => r()) // await next tick
+      await new Promise<void>((r) => {
+        r()
+      }) // await next tick
     }
   }
   const res = await pbkdf2(password, B, { c: 1, dkLen })
