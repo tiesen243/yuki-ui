@@ -1,5 +1,6 @@
 ---
 title: Installation
+description: Learn how to install Yuki Auth in your project, including database setup and package installation.
 ---
 
 Follow these steps to install Yuki Auth in your project. The installation process may vary slightly depending on your framework and database choice.
@@ -255,3 +256,57 @@ export const authOptions = {
 ### Manual Installation
 
 You can find all the necessary code in our GitHub repository: [https://github.com/tiesen243/yuki-ui/tree/main/registry/auth](https://github.com/tiesen243/yuki-ui/tree/main/registry/auth).
+
+## Notes
+
+If you're implementing Yuki Auth in a framework other than Next.js, remember to remove any imports of `cookies` from `next/headers` and replace them with the appropriate cookie management solution for your framework.
+
+Example:
+
+<Tabs items={['Next.js', 'Other frameworks']}>
+<Tab value="Next.js">
+
+```ts title="server/auth/core/cookies.ts"
+async function getCookie(
+  key: string,
+  req?: Request,
+): Promise<string | undefined> {
+  if (req) {
+    const cookies = req.headers
+      .get('cookie')
+      ?.split(';')
+      .reduce((acc: Record<string, string>, cookie) => {
+        const [key, value] = cookie.trim().split('=')
+        if (key && value) acc[key] = decodeURIComponent(value)
+        return acc
+      }, {})
+    return cookies?.[key]
+  }
+  return (await cookies()).get(key)?.value
+}
+```
+
+</Tab>
+
+<Tab value="Other frameworks">
+
+```ts title="server/auth/core/cookies.ts"
+async function getCookie(
+  key: string,
+  req: Request, // make sure the `req` parameter is required
+): Promise<string | undefined> {
+  const cookies = req.headers
+    .get('cookie')
+    ?.split(';')
+    .reduce((acc: Record<string, string>, cookie) => {
+      const [key, value] = cookie.trim().split('=')
+      if (key && value) acc[key] = decodeURIComponent(value)
+      return acc
+    }, {})
+  return cookies?.[key]
+}
+```
+
+</Tab>
+
+</Tabs>
