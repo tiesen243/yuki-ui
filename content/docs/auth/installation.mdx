@@ -16,6 +16,19 @@ To begin, you'll need to create your database schema to store authentication dat
 <Steps>
 
 <Step>
+Install necessary packages.
+
+```package-install
+-d drizzle-kit
+```
+
+```package-install
+dizzle-orm
+```
+
+</Step>
+
+<Step>
 Create a new table in your database.
 
 ```ts title="server/db/schema.ts"
@@ -105,6 +118,19 @@ if (process.env.NODE_ENV !== 'production') globalForDrizzle.db = db
 <Steps>
 
 <Step>
+Install necessary packages.
+
+```package-install
+-d prisma
+```
+
+```package-install
+@prisma/client
+```
+
+</Step>
+
+<Step>
 Create a new table in your database.
 
 ```prisma title="prisma/schema.prisma"
@@ -183,6 +209,14 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.db = db
 <Tab value="Mongoose">
 
 <Steps>
+<Step>
+Install necessary packages.
+
+```package-install
+mongoose
+```
+
+</Step>
 <Step>
 Create a new table in your database.
 
