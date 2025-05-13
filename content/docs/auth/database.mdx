@@ -28,7 +28,7 @@ Table name: `account`
 | ---------- | ------------ | --- | ---------------------------------------------------- |
 | provider   | varchar(255) | PK  | Provider name (e.g. 'google', 'github')              |
 | account_id | varchar(255) | PK  | Unique identifier for the account                    |
-| userId     | uuid         | FK  | Foreign key referencing the user table               |
+| user_id    | uuid         | FK  | Foreign key referencing the user table               |
 | password   | varchar(255) | `?` | Hashed password (only used with credential provider) |
 
 ### Session
