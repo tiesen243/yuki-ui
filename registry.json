@@ -204,6 +204,17 @@
           "target": "server/auth/providers/google.ts"
         }
       ]
+    },
+    {
+      "name": "auth-notion",
+      "type": "registry:file",
+      "files": [
+        {
+          "path": "registry/auth/providers/notion.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/providers/notion.ts"
+        }
+      ]
     }
   ]
 }

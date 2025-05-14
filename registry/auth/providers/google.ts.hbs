@@ -5,8 +5,8 @@ import { BaseProvider } from '@/server/auth/providers/base'
 
 interface GoogleUserResponse {
   sub: string
-  name: string
   email: string
+  name: string
   picture: string
 }
 
