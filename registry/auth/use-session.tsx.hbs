@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react'
-import { useRouter } from 'next/navigation'
 
 import type { Options, SessionResult } from '@/server/auth/types'
 
@@ -39,7 +38,6 @@ function SessionProvider({
   children,
   session: initialSession,
 }: Readonly<{ children: React.ReactNode; session?: SessionResult }>) {
-  const router = useRouter()
   const hasInitialSession = initialSession !== undefined
   const [isLoading, setIsLoading] = React.useState(!hasInitialSession)
   const [session, setSession] = React.useState<SessionResult>(() => {
@@ -104,13 +102,11 @@ function SessionProvider({
       } else {
         const redirectTo =
           (args[0] as { redirectTo?: string } | undefined)?.redirectTo ?? '/'
-        router.push(
-          `/api/auth/sign-in/${provider}?redirect_to=${encodeURIComponent(redirectTo)}`,
-        )
+        window.location.href = `/api/auth/sign-in/${provider}?redirect_to=${encodeURIComponent(redirectTo)}`
         return undefined as TProvider extends 'credentials' ? string : undefined
       }
     },
-    [fetchSession, router],
+    [fetchSession],
   )
 
   const signOut = React.useCallback(async (): Promise<void> => {
@@ -118,12 +114,12 @@ function SessionProvider({
       const res = await fetch('/api/auth/sign-out', { method: 'POST' })
       if (!res.ok) throw new Error(`Sign out failed: ${res.status}`)
       setSession({ expires: new Date() })
-      router.refresh()
+      window.location.reload()
     } catch (error) {
       console.error('Error signing out:', error)
       throw error
     }
-  }, [router])
+  }, [])
 
   // Fetch initial session if not provided
   React.useEffect(() => {
