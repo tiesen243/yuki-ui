@@ -4,7 +4,13 @@ import { Slot } from '@radix-ui/react-slot'
 
 import { cn } from '@/lib/utils'
 
-function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
+function useForm<TSchema extends StandardSchemaV1, TData = unknown>({
+  schema,
+  defaultValues,
+  submitFn,
+  onSuccess,
+  onError,
+}: {
   schema: TSchema
   defaultValues: StandardSchemaV1.InferInput<TSchema>
   submitFn: (
@@ -13,56 +19,53 @@ function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
   onSuccess?: (data: TData) => Promise<void> | void
   onError?: (error: string) => Promise<void> | void
 }) {
-  const { schema, defaultValues, submitFn, onSuccess, onError } = params
-
   const formValuesRef = React.useRef(defaultValues)
   const prevValidatedValuesRef = React.useRef<Record<string, unknown>>({})
+
   const [isPending, startTransition] = React.useTransition()
-  const [data, setData] = React.useState<TData | undefined>(undefined)
+  const [data, setData] = React.useState<TData>()
   const [error, setError] = React.useState<FormStateContextValue['error']>({
     message: '',
     fieldErrors: {},
   })
   const [resetKey, setResetKey] = React.useState(0)
 
-  const getFieldValues = React.useMemo(() => () => formValuesRef.current, [])
-  const getFieldValue = React.useMemo(
-    () => (name: keyof StandardSchemaV1.InferInput<TSchema>) =>
-      formValuesRef.current[name] as never,
+  const getFieldValues = React.useCallback(() => formValuesRef.current, [])
+
+  const getFieldValue = React.useCallback(
+    (name: keyof StandardSchemaV1.InferInput<TSchema>) =>
+      formValuesRef.current[name],
     [],
   )
+
   const setFieldValue = React.useCallback(
     (
       name: keyof StandardSchemaV1.InferInput<TSchema>,
-      value: StandardSchemaV1.InferInput<TSchema>[keyof StandardSchemaV1.InferInput<TSchema>],
+      value: StandardSchemaV1.InferInput<TSchema>[typeof name],
     ) => {
-      ;(formValuesRef.current as never)[name] = value as never
+      formValuesRef.current[name] = value
     },
     [],
   )
 
-  const handleBlur = React.useCallback(
-    async (event: React.FocusEvent<HTMLInputElement>) => {
-      const { name } = event.target
-      const currentValue =
-        formValuesRef.current[name as keyof typeof formValuesRef.current]
-
+  const validateField = React.useCallback(
+    async (name: string, currentValue: unknown) => {
       if (prevValidatedValuesRef.current[name] === currentValue) return
 
       prevValidatedValuesRef.current[name] = currentValue
-
       const res = await schema['~standard'].validate(formValuesRef.current)
-      if (res.issues)
+
+      if (res.issues) {
+        const issueMessage =
+          res.issues.find((issue) => issue.path?.[0] === name)?.message ?? ''
         setError((prev) => ({
           message: 'Validation error',
           fieldErrors: {
             ...prev.fieldErrors,
-            [name]:
-              res.issues.find((issue) => issue.path?.at(0) === name)?.message ??
-              '',
+            [name]: issueMessage,
           },
         }))
-      else
+      } else {
         setError((prev) => ({
           message: '',
           fieldErrors: {
@@ -70,8 +73,19 @@ function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
             [name]: '',
           },
         }))
+      }
     },
     [schema],
+  )
+
+  const handleBlur = React.useCallback(
+    (event: React.FocusEvent<HTMLInputElement>) => {
+      const name = event.target.name
+      const value =
+        formValuesRef.current[name as keyof typeof formValuesRef.current]
+      void validateField(name, value)
+    },
+    [validateField],
   )
 
   const handleSubmit = React.useCallback(
@@ -80,39 +94,38 @@ function useForm<TSchema extends StandardSchemaV1, TData = unknown>(params: {
       event.stopPropagation()
 
       const parsed = await schema['~standard'].validate(formValuesRef.current)
+
       if (parsed.issues) {
-        setError({
-          message: 'Validation error',
-          fieldErrors: parsed.issues.reduce<Record<string, string>>(
-            (acc, issue) => ({
-              ...acc,
-              [issue.path as never]: issue.message,
-            }),
-            {},
-          ) as Record<keyof StandardSchemaV1.InferInput<TSchema>, string>,
-        })
+        const fieldErrors = parsed.issues.reduce<Record<string, string>>(
+          (acc, issue) => {
+            if (issue.path) acc[issue.path[0] as string] = issue.message
+            return acc
+          },
+          {},
+        )
+
+        setError({ message: 'Validation error', fieldErrors })
+
         if (onError) void onError('Validation error')
         return
       }
 
-      startTransition(async () => {
-        try {
-          const data = await submitFn(parsed.value)
-          setData(data)
-          if (onSuccess) await onSuccess(data)
-          setError({ message: '', fieldErrors: {} })
-        } catch (error) {
-          let message: string
-          if (error instanceof Error) message = error.message
-          else message = 'Unknown error'
-
-          setData(undefined)
-          setError({ message, fieldErrors: {} })
-          if (onError) await onError(message)
-        }
+      startTransition(() => {
+        Promise.resolve(submitFn(parsed.value))
+          .then((result) => {
+            setData(result)
+            setError({ message: '', fieldErrors: {} })
+            if (onSuccess) return onSuccess(result)
+          })
+          .catch((err: unknown) => {
+            const message = err instanceof Error ? err.message : 'Unknown error'
+            setData(undefined)
+            setError({ message, fieldErrors: {} })
+            if (onError) return onError(message)
+          })
       })
     },
-    [onError, onSuccess, schema, submitFn],
+    [schema, submitFn, onSuccess, onError],
   )
 
   const reset = React.useCallback(() => {

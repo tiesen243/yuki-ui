@@ -2,6 +2,7 @@ import '@/app/globals.css'
 
 import { Geist } from 'next/font/google'
 import Image from 'next/image'
+import Script from 'next/script'
 import { DocsLayout } from 'fumadocs-ui/layouts/docs'
 import { RootProvider } from 'fumadocs-ui/provider'
 
@@ -21,6 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script src="https://unpkg.com/react-scan/dist/auto.global.js" />
+      </head>
       <body
         className={cn('min-h-dvh font-sans antialiased', geistSans.variable)}
       >
