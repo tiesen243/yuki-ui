@@ -1,6 +1,6 @@
 import '@/app/globals.css'
 
-import { Geist } from 'next/font/google'
+import { Geist, Geist_Mono } from 'next/font/google'
 import Image from 'next/image'
 import Script from 'next/script'
 import { DocsLayout } from 'fumadocs-ui/layouts/docs'
@@ -15,6 +15,11 @@ const geistSans = Geist({
   subsets: ['latin'],
 })
 
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+})
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -26,7 +31,11 @@ export default function RootLayout({
         <Script src="https://unpkg.com/react-scan/dist/auto.global.js" />
       </head>
       <body
-        className={cn('min-h-dvh font-sans antialiased', geistSans.variable)}
+        className={cn(
+          'flex min-h-dvh flex-col font-sans antialiased',
+          geistSans.variable,
+          geistMono.variable,
+        )}
       >
         <RootProvider>
           <DocsLayout
