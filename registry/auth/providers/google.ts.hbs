@@ -5,8 +5,8 @@ import { BaseProvider } from '@/server/auth/providers/base'
 
 interface GoogleUserResponse {
   sub: string
-  email: string
   name: string
+  email: string
   picture: string
 }
 
@@ -54,8 +54,8 @@ export class GoogleProvider extends BaseProvider {
 
     return {
       accountId: user.sub,
-      name: user.name,
       email: user.email,
+      name: user.name,
       image: user.picture,
     }
   }

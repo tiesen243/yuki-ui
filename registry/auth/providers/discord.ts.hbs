@@ -5,9 +5,9 @@ import { BaseProvider } from '@/server/auth/providers/base'
 
 interface DiscordUserResponse {
   id: string
-  username: string
   email: string
-  avatar: string | null
+  username: string
+  avatar: string
 }
 
 export class DiscordProvider extends BaseProvider {
@@ -52,15 +52,11 @@ export class DiscordProvider extends BaseProvider {
 
     const user = (await response.json()) as DiscordUserResponse
 
-    const avatarUrl = user.avatar
-      ? `https://cdn.discordapp.com/embed/avatars/${user.id}/${user.avatar}.png`
-      : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.id) % 5}.png`
-
     return {
       accountId: user.id,
-      name: user.username,
       email: user.email,
-      image: avatarUrl,
+      name: user.username,
+      image: `https://cdn.discordapp.com/embed/avatars/${user.id}/${user.avatar}.png`,
     }
   }
 }

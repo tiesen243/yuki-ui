@@ -173,6 +173,17 @@
       ]
     },
     {
+      "name": "auth-figma",
+      "type": "registry:file",
+      "files": [
+        {
+          "path": "registry/auth/providers/figma.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/providers/figma.ts"
+        }
+      ]
+    },
+    {
       "name": "auth-github",
       "type": "registry:file",
       "files": [

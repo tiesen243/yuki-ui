@@ -1,24 +1,24 @@
-import { GitHub } from 'arctic'
+import { Figma } from 'arctic'
 
 import type { ProviderUserData } from '@/server/auth/providers/base'
 import { BaseProvider } from '@/server/auth/providers/base'
 
-interface GithubUserResponse {
+interface FigmaUserResponse {
   id: string
   email: string
-  name: string
-  avatar_url: string
+  handle: string
+  img_url: string
 }
 
-export class GithubProvider extends BaseProvider {
-  protected provider = new GitHub(
-    process.env.GITHUB_CLIENT_ID ?? '',
-    process.env.GITHUB_CLIENT_SECRET ?? '',
-    this.createCallbackUrl('github'),
+export class FigmaProvider extends BaseProvider {
+  protected provider = new Figma(
+    process.env.FIGMA_CLIENT_ID ?? '',
+    process.env.FIGMA_CLIENT_SECRET ?? '',
+    this.createCallbackUrl('figma'),
   )
 
-  protected readonly API_URL = 'https://api.github.com/user'
-  protected readonly DEFAULT_SCOPES = ['user:email']
+  protected readonly API_URL = 'https://api.figma.com/v1/me'
+  protected readonly DEFAULT_SCOPES = ['current_user:read']
 
   public createAuthorizationURL(
     state: string,
@@ -39,16 +39,16 @@ export class GithubProvider extends BaseProvider {
     })
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unknown error')
-      throw new Error(`Github API error (${response.status}): ${errorText}`)
+      throw new Error(`Google API error (${response.status}): ${errorText}`)
     }
 
-    const user = (await response.json()) as GithubUserResponse
+    const user = (await response.json()) as FigmaUserResponse
 
     return {
       accountId: user.id,
       email: user.email,
-      name: user.name,
-      image: user.avatar_url,
+      name: user.handle,
+      image: user.img_url,
     }
   }
 }

@@ -1,7 +1,7 @@
 export interface ProviderUserData {
   accountId: string
-  name: string
   email: string
+  name: string
   image: string
 }
 
