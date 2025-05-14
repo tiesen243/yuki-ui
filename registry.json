@@ -215,6 +215,17 @@
           "target": "server/auth/providers/notion.ts"
         }
       ]
+    },
+    {
+      "name": "auth-spotify",
+      "type": "registry:file",
+      "files": [
+        {
+          "path": "registry/auth/providers/spotify.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/providers/spotify.ts"
+        }
+      ]
     }
   ]
 }
