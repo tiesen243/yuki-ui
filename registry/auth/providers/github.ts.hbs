@@ -18,13 +18,13 @@ export class GithubProvider extends BaseProvider {
   )
 
   protected readonly API_URL = 'https://api.github.com/user'
-  protected readonly DEFAULT_SCOPES = ['user:email']
+  protected readonly SCOPES = ['user:email']
 
   public createAuthorizationURL(
     state: string,
     _codeVerifier: string | null,
   ): URL {
-    return this.provider.createAuthorizationURL(state, this.DEFAULT_SCOPES)
+    return this.provider.createAuthorizationURL(state, this.SCOPES)
   }
 
   public async fetchUserData(

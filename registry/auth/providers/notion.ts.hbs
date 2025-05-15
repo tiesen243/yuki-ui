@@ -24,7 +24,7 @@ export class NotionProvider extends BaseProvider {
   )
 
   protected readonly API_URL = 'https://api.notion.com/v1/users/me'
-  protected readonly DEFAULT_SCOPES = []
+  protected readonly SCOPES = []
 
   public createAuthorizationURL(
     state: string,

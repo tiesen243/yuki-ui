@@ -18,7 +18,7 @@ export class SpotifyProvider extends BaseProvider {
   )
 
   protected readonly API_URL = 'https://api.spotify.com/v1/me'
-  protected readonly DEFAULT_SCOPES = ['user-read-email', 'user-read-private']
+  protected readonly SCOPES = ['user-read-email', 'user-read-private']
 
   public createAuthorizationURL(
     state: string,
@@ -27,7 +27,7 @@ export class SpotifyProvider extends BaseProvider {
     return this.provider.createAuthorizationURL(
       state,
       codeVerifier,
-      this.DEFAULT_SCOPES,
+      this.SCOPES,
     )
   }
 

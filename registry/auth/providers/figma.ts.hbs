@@ -18,13 +18,13 @@ export class FigmaProvider extends BaseProvider {
   )
 
   protected readonly API_URL = 'https://api.figma.com/v1/me'
-  protected readonly DEFAULT_SCOPES = ['current_user:read']
+  protected readonly SCOPES = ['current_user:read']
 
   public createAuthorizationURL(
     state: string,
     _codeVerifier: string | null,
   ): URL {
-    return this.provider.createAuthorizationURL(state, this.DEFAULT_SCOPES)
+    return this.provider.createAuthorizationURL(state, this.SCOPES)
   }
 
   public async fetchUserData(

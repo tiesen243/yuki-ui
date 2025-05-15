@@ -18,13 +18,13 @@ export class FacebookProvider extends BaseProvider {
   )
 
   protected readonly API_URL = 'https://graph.facebook.com/me'
-  protected readonly DEFAULT_SCOPES = ['email', 'public_profile']
+  protected readonly SCOPES = ['email', 'public_profile']
 
   public createAuthorizationURL(
     state: string,
     _codeVerifier: string | null,
   ): URL {
-    return this.provider.createAuthorizationURL(state, this.DEFAULT_SCOPES)
+    return this.provider.createAuthorizationURL(state, this.SCOPES)
   }
 
   public async fetchUserData(
