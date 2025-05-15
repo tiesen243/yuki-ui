@@ -92,7 +92,7 @@ Export your database instance.
 ```ts title="server/db/index.ts"
 import { drizzle } from 'drizzle-orm/node-postgres'
 
-import * as schema from './schema'
+import * as schema from '@/serer/db/schema'
 
 const createDrizzleClient = () =>
   drizzle(process.env.DATABASE_URL, {
@@ -291,7 +291,7 @@ Export your database instance.
 ```ts title="server/db/index.ts"
 import mongoose from 'mongoose'
 
-import * as schema from './schema'
+import * as schema from '@/server/db/schema'
 
 const createMongooseClient = () => {
   void mongoose.connect(process.env.DATABASE_URL ?? '')

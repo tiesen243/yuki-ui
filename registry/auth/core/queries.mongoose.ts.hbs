@@ -10,6 +10,7 @@ import type { SessionResult } from '@/server/auth/types'
 import { authOptions } from '@/server/auth/config'
 import { Password } from '@/server/auth/core/password'
 import { db } from '@/server/db'
+import { User } from '@/server/db/schema'
 
 async function createSession(
   userId: string,
@@ -95,7 +96,7 @@ async function getOrCreateUserFromOAuth(data: {
   name: string
   email: string
   image: string
-}): Promise<any> {
+}): Promise<User> {
   const { provider, accountId, email } = data
 
   const existingAccount = await db.account.findOne({ provider, accountId })
