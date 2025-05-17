@@ -1,6 +1,6 @@
 import type { authOptions } from '@/server/auth/config'
 import type { BaseProvider } from '@/server/auth/providers/base'
-import { users } from '@/server/db/schema'
+import type { users } from '@/server/db/schema'
 
 export type Providers = Record<string, BaseProvider>
 
