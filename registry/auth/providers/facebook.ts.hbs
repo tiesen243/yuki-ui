@@ -1,7 +1,7 @@
 import { Facebook } from 'arctic'
 
 import type { ProviderUserData } from '@/server/auth/providers/base'
-import { BaseProvider } from './base'
+import { BaseProvider } from '@/server/auth/providers/base'
 
 interface FacebookUserResponse {
   id: string
