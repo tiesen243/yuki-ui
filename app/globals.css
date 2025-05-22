@@ -3,7 +3,7 @@
 @import 'fumadocs-ui/css/neutral.css';
 @source '../node_modules/fumadocs-ui/dist/**/*.js';
 
-@plugin 'tailwindcss-animate';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 

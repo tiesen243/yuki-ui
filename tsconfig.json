@@ -1,41 +1,40 @@
 {
   "compilerOptions": {
-    /* Base Options: */
+    /** Base Options */
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "target": "es2022",
+    "target": "ES2022",
     "allowJs": true,
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-
-    /* Strictness */
+    /** Keep TSC performant in monorepos */
+    "incremental": true,
+    "disableSourceOfProjectReferenceRedirect": true,
+    "tsBuildInfoFile": "${configDir}/.cache/tsbuildinfo.json",
+    /** Strictness */
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
-
-    /* Bundled projects */
-    "lib": ["dom", "dom.iterable", "ES2022"],
-    "noEmit": true,
-    "module": "ESNext",
+    /** Transpile using Bundler (not tsc) */
     "moduleResolution": "Bundler",
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    /** Next.js Options */
     "jsx": "preserve",
+    "lib": ["ES2022", "dom", "dom.iterable"],
+    "module": "esnext",
     "plugins": [{ "name": "next" }],
-    "incremental": true,
-
-    /* Path Aliases */
+    /** Path Aliases */
     "baseUrl": ".",
-    "paths": { "@/*": ["./*"] }
+    "paths": {
+      "@/.source": ["./.source/index.ts"],
+      "@/*": ["./*"]
+    }
   },
-  "include": [
-    "next-env.d.ts",
-    "*.config.js",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.cjs",
-    "**/*.js",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": ["node_modules"]
+  "include": [".", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".source"]
 }
