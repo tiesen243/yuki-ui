@@ -4,6 +4,11 @@ import { createMetadataImage } from 'fumadocs-core/server'
 import { source } from '@/content'
 import { getBaseUrl } from '@/lib/utils'
 
+export const metadataImage = createMetadataImage({
+  imageRoute: '/api/og',
+  source,
+}) as ReturnType<typeof createMetadataImage>
+
 export const createMetadata = (
   slug: string[],
   override: Omit<Metadata, 'title'> & { title?: string },
@@ -15,10 +20,7 @@ export const createMetadata = (
     ? `${getBaseUrl()}${override.openGraph.url}`
     : getBaseUrl()
 
-  return createMetadataImage({
-    imageRoute: '/api/og',
-    source,
-  }).withImage(slug, {
+  return metadataImage.withImage(slug, {
     ...override,
     metadataBase: new URL(getBaseUrl()),
     title: override.title ? `${override.title} | ${siteName}` : siteName,
