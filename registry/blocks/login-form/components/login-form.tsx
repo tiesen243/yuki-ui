@@ -12,13 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import {
-  FormControl,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useForm,
-} from '@/registry/ui/form'
+import { useForm } from '@/registry/ui/form'
 
 export const LoginForm = () => {
   const form = useForm({
@@ -69,23 +63,23 @@ export const LoginForm = () => {
         >
           <form.Field
             name="email"
-            render={(field) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
+            render={({ field, meta }) => (
+              <div id={meta.id} className="grid gap-1">
+                <form.Label>Email</form.Label>
+                <form.Control>
                   <Input type="email" placeholder="yuki@gmail.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+                </form.Control>
+                <form.Message />
+              </div>
             )}
           />
 
           <form.Field
             name="password"
-            render={(field) => (
-              <FormItem>
+            render={({ field, meta }) => (
+              <div id={meta.id} className="grid gap-1">
                 <div className="flex items-center justify-between">
-                  <FormLabel>Password</FormLabel>
+                  <form.Label>Password</form.Label>
                   <a
                     href="https://youtube.com/watch?v=dQw4w9WgXcQ"
                     className="text-sm underline-offset-4 hover:underline"
@@ -93,17 +87,15 @@ export const LoginForm = () => {
                     Forgot your password?
                   </a>
                 </div>
-                <FormControl>
+                <form.Control>
                   <Input type="password" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+                </form.Control>
+                <form.Message />
+              </div>
             )}
           />
 
-          <Button disabled={form.isPending} type="submit">
-            Login
-          </Button>
+          <Button disabled={form.state.isPending}>Login</Button>
         </form>
       </CardContent>
 

@@ -17,7 +17,7 @@
       "title": "Form",
       "description": "A form component using standard schema to validate. It support Arktype, Valibot, and Zod.",
       "categories": ["form"],
-      "dependencies": ["@radix-ui/react-slot", "@standard-schema/spec"],
+      "dependencies": ["@radix-ui/react-slot"],
       "registryDependencies": ["button", "input"],
       "files": [{ "path": "registry/ui/form.tsx", "type": "registry:ui" }]
     },

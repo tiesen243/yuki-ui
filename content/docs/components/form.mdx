@@ -23,13 +23,13 @@ A form is a collection of form fields that are grouped together. Each form field
 <form>
   <form.Field
     name="..."
-    render={({ name, value, onChange, onBlur }) => (
-      <FormItem>
-        <FormLabel />
-        <FormControl>{/* Controller */}</FormControl>
-        <FormDescription />
-        <FormMessage />
-      </FormItem>
+    render={({ field, state, meta }) => (
+      <div>
+        <form.Label />
+        <form.Control />
+        <form.Description />
+        <form.Message />
+      </div>
     )}
   />
 </form>
@@ -53,31 +53,18 @@ const Example: React.FC = () => {
     >
       <form.Field
         name="name"
-        render={(field) => (
-          <FormItem>
-            <FormLabel>Name</FormLabel>
-            <FormControl>
+        render={({ field, meta }) => (
+          <div id={meta.id} className="grid gap-1">
+            <form.Label>Name</form.Label>
+            <form.Control>
               <Input placeholder="Yuki" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+            </form.Control>
+            <form.Message />
+          </div>
         )}
       />
 
-      <form.Field
-        name="email"
-        render={(field) => (
-          <FormItem>
-            <FormLabel>Email</FormLabel>
-            <FormControl>
-              <Input placeholder="yuki@gmail.com" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <Button disabled={form.isPending}>Submit</Button>
+      <Button disabled={form.state.isPending}>Submit</Button>
     </form>
   )
 }
@@ -195,8 +182,13 @@ const loginSchema = valibot({
 
 ```ts
 const loginSchema = (value) => {
+  const issues = []
   if (!value.email)
-    return { issues: [{ path: ['email'], message: 'Email is required' }] }
+    issues.push({ path: ['email'], message: 'Email is required' })
+  if (!value.password)
+    issues.push({ path: ['password'], message: 'Password is required' })
+
+  if (issues.length > 0) return { issues }
   return { value }
 }
 ```
@@ -237,21 +229,7 @@ We can now use the `<Form />` components to build our form.
 
 ```tsx
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
-  FormControl,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useForm,
-} from '@/components/ui/form'
+import { useForm } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
 export const LoginForm: React.FC = () => {
@@ -268,27 +246,27 @@ export const LoginForm: React.FC = () => {
     >
       <form.Field
         name="email"
-        render={(field) => (
-          <FormItem>
-            <FormLabel>Email</FormLabel>
-            <FormControl>
-              <Input type="email" placeholder="yuki@gmail.com" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+        render={({ field, meta }) => (
+          <div id={meta.id} className="grid gap-1">
+            <form.Label>Email</form.Label>
+            <form.Control>
+              <Input {...field} />
+            </form.Control>
+            <form.Message />
+          </div>
         )}
       />
 
       <form.Field
         name="password"
-        render={(field) => (
-          <FormItem>
-            <FormLabel>Email</FormLabel>
-            <FormControl>
+        render={({ field, meta }) => (
+          <div id={meta.id} className="grid gap-1">
+            <form.Label>Password</form.Label>
+            <form.Control>
               <Input type="password" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+            </form.Control>
+            <form.Message />
+          </div>
         )}
       />
 
