@@ -26,7 +26,7 @@ A form is a collection of form fields that are grouped together. Each form field
     render={({ name, value, onChange, onBlur }) => (
       <FormItem>
         <FormLabel />
-        <FormControl>{/* Form field component */}</FormControl>
+        <Input />
         <FormDescription />
         <FormMessage />
       </FormItem>
@@ -44,35 +44,37 @@ const Example: React.FC = () => {
   const form = useForm(/* options */)
 
   return (
-    <Form form={form}>
-      <FormField
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        form.handleSubmit()
+      }}
+    >
+      <form.Field
         name="name"
         render={(field) => (
           <FormItem>
             <FormLabel>Name</FormLabel>
-            <FormControl {...field}>
-              <Input placeholder="Yuki" />
-            </FormControl>
+            <Input placeholder="Yuki" {...field} />
             <FormMessage />
           </FormItem>
         )}
       />
 
-      <FormField
+      <form.Field
         name="email"
         render={(field) => (
           <FormItem>
             <FormLabel>Email</FormLabel>
-            <FormControl {...field}>
-              <Input placeholder="yuki@gmail.com" />
-            </FormControl>
+            <Input placeholder="yuki@gmail.com" {...field} />
             <FormMessage />
           </FormItem>
         )}
       />
 
       <Button disabled={form.isPending}>Submit</Button>
-    </Form>
+    </form>
   )
 }
 ```
@@ -244,21 +246,19 @@ export const LoginForm: React.FC = () => {
   // ...
 
   return (
-    <Form form={form}>
-      <FormField
+    <form onSubmit={}>
+      <form.Field
         name="email"
         render={(props) => (
           <FormItem>
             <FormLabel>Email</FormLabel>
-            <FormControl {...props}>
-              <Input type="email" placeholder="yuki@gmail.com" />
-            </FormControl>
+            <Input type="email" placeholder="yuki@gmail.com" {...field} />
             <FormMessage />
           </FormItem>
         )}
       />
 
-      <FormField
+      <form.Field
         name="password"
         render={(props) => (
           <FormItem>
@@ -272,9 +272,7 @@ export const LoginForm: React.FC = () => {
                 Forgot your password?
               </a>
             </div>
-            <FormControl {...props}>
-              <Input type="password" />
-            </FormControl>
+            <Input type="password" {...field} />
             <FormMessage />
           </FormItem>
         )}
@@ -283,7 +281,7 @@ export const LoginForm: React.FC = () => {
       <Button disabled={form.isPending} type="submit">
         Login
       </Button>
-    </Form>
+    </form>
   )
 }
 ```

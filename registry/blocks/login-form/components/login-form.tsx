@@ -13,15 +13,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useForm,
-} from '@/registry/ui/form'
+import { FormItem, FormLabel, FormMessage, useForm } from '@/registry/ui/form'
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -35,16 +27,14 @@ const loginSchema = z.object({
 
 export const LoginForm = () => {
   const form = useForm({
-    schema: loginSchema,
+    validator: loginSchema,
     defaultValues: { email: '', password: '' },
-    submitFn: async (values) => {
+    onSubmit: async (values) => {
       await new Promise((resolve) => setTimeout(resolve, 1000))
       return values
     },
-    onError: (e) => {
-      toast.error(e)
-    },
-    onSuccess: (data) => {
+    onError: (e) => toast.error(e.message),
+    onSuccess: (data) =>
       toast('Login successful', {
         description: (
           <pre className="bg-background mt-2 w-[calc(100svh-37rem)] overflow-x-auto rounded-md p-4 md:w-[320px]">
@@ -53,8 +43,7 @@ export const LoginForm = () => {
             </code>
           </pre>
         ),
-      })
-    },
+      }),
   })
 
   return (
@@ -66,34 +55,40 @@ export const LoginForm = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form form={form}>
-          <FormField
+        <form
+          className="grid gap-4"
+          onSubmit={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            form.handleSubmit()
+          }}
+        >
+          <form.Field
             name="email"
-            render={(props) => (
+            render={(field) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
-                <FormControl {...props}>
-                  <Input type="email" placeholder="yuki@gmail.com" />
-                </FormControl>
+                <Input type="email" placeholder="yuki@gmail.com" {...field} />
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <FormField
+          <form.Field
             name="password"
-            render={(props) => (
+            render={(field) => (
               <FormItem>
                 <div className="flex items-center justify-between">
                   <FormLabel>Password</FormLabel>
 
-                  <a className="text-sm underline-offset-4 hover:underline">
+                  <a
+                    href="https://youtube.com/watch?v=dQw4w9WgXcQ"
+                    className="text-sm underline-offset-4 hover:underline"
+                  >
                     Forgot your password?
                   </a>
                 </div>
-                <FormControl {...props}>
-                  <Input type="password" />
-                </FormControl>
+                <Input type="password" {...field} />
                 <FormMessage />
               </FormItem>
             )}
@@ -102,7 +97,7 @@ export const LoginForm = () => {
           <Button disabled={form.isPending} type="submit">
             Login
           </Button>
-        </Form>
+        </form>
       </CardContent>
 
       <CardFooter className="flex-col">

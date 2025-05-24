@@ -120,19 +120,11 @@ export const metadata = {
   ],
   openGraph: {
     url,
-    images: [
-      `https://tiesen.id.vn/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`,
-    ],
     siteName: title,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     creator: '@tiesen243',
-  },
-  icons: {
-    icon: 'https://tiesen.id.vn/favicon.ico',
-    shortcut: 'https://tiesen.id.vn/favicon-16x16.png',
-    apple: 'https://tiesen.id.vn/apple-touch-icon.png',
   },
 }
