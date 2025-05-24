@@ -1,5 +1,6 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec'
 import * as React from 'react'
+import { Slot } from '@radix-ui/react-slot'
 
 import { cn } from '@/lib/utils'
 
@@ -265,18 +266,39 @@ const useFormField = () => {
 }
 
 function FormLabel({ className, ...props }: React.ComponentProps<'label'>) {
-  const { formItemId, error } = useFormField()
+  const { error, formItemId, isPending } = useFormField()
 
   return (
     <label
       data-slot="form-label"
-      data-error={!!error}
       htmlFor={formItemId}
+      aria-invalid={!!error}
+      aria-disabled={isPending}
       className={cn(
-        'flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50',
-        'data-[error=true]:text-destructive',
+        'text-sm leading-none font-medium',
+        'aria-disabled:cursor-not-allowed aria-disabled:opacity-70',
+        'aria-invalid:text-destructive',
         className,
       )}
+      {...props}
+    />
+  )
+}
+
+function FormControl(props: React.ComponentProps<typeof Slot>) {
+  const { error, formItemId, formDescriptionId, formMessageId, isPending } =
+    useFormField()
+
+  return (
+    <Slot
+      data-slot="form-control"
+      id={formItemId}
+      aria-describedby={
+        !error ? formDescriptionId : `${formDescriptionId} ${formMessageId}`
+      }
+      aria-invalid={!!error}
+      // @ts-expect-error - Slot does not have disabled prop
+      disabled={isPending}
       {...props}
     />
   )
@@ -286,7 +308,7 @@ function FormDescription({ className, ...props }: React.ComponentProps<'p'>) {
   const { formDescriptionId } = useFormField()
 
   return (
-    <p
+    <span
       data-slot="form-description"
       id={formDescriptionId}
       className={cn('text-muted-foreground text-sm', className)}
@@ -306,14 +328,14 @@ function FormMessage({
   if (!body) return null
 
   return (
-    <p
+    <span
       data-slot="form-message"
       id={formMessageId}
-      className={cn('text-destructive text-sm', className)}
+      className={cn('text-destructive text-sm font-medium', className)}
       {...props}
     >
       {body}
-    </p>
+    </span>
   )
 }
 
@@ -322,6 +344,7 @@ export {
   useFormField,
   FormItem,
   FormLabel,
+  FormControl,
   FormDescription,
   FormMessage,
 }

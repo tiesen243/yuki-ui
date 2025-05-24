@@ -13,7 +13,13 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { FormItem, FormLabel, FormMessage, useForm } from '@/registry/ui/form'
+import {
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useForm,
+} from '@/registry/ui/form'
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -68,7 +74,9 @@ export const LoginForm = () => {
             render={(field) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
-                <Input type="email" placeholder="yuki@gmail.com" {...field} />
+                <FormControl {...field}>
+                  <Input type="email" placeholder="yuki@gmail.com" />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -88,7 +96,9 @@ export const LoginForm = () => {
                     Forgot your password?
                   </a>
                 </div>
-                <Input type="password" {...field} />
+                <FormControl {...field}>
+                  <Input type="password" />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

@@ -20,19 +20,19 @@ The `<Form>` component is a flexible and accessible form builder that allows you
 A form is a collection of form fields that are grouped together. Each form field is a controlled component that can be used to collect user input. The `<Form>` component is a wrapper that contains all the form fields and handles form submission.
 
 ```tsx
-<Form>
-  <FormField
+<form>
+  <form.Field
     name="..."
     render={({ name, value, onChange, onBlur }) => (
       <FormItem>
         <FormLabel />
-        <Input />
+        <FormControl>{/* Controller */}</FormControl>
         <FormDescription />
         <FormMessage />
       </FormItem>
     )}
   />
-</Form>
+</form>
 ```
 
 ## Example
@@ -200,10 +200,10 @@ import { useForm } from '@/components/ui/form'
 export const LoginForm: React.FC = () => {
   // 1. Define your form.
   const form = useForm({
-    schema: loginSchema,
+    validator: loginSchema,
     defaultValues: { email: '', password: '' },
     // 2. Define a submit handler.
-    submitFn: (values) => {
+    onSubmit: (values) => {
       // Do something with the form values.
       // ✅ This will be type-safe and validated.
       toast.success('Logged in successfully', {
@@ -232,9 +232,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
-  Form,
   FormControl,
-  FormField,
   FormItem,
   FormLabel,
   FormMessage,
@@ -246,13 +244,22 @@ export const LoginForm: React.FC = () => {
   // ...
 
   return (
-    <form onSubmit={}>
+    <form
+      className="grid gap-4"
+      onSubmit={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        form.handleSubmit()
+      }}
+    >
       <form.Field
         name="email"
-        render={(props) => (
+        render={(field) => (
           <FormItem>
             <FormLabel>Email</FormLabel>
-            <Input type="email" placeholder="yuki@gmail.com" {...field} />
+            <FormControl {...field}>
+              <Input type="email" placeholder="yuki@gmail.com" />
+            </FormControl>
             <FormMessage />
           </FormItem>
         )}
@@ -260,19 +267,12 @@ export const LoginForm: React.FC = () => {
 
       <form.Field
         name="password"
-        render={(props) => (
+        render={(field) => (
           <FormItem>
-            <div className="flex items-center justify-between">
-              <FormLabel>Password</FormLabel>
-
-              <a
-                href="#"
-                className="text-sm underline-offset-4 hover:underline"
-              >
-                Forgot your password?
-              </a>
-            </div>
-            <Input type="password" {...field} />
+            <FormLabel>Email</FormLabel>
+            <FormControl {...field}>
+              <Input type="password" />
+            </FormControl>
             <FormMessage />
           </FormItem>
         )}
