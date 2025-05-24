@@ -1,7 +1,6 @@
 'use client'
 
 import { toast } from 'sonner'
-import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -21,20 +20,19 @@ import {
   useForm,
 } from '@/registry/ui/form'
 
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z
-    .string()
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
-      'Password is too weak',
-    ),
-})
-
 export const LoginForm = () => {
   const form = useForm({
-    validator: loginSchema,
     defaultValues: { email: '', password: '' },
+    validator: (value) => {
+      const issues = []
+      if (!value.email)
+        issues.push({ path: ['email'], message: 'Email is required' })
+      if (!value.password)
+        issues.push({ path: ['password'], message: 'Password is required' })
+
+      if (issues.length > 0) return { issues }
+      return { value }
+    },
     onSubmit: async (values) => {
       await new Promise((resolve) => setTimeout(resolve, 1000))
       return values
@@ -74,8 +72,8 @@ export const LoginForm = () => {
             render={(field) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
-                <FormControl {...field}>
-                  <Input type="email" placeholder="yuki@gmail.com" />
+                <FormControl>
+                  <Input type="email" placeholder="yuki@gmail.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -88,7 +86,6 @@ export const LoginForm = () => {
               <FormItem>
                 <div className="flex items-center justify-between">
                   <FormLabel>Password</FormLabel>
-
                   <a
                     href="https://youtube.com/watch?v=dQw4w9WgXcQ"
                     className="text-sm underline-offset-4 hover:underline"
@@ -96,8 +93,8 @@ export const LoginForm = () => {
                     Forgot your password?
                   </a>
                 </div>
-                <FormControl {...field}>
-                  <Input type="password" />
+                <FormControl>
+                  <Input type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

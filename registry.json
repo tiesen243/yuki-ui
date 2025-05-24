@@ -27,7 +27,7 @@
       "title": "Login Form",
       "description": "A simple login form.",
       "categories": ["form", "athentication"],
-      "dependencies": ["arktype"],
+      "dependencies": [],
       "registryDependencies": [
         "button",
         "card",
