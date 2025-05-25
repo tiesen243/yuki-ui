@@ -279,7 +279,9 @@ export const LoginForm: React.FC = () => {
 </Step>
 
 <Step>
-### You can get field data by using
+### Tips
+
+#### You can get field data by using
 
 Remember to call it inside render function
 
@@ -289,6 +291,16 @@ Remember to call it inside render function
     <pre>{JSON.stringify({ field, state, meta }, null, 2)}</pre>
   )}
 </FieldInfo>
+```
+
+#### You can custom onChange function by using
+
+```tsx
+<form.Control
+  onChange={() => {
+    field.onChange('your mom is fat')
+  }}
+/>
 ```
 
 </Step>
