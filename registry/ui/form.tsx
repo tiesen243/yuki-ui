@@ -14,13 +14,20 @@ type ChangeEvent =
   | number
   | boolean
 
-interface FormFieldContextValue {
+interface FormFieldContextValue<
+  TValue extends Record<string, unknown>,
+  TName extends keyof TValue = keyof TValue,
+> {
   field: {
-    name: string
-    value: unknown
+    name: TName
+    value: TValue[TName]
+    onChange: (event: ChangeEvent) => void
+    onBlur: (event: React.FocusEvent<HTMLInputElement>) => Promise<void> | void
+  }
+  state: {
+    isPending: boolean
     hasError: boolean
     error?: string
-    isPending: boolean
   }
   meta: {
     id: string
@@ -30,7 +37,9 @@ interface FormFieldContextValue {
   }
 }
 
-const FormFieldContext = React.createContext<FormFieldContextValue | null>(null)
+const FormFieldContext = React.createContext<FormFieldContextValue<
+  Record<string, unknown>
+> | null>(null)
 
 function useFormField() {
   const formField = React.use(FormFieldContext)
@@ -137,18 +146,9 @@ function useForm<
       render,
     }: {
       name: TFieldName
-      render: (props: {
-        field: {
-          name: TFieldName
-          value: TValue[TFieldName]
-          onChange: (event: ChangeEvent) => void
-          onBlur: (
-            event: React.FocusEvent<HTMLInputElement>,
-          ) => Promise<void> | void
-        }
-        state: { isPending: boolean; hasError: boolean; error?: string }
-        meta: FormFieldContextValue['meta']
-      }) => React.ReactNode
+      render: (
+        props: FormFieldContextValue<TValue, TFieldName>,
+      ) => React.ReactNode
     }) {
       const [value, setValue] = React.useState(formValueRef.current[name])
       const prevValueRef = React.useRef(value)
@@ -197,42 +197,24 @@ function useForm<
 
       const id = React.useId()
 
-      const meta = React.useMemo(
-        () => ({
-          id,
-          formItemId: `${id}-form-item`,
-          formDescriptionId: `${id}-form-item-description`,
-          formMessageId: `${id}-form-item-message`,
-        }),
-        [id],
-      )
-
       const formFieldContextValue = React.useMemo(
-        () => ({
-          field: {
-            name: String(name),
-            value,
-            hasError: !!error,
-            error: error || undefined,
-            isPending,
-          },
-          meta,
-        }),
-        [error, meta, name, value],
-      )
-
-      const fieldProps = React.useMemo(
-        () => ({
-          field: { name, value, onChange: handleChange, onBlur: handleBlur },
-          state: { isPending, hasError: !!error, error },
-          meta,
-        }),
-        [name, value, handleChange, handleBlur, error, meta],
+        () =>
+          ({
+            field: { name, value, onChange: handleChange, onBlur: handleBlur },
+            state: { isPending, hasError: !!error, error },
+            meta: {
+              id,
+              formItemId: `${id}-form-item`,
+              formDescriptionId: `${id}-form-item-description`,
+              formMessageId: `${id}-form-item-message`,
+            },
+          }) satisfies FormFieldContextValue<TValue, TFieldName>,
+        [error, handleBlur, handleChange, id, name, value],
       )
 
       return (
-        <FormFieldContext value={formFieldContextValue}>
-          {render(fieldProps)}
+        <FormFieldContext value={formFieldContextValue as never}>
+          {render(formFieldContextValue)}
         </FormFieldContext>
       )
     },
@@ -243,14 +225,14 @@ function useForm<
     className,
     ...props
   }: React.ComponentProps<'label'>) {
-    const { field, meta } = useFormField()
+    const { state, meta } = useFormField()
 
     return (
       <label
         data-slot="form-label"
         htmlFor={meta.formItemId}
-        aria-disabled={field.isPending}
-        aria-invalid={!!field.error}
+        aria-disabled={state.isPending}
+        aria-invalid={state.hasError}
         className={cn(
           'text-sm leading-none font-medium',
           'aria-disabled:cursor-not-allowed aria-disabled:opacity-70',
@@ -265,20 +247,20 @@ function useForm<
   const Control = React.useCallback(function FormControl({
     className,
     ...props
-  }: React.ComponentProps<typeof Slot>) {
-    const { field, meta } = useFormField()
+  }: React.ComponentProps<'input'>) {
+    const { state, meta } = useFormField()
 
     return (
       <Slot
         data-slot="form-control"
         id={meta.formItemId}
         aria-describedby={
-          !field.error
+          !state.hasError
             ? meta.formDescriptionId
             : `${meta.formDescriptionId} ${meta.formMessageId}`
         }
-        aria-invalid={!!field.error}
-        aria-disabled={field.isPending}
+        aria-invalid={state.hasError}
+        aria-disabled={state.isPending}
         className={cn(
           'aria-disabled:cursor-not-allowed aria-disabled:opacity-70',
           className,
@@ -312,8 +294,8 @@ function useForm<
     className,
     ...props
   }: React.ComponentProps<'span'>) {
-    const { field, meta } = useFormField()
-    const body = field.error ? String(field.error) : children
+    const { state, meta } = useFormField()
+    const body = state.hasError ? String(state.error) : children
 
     return (
       <span

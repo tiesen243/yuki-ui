@@ -56,8 +56,8 @@ const Example: React.FC = () => {
         render={({ field, meta }) => (
           <div id={meta.id} className="grid gap-1">
             <form.Label>Name</form.Label>
-            <form.Control>
-              <Input placeholder="Yuki" {...field} />
+            <form.Control {...field}>
+              <Input placeholder="Yuki" />
             </form.Control>
             <form.Message />
           </div>
@@ -249,8 +249,8 @@ export const LoginForm: React.FC = () => {
         render={({ field, meta }) => (
           <div id={meta.id} className="grid gap-1">
             <form.Label>Email</form.Label>
-            <form.Control>
-              <Input {...field} />
+            <form.Control {...field}>
+              <Input type="email" placeholder="yuki@example.com" />
             </form.Control>
             <form.Message />
           </div>
@@ -262,8 +262,8 @@ export const LoginForm: React.FC = () => {
         render={({ field, meta }) => (
           <div id={meta.id} className="grid gap-1">
             <form.Label>Password</form.Label>
-            <form.Control>
-              <Input type="password" {...field} />
+            <form.Control {...field}>
+              <Input type="password" placeholder="********" />
             </form.Control>
             <form.Message />
           </div>
