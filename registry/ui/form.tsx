@@ -344,7 +344,7 @@ function useForm<
   )
 }
 
-export { useForm }
+export { useForm, useFormField }
 
 /** The Standard Schema interface. */
 interface StandardSchemaV1<Input = unknown, Output = Input> {
