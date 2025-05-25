@@ -50,11 +50,9 @@ function useFormField() {
 
 function useForm<
   TValue extends Record<string, unknown>,
-  TSchema extends StandardSchemaV1 | ((value: TValue) => TValue) =
-    | StandardSchemaV1
-    | ((value: TValue) => TValue),
-  TData = unknown,
-  TError extends FormError<TValue> = FormError<TValue>,
+  TSchema extends StandardSchemaV1 | ((value: TValue) => TValue),
+  TData,
+  TError extends FormError<TValue>,
 >({
   defaultValues,
   validator,
