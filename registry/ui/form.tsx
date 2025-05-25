@@ -41,8 +41,13 @@ const FormFieldContext = React.createContext<FormFieldContextValue<
   Record<string, unknown>
 > | null>(null)
 
-function useFormField() {
-  const formField = React.use(FormFieldContext)
+function useFormField<
+  TForm extends ReturnType<typeof useForm>,
+  TName extends keyof TForm['state']['value'] = keyof TForm['state']['value'],
+>() {
+  const formField = React.use(
+    FormFieldContext,
+  ) as unknown as FormFieldContextValue<TForm['state']['value'], TName> | null
   if (!formField)
     throw new Error('useFormField must be used within a FormField')
   return formField
@@ -189,7 +194,8 @@ function useForm<
         prevValueRef.current = value
 
         const results = await validateField(name, value)
-        if (!results.isValid) setError(results.errors[name])
+        if (!results.isValid && results.errors[name])
+          setError(results.errors[name])
         else setError('')
       }, [name, value])
 
@@ -223,7 +229,7 @@ function useForm<
     className,
     ...props
   }: React.ComponentProps<'label'>) {
-    const { state, meta } = useFormField()
+    const { state, meta } = useFormField<never>()
 
     return (
       <label
@@ -344,7 +350,24 @@ function useForm<
   )
 }
 
-export { useForm, useFormField }
+function FieldInfo<
+  TForm extends ReturnType<typeof useForm>,
+  TFieldName extends
+    keyof TForm['state']['value'] = keyof TForm['state']['value'],
+>({
+  children,
+}: {
+  form: TForm
+  fieldName: TFieldName
+  children: (
+    field: ReturnType<typeof useFormField<TForm, TFieldName>>,
+  ) => React.ReactNode
+}) {
+  const field = useFormField<TForm, TFieldName>()
+  return children(field)
+}
+
+export { useForm, useFormField, FieldInfo }
 
 /** The Standard Schema interface. */
 interface StandardSchemaV1<Input = unknown, Output = Input> {

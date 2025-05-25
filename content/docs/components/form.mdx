@@ -279,6 +279,21 @@ export const LoginForm: React.FC = () => {
 </Step>
 
 <Step>
+### You can get field data by using
+
+Remember to call it inside render function
+
+```tsx
+<FieldInfo form={form} fieldName="your-field">
+  {({ field, state, meta }) => (
+    <pre>{JSON.stringify({ field, state, meta }, null, 2)}</pre>
+  )}
+</FieldInfo>
+```
+
+</Step>
+
+<Step>
 ### Done
 
 That's it. You now have a fully accessible form that is type-safe with client-side validation.
