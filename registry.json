@@ -96,6 +96,22 @@
       ]
     },
     {
+      "name": "auth-with-memory",
+      "type": "registry:file",
+      "files": [
+        {
+          "path": "registry/auth/core/queries.memory.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/core/queries.ts"
+        },
+        {
+          "path": "registry/auth/types.memory.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/types.ts"
+        }
+      ]
+    },
+    {
       "name": "auth",
       "type": "registry:file",
       "title": "Yuki Auth",
