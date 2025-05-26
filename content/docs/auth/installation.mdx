@@ -8,7 +8,7 @@ Follow these steps to install Auth in your project. The installation process may
 
 To begin, you'll need to create your database schema to store authentication data.
 
-<Tabs items={['Drizzle', 'Prisma', 'Mongoose']}>
+<Tabs items={['Drizzle', 'Prisma', 'Mongoose','Memory']}>
 
 <Tab value="Drizzle">
 
@@ -310,6 +310,70 @@ if (process.env.NODE_ENV !== 'production') globalForMongoose.db = db
 
 </Tab>
 
+<Tab value="Memory">
+
+<Steps>
+
+<Step>
+Create a schema
+
+```ts title="server/db/schema.ts"
+export interface User {
+  id: string
+  name: string
+  email: string
+  image: string
+  createdAt: Date
+  updatedAt: Date
+
+  accounts?: Account[]
+  sessions?: Session[]
+}
+
+export interface Account {
+  provider: string
+  accountId: string
+  userId: string
+  password?: string
+
+  user?: User
+}
+
+export interface Session {
+  token: string
+  expires: Date
+  userId: string
+
+  user?: User
+}
+```
+
+</Step>
+
+<Step>
+Export your database instance.
+
+```ts
+import type { Account, Session, User } from '@/server/db/schema'
+
+export interface Database {
+  users: User[]
+  accounts: Account[]
+  sessions: Session[]
+}
+
+export const db: Database = {
+  users: [],
+  accounts: [],
+  sessions: [],
+}
+```
+
+</Step>
+
+</Steps>
+</Tab>
+
 </Tabs>
 
 ## Install the package.
@@ -325,6 +389,7 @@ Replace `{database}` with your database adapter. Currently supported databases:
 - drizzle
 - prisma
 - mongoose
+- memory
 
 Then, install the package.
 
@@ -340,7 +405,7 @@ By default, Auth uses [`Scrypt`](https://github.com/lucia-auth/lucia/blob/v3/pac
 
 These OAuth providers are implemented using [Arctic](https://arcticjs.dev/), a collection of OAuth 2.0 clients for popular providers.
 
-<InstallComponent name="auth-{provider}" />
+<InstallComponent name="oauth-{provider}" />
 
 Replace `{provider}` with the OAuth provider you want to use. Currently supported providers:
 
@@ -354,7 +419,7 @@ Replace `{provider}` with the OAuth provider you want to use. Currently supporte
 
 Example:
 
-<InstallComponent name="auth-google" />
+<InstallComponent name="oauth-google" />
 
 <Callout>
 Remember to add environment variables for your OAuth providers. You can find the required environment variables in the documentation for each provider.

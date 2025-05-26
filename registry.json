@@ -151,7 +151,7 @@
       ]
     },
     {
-      "name": "auth-discord",
+      "name": "oauth-discord",
       "type": "registry:file",
       "files": [
         {
@@ -162,7 +162,7 @@
       ]
     },
     {
-      "name": "auth-facebook",
+      "name": "oauth-facebook",
       "type": "registry:file",
       "files": [
         {
@@ -173,7 +173,7 @@
       ]
     },
     {
-      "name": "auth-figma",
+      "name": "oauth-figma",
       "type": "registry:file",
       "files": [
         {
@@ -184,7 +184,7 @@
       ]
     },
     {
-      "name": "auth-github",
+      "name": "oauth-github",
       "type": "registry:file",
       "files": [
         {
@@ -195,7 +195,7 @@
       ]
     },
     {
-      "name": "auth-google",
+      "name": "oauth-google",
       "type": "registry:file",
       "files": [
         {
@@ -206,7 +206,7 @@
       ]
     },
     {
-      "name": "auth-notion",
+      "name": "oauth-notion",
       "type": "registry:file",
       "files": [
         {
@@ -217,7 +217,7 @@
       ]
     },
     {
-      "name": "auth-spotify",
+      "name": "oauth-spotify",
       "type": "registry:file",
       "files": [
         {

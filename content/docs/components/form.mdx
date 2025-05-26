@@ -281,18 +281,6 @@ export const LoginForm: React.FC = () => {
 <Step>
 ### Tips
 
-#### You can get field data by using
-
-Remember to call it inside render function
-
-```tsx
-<FieldInfo form={form} fieldName="your-field">
-  {({ field, state, meta }) => (
-    <pre>{JSON.stringify({ field, state, meta }, null, 2)}</pre>
-  )}
-</FieldInfo>
-```
-
 #### You can custom onChange function by using
 
 ```tsx
