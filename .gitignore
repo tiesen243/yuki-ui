@@ -16,7 +16,7 @@ next-env.d.ts
 # misc
 .cache/
 .source/
-/public/r/
+r/
 .DS_Store
 *.pem
 

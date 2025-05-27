@@ -33,6 +33,25 @@ bunx --bun shadcn add https://yuki-ui.vercel.app/r/[component-name].json
 - Form
 - Typography
 
+### Auth Library
+
+#### Adapters
+
+- Drizzle
+- Prisma
+- MongoDb
+- Memory
+
+#### OAuth
+
+- Discord
+- Facebook
+- Figma
+- Github
+- Google
+- Notion
+- Spotify
+
 ## Customization
 
 Components can be customized using Tailwind CSS classes or by modifying the CSS variables in your global CSS file.
