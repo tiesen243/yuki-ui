@@ -31,7 +31,7 @@ async function createSession(
   if (!session) throw new Error('Failed to create session')
 
   // Return the unhashed token to the client along with expiration
-  return { sessionToken, expires: session.expires }
+  return { sessionToken, expires }
 }
 
 async function validateToken(token: string): Promise<SessionResult> {

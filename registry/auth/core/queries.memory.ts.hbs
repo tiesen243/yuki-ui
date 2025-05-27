@@ -39,13 +39,12 @@ async function validateToken(token: string): Promise<SessionResult> {
   const sessionToken = hashSHA256(token)
 
   // Lookup the session and associated user in the database
-  const result = db.sessions.find((s) => s.token === sessionToken)
+  const session = db.sessions.find((s) => s.token === sessionToken)
+  const user = session ? db.users.find((u) => u.id === session.userId) : null
 
   // Return early if session not found
-  if (!result) return { expires: new Date() }
-  else result.user = db.users.find((u) => u.id === result.userId)
+  if (!session || !user) return { expires: new Date() }
 
-  const { user, ...session } = result
   const now = Date.now()
 
   // Check if session has expired
