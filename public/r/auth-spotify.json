@@ -1,0 +1,13 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "auth-spotify",
+  "type": "registry:file",
+  "files": [
+    {
+      "path": "registry/auth/providers/spotify.ts.hbs",
+      "content": "import { Spotify } from 'arctic'\n\nimport type { ProviderUserData } from '@/server/auth/providers/base'\nimport { BaseProvider } from '@/server/auth/providers/base'\n\ninterface SpotifyUserResponse {\n  id: string\n  email: string\n  display_name: string\n  images: { height: number; url: string; width: number }[]\n}\n\nexport class SpotifyProvider extends BaseProvider {\n  protected provider = new Spotify(\n    process.env.SPOTIFY_CLIENT_ID ?? '',\n    process.env.SPOTIFY_CLIENT_SECRET ?? '',\n    this.createCallbackUrl('spotify'),\n  )\n\n  protected readonly API_URL = 'https://api.spotify.com/v1/me'\n  protected readonly SCOPES = ['user-read-email', 'user-read-private']\n\n  public createAuthorizationURL(\n    state: string,\n    codeVerifier: string | null,\n  ): URL {\n    return this.provider.createAuthorizationURL(\n      state,\n      codeVerifier,\n      this.SCOPES,\n    )\n  }\n\n  public async fetchUserData(\n    code: string,\n    codeVerifier: string | null,\n  ): Promise<ProviderUserData> {\n    const tokens = await this.provider.validateAuthorizationCode(\n      code,\n      codeVerifier,\n    )\n    const accessToken = tokens.accessToken()\n\n    const response = await fetch(this.API_URL, {\n      headers: { Authorization: `Bearer ${accessToken}` },\n    })\n    if (!response.ok) {\n      const errorText = await response.text().catch(() => 'Unknown error')\n      throw new Error(`Spotify API error (${response.status}): ${errorText}`)\n    }\n\n    const user = (await response.json()) as SpotifyUserResponse\n\n    return {\n      accountId: user.id,\n      email: user.email,\n      name: user.display_name,\n      image: user.images.at(0)?.url ?? '',\n    }\n  }\n\n  protected createCallbackUrl(provider: string) {\n    let baseUrl = `http://[::1]:${process.env.PORT ?? 3000}`\n    if (typeof window !== 'undefined') baseUrl = window.location.origin\n    if (process.env.VERCEL_PROJECT_PRODUCTION_URL)\n      baseUrl = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`\n    if (process.env.VERCEL_URL) baseUrl = `https://${process.env.VERCEL_URL}`\n\n    return `${baseUrl}/api/auth/${provider}/callback`\n  }\n}\n",
+      "type": "registry:file",
+      "target": "server/auth/providers/spotify.ts"
+    }
+  ]
+}

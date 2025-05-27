@@ -1,0 +1,32 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "login-form",
+  "type": "registry:block",
+  "title": "Login Form",
+  "description": "A simple login form.",
+  "dependencies": [],
+  "registryDependencies": [
+    "button",
+    "card",
+    "input",
+    "sonner",
+    "https://yuki-ui.vercel.app/r/form.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/login-form/components/login-form.tsx",
+      "content": "'use client'\n\nimport { toast } from 'sonner'\n\nimport { Button } from '@/registry/ui/button'\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardFooter,\n  CardHeader,\n  CardTitle,\n} from '@/registry/ui/card'\nimport { Input } from '@/registry/ui/input'\nimport { useForm } from '@/registry/ui/ui/form'\n\nexport const LoginForm = () => {\n  const form = useForm({\n    defaultValues: { email: '', password: '' },\n    validator: (value) => {\n      const issues = []\n      if (!value.email)\n        issues.push({ path: ['email'], message: 'Email is required' })\n      if (!value.password)\n        issues.push({ path: ['password'], message: 'Password is required' })\n\n      if (issues.length > 0) return { issues }\n      return { value }\n    },\n    onSubmit: async (values) => {\n      await new Promise((resolve) => setTimeout(resolve, 1000))\n      return values\n    },\n    onError: (e) => toast.error(e.message),\n    onSuccess: (data) =>\n      toast('Login successful', {\n        description: (\n          <pre className=\"bg-background mt-2 w-[calc(100svh-37rem)] overflow-x-auto rounded-md p-4 md:w-[320px]\">\n            <code className=\"text-foreground\">\n              {JSON.stringify(data, null, 2)}\n            </code>\n          </pre>\n        ),\n      }),\n  })\n\n  return (\n    <Card className=\"w-svh max-w-md overflow-hidden\">\n      <CardHeader>\n        <CardTitle>Log in</CardTitle>\n        <CardDescription>\n          Enter your email below to login to your account\n        </CardDescription>\n      </CardHeader>\n      <CardContent>\n        <form\n          className=\"grid gap-4\"\n          onSubmit={(e) => {\n            e.preventDefault()\n            e.stopPropagation()\n            form.handleSubmit()\n          }}\n        >\n          <form.Field\n            name=\"email\"\n            render={({ field, meta }) => (\n              <div id={meta.id} className=\"grid gap-1\">\n                <form.Label>Email</form.Label>\n                <form.Control {...field}>\n                  <Input type=\"email\" placeholder=\"yuki@gmail.com\" />\n                </form.Control>\n                <form.Message />\n              </div>\n            )}\n          />\n\n          <form.Field\n            name=\"password\"\n            render={({ field, meta }) => (\n              <div id={meta.id} className=\"grid gap-1\">\n                <div className=\"flex items-center justify-between\">\n                  <form.Label>Password</form.Label>\n                  <a\n                    href=\"https://youtube.com/watch?v=dQw4w9WgXcQ\"\n                    className=\"text-sm underline-offset-4 hover:underline\"\n                  >\n                    Forgot your password?\n                  </a>\n                </div>\n                <form.Control {...field}>\n                  <Input type=\"password\" />\n                </form.Control>\n                <form.Message />\n              </div>\n            )}\n          />\n\n          <Button disabled={form.state.isPending}>Login</Button>\n        </form>\n      </CardContent>\n\n      <CardFooter className=\"flex-col\">\n        <Button variant=\"outline\" className=\"w-full\">\n          Login with Google\n        </Button>\n\n        <p>\n          Don&apos;t have an account?{' '}\n          <Button variant=\"link\" className=\"p-0\">\n            Sign Up\n          </Button>\n        </p>\n      </CardFooter>\n    </Card>\n  )\n}\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/blocks/login-form/page.tsx",
+      "content": "import { Toaster } from '@/registry/ui/sonner'\nimport { LoginForm } from '@/registry/blocks/login-form/components/login-form'\n\nexport default function LoginPage() {\n  return (\n    <main className=\"grid min-h-dvh place-items-center\">\n      <LoginForm />\n      <Toaster />\n    </main>\n  )\n}\n",
+      "type": "registry:page",
+      "target": "app/login/page.tsx"
+    }
+  ],
+  "categories": [
+    "form",
+    "athentication"
+  ]
+}

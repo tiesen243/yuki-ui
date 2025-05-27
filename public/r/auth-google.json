@@ -1,0 +1,13 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "auth-google",
+  "type": "registry:file",
+  "files": [
+    {
+      "path": "registry/auth/providers/google.ts.hbs",
+      "content": "import { Google } from 'arctic'\n\nimport type { ProviderUserData } from '@/server/auth/providers/base'\nimport { BaseProvider } from '@/server/auth/providers/base'\n\ninterface GoogleUserResponse {\n  sub: string\n  email: string\n  name: string\n  picture: string\n}\n\nexport class GoogleProvider extends BaseProvider {\n  protected provider = new Google(\n    process.env.GOOGLE_CLIENT_ID ?? '',\n    process.env.GOOGLE_CLIENT_SECRET ?? '',\n    this.createCallbackUrl('google'),\n  )\n\n  protected readonly API_URL =\n    'https://openidconnect.googleapis.com/v1/userinfo'\n  protected readonly SCOPES = ['openid', 'profile', 'email']\n\n  public createAuthorizationURL(\n    state: string,\n    codeVerifier: string | null,\n  ): URL {\n    return this.provider.createAuthorizationURL(\n      state,\n      codeVerifier ?? '',\n      this.SCOPES,\n    )\n  }\n\n  public async fetchUserData(\n    code: string,\n    codeVerifier: string | null,\n  ): Promise<ProviderUserData> {\n    const tokens = await this.provider.validateAuthorizationCode(\n      code,\n      codeVerifier ?? '',\n    )\n    const accessToken = tokens.accessToken()\n\n    const response = await fetch(this.API_URL, {\n      headers: { Authorization: `Bearer ${accessToken}` },\n    })\n    if (!response.ok) {\n      const errorText = await response.text().catch(() => 'Unknown error')\n      throw new Error(`Google API error (${response.status}): ${errorText}`)\n    }\n\n    const user = (await response.json()) as GoogleUserResponse\n\n    return {\n      accountId: user.sub,\n      email: user.email,\n      name: user.name,\n      image: user.picture,\n    }\n  }\n}\n",
+      "type": "registry:file",
+      "target": "server/auth/providers/google.ts"
+    }
+  ]
+}

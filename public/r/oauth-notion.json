@@ -1,0 +1,13 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "oauth-notion",
+  "type": "registry:file",
+  "files": [
+    {
+      "path": "registry/auth/providers/notion.ts.hbs",
+      "content": "import { Notion } from 'arctic'\n\nimport type { ProviderUserData } from '@/server/auth/providers/base'\nimport { BaseProvider } from '@/server/auth/providers/base'\n\ninterface NotionUserResponse {\n  bot: {\n    owner: {\n      user: {\n        id: string\n        person: { email: string }\n        name: string\n        avatar_url: string\n      }\n    }\n  }\n}\n\nexport class NotionProvider extends BaseProvider {\n  protected provider = new Notion(\n    process.env.NOTION_CLIENT_ID ?? '',\n    process.env.NOTION_CLIENT_SECRET ?? '',\n    this.createCallbackUrl('notion'),\n  )\n\n  protected readonly API_URL = 'https://api.notion.com/v1/users/me'\n  protected readonly SCOPES = []\n\n  public createAuthorizationURL(\n    state: string,\n    _codeVerifier: string | null,\n  ): URL {\n    return this.provider.createAuthorizationURL(state)\n  }\n\n  public async fetchUserData(\n    code: string,\n    _codeVerifier: string | null,\n  ): Promise<ProviderUserData> {\n    const tokens = await this.provider.validateAuthorizationCode(code)\n    const accessToken = tokens.accessToken()\n\n    const response = await fetch(this.API_URL, {\n      headers: {\n        Authorization: `Bearer ${accessToken}`,\n        'Notion-Version': '2022-06-28',\n      },\n    })\n    if (!response.ok) {\n      const errorText = await response.text().catch(() => 'Unknown error')\n      throw new Error(`Notion API error (${response.status}): ${errorText}`)\n    }\n\n    const {\n      bot: {\n        owner: { user },\n      },\n    } = (await response.json()) as NotionUserResponse\n\n    return {\n      accountId: user.id,\n      email: user.person.email,\n      name: user.name,\n      image: user.avatar_url,\n    }\n  }\n}\n",
+      "type": "registry:file",
+      "target": "server/auth/providers/notion.ts"
+    }
+  ]
+}
