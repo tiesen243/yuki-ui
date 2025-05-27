@@ -1,55 +1,62 @@
-import type { Metadata } from 'next'
-import { createMetadataImage } from 'fumadocs-core/server'
+import type { Metadata as NextMetadata } from 'next'
 
-import { source } from '@/content'
 import { getBaseUrl } from '@/lib/utils'
 
-export const metadataImage = createMetadataImage({
-  imageRoute: '/api/og',
-  source,
-}) as ReturnType<typeof createMetadataImage>
+type Metadata = Omit<NextMetadata, 'title' | 'keywords'> & {
+  title: string
+  keywords: string[]
+}
 
-export const createMetadata = (
-  slug: string[],
-  override: Omit<Metadata, 'title'> & { title?: string },
-): Metadata => {
+export const createMetadata = (override: Partial<Metadata> = {}): Metadata => {
   const siteName = 'Yuki UI'
+  const title = override.title ? `${override.title} | ${siteName}` : siteName
   const description =
-    'A collection of reusable React components built with a focus on customization, accessibility, and developer experience. Works with your favorite framework.'
-  const url = override.openGraph?.url
-    ? `${getBaseUrl()}${override.openGraph.url}`
-    : getBaseUrl()
+    override.description ??
+    'A collection of reusable React components built with a focus on customization, accessibility, and developer experience.'
+  const {
+    title: _,
+    description: __,
+    keywords = [],
+    openGraph,
+    ...restOverride
+  } = override
+  const { images: ogImages, url: ogUrl, ...restOpenGraph } = openGraph ?? {}
+  const url = `${getBaseUrl()}${ogUrl ?? ''}`
 
-  return metadataImage.withImage(slug, {
-    ...override,
+  return {
     metadataBase: new URL(getBaseUrl()),
-    title: override.title ? `${override.title} | ${siteName}` : siteName,
-    description: override.description ?? description,
-    alternates: { canonical: url },
+    applicationName: siteName,
+    title,
+    description,
+    authors: { name: 'Tiesen', url: getBaseUrl() },
     manifest: `${getBaseUrl()}/manifest.webmanifest`,
     keywords: [
+      ...keywords,
+      'yuki ui',
       'react',
       'nextjs',
       'components',
       'ui',
-      'design',
-      'library',
+      'design system',
+      'tailwindcss',
       'typescript',
-      ...(override.keywords
-        ? typeof override.keywords === 'string'
-          ? [override.keywords]
-          : override.keywords
-        : []),
+      'accessible',
+      'customizable',
+      'developer experience',
+      'open source',
     ],
     openGraph: {
-      url: url,
+      url,
+      title,
+      description,
       siteName,
       type: 'website',
-      ...override.openGraph,
+      images: Array.isArray(ogImages) ? ogImages : ogImages ? [ogImages] : [],
+      ...restOpenGraph,
     },
     twitter: {
       card: 'summary_large_image',
-      creator: '@tiesen243',
+      creatorId: '@tiesen243',
       ...override.twitter,
     },
     icons: {
@@ -57,5 +64,17 @@ export const createMetadata = (
       shortcut: '/favicon-16x16.png',
       apple: '/apple-touch-icon.png',
     },
-  })
+    alternates: {
+      canonical: url,
+      types: {
+        'application/rss+xml': [
+          { title: 'Yuki UI', url: `${getBaseUrl()}/rss.xml` },
+        ],
+      },
+      ...override.alternates,
+    },
+    facebook: { appId: '625246206988524' },
+    assets: '/assets',
+    ...restOverride,
+  }
 }

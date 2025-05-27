@@ -65,10 +65,13 @@ export async function generateMetadata(props: {
   const page = source.getPage(slug)
   if (!page) notFound()
 
-  return createMetadata(slug ?? [], {
+  const image = ['/api/og', ...(slug ?? []), 'image.png'].join('/')
+
+  return createMetadata({
     title: slug ? page.data.title : '',
     description: page.data.description,
     openGraph: {
+      images: { url: image, alt: page.data.title },
       url: page.url,
     },
   })

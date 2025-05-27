@@ -6,7 +6,8 @@ import { Analytics } from '@vercel/analytics/next'
 import { RootProvider } from 'fumadocs-ui/provider'
 
 import { Toaster } from '@/components/ui/sonner'
-import { cn, getBaseUrl } from '@/lib/utils'
+import { createMetadata } from '@/lib/metadata'
+import { cn } from '@/lib/utils'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -46,32 +47,4 @@ export default function RootLayout({
   )
 }
 
-const url = getBaseUrl()
-const title = 'Yuki UI'
-const description =
-  'A collection of reusable React components built with a focus on customization, accessibility, and developer experience.'
-
-export const metadata = {
-  metadataBase: new URL(url),
-  title,
-  description,
-  alternates: { canonical: url },
-  facebook: { appId: '523462826928110' },
-  manifest: `https://tiesen.id.vn/manifest.webmanifest`,
-  keywords: [
-    'tiesen243',
-    'Yuki UI',
-    'React',
-    'Tailwind CSS',
-    'Component Library',
-  ],
-  openGraph: {
-    url,
-    siteName: title,
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    creator: '@tiesen243',
-  },
-}
+export const metadata = createMetadata()
