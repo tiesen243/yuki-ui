@@ -80,16 +80,16 @@
       ]
     },
     {
-      "name": "auth-with-mongoose",
+      "name": "auth-with-mongodb",
       "type": "registry:file",
       "files": [
         {
-          "path": "registry/auth/core/queries.mongoose.ts.hbs",
+          "path": "registry/auth/core/queries.mongodb.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/core/queries.ts"
         },
         {
-          "path": "registry/auth/types.mongoose.ts.hbs",
+          "path": "registry/auth/types.mongodb.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/types.ts"
         }
