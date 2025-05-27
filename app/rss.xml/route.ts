@@ -13,7 +13,8 @@ export function GET() {
     link: `${getBaseUrl()}/blog`,
     language: 'en',
 
-    favicon: `${getBaseUrl()}/icon.png`,
+    image: `${getBaseUrl()}/tiesen-v2.png`,
+    favicon: `${getBaseUrl()}/logo.png`,
     copyright: 'All rights reserved 2025, Tiesen',
   })
 
@@ -33,14 +34,19 @@ export function GET() {
       author: [
         {
           name: 'Tiesen',
-          avatar:
-            'https://gravatar.com/avatar/48b8ec4ce6c85e06c11bda4381a3ac6cb8161a23e5ea540544c809063090815d',
           email: 'ttien56906@gmail.com',
           link: 'https://tiesen.id.vn',
+          avatar:
+            'https://gravatar.com/avatar/48b8ec4ce6c85e06c11bda4381a3ac6cb8161a23e5ea540544c809063090815d',
         },
       ],
     })
   }
 
-  return new NextResponse(feed.rss2())
+  return new NextResponse(feed.rss2(), {
+    headers: {
+      'Content-Type': 'application/rss+xml; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+    },
+  })
 }

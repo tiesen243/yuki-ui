@@ -75,6 +75,9 @@ export const createMetadata = (override: Partial<Metadata> = {}): Metadata => {
     },
     facebook: { appId: '625246206988524' },
     assets: '/assets',
+    verification: {
+      google: 'IxxbL_t4Uj36PsfajteCHNpV6Ln9fr7WCkxmzFjW_ms',
+    },
     ...restOverride,
   }
 }
