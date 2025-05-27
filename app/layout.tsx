@@ -2,6 +2,7 @@ import '@/app/globals.css'
 
 import { Geist, Geist_Mono } from 'next/font/google'
 import Script from 'next/script'
+import { Analytics } from '@vercel/analytics/next'
 import { RootProvider } from 'fumadocs-ui/provider'
 
 import { Toaster } from '@/components/ui/sonner'
@@ -38,6 +39,8 @@ export default function RootLayout({
           {children}
           <Toaster />
         </RootProvider>
+
+        <Analytics />
       </body>
     </html>
   )

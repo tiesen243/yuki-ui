@@ -394,7 +394,7 @@ Then, install the package.
 
 <Callout>
 
-By default, Auth uses [`Scrypt`](https://github.com/lucia-auth/lucia/blob/v3/packages/lucia/src/scrypt/index.ts) for hashing passwords. You can change the hashing algorithm by passing a different hashing function to the `hash` and `verify` methods in the `server/auth/core/password` folder.
+By default, Auth uses [`Scrypt`](https://github.com/lucia-auth/lucia/blob/v3/packages/lucia/src/scrypt/index.ts) for hashing passwords. You can change the hashing algorithm by passing a different hashing function to the `hash` and `verify` methods in the `server/auth/core/password.ts`.
 
 </Callout>
 
@@ -439,7 +439,7 @@ For example, if your base URL is `https://example.com`, the callback URL for Goo
 
 </Callout>
 
-Final, add OAuth providers to your Auth configuration.
+4. Add OAuth providers to your Auth configuration.
 
 ```ts title="server/auth/config.ts"
 import type { AuthOptions } from '@/server/auth/types'
@@ -474,7 +474,6 @@ async function getCookie(
       ?.split(';')
       .reduce((acc: Record<string, string>, cookie) => {
         const [key, value] = cookie.trim().split('=')
-        if (key && value) acc[key] = decodeURIComponent(value)
         return acc
       }, {})
     return cookies?.[key]
@@ -487,7 +486,7 @@ async function getCookie(
 
 <Tab value="Other frameworks">
 
-```ts title="server/auth/core/cookies.ts"
+```ts diff title="server/auth/core/cookies.ts"
 async function getCookie(
   key: string,
   request: Request, // make sure the `req` parameter is required
