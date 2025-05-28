@@ -207,13 +207,13 @@ export default async function HomePage({
 
   return (
     <main>
-      <h1>{t('welcome', {}, lang)}</h1>
+      <h1>{t('welcome', lang)}</h1>
       <p>{t('greeting', { name: 'World' }, lang)}</p>
 
       {/* Nested translations */}
       <div className="flex gap-2">
-        <button>{t('common.buttons.save', {}, lang)}</button>
-        <button>{t('common.buttons.cancel', {}, lang)}</button>
+        <button>{t('common.buttons.save', lang)}</button>
+        <button>{t('common.buttons.cancel', lang)}</button>
       </div>
 
       {/* Pluralization */}
@@ -241,20 +241,20 @@ export const LoginForm = () => {
 
   return (
     <main>
-      <h1>{t('welcome', {}, lang)}</h1>
-      <p>{t('greeting', { name: 'World' }, lang)}</p>
+      <h1>{t('welcome')}</h1>
+      <p>{t('greeting', { name: 'World' })}</p>
 
       {/* Nested translations */}
       <div className="flex gap-2">
-        <button>{t('common.buttons.save', {}, lang)}</button>
-        <button>{t('common.buttons.cancel', {}, lang)}</button>
+        <button>{t('common.buttons.save')}</button>
+        <button>{t('common.buttons.cancel')}</button>
       </div>
 
       {/* Pluralization */}
-      <p>{t('cartItems', { count: 3 }, lang)}</p>
+      <p>{t('cartItems', { count: 3 })}</p>
 
       {/* Nested with interpolation */}
-      <p>{t('user.profile', { username: 'john_doe' }, lang)}</p>
+      <p>{t('user.profile', { username: 'john_doe' })}</p>
     </main>
   )
 }
@@ -411,6 +411,7 @@ lib/
     ├── define-translation.ts # dt() helper
     ├── index.ts              # Public API exports
     ├── init.ts               # Core i18n initialization
+    ├── register.d.ts
     └── locale/
         ├── en.ts             # English translations
         ├── es.ts             # Spanish translations
