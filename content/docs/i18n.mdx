@@ -1,0 +1,422 @@
+---
+title: Internationalization
+description: A lightweight, type-safe internationalization library built from scratch for modern web applications with multi-language support and locale management.
+---
+
+I18n is a lightweight, type-safe internationalization library designed for developers who want complete control over their localization implementation. Built from scratch with modern JavaScript frameworks in mind.
+
+Inspired by [Kyle's Internationalization Crash Course](https://github.com/WebDevSimplified/intl-crash-course), this library provides a more type-safe and framework-agnostic approach to i18n.
+
+## Overview
+
+I18n provides essential building blocks for internationalization without the complexity of heavyweight solutions. It gives you:
+
+- **Type-Safe**: First-class TypeScript support with compile-time translation key validation
+- **Framework Agnostic**: Works with React, Next.js, and any JavaScript framework
+- **Lightweight**: Minimal bundle size with tree-shaking support
+- **Server & Client**: Seamless server-side and client-side rendering support
+- **Nested Keys**: Support for nested translation keys with dot notation
+- **Interpolation**: Variable interpolation with type safety
+- **Pluralization**: Built-in pluralization rules with `dt` helper
+- **Define Translation**: Use `dt()` for complex translations with pluralization
+
+## Key Concepts
+
+### Translation Definition
+
+Define translations using the `dt()` helper for complex scenarios:
+
+```ts
+import { dt } from '@/lib/i18n/define-translation'
+
+// Simple interpolation
+greeting: 'Hello {name}!'
+
+// Complex pluralization with dt()
+count: dt('count {count} {entity:plural}', {
+  plural: { entity: { one: 'item', other: 'items' } },
+})
+```
+
+### Nested Keys
+
+Access nested translation objects using dot notation:
+
+```ts
+export default {
+  nested: {
+    greeting: 'Hello {name} from nested!',
+    buttons: {
+      save: 'Save',
+      cancel: 'Cancel',
+    },
+  },
+} as const satisfies LanguageMessages
+```
+
+### Interpolation
+
+Pass variables to your translations with type safety:
+
+```tsx
+// Translation: "Hello {name}!"
+t('greeting', { name: 'John' }) // "Hello, John!"
+```
+
+### Pluralization
+
+Handle singular and plural forms using `dt()`:
+
+```tsx
+// Translation defined with dt()
+count: dt('count {count} {entity:plural}', {
+  plural: { entity: { one: 'item', other: 'items' } },
+})
+
+// Usage
+t('count', { count: 1, entity: 'item' }) // "count 1 item"
+t('count', { count: 5, entity: 'items' }) // "count 5 items"
+```
+
+## Installation
+
+<InstallComponent name="i18n" />
+
+### 1. Define your locale files
+
+Create translation files for each locale in `lib/i18n/locale/`:
+
+```ts title="lib/i18n/locale/en.ts"
+import type { LanguageMessages } from '@/lib/i18n/init'
+import { dt } from '@/lib/i18n/define-translation'
+
+export default {
+  locale: 'en',
+
+  // Simple translations
+  greeting: 'Hello {name}!',
+  welcome: 'Welcome back!',
+
+  // Nested translations
+  auth: {
+    login: 'Login',
+    logout: 'Logout',
+    signUp: 'Sign Up',
+  },
+
+  common: {
+    buttons: {
+      save: 'Save',
+      cancel: 'Cancel',
+      delete: 'Delete',
+    },
+    loading: 'Loading...',
+  },
+
+  // Complex pluralization
+  cartItems: dt('{count} {item:plural} in cart', {
+    plural: { item: { one: 'item', other: 'items' } },
+  }),
+
+  // Nested with interpolation
+  user: {
+    profile: 'Profile for {username}',
+    lastSeen: 'Last seen {time}',
+  },
+} as const satisfies LanguageMessages
+```
+
+```ts title="lib/i18n/locale/es.ts"
+import type { LanguageMessages } from '@/lib/i18n/init'
+import { dt } from '@/lib/i18n/define-translation'
+
+export default {
+  locale: 'es',
+
+  // Simple translations
+  greeting: '¡Hola {name}!',
+  welcome: '¡Bienvenido de nuevo!',
+
+  // Nested translations
+  auth: {
+    login: 'Iniciar sesión',
+    logout: 'Cerrar sesión',
+    signUp: 'Registrarse',
+  },
+
+  common: {
+    buttons: {
+      save: 'Guardar',
+      cancel: 'Cancelar',
+      delete: 'Eliminar',
+    },
+    loading: 'Cargando...',
+  },
+
+  // Complex pluralization
+  cartItems: dt('{count} {item:plural} en el carrito', {
+    plural: { item: { one: 'artículo', other: 'artículos' } },
+  }),
+
+  // Nested with interpolation
+  user: {
+    profile: 'Perfil de {username}',
+    lastSeen: 'Visto por última vez {time}',
+  },
+} as const satisfies LanguageMessages
+```
+
+### 2. Configure the library
+
+```ts title="lib/i18n/config.ts"
+import type translations from '@/lib/i18n/locales/en'
+import en from '@/lib/i18n/locales/en'
+import es from '@/lib/i18n/locales/es'
+
+export const i18nConfig = {
+  fallbackLocale: ['en', 'vi'],
+  defaultLocale: 'en',
+  translations: {
+    en,
+    es,
+  },
+}
+
+declare module '@/lib/i18n/register' {
+  interface Register {
+    translations: typeof translations
+  }
+}
+```
+
+## Usage
+
+### Server-side
+
+Use the `t` function directly in server components:
+
+```tsx title="app/[lang]/page.tsx"
+import { t } from '@/lib/i18n'
+
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ lang: string }>
+}) {
+  const { lang } = await params
+
+  return (
+    <main>
+      <h1>{t('welcome', {}, lang)}</h1>
+      <p>{t('greeting', { name: 'World' }, lang)}</p>
+
+      {/* Nested translations */}
+      <div className="flex gap-2">
+        <button>{t('common.buttons.save', {}, lang)}</button>
+        <button>{t('common.buttons.cancel', {}, lang)}</button>
+      </div>
+
+      {/* Pluralization */}
+      <p>{t('cartItems', { count: 3 }, lang)}</p>
+
+      {/* Nested with interpolation */}
+      <p>{t('user.profile', { username: 'john_doe' }, lang)}</p>
+    </main>
+  )
+}
+```
+
+### Client-side
+
+Use the `useTranslation` hook in client components:
+
+```tsx title="components/auth/login-form.tsx"
+'use client'
+
+import { Button } from '@/components/ui/button'
+import { useTranslation } from '@/lib/i18n'
+
+export const LoginForm = () => {
+  const { t } = useTranslation()
+
+  return (
+    <main>
+      <h1>{t('welcome', {}, lang)}</h1>
+      <p>{t('greeting', { name: 'World' }, lang)}</p>
+
+      {/* Nested translations */}
+      <div className="flex gap-2">
+        <button>{t('common.buttons.save', {}, lang)}</button>
+        <button>{t('common.buttons.cancel', {}, lang)}</button>
+      </div>
+
+      {/* Pluralization */}
+      <p>{t('cartItems', { count: 3 }, lang)}</p>
+
+      {/* Nested with interpolation */}
+      <p>{t('user.profile', { username: 'john_doe' }, lang)}</p>
+    </main>
+  )
+}
+```
+
+### Provider Setup
+
+Wrap your app with the I18nProvider:
+
+```tsx title="app/[lang]/layout.tsx"
+import { TranslationProvider } from '@/hooks/use-translation'
+
+export default async function LangLayout({
+  children,
+  params,
+}: Readonly<{
+  children: React.ReactNode
+  params: Promise<{ lang: string }>
+}>) {
+  const { lang } = await params
+
+  return <TranslationProvider locale={lang}>{children}</TranslationProvider>
+}
+```
+
+## Advanced Usage
+
+### Complex Pluralization with `dt()`
+
+The `dt()` helper allows you to define complex pluralization rules:
+
+```ts title="lib/i18n/locale/en.ts"
+export default {
+  // Multiple pluralization variables
+  fileCount: dt(
+    '{userCount} {user:plural} uploaded {fileCount} {file:plural}',
+    {
+      plural: {
+        user: { one: 'user', other: 'users' },
+        file: { one: 'file', other: 'files' },
+      },
+    },
+  ),
+
+  // Zero, one, other forms
+  notifications: dt('{count} {notification:plural}', {
+    plural: {
+      notification: {
+        zero: 'No notifications',
+        one: 'notification',
+        other: 'notifications',
+      },
+    },
+  }),
+} as const satisfies LanguageMessages
+```
+
+Usage:
+
+```tsx
+// Multiple variables
+t('fileCount', { userCount: 3, fileCount: 7 })
+// "3 users uploaded 7 files"
+
+// Zero form
+t('notifications', { count: 0 })
+// "No notifications"
+```
+
+### Type Safety
+
+Get full TypeScript support for translation keys:
+
+```tsx
+// ✅ Valid - TypeScript knows these keys exist
+t('greeting', { name: 'John' })
+t('auth.login')
+t('common.buttons.save')
+
+// ❌ TypeScript error - key doesn't exist
+t('nonexistent.key')
+
+// ✅ TypeScript enforces required variables
+t('greeting', { name: 'John' }) // ✅ name is required
+t('greeting', {}) // ❌ TypeScript error - missing name
+```
+
+### Nested Translation Access
+
+Access deeply nested translations with dot notation:
+
+```tsx
+// Direct access to nested properties
+t('common.buttons.save')
+t('user.profile', { username: 'john' })
+t('auth.login')
+
+// All type-safe and autocompleted
+```
+
+## API Reference
+
+### `t(key, variables?, locale?)`
+
+The main translation function.
+
+- `key`: Translation key (dot notation supported)
+- `variables`: Object with interpolation variables
+- `locale`: Target locale (defaults to current)
+
+### `dt(template, options)`
+
+Define complex translations with pluralization.
+
+- `template`: Translation template with interpolation
+- `options.plural`: Pluralization rules object
+
+### `useTranslation()`
+
+React hook for client-side translations.
+
+Returns:
+
+- `t`: Translation function
+
+### `TranslationProvider`
+
+React context provider for client-side translations.
+
+Props:
+
+- `locale`: Current locale
+- `children`: React children
+
+### `LanguageMessages`
+
+TypeScript type for locale message objects.
+
+## Best Practices
+
+1. **Use TypeScript**: Enable strict type checking for translation keys
+2. **Organize Logically**: Group related translations in nested objects
+3. **Use `dt()` for Pluralization**: Always use the `dt()` helper for plural forms
+4. **Keep Keys Descriptive**: Use clear, descriptive translation keys
+5. **Consistent Structure**: Maintain the same structure across all locale files
+6. **Export as const**: Always use `as const satisfies LanguageMessages`
+
+## File Structure
+
+```
+lib/
+└── i18n/
+    ├── config.ts             # Configuration and type registration
+    ├── define-translation.ts # dt() helper
+    ├── index.ts              # Public API exports
+    ├── init.ts               # Core i18n initialization
+    └── locale/
+        ├── en.ts             # English translations
+        ├── es.ts             # Spanish translations
+        └── ...
+```
+
+## Reference
+
+This library was inspired by [Kyle's Internationalization Crash Course](https://github.com/WebDevSimplified/intl-crash-course), which provides an excellent foundation for understanding i18n concepts. Our implementation builds upon those concepts with enhanced TypeScript support, framework-agnostic design, and additional features like the `dt()` helper for complex pluralization.
