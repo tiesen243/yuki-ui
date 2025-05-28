@@ -1,54 +1,54 @@
+interface ParameterTypeMap {
+  number: Intl.NumberFormatOptions
+  date: Intl.DateTimeFormatOptions
+  list: Intl.ListFormatOptions
+  plural: Partial<Record<Exclude<Intl.LDMLPluralRule, 'other'>, string>> & {
+    other: string
+    formatter?: Intl.NumberFormatOptions
+    type?: Intl.PluralRuleType
+  }
+  enum: Record<string, string>
+}
+
 type ParseOptionType<
-  ParamType extends string,
+  ParamType extends keyof ParameterTypeMap,
   ParamName extends string,
-> = ParamType extends 'number'
-  ? { number?: Partial<Record<ParamName, Intl.NumberFormatOptions>> }
-  : ParamType extends 'plural'
-    ? {
-        plural: Record<
-          ParamName,
-          Partial<Record<Exclude<Intl.LDMLPluralRule, 'other'>, string>> & {
-            other: string
-            formatter?: Intl.NumberFormatOptions
-            type?: Intl.PluralRuleType
-          }
-        >
-      }
-    : ParamType extends 'date'
-      ? { date?: Partial<Record<ParamName, Intl.DateTimeFormatOptions>> }
-      : ParamType extends 'list'
-        ? { list?: Partial<Record<ParamName, Intl.ListFormatOptions>> }
-        : ParamType extends 'enum'
-          ? { enum: Record<ParamName, Record<string, string>> }
-          : never
+> = ParamType extends 'plural' | 'enum'
+  ? { [K in ParamType]: Record<ParamName, ParameterTypeMap[K]> }
+  : { [K in ParamType]?: Partial<Record<ParamName, ParameterTypeMap[K]>> }
 
 type ExtractParamOptions<S extends string> =
   S extends `${string}{${infer Param}}${infer Rest}`
-    ? Param extends `${infer Name}:${infer Type}` // If the string contains a parameter
-      ? ParseOptionType<Type, Name> & ExtractParamOptions<Rest> // If the string contains a parameter with a type
-      : ExtractParamOptions<Rest> // If the string has no parameter type
-    : unknown // If the string has no parameters
+    ? Param extends `${infer Name}:${infer Type}`
+      ? Type extends keyof ParameterTypeMap
+        ? ParseOptionType<Type, Name> & ExtractParamOptions<Rest>
+        : ExtractParamOptions<Rest>
+      : ExtractParamOptions<Rest>
+    : Record<string, never>
 
 interface ParamOptions {
-  date?: Record<string, Intl.DateTimeFormatOptions>
-  number?: Record<string, Intl.NumberFormatOptions>
-  plural?: Record<
-    string,
-    Partial<Record<Exclude<Intl.LDMLPluralRule, 'other'>, string>> & {
-      other: string
-      formatter?: Intl.NumberFormatOptions
-      type?: Intl.PluralRuleType
-    }
-  >
-  enum?: Record<string, Record<string, string>>
-  list?: Record<string, Intl.ListFormatOptions>
+  date?: Record<string, ParameterTypeMap['date']>
+  number?: Record<string, ParameterTypeMap['number']>
+  list?: Record<string, ParameterTypeMap['list']>
+  plural?: Record<string, ParameterTypeMap['plural']>
+  enum?: Record<string, ParameterTypeMap['enum']>
 }
 
-function defineTranslation<S extends string, O extends ExtractParamOptions<S>>(
-  string: S,
+type ValidatedOptions<S extends string> =
+  ExtractParamOptions<S> extends Record<string, never>
+    ? ParamOptions | undefined
+    : ExtractParamOptions<S>
+
+function defineTranslation<S extends string>(template: S): [S, undefined]
+function defineTranslation<S extends string, O extends ValidatedOptions<S>>(
+  template: S,
   options: O,
-): [S, O] {
-  return [string, options]
+): [S, O]
+function defineTranslation<S extends string, O extends ValidatedOptions<S>>(
+  template: S,
+  options?: O,
+): [S, O | undefined] {
+  return [template, options]
 }
 
 export type { ParamOptions }
