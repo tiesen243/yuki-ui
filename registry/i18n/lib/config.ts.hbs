@@ -1,0 +1,18 @@
+import type translations from '@/lib/i18n/locales/en'
+import en from '@/lib/i18n/locales/en'
+import vi from '@/lib/i18n/locales/vi'
+
+export const i18nConfig = {
+  fallbackLocale: ['en', 'vi'],
+  defaultLocale: 'en',
+  translations: {
+    en,
+    vi,
+  },
+}
+
+declare module '@/lib/i18n/register' {
+  interface Register {
+    translations: typeof translations
+  }
+}

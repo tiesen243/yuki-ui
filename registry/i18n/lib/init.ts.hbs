@@ -1,0 +1,381 @@
+import type { dt, ParamOptions } from '@/lib/i18n/define-translation'
+import type { Register } from '@/lib/i18n/register'
+
+export type RegisteredTranslations = Register extends { translations: infer T }
+  ? T extends infer Translations
+    ? Translations
+    : never
+  : LanguageMessages
+
+type I18nMessage = string | ReturnType<typeof dt>
+
+export interface LanguageMessages {
+  [key: string]: I18nMessage | LanguageMessages
+}
+
+type Join<K, P> = K extends string
+  ? P extends string
+    ? `${K}.${P}`
+    : never
+  : never
+
+type DotPathsFor<T extends object = RegisteredTranslations> = {
+  [K in keyof T]: T[K] extends I18nMessage
+    ? K
+    : T[K] extends object
+      ? Join<K, DotPathsFor<T[K]>>
+      : never
+}[keyof T]
+
+type EnumMap = Record<string, Record<string, string>>
+
+type ParseArgType<
+  ParamType extends string,
+  ParamName extends string,
+  Enums extends EnumMap,
+> = ParamType extends 'number' | 'plural'
+  ? number
+  : ParamType extends 'date'
+    ? Date
+    : ParamType extends 'list'
+      ? string[]
+      : ParamType extends 'enum'
+        ? ParamName extends keyof Enums
+          ? keyof Enums[ParamName]
+          : never
+        : never
+
+type ExtractParamArgs<
+  S extends string,
+  Enums extends EnumMap,
+> = S extends `${string}{${infer Param}}${infer Rest}`
+  ? Param extends `${infer Name}:${infer Type}` // If the string contains a parameter
+    ? { [K in Name]: ParseArgType<Type, Name, Enums> } & ExtractParamArgs<
+        Rest,
+        Enums
+      > // If the string contains a parameter with a type
+    : { [K in Param]: string } & ExtractParamArgs<Rest, Enums> // If the string has no parameter type
+  : unknown // If the string has no parameters
+
+type TranslationAtKeyWithParams<
+  Translations,
+  Key extends string,
+> = Key extends `${infer First}.${infer Rest}`
+  ? First extends keyof Translations
+    ? TranslationAtKeyWithParams<Translations[First], Rest>
+    : never
+  : Key extends keyof Translations
+    ? Translations[Key]
+    : never
+
+type NormalizedTranslationAtKey<T> =
+  T extends ReturnType<typeof dt> ? T : [T, ReturnType<typeof dt>[1]]
+
+type NormalizedTranslationAtKeyWithParams<Key extends string> =
+  NormalizedTranslationAtKey<
+    TranslationAtKeyWithParams<RegisteredTranslations, Key>
+  >
+
+type Params<S extends DotPathsFor> = ExtractParamArgs<
+  NormalizedTranslationAtKeyWithParams<S>[0],
+  NormalizedTranslationAtKeyWithParams<S>[1] extends {
+    enum: infer E
+  }
+    ? keyof E extends never
+      ? EnumMap
+      : E
+    : EnumMap
+>
+
+type PathsWithParams = {
+  [K in DotPathsFor]: keyof Params<K> extends never ? never : K
+}[DotPathsFor]
+
+type PathsWithNoParams = {
+  [K in DotPathsFor]: keyof Params<K> extends never ? K : never
+}[DotPathsFor]
+
+interface I18nOptions {
+  defaultLocale: string
+  fallbackLocale: string | string[]
+  translations: Record<Lowercase<string>, LanguageMessages>
+}
+
+interface TranslationFn {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+  <S extends PathsWithNoParams>(key: S, locale?: string): string
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+  <S extends PathsWithParams, A extends Params<S>>(
+    key: S,
+    args: A,
+    locale?: string,
+  ): string
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+  <S extends DotPathsFor, A extends Params<S>>(
+    key: S,
+    args?: A,
+    locale?: string,
+  ): string
+}
+
+function initI18n(options: I18nOptions) {
+  const { defaultLocale, fallbackLocale, translations } = options
+
+  const fallbackLocales = Array.isArray(fallbackLocale)
+    ? fallbackLocale
+    : [fallbackLocale]
+
+  // Cache ordered locales to avoid recomputation
+  const orderedLocales = new Set([
+    ...getOrderedLocaleAndParentLocales(defaultLocale),
+    ...fallbackLocales.flatMap(getOrderedLocaleAndParentLocales),
+  ])
+
+  // Cache locale hierarchies to avoid repeated computation
+  const localeCache = new Map<string, Set<string>>()
+
+  // Pre-compile regex patterns for better performance
+  const paramRegexCache = new Map<string, RegExp>()
+
+  const getTargetLocales = (locale: string): Set<string> => {
+    if (locale === defaultLocale) return orderedLocales
+
+    if (!localeCache.has(locale)) {
+      localeCache.set(
+        locale,
+        new Set([
+          ...getOrderedLocaleAndParentLocales(locale),
+          ...orderedLocales,
+        ]),
+      )
+    }
+    return localeCache.get(locale) ?? new Set()
+  }
+
+  const t: TranslationFn = <S extends DotPathsFor>(
+    key: S,
+    args?: Params<S>,
+    locale: string = defaultLocale,
+  ) => {
+    const actualArgs = typeof args === 'string' ? undefined : args
+    const actualLocale =
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      typeof args === 'string' ? args : (locale ?? defaultLocale)
+
+    const targetLocales = getTargetLocales(actualLocale)
+
+    for (const locale of targetLocales) {
+      const translationFile =
+        translations[locale.toLowerCase() as Lowercase<string>]
+      if (translationFile == null) continue
+
+      const translation = getTranslation(
+        locale,
+        translationFile,
+        key,
+        actualArgs,
+        paramRegexCache,
+      )
+      if (translation) return translation
+    }
+    return key
+  }
+
+  return { t }
+}
+
+function getOrderedLocaleAndParentLocales(locale: string) {
+  const locales = []
+  let parentLocale = locale
+  while (parentLocale !== '') {
+    locales.push(parentLocale)
+    // More efficient parent locale extraction
+    const lastDashIndex = parentLocale.lastIndexOf('-')
+    parentLocale = lastDashIndex > 0 ? parentLocale.slice(0, lastDashIndex) : ''
+  }
+  return locales
+}
+
+function getTranslation<S extends DotPathsFor>(
+  locale: string,
+  translations: LanguageMessages,
+  key: S,
+  args?: Params<S>,
+  regexCache?: Map<string, RegExp>,
+) {
+  const translation = getTranslationByKey(translations, key)
+  if (!translation) return undefined
+
+  const argObj = args ?? {}
+
+  try {
+    if (typeof translation === 'string') {
+      return performSubstitution(locale, translation, argObj, {}, regexCache)
+    }
+
+    if (Array.isArray(translation)) {
+      const [str, translationParams] = translation as [string, ParamOptions]
+      return performSubstitution(
+        locale,
+        str,
+        argObj,
+        translationParams,
+        regexCache,
+      )
+    }
+  } catch {
+    return undefined
+  }
+
+  return undefined
+}
+
+function getTranslationByKey(obj: LanguageMessages, key: string) {
+  // Optimize for single-level keys (common case)
+  if (!key.includes('.')) {
+    const result = obj[key]
+    return typeof result === 'string' || Array.isArray(result)
+      ? result
+      : undefined
+  }
+
+  const keys = key.split('.')
+  let currentObj = obj
+
+  for (let i = 0; i < keys.length; i++) {
+    const k = keys[i] as keyof LanguageMessages
+    const newObj = currentObj[k] as LanguageMessages | I18nMessage | null
+
+    if (newObj == null) return undefined
+
+    if (typeof newObj === 'string' || Array.isArray(newObj)) {
+      // Early return if we found a value but haven't reached the end
+      return i === keys.length - 1 ? newObj : undefined
+    }
+
+    currentObj = newObj
+  }
+
+  return undefined
+}
+
+// Extract substitution handlers for better maintainability
+const substitutionHandlers = {
+  plural: (
+    locale: string,
+    argValue: unknown,
+    argKey: string,
+    translationParams: ParamOptions,
+  ) => {
+    if (typeof argValue !== 'number') throw new Error('Invalid argument')
+
+    const pluralMap = translationParams.plural?.[argKey]
+    if (!pluralMap) throw new Error('Missing plural configuration')
+
+    const pluralRules = new Intl.PluralRules(locale, { type: pluralMap.type })
+    const replacement =
+      pluralMap[pluralRules.select(argValue)] ?? pluralMap.other
+
+    const numberFormatter = new Intl.NumberFormat(locale, pluralMap.formatter)
+    return replacement.replace('{?}', numberFormatter.format(argValue))
+  },
+
+  enum: (
+    _locale: string,
+    argValue: unknown,
+    argKey: string,
+    translationParams: ParamOptions,
+  ) => {
+    if (typeof argValue !== 'string') throw new Error('Invalid argument')
+
+    const enumMap = translationParams.enum?.[argKey]
+    const replacement = enumMap?.[argValue]
+
+    if (replacement == null) throw new Error('Missing replacement value')
+    return replacement
+  },
+
+  number: (
+    locale: string,
+    argValue: unknown,
+    argKey: string,
+    translationParams: ParamOptions,
+  ) => {
+    if (typeof argValue !== 'number') throw new Error('Invalid argument')
+
+    const numberFormat = new Intl.NumberFormat(
+      locale,
+      translationParams.number?.[argKey],
+    )
+    return numberFormat.format(argValue)
+  },
+
+  list: (
+    locale: string,
+    argValue: unknown,
+    argKey: string,
+    translationParams: ParamOptions,
+  ) => {
+    if (!Array.isArray(argValue)) throw new Error('Invalid argument')
+
+    const formatter = new Intl.ListFormat(
+      locale,
+      translationParams.list?.[argKey],
+    )
+    return formatter.format(argValue)
+  },
+
+  date: (
+    locale: string,
+    argValue: unknown,
+    argKey: string,
+    translationParams: ParamOptions,
+  ) => {
+    if (!(argValue instanceof Date)) throw new Error('Invalid argument')
+
+    const dateFormat = new Intl.DateTimeFormat(
+      locale,
+      translationParams.date?.[argKey],
+    )
+    return dateFormat.format(argValue)
+  },
+}
+
+function performSubstitution(
+  locale: string,
+  str: string,
+  args: Record<string, unknown>,
+  translationParams: ParamOptions,
+  regexCache?: Map<string, RegExp>,
+): string {
+  return Object.entries(args).reduce((result, [argKey, argValue]) => {
+    // Cache regex compilation for better performance
+    const regexKey = `{${argKey}:?([^}]*)?}`
+    let regex = regexCache?.get(regexKey)
+
+    if (!regex) {
+      regex = new RegExp(regexKey)
+      regexCache?.set(regexKey, regex)
+    }
+
+    const match = result.match(regex)
+    const [replaceKey, argType] = match ?? [`{${argKey}}`, undefined]
+
+    if (
+      argType &&
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      substitutionHandlers[argType as keyof typeof substitutionHandlers]
+    ) {
+      const handler =
+        substitutionHandlers[argType as keyof typeof substitutionHandlers]
+      const replacement = handler(locale, argValue, argKey, translationParams)
+      return result.replace(replaceKey, replacement)
+    }
+
+    // Default case: string conversion
+    return result.replace(replaceKey, String(argValue))
+  }, str)
+}
+
+export type { I18nOptions, TranslationFn }
+export { initI18n }

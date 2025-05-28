@@ -1,0 +1,8 @@
+import { cache } from 'react'
+
+import { i18nConfig } from '@/lib/i18n/config'
+import { initI18n } from '@/lib/i18n/init'
+
+const { t: uncachedT } = initI18n(i18nConfig)
+
+export const t = cache(uncachedT)

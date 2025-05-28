@@ -1,0 +1,41 @@
+import { Geist, Geist_Mono } from 'next/font/google'
+import { ThemeProvider } from 'next-themes'
+
+import { TranslationProvider } from '@/hooks/use-translation'
+import { cn } from '@/lib/utils'
+
+const geistSans = Geist({
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+})
+
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+})
+
+export default async function LocaleLayout({
+  children,
+  params,
+}: Readonly<{
+  children: React.ReactNode
+  params: Promise<{ lang: string }>
+}>) {
+  const { lang } = await params
+
+  return (
+    <html lang={lang} suppressHydrationWarning>
+      <body
+        className={cn(
+          'flex min-h-dvh flex-col font-sans antialiased',
+          geistSans.variable,
+          geistMono.variable,
+        )}
+      >
+        <ThemeProvider attribute="class" disableTransitionOnChange>
+          <TranslationProvider locale={lang}>{children}</TranslationProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  )
+}

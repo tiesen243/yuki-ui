@@ -52,12 +52,12 @@
       "type": "registry:file",
       "files": [
         {
-          "path": "registry/auth/core/queries.drizzle.ts.hbs",
+          "path": "registry/auth/server/core/queries.drizzle.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/core/queries.ts"
         },
         {
-          "path": "registry/auth/types.drizzle.ts.hbs",
+          "path": "registry/auth/server/types.drizzle.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/types.ts"
         }
@@ -68,12 +68,12 @@
       "type": "registry:file",
       "files": [
         {
-          "path": "registry/auth/core/queries.prisma.ts.hbs",
+          "path": "registry/auth/server/core/queries.prisma.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/core/queries.ts"
         },
         {
-          "path": "registry/auth/types.prisma.ts.hbs",
+          "path": "registry/auth/server/types.prisma.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/types.ts"
         }
@@ -84,12 +84,12 @@
       "type": "registry:file",
       "files": [
         {
-          "path": "registry/auth/core/queries.mongodb.ts.hbs",
+          "path": "registry/auth/server/core/queries.mongodb.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/core/queries.ts"
         },
         {
-          "path": "registry/auth/types.mongodb.ts.hbs",
+          "path": "registry/auth/server/types.mongodb.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/types.ts"
         }
@@ -100,12 +100,12 @@
       "type": "registry:file",
       "files": [
         {
-          "path": "registry/auth/core/queries.memory.ts.hbs",
+          "path": "registry/auth/server/core/queries.memory.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/core/queries.ts"
         },
         {
-          "path": "registry/auth/types.memory.ts.hbs",
+          "path": "registry/auth/server/types.memory.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/types.ts"
         }
@@ -114,53 +114,53 @@
     {
       "name": "auth",
       "type": "registry:file",
-      "title": "Yuki Auth",
+      "title": "Auth",
       "description": "A simple authentication system from scratch.",
       "categories": ["authentication"],
       "dependencies": ["@oslojs/crypto", "@oslojs/encoding", "arctic"],
       "files": [
         {
-          "path": "registry/auth/core/password/scrypt.ts.hbs",
+          "path": "registry/auth/server/core/password/scrypt.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/core/password/scrypt.ts"
         },
         {
-          "path": "registry/auth/core/password/index.ts.hbs",
+          "path": "registry/auth/server/core/password/index.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/core/password/index.ts"
         },
         {
-          "path": "registry/auth/core/cookies.ts.hbs",
+          "path": "registry/auth/server/core/cookies.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/core/cookies.ts"
         },
         {
-          "path": "registry/auth/core/index.ts.hbs",
+          "path": "registry/auth/server/core/index.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/core/index.ts"
         },
         {
-          "path": "registry/auth/providers/base.ts.hbs",
+          "path": "registry/auth/server/providers/base.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/providers/base.ts"
         },
         {
-          "path": "registry/auth/config.ts.hbs",
+          "path": "registry/auth/server/config.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/config.ts"
         },
         {
-          "path": "registry/auth/index.ts.hbs",
+          "path": "registry/auth/server/index.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/index.ts"
         },
         {
-          "path": "registry/auth/route.ts.hbs",
+          "path": "registry/auth/app/route.ts.hbs",
           "type": "registry:page",
           "target": "app/api/auth/[[...auth]]/route.ts"
         },
         {
-          "path": "registry/auth/use-session.tsx.hbs",
+          "path": "registry/auth/hooks/use-session.tsx.hbs",
           "type": "registry:hook",
           "target": "hooks/use-session.tsx"
         }
@@ -171,7 +171,7 @@
       "type": "registry:file",
       "files": [
         {
-          "path": "registry/auth/providers/discord.ts.hbs",
+          "path": "registry/auth/server/providers/discord.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/providers/discord.ts"
         }
@@ -182,7 +182,7 @@
       "type": "registry:file",
       "files": [
         {
-          "path": "registry/auth/providers/facebook.ts.hbs",
+          "path": "registry/auth/server/providers/facebook.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/providers/facebook.ts"
         }
@@ -193,7 +193,7 @@
       "type": "registry:file",
       "files": [
         {
-          "path": "registry/auth/providers/figma.ts.hbs",
+          "path": "registry/auth/server/providers/figma.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/providers/figma.ts"
         }
@@ -204,7 +204,7 @@
       "type": "registry:file",
       "files": [
         {
-          "path": "registry/auth/providers/github.ts.hbs",
+          "path": "registry/auth/server/providers/github.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/providers/github.ts"
         }
@@ -215,7 +215,7 @@
       "type": "registry:file",
       "files": [
         {
-          "path": "registry/auth/providers/google.ts.hbs",
+          "path": "registry/auth/server/providers/google.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/providers/google.ts"
         }
@@ -226,7 +226,7 @@
       "type": "registry:file",
       "files": [
         {
-          "path": "registry/auth/providers/notion.ts.hbs",
+          "path": "registry/auth/server/providers/notion.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/providers/notion.ts"
         }
@@ -237,9 +237,78 @@
       "type": "registry:file",
       "files": [
         {
-          "path": "registry/auth/providers/spotify.ts.hbs",
+          "path": "registry/auth/server/providers/spotify.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/providers/spotify.ts"
+        }
+      ]
+    },
+    {
+      "name": "i18n",
+      "type": "registry:file",
+      "title": "Yuki i18n",
+      "description": "A simple i18n system form scratch.",
+      "categories": ["i18n"],
+      "files": [
+        {
+          "path": "registry/i18n/lib/locales/en.ts.hbs",
+          "type": "registry:lib",
+          "target": "lib/i18n/locales/en.ts"
+        },
+        {
+          "path": "registry/i18n/lib/locales/vi.ts.hbs",
+          "type": "registry:lib",
+          "target": "lib/i18n/locales/vi.ts"
+        },
+        {
+          "path": "registry/i18n/lib/config.ts.hbs",
+          "type": "registry:lib",
+          "target": "lib/i18n/config.ts"
+        },
+        {
+          "path": "registry/i18n/lib/define-translation.ts.hbs",
+          "type": "registry:lib",
+          "target": "lib/i18n/define-translation.ts"
+        },
+        {
+          "path": "registry/i18n/lib/index.ts.hbs",
+          "type": "registry:lib",
+          "target": "lib/i18n/index.ts"
+        },
+        {
+          "path": "registry/i18n/lib/init.ts.hbs",
+          "type": "registry:lib",
+          "target": "lib/i18n/init.ts"
+        },
+        {
+          "path": "registry/i18n/lib/register.d.ts.hbs",
+          "type": "registry:lib",
+          "target": "lib/i18n/register.d.ts"
+        },
+        {
+          "path": "registry/i18n/hooks/use-translation.tsx.hbs",
+          "type": "registry:hook",
+          "target": "hooks/use-translation.tsx"
+        },
+        {
+          "path": "registry/i18n/app/middleware.ts.hbs",
+          "type": "registry:file",
+          "target": "middleware.ts"
+        },
+        {
+          "path": "registry/i18n/app/[lang]/layout.tsx.hbs",
+          "type": "registry:page",
+          "target": "app/[lang]/layout.tsx"
+        },
+        {
+          "path": "registry/i18n/app/[lang]/page.tsx.hbs",
+          "type": "registry:page",
+          "target": "app/[lang]/page.tsx"
+        },
+        {
+          "path": "registry/i18n/app/[lang]/page.client.tsx.hbs",
+          "type": "registry:page",
+          "target": "app/[lang]/page.client.tsx"
         }
       ]
     }
