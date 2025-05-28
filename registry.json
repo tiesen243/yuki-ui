@@ -296,17 +296,17 @@
           "target": "middleware.ts"
         },
         {
-          "path": "registry/i18n/app/[lang]/layout.tsx.hbs",
+          "path": "registry/i18n/app/layout.tsx.hbs",
           "type": "registry:page",
           "target": "app/[lang]/layout.tsx"
         },
         {
-          "path": "registry/i18n/app/[lang]/page.tsx.hbs",
+          "path": "registry/i18n/app/page.tsx.hbs",
           "type": "registry:page",
           "target": "app/[lang]/page.tsx"
         },
         {
-          "path": "registry/i18n/app/[lang]/page.client.tsx.hbs",
+          "path": "registry/i18n/app/page.client.tsx.hbs",
           "type": "registry:page",
           "target": "app/[lang]/page.client.tsx"
         }
