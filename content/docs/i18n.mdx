@@ -84,9 +84,9 @@ t('count', { count: 5, entity: 'items' }) // "count 5 items"
 
 ### 1. Define your locale files
 
-Create translation files for each locale in `lib/i18n/locale/`:
+Create translation files for each locale in `lib/i18n/locales/`:
 
-```ts title="lib/i18n/locale/en.ts"
+```ts title="lib/i18n/locales/en.ts"
 import type { LanguageMessages } from '@/lib/i18n/init'
 import { dt } from '@/lib/i18n/define-translation'
 
@@ -126,7 +126,7 @@ export default {
 } as const satisfies LanguageMessages
 ```
 
-```ts title="lib/i18n/locale/es.ts"
+```ts title="lib/i18n/locales/es.ts"
 import type { LanguageMessages } from '@/lib/i18n/init'
 import { dt } from '@/lib/i18n/define-translation'
 
@@ -286,7 +286,7 @@ export default async function LangLayout({
 
 The `dt()` helper allows you to define complex pluralization rules:
 
-```ts title="lib/i18n/locale/en.ts"
+```ts title="lib/i18n/locales/en.ts"
 export default {
   // Multiple pluralization variables
   fileCount: dt(
@@ -357,7 +357,7 @@ t('auth.login')
 
 ## API Reference
 
-### `t(key, variables?, locale?)`
+### `t(key, variables?, locale?)` or `t(key, locale?)`
 
 The main translation function.
 
@@ -412,7 +412,7 @@ lib/
     ├── index.ts              # Public API exports
     ├── init.ts               # Core i18n initialization
     ├── register.d.ts
-    └── locale/
+    └── locales/
         ├── en.ts             # English translations
         ├── es.ts             # Spanish translations
         └── ...
