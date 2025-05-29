@@ -129,14 +129,56 @@ import {
 
 </Tabs>
 
-## Usage
+## Variants
 
-```tsx
-import { Typography } from '@/components/ui/typography'
-```
+### Default
 
-```tsx
-<Typography variant="h1">
-  The quick brown fox jumps over the lazy dog
-</Typography>
-```
+<YukiTabs defaultValue="tab1">
+  <TabsList variant="default" className="w-full">
+    <TabsTrigger value="tab1" variant="default">
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2" variant="default">
+      Tab 2
+    </TabsTrigger>
+  </TabsList>
+</YukiTabs>
+
+### Underline
+
+<YukiTabs defaultValue="tab1">
+  <TabsList variant="underline" className="w-full">
+    <TabsTrigger value="tab1" variant="underline">
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2" variant="underline">
+      Tab 2
+    </TabsTrigger>
+  </TabsList>
+</YukiTabs>
+
+### Border
+
+<YukiTabs defaultValue="tab1">
+  <TabsList variant="border" className="w-full">
+    <TabsTrigger value="tab1" variant="border">
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2" variant="border">
+      Tab 2
+    </TabsTrigger>
+  </TabsList>
+</YukiTabs>
+
+### Light
+
+<YukiTabs defaultValue="tab1">
+  <TabsList variant="light" className="w-full">
+    <TabsTrigger value="tab1" variant="light">
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2" variant="light">
+      Tab 2
+    </TabsTrigger>
+  </TabsList>
+</YukiTabs>
