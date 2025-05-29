@@ -4,14 +4,6 @@
   "homepage": "https://yuki-ui.vercel.app",
   "items": [
     {
-      "name": "typography",
-      "type": "registry:ui",
-      "title": "Typography",
-      "description": "A typography component.",
-      "categories": ["text"],
-      "files": [{ "path": "registry/ui/typography.tsx", "type": "registry:ui" }]
-    },
-    {
       "name": "form",
       "type": "registry:ui",
       "title": "Form",
@@ -46,6 +38,21 @@
           "target": "app/login/page.tsx"
         }
       ]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Shadcn Tabs extended with some variants.",
+      "files": [{ "path": "registry/ui/tabs.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "typography",
+      "type": "registry:ui",
+      "title": "Typography",
+      "description": "A typography component.",
+      "categories": ["text"],
+      "files": [{ "path": "registry/ui/typography.tsx", "type": "registry:ui" }]
     },
     {
       "name": "auth-with-drizzle",

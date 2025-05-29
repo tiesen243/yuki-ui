@@ -1,0 +1,142 @@
+---
+title: Tabs
+description: A set of layered sections of content—known as tab panels—that are displayed one at a time, extended with additional variants and styling options.
+---
+
+import { Card, CardContent } from '@/components/ui/card'
+import {
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Tabs as YukiTabs,
+} from '@/registry/ui/tabs'
+
+<Tabs items={['Preview', 'Code']}>
+
+<Tab value='Preview'>
+
+  <YukiTabs defaultValue="tab1">
+    <TabsList variant='underline' className="w-full">
+      <TabsTrigger value="tab1" variant='underline'>
+        Tab 1
+      </TabsTrigger>
+      <TabsTrigger value="tab2" variant='underline'>
+        Tab 2
+      </TabsTrigger>
+    </TabsList>
+
+    <TabsContent value="tab1" asChild>
+      <Card className="py-0">
+        <CardContent>
+          This is the content of Tab 1. <br/>
+          lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </CardContent>
+      </Card>
+    </TabsContent>
+
+    <TabsContent value="tab2" asChild>
+      <Card className='py-0'>
+        <CardContent>
+          Tab 2 content goes here. <br/>
+          lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </CardContent>
+      </Card>
+    </TabsContent>
+
+  </YukiTabs>
+
+</Tab>
+
+<Tab value='Code'>
+
+```tsx
+<Tabs defaultValue="tab1">
+  <TabsList variant="underline" className="w-full">
+    <TabsTrigger value="tab1" variant="underline">
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2" variant="underline">
+      Tab 2
+    </TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="tab1" asChild>
+    <Card>
+      <CardContent>
+        This is the content of Tab 1. lorem ipsum dolor sit amet, consectetur
+        adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua.
+      </CardContent>
+    </Card>
+  </TabsContent>
+
+  <TabsContent value="tab2" asChild>
+    <Card>
+      <CardContent>
+        Tab 2 content goes here. lorem ipsum dolor sit amet, consectetur
+        adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua.
+      </CardContent>
+    </Card>
+  </TabsContent>
+</Tabs>
+```
+
+</Tab>
+
+</Tabs>
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+
+<Tab value='CLI'>
+
+<Install name="tabs" />
+
+</Tab>
+
+<Tab value='Manual'>
+
+<Steps>
+<Step>
+
+### Install the following dependencies:
+
+```package-install
+@radix-ui/react-tabs
+```
+
+</Step>
+
+<Step>
+### Copy and paste the following code into your project.
+
+<ComponentSource name="ui/tabs.tsx" />
+
+</Step>
+
+<Step>
+
+### Update the import paths to match your project setup.
+
+</Step>
+
+</Steps>
+</Tab>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { Typography } from '@/components/ui/typography'
+```
+
+```tsx
+<Typography variant="h1">
+  The quick brown fox jumps over the lazy dog
+</Typography>
+```
