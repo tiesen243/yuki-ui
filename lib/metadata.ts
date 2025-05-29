@@ -8,7 +8,7 @@ type Metadata = Omit<NextMetadata, 'title' | 'keywords'> & {
 }
 
 export const createMetadata = (override: Partial<Metadata> = {}): Metadata => {
-  const siteName = 'Yuki Toolkit'
+  const siteName = 'Yuki UI'
   const title = override.title ? `${override.title} | ${siteName}` : siteName
   const description =
     override.description ??

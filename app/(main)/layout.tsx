@@ -49,12 +49,12 @@ export default function MainLayout({
           <>
             <Image
               src="/logo.svg"
-              alt="Yuki Toolkit"
+              alt="Yuki UI"
               width={32}
               height={32}
               className="dark:invert"
             />
-            <span className="text-xl font-bold">Yuki Toolkit</span>
+            <span className="text-xl font-bold">Yuki UI</span>
           </>
         ),
       }}
