@@ -1,6 +1,6 @@
 # Yuki Toolkit
 
-A comprehensive collection of copy-paste React components and UI libraries built with shadcn/ui. Install components instantly using the shadcn CLI with a focus on customization, accessibility, and developer experience.
+A comprehensive collection of copy-paste React components and libraries. Install components instantly using the shadcn CLI with a focus on customization, accessibility, and developer experience.
 
 ## Features
 

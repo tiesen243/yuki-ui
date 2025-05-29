@@ -12,7 +12,7 @@ import {
 } from 'fumadocs-ui/page'
 
 import { ComponentSource } from '@/components/component-source'
-import { InstallComponent } from '@/components/install-component'
+import { Install } from '@/components/install'
 import { Button } from '@/components/ui/button'
 import { source } from '@/content'
 import { createMetadata } from '@/lib/metadata'
@@ -41,7 +41,7 @@ export default async function Page({
             Button,
             Callout,
             ComponentSource,
-            InstallComponent,
+            Install,
             Link,
             Step,
             Steps,

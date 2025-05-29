@@ -379,7 +379,7 @@ if (process.env.NODE_ENV !== 'production') globalForMemory.db = db
 
 First, install the database adapter for your database.
 
-<InstallComponent name="auth-with-{database}" />
+<Install name="auth-with-{database}" />
 
 Replace `{database}` with your database adapter. Currently supported databases:
 
@@ -390,7 +390,7 @@ Replace `{database}` with your database adapter. Currently supported databases:
 
 Then, install the package.
 
-<InstallComponent name="auth" />
+<Install name="auth" />
 
 <Callout>
 
@@ -402,7 +402,7 @@ By default, Auth uses [`Scrypt`](https://github.com/lucia-auth/lucia/blob/v3/pac
 
 These OAuth providers are implemented using [Arctic](https://arcticjs.dev/), a collection of OAuth 2.0 clients for popular providers.
 
-<InstallComponent name="oauth-{provider}" />
+<Install name="oauth-{provider}" />
 
 Replace `{provider}` with the OAuth provider you want to use. Currently supported providers:
 
@@ -416,7 +416,7 @@ Replace `{provider}` with the OAuth provider you want to use. Currently supporte
 
 Example:
 
-<InstallComponent name="oauth-google" />
+<Install name="oauth-google" />
 
 <Callout>
 Remember to add environment variables for your OAuth providers. You can find the required environment variables in the documentation for each provider.

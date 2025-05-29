@@ -3,7 +3,7 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs'
 
 import { getBaseUrl } from '@/lib/utils'
 
-export const InstallComponent: React.FC<{ name: string }> = ({ name }) => {
+export const Install: React.FC<{ name: string }> = ({ name }) => {
   const code = `shadcn@latest add ${getBaseUrl()}/r/${name}.json`
 
   return (
