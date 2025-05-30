@@ -63,4 +63,4 @@ function Typography({
   )
 }
 
-export { Typography }
+export { Typography, typographyVariants }
