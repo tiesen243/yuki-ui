@@ -13,9 +13,9 @@ import {
 
 import { ComponentSource } from '@/components/component-source'
 import { Install } from '@/components/install'
-import { Button } from '@/components/ui/button'
 import { source } from '@/content'
 import { createMetadata } from '@/lib/metadata'
+import { Button } from '@/registry/ui/button'
 
 export default async function Page({
   params,
