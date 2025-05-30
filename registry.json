@@ -4,6 +4,35 @@
   "homepage": "https://yuki-ui.vercel.app",
   "items": [
     {
+      "name": "use-mounted",
+      "type": "registry:hook",
+      "title": "useMounted",
+      "description": "A hook that returns true if the component is mounted.",
+      "files": [
+        { "path": "registry/hooks/use-mounted.ts", "type": "registry:hook" }
+      ]
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "Extended alert component with variants.",
+      "categories": ["feedback"],
+      "cssVars": {
+        "light": {
+          "success": "oklch(0.63 0.17 149)",
+          "info": "oklch(0.55 0.22 263)",
+          "warning": "oklch(0.68 0.14 76)"
+        },
+        "dark": {
+          "success": "oklch(0.8 0.18 152)",
+          "info": "oklch(0.71 0.14 255)",
+          "warning": "oklch(0.86 0.17 92)"
+        }
+      },
+      "files": [{ "path": "registry/ui/alert.tsx", "type": "registry:ui" }]
+    },
+    {
       "name": "form",
       "type": "registry:ui",
       "title": "Form",

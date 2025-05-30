@@ -1,0 +1,117 @@
+---
+title: Alert
+description: Extended with additional variants and styling options.
+---
+
+import { TerminalIcon } from 'lucide-react'
+
+import { Alert, AlertDescription, AlertTitle } from '@/registry/ui/alert'
+
+<Tabs items={['Preview', 'Code']}>
+
+<Tab value='Preview'>
+
+<Alert>
+  <TerminalIcon />
+  <AlertTitle>Alert Title</AlertTitle>
+  <AlertDescription>
+    This is an alert description. It provides additional information about the
+    alert.
+  </AlertDescription>
+</Alert>
+
+</Tab>
+
+<Tab value='Code'>
+
+```tsx
+<Alert>
+  <TerminalIcon />
+  <AlertTitle>Alert Title</AlertTitle>
+  <AlertDescription>
+    This is an alert description. It provides additional information about the
+    alert.
+  </AlertDescription>
+</Alert>
+```
+
+</Tab>
+
+</Tabs>
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+
+<Tab value='CLI'>
+
+<Install name="tabs" />
+
+</Tab>
+
+<Tab value='Manual'>
+
+### Copy and paste the following code into your project.
+
+<ComponentSource name="ui/alert.tsx" />
+
+</Tab>
+
+</Tabs>
+
+## Variants
+
+### Default
+
+<Alert>
+  <TerminalIcon />
+  <AlertTitle>Alert Title</AlertTitle>
+  <AlertDescription>
+    This is an alert description. It provides additional information about the
+    alert.
+  </AlertDescription>
+</Alert>
+
+### Success
+
+<Alert variant="success">
+  <TerminalIcon />
+  <AlertTitle>Alert Title</AlertTitle>
+  <AlertDescription>
+    This is an alert description. It provides additional information about the
+    alert.
+  </AlertDescription>
+</Alert>
+
+### Info
+
+<Alert variant="info">
+  <TerminalIcon />
+  <AlertTitle>Alert Title</AlertTitle>
+  <AlertDescription>
+    This is an alert description. It provides additional information about the
+    alert.
+  </AlertDescription>
+</Alert>
+
+### Warning
+
+<Alert variant="warning">
+  <TerminalIcon />
+  <AlertTitle>Alert Title</AlertTitle>
+  <AlertDescription>
+    This is an alert description. It provides additional information about the
+    alert.
+  </AlertDescription>
+</Alert>
+
+### Destructive
+
+<Alert variant="destructive">
+  <TerminalIcon />
+  <AlertTitle>Alert Title</AlertTitle>
+  <AlertDescription>
+    This is an alert description. It provides additional information about the
+    alert.
+  </AlertDescription>
+</Alert>

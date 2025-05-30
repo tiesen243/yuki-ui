@@ -1,5 +1,6 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/ui/tabs'
+import { TerminalIcon } from 'lucide-react'
+
+import { Alert, AlertDescription, AlertTitle } from '@/registry/ui/alert'
 import { ToggleTheme } from './page.client'
 
 export default function TestPage() {
@@ -7,38 +8,18 @@ export default function TestPage() {
     <main className="container flex min-h-dvh flex-col items-center justify-center gap-4">
       <ToggleTheme />
 
-      {(['default', 'underline', 'border', 'light'] as const).map((variant) => (
-        <Tabs key={variant} defaultValue="tab1">
-          <TabsList variant={variant} className="w-full">
-            <TabsTrigger value="tab1" variant={variant}>
-              Tab 1
-            </TabsTrigger>
-            <TabsTrigger value="tab2" variant={variant}>
-              Tab 2
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="tab1" asChild>
-            <Card>
-              <CardContent>
-                <p>This is the content of Tab 1.</p>
-                lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="tab2" asChild>
-            <Card>
-              <CardContent>
-                <p>Tab 2 content goes here.</p>
-                lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      ))}
+      {(['default', 'destructive', 'success', 'info', 'warning'] as const).map(
+        (variant) => (
+          <Alert key={variant} variant={variant}>
+            <TerminalIcon />
+            <AlertTitle>Alert Title</AlertTitle>
+            <AlertDescription>
+              This is an alert description. It provides additional information
+              about the alert.
+            </AlertDescription>
+          </Alert>
+        ),
+      )}
     </main>
   )
 }
