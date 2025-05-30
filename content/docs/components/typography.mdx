@@ -7,7 +7,7 @@ import { Typography } from '@/registry/ui/typography'
 
 <Tabs items={['Preview', 'Code']}>
 
-<Tab value='Preview'>
+<Tab value='Preview' className="not-prose">
 
 <Typography variant="h1">
   The quick brown fox jumps over the lazy dog
@@ -22,9 +22,9 @@ import { Typography } from '@/registry/ui/typography'
   The quick brown fox jumps over the lazy dog
 </Typography>
 <Typography variant="p">The quick brown fox jumps over the lazy dog</Typography>
-<Typography variant="blockquote">
-  The quick brown fox jumps over the lazy dog
-</Typography>
+
+{/* prettier-ignore */}
+<Typography variant="blockquote">The quick brown fox jumps over the lazy dog</Typography>
 
 <Typography variant="ul">
   <li>Unordered list item 1</li>
@@ -37,6 +37,9 @@ import { Typography } from '@/registry/ui/typography'
   <li>Ordered list item 2</li>
   <li>Ordered list item 3</li>
 </Typography>
+
+<Typography variant="code">console.log('hello')</Typography>
+
 </Tab>
 
 <Tab value='Code'>
