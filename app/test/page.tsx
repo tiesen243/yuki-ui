@@ -1,4 +1,6 @@
-import { Button } from '@/registry/ui/button'
+import { HomeIcon } from 'lucide-react'
+
+import { Badge } from '@/registry/ui/badge'
 import { ToggleTheme } from './page.client'
 
 export default function TestPage() {
@@ -15,13 +17,12 @@ export default function TestPage() {
           'warning',
           'destructive',
           'outline',
-          'ghost',
-          'link',
         ] as const
       ).map((variant) => (
-        <Button key={variant} variant={variant}>
+        <Badge key={variant} variant={variant} size="lg" rounded="full">
+          <HomeIcon />
           {variant}
-        </Button>
+        </Badge>
       ))}
     </main>
   )

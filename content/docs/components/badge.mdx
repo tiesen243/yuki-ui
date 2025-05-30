@@ -1,0 +1,71 @@
+---
+title: Badge
+description: Extended with additional variants and styling options.
+---
+
+import { Badge } from '@/registry/ui/badge'
+
+<Tabs items={['Preview', 'Code']}>
+
+<Tab value='Preview' className="flex gap-4 flex-wrap">
+
+<Badge variant="default">Default</Badge>
+<Badge variant="secondary">Secondary</Badge>
+<Badge variant="success">Success</Badge>
+<Badge variant="info">Info</Badge>
+<Badge variant="warning">Warning</Badge>
+<Badge variant="destructive">Destructive</Badge>
+<Badge variant="outline">Outline</Badge>
+
+</Tab>
+
+<Tab value='Code'>
+
+```tsx
+<Button variant="default">Default</Button>
+<Badge variant="default">Default</Badge>
+<Badge variant="secondary">Secondary</Badge>
+<Badge variant="success">Success</Badge>
+<Badge variant="info">Info</Badge>
+<Badge variant="warning">Warning</Badge>
+<Badge variant="destructive">Destructive</Badge>
+<Badge variant="outline">Outline</Badge>
+```
+
+</Tab>
+
+</Tabs>
+
+## Installation
+
+<Tabs items={['CLI', 'Manual']}>
+
+<Tab value='CLI'>
+
+<Install name="button" />
+
+</Tab>
+
+<Tab value="Manual">
+
+<Steps>
+<Step>
+
+### Install the following dependencies:
+
+```package-install
+@radix-ui/react-slot
+```
+
+</Step>
+
+<Step>
+### Copy and paste the following code into your project.
+
+</Step>
+<ComponentSource name="ui/badge.tsx" />
+</Steps>
+
+</Tab>
+
+</Tabs>
