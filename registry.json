@@ -121,6 +121,18 @@
       "title": "Typography",
       "description": "A typography component.",
       "categories": ["text"],
+      "cssVars": {
+        "light": {
+          "success": "oklch(0.63 0.17 149)",
+          "info": "oklch(0.55 0.22 263)",
+          "warning": "oklch(0.68 0.14 76)"
+        },
+        "dark": {
+          "success": "oklch(0.8 0.18 152)",
+          "info": "oklch(0.71 0.14 255)",
+          "warning": "oklch(0.86 0.17 92)"
+        }
+      },
       "files": [{ "path": "registry/ui/typography.tsx", "type": "registry:ui" }]
     },
     {
