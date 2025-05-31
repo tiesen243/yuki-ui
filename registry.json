@@ -20,14 +20,16 @@
       "categories": ["feedback"],
       "cssVars": {
         "light": {
-          "success": "oklch(0.63 0.17 149)",
-          "info": "oklch(0.55 0.22 263)",
-          "warning": "oklch(0.68 0.14 76)"
+          "success": "oklch(0.723 0.219 149.579)",
+          "info": "oklch(0.623 0.214 259.815)",
+          "warning": "oklch(0.795 0.184 86.047)",
+          "error": "oklch(0.637 0.237 25.331)"
         },
         "dark": {
-          "success": "oklch(0.8 0.18 152)",
-          "info": "oklch(0.71 0.14 255)",
-          "warning": "oklch(0.86 0.17 92)"
+          "success": "oklch(0.636 0.17 149.48)",
+          "info": "oklch(0.546 0.245 262.881)",
+          "warning": "oklch(0.795 0.184 86.047)",
+          "error": "oklch(0.637 0.237 25.331)"
         }
       },
       "files": [{ "path": "registry/ui/alert.tsx", "type": "registry:ui" }]
@@ -40,14 +42,16 @@
       "categories": ["feedback"],
       "cssVars": {
         "light": {
-          "success": "oklch(0.63 0.17 149)",
-          "info": "oklch(0.55 0.22 263)",
-          "warning": "oklch(0.68 0.14 76)"
+          "success": "oklch(0.723 0.219 149.579)",
+          "info": "oklch(0.623 0.214 259.815)",
+          "warning": "oklch(0.795 0.184 86.047)",
+          "error": "oklch(0.637 0.237 25.331)"
         },
         "dark": {
-          "success": "oklch(0.8 0.18 152)",
-          "info": "oklch(0.71 0.14 255)",
-          "warning": "oklch(0.86 0.17 92)"
+          "success": "oklch(0.636 0.17 149.48)",
+          "info": "oklch(0.546 0.245 262.881)",
+          "warning": "oklch(0.795 0.184 86.047)",
+          "error": "oklch(0.637 0.237 25.331)"
         }
       },
       "files": [{ "path": "registry/ui/badge.tsx", "type": "registry:ui" }]
@@ -60,14 +64,16 @@
       "categories": ["action"],
       "cssVars": {
         "light": {
-          "success": "oklch(0.63 0.17 149)",
-          "info": "oklch(0.55 0.22 263)",
-          "warning": "oklch(0.68 0.14 76)"
+          "success": "oklch(0.723 0.219 149.579)",
+          "info": "oklch(0.623 0.214 259.815)",
+          "warning": "oklch(0.795 0.184 86.047)",
+          "error": "oklch(0.637 0.237 25.331)"
         },
         "dark": {
-          "success": "oklch(0.8 0.18 152)",
-          "info": "oklch(0.71 0.14 255)",
-          "warning": "oklch(0.86 0.17 92)"
+          "success": "oklch(0.636 0.17 149.48)",
+          "info": "oklch(0.546 0.245 262.881)",
+          "warning": "oklch(0.795 0.184 86.047)",
+          "error": "oklch(0.637 0.237 25.331)"
         }
       },
       "files": [{ "path": "registry/ui/button.tsx", "type": "registry:ui" }]

@@ -9,22 +9,18 @@ import { Typography } from '@/registry/ui/typography'
 
 <Tab value='Preview' className="not-prose">
 
-<Typography variant="h1">
-  The quick brown fox jumps over the lazy dog
+<Typography variant="h1">Heading 1</Typography>
+<Typography variant="h2">Heading 2</Typography>
+<Typography variant="h3">Heading 3</Typography>
+<Typography variant="h4">Heading 4</Typography>
+<Typography variant="h5">Heading 5</Typography>
+<Typography variant="h6">Heading 6</Typography>
+<Typography variant="p">Paragraph</Typography>
+<Typography variant="caption" as="span">
+  Caption
 </Typography>
-<Typography variant="h2">
-  The quick brown fox jumps over the lazy dog
-</Typography>
-<Typography variant="h3">
-  The quick brown fox jumps over the lazy dog
-</Typography>
-<Typography variant="h4">
-  The quick brown fox jumps over the lazy dog
-</Typography>
-<Typography variant="p">The quick brown fox jumps over the lazy dog</Typography>
-
-{/* prettier-ignore */}
-<Typography variant="blockquote">The quick brown fox jumps over the lazy dog</Typography>
+<Typography variant="code">Code</Typography>
+<Typography variant="blockquote">Blockquote</Typography>
 
 <Typography variant="ul">
   <li>Unordered list item 1</li>
@@ -38,36 +34,34 @@ import { Typography } from '@/registry/ui/typography'
   <li>Ordered list item 3</li>
 </Typography>
 
-<Typography variant="code">console.log('hello')</Typography>
-
 </Tab>
 
 <Tab value='Code'>
 
 ```tsx
-import { Typography } from '@/components/ui/typography'
-
-<Typography variant="h1">
-  The quick brown fox jumps over the lazy dog
+<Typography variant="h1">Heading 1</Typography>
+<Typography variant="h2">Heading 2</Typography>
+<Typography variant="h3">Heading 3</Typography>
+<Typography variant="h4">Heading 4</Typography>
+<Typography variant="h5">Heading 5</Typography>
+<Typography variant="h6">Heading 6</Typography>
+<Typography variant="p">Paragraph</Typography>
+<Typography variant="caption">
+  Caption
 </Typography>
-<Typography variant="h2">
-  The quick brown fox jumps over the lazy dog
-</Typography>
-<Typography variant="h3">
-  The quick brown fox jumps over the lazy dog
-</Typography>
-<Typography variant="h4">
-  The quick brown fox jumps over the lazy dog
-</Typography>
-<Typography variant="p">The quick brown fox jumps over the lazy dog</Typography>
-<Typography variant="blockquote">
-  The quick brown fox jumps over the lazy dog
-</Typography>
+<Typography variant="code">Code</Typography>
+<Typography variant="blockquote">Blockquote</Typography>
 
 <Typography variant="ul">
   <li>Unordered list item 1</li>
   <li>Unordered list item 2</li>
   <li>Unordered list item 3</li>
+</Typography>
+
+<Typography variant="ol">
+  <li>Ordered list item 1</li>
+  <li>Ordered list item 2</li>
+  <li>Ordered list item 3</li>
 </Typography>
 ```
 
@@ -88,8 +82,8 @@ import { Typography } from '@/components/ui/typography'
 <Tab value='Manual'>
 
 <Steps>
-<Step>
 
+<Step>
 ### Install the following dependencies:
 
 ```package-install
@@ -106,24 +100,12 @@ import { Typography } from '@/components/ui/typography'
 </Step>
 
 <Step>
-
 ### Update the import paths to match your project setup.
 
 </Step>
 
 </Steps>
+
 </Tab>
 
 </Tabs>
-
-## Usage
-
-```tsx
-import { Typography } from '@/components/ui/typography'
-```
-
-```tsx
-<Typography variant="h1">
-  The quick brown fox jumps over the lazy dog
-</Typography>
-```

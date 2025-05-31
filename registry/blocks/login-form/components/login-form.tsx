@@ -64,7 +64,7 @@ export const LoginForm = () => {
           <form.Field
             name="email"
             render={({ field, meta }) => (
-              <div id={meta.id} className="grid gap-1">
+              <div id={meta.id} className="grid gap-2">
                 <form.Label>Email</form.Label>
                 <form.Control {...field}>
                   <Input type="email" placeholder="yuki@gmail.com" />
@@ -77,7 +77,7 @@ export const LoginForm = () => {
           <form.Field
             name="password"
             render={({ field, meta }) => (
-              <div id={meta.id} className="grid gap-1">
+              <div id={meta.id} className="grid gap-2">
                 <div className="flex items-center justify-between">
                   <form.Label>Password</form.Label>
                   <a

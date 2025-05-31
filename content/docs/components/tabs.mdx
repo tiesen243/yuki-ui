@@ -13,45 +13,68 @@ import {
 
 <Tabs items={['Preview', 'Code']}>
 
-<Tab value='Preview'>
+<Tab value='Preview' className="not-prose space-y-4">
 
-  <YukiTabs defaultValue="tab1">
-    <TabsList variant='underline' className="w-full">
-      <TabsTrigger value="tab1" variant='underline'>
-        Tab 1
-      </TabsTrigger>
-      <TabsTrigger value="tab2" variant='underline'>
-        Tab 2
-      </TabsTrigger>
-    </TabsList>
+<YukiTabs defaultValue="tab1">
+  <TabsList variant="default" className="w-full">
+    <TabsTrigger value="tab1" variant="default">
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2" variant="default">
+      Tab 2
+    </TabsTrigger>
+  </TabsList>
+</YukiTabs>
 
-    <TabsContent value="tab1" asChild>
-      <Card className="py-0">
-        <CardContent>
-          This is the content of Tab 1. <br/>
-          lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </CardContent>
-      </Card>
-    </TabsContent>
+<YukiTabs defaultValue="tab1">
+  <TabsList variant="underline" className="w-full">
+    <TabsTrigger value="tab1" variant="underline">
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2" variant="underline">
+      Tab 2
+    </TabsTrigger>
+  </TabsList>
+</YukiTabs>
 
-    <TabsContent value="tab2" asChild>
-      <Card className='py-0'>
-        <CardContent>
-          Tab 2 content goes here. <br/>
-          lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </CardContent>
-      </Card>
-    </TabsContent>
+<YukiTabs defaultValue="tab1">
+  <TabsList variant="border" className="w-full">
+    <TabsTrigger value="tab1" variant="border">
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2" variant="border">
+      Tab 2
+    </TabsTrigger>
+  </TabsList>
+</YukiTabs>
 
-  </YukiTabs>
+<YukiTabs defaultValue="tab1">
+  <TabsList variant="light" className="w-full">
+    <TabsTrigger value="tab1" variant="light">
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2" variant="light">
+      Tab 2
+    </TabsTrigger>
+  </TabsList>
+</YukiTabs>
 
 </Tab>
 
 <Tab value='Code'>
 
 ```tsx
+<Tabs defaultValue="tab1">
+  <TabsList variant="default" className="w-full">
+    <TabsTrigger value="tab1" variant="default">
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2" variant="default">
+      Tab 2
+    </TabsTrigger>
+  </TabsList>
+</Tabs>
+
 <Tabs defaultValue="tab1">
   <TabsList variant="underline" className="w-full">
     <TabsTrigger value="tab1" variant="underline">
@@ -61,26 +84,28 @@ import {
       Tab 2
     </TabsTrigger>
   </TabsList>
+</Tabs>
 
-  <TabsContent value="tab1" asChild>
-    <Card>
-      <CardContent>
-        This is the content of Tab 1. lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua.
-      </CardContent>
-    </Card>
-  </TabsContent>
+<Tabs defaultValue="tab1">
+  <TabsList variant="border" className="w-full">
+    <TabsTrigger value="tab1" variant="border">
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2" variant="border">
+      Tab 2
+    </TabsTrigger>
+  </TabsList>
+</Tabs>
 
-  <TabsContent value="tab2" asChild>
-    <Card>
-      <CardContent>
-        Tab 2 content goes here. lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua.
-      </CardContent>
-    </Card>
-  </TabsContent>
+<Tabs defaultValue="tab1">
+  <TabsList variant="light" className="w-full">
+    <TabsTrigger value="tab1" variant="light">
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2" variant="light">
+      Tab 2
+    </TabsTrigger>
+  </TabsList>
 </Tabs>
 ```
 
@@ -101,8 +126,8 @@ import {
 <Tab value='Manual'>
 
 <Steps>
-<Step>
 
+<Step>
 ### Install the following dependencies:
 
 ```package-install
@@ -119,66 +144,12 @@ import {
 </Step>
 
 <Step>
-
 ### Update the import paths to match your project setup.
 
 </Step>
 
 </Steps>
+
 </Tab>
 
 </Tabs>
-
-## Variants
-
-### Default
-
-<YukiTabs defaultValue="tab1">
-  <TabsList variant="default" className="w-full">
-    <TabsTrigger value="tab1" variant="default">
-      Tab 1
-    </TabsTrigger>
-    <TabsTrigger value="tab2" variant="default">
-      Tab 2
-    </TabsTrigger>
-  </TabsList>
-</YukiTabs>
-
-### Underline
-
-<YukiTabs defaultValue="tab1">
-  <TabsList variant="underline" className="w-full">
-    <TabsTrigger value="tab1" variant="underline">
-      Tab 1
-    </TabsTrigger>
-    <TabsTrigger value="tab2" variant="underline">
-      Tab 2
-    </TabsTrigger>
-  </TabsList>
-</YukiTabs>
-
-### Border
-
-<YukiTabs defaultValue="tab1">
-  <TabsList variant="border" className="w-full">
-    <TabsTrigger value="tab1" variant="border">
-      Tab 1
-    </TabsTrigger>
-    <TabsTrigger value="tab2" variant="border">
-      Tab 2
-    </TabsTrigger>
-  </TabsList>
-</YukiTabs>
-
-### Light
-
-<YukiTabs defaultValue="tab1">
-  <TabsList variant="light" className="w-full">
-    <TabsTrigger value="tab1" variant="light">
-      Tab 1
-    </TabsTrigger>
-    <TabsTrigger value="tab2" variant="light">
-      Tab 2
-    </TabsTrigger>
-  </TabsList>
-</YukiTabs>

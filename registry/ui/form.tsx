@@ -305,7 +305,7 @@ function useForm<
       <span
         data-slot="form-message"
         id={meta.formMessageId}
-        className={cn('text-destructive text-sm font-medium', className)}
+        className={cn('text-destructive text-sm', className)}
         {...props}
       >
         {body}
