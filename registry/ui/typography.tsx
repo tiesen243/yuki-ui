@@ -23,25 +23,15 @@ const typographyVariants = cva(
         code: 'bg-muted relative w-fit rounded-md px-[0.3rem] py-[0.2rem] font-mono text-sm font-medium',
         caption: 'block text-sm tracking-wide',
       },
-      color: {
-        default: 'text-foreground',
-        success: 'text-success',
-        warning: 'text-warning',
-        info: 'text-info',
-        error: 'text-error',
-        destructive: 'text-destructive',
-        muted: 'text-muted-foreground',
-      },
     },
     defaultVariants: {
       variant: 'p',
-      color: 'default',
     },
   },
 )
 
 interface TypographyProps
-  extends Omit<React.ComponentProps<'p'>, 'color'>,
+  extends React.ComponentProps<'p'>,
     VariantProps<typeof typographyVariants> {
   component?: React.ElementType
 }
@@ -49,7 +39,6 @@ interface TypographyProps
 function Typography({
   className,
   variant = 'p',
-  color,
   component,
   ...props
 }: TypographyProps) {
@@ -58,7 +47,7 @@ function Typography({
   return (
     <Comp
       data-slot="typography"
-      className={cn(typographyVariants({ variant, color }), className)}
+      className={cn(typographyVariants({ variant }), className)}
       {...props}
     />
   )
