@@ -4,6 +4,13 @@
   "homepage": "https://yuki-ui.vercel.app",
   "items": [
     {
+      "name": "slugify",
+      "type": "registry:lib",
+      "title": "Slugify",
+      "description": "A simple slugify function.",
+      "files": [{ "path": "registry/lib/slugify.ts", "type": "registry:lib" }]
+    },
+    {
       "name": "use-mounted",
       "type": "registry:hook",
       "title": "useMounted",
