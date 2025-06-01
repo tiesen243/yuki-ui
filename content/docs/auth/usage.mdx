@@ -27,6 +27,7 @@ export default async function SSRPage() {
           action={async () => {
             'use server'
             await signOut({ headers: await headers() })
+            ;(await cookies()).delete('auth_token')
           }}
         >
           <button>Sign Out</button>
