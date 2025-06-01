@@ -20,11 +20,10 @@
       ]
     },
     {
-      "name": "alert",
-      "type": "registry:ui",
-      "title": "Alert",
-      "description": "Extended alert component with variants.",
-      "categories": ["feedback"],
+      "name": "colors",
+      "type": "registry:style",
+      "title": "Colors",
+      "description": "Extended colors.",
       "cssVars": {
         "light": {
           "success": "oklch(0.723 0.219 149.579)",
@@ -39,6 +38,15 @@
           "error": "oklch(0.637 0.237 25.331)"
         }
       },
+      "files": []
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "Extended alert component with variants.",
+      "categories": ["feedback"],
+      "registryDependencies": ["https://yuki-ui.vercel.app/r/colors.json"],
       "files": [{ "path": "registry/ui/alert.tsx", "type": "registry:ui" }]
     },
     {
@@ -47,20 +55,7 @@
       "title": "Badge",
       "description": "Extended badge component with variants.",
       "categories": ["feedback"],
-      "cssVars": {
-        "light": {
-          "success": "oklch(0.723 0.219 149.579)",
-          "info": "oklch(0.623 0.214 259.815)",
-          "warning": "oklch(0.795 0.184 86.047)",
-          "error": "oklch(0.637 0.237 25.331)"
-        },
-        "dark": {
-          "success": "oklch(0.636 0.17 149.48)",
-          "info": "oklch(0.546 0.245 262.881)",
-          "warning": "oklch(0.795 0.184 86.047)",
-          "error": "oklch(0.637 0.237 25.331)"
-        }
-      },
+      "registryDependencies": ["https://yuki-ui.vercel.app/r/colors.json"],
       "files": [{ "path": "registry/ui/badge.tsx", "type": "registry:ui" }]
     },
     {
@@ -69,20 +64,7 @@
       "title": "Button",
       "description": "Extended button component with variants.",
       "categories": ["action"],
-      "cssVars": {
-        "light": {
-          "success": "oklch(0.723 0.219 149.579)",
-          "info": "oklch(0.623 0.214 259.815)",
-          "warning": "oklch(0.795 0.184 86.047)",
-          "error": "oklch(0.637 0.237 25.331)"
-        },
-        "dark": {
-          "success": "oklch(0.636 0.17 149.48)",
-          "info": "oklch(0.546 0.245 262.881)",
-          "warning": "oklch(0.795 0.184 86.047)",
-          "error": "oklch(0.637 0.237 25.331)"
-        }
-      },
+      "registryDependencies": ["https://yuki-ui.vercel.app/r/colors.json"],
       "files": [{ "path": "registry/ui/button.tsx", "type": "registry:ui" }]
     },
     {
