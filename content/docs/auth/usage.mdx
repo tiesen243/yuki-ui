@@ -9,12 +9,12 @@ This guide covers authentication implementation across your application. Learn h
 Server-side authentication allows you to protect routes, handle user sessions, and implement authentication flows using server components and server actions. You can retrieve the current session with `auth()` and implement sign-in/sign-out functionality.
 
 ```tsx
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 
 import { auth, signIn, signOut } from '@/server/auth'
 
 export default async function SSRPage() {
-  const session = await auth()
+  const session = await auth({ headers: await headers() })
 
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center gap-4">
@@ -68,9 +68,7 @@ import { SessionProvider } from '@/hooks/use-session'
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -80,9 +78,7 @@ export default function RootLayout({
           geistMono.variable,
         )}
       >
-        <ThemeProvider attribute="class" disableTransitionOnChange>
-          <SessionProvider>{children}</SessionProvider>
-        </ThemeProvider>
+        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   )
@@ -139,7 +135,7 @@ const protectedRoutes: string[] = []
 
 export default async function middleware(req: NextRequest) {
   const { pathname } = new URL(req.url)
-  const session = await auth(req)
+  const session = await auth({ headers: req.headers })
 
   if (req.method === 'GET') {
     if (
@@ -292,6 +288,7 @@ export const signUp = async (input) => {
 ```ts title="server/actions.ts"
 'use server'
 
+import { headers } from 'next/headers'
 import { and, eq } from 'drizzle-orm'
 
 import { auth } from '@/server/auth'
@@ -300,7 +297,7 @@ import { db } from '@/server/db'
 import { accounts } from '@/server/db/schema'
 
 export const changePassword = async (input) => {
-  const session = await auth()
+  const session = await auth({ headers: await headers() })
   const { currentPassword, newPassword } = input
   const userId = ctx.session.user.id
 

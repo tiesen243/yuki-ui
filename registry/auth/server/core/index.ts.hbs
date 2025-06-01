@@ -15,24 +15,20 @@ export function Auth<TProviders extends Providers>({
   cookieOptions,
   providers,
 }: AuthOptions<TProviders>) {
-  async function auth(request?: Request): Promise<SessionResult> {
+  async function auth(opts: { headers: Headers }): Promise<SessionResult> {
     const token =
-      (await getCookie(cookieKey, request)) ??
-      request?.headers.get('Authorization')?.replace('Bearer ', '') ??
+      (await getCookie(cookieKey, opts as Request)) ??
+      opts.headers.get('Authorization')?.replace('Bearer ', '') ??
       ''
     return validateToken(token)
   }
 
-  async function signOut(request?: Request): Promise<void> {
+  async function signOut(request: Request): Promise<void> {
     const token =
       (await getCookie(cookieKey, request)) ??
       request?.headers.get('Authorization')?.replace('Bearer ', '') ??
       ''
-
-    if (token) {
-      await invalidateToken(token)
-      if (!request) await deleteCookie(cookieKey)
-    }
+    if (token) await invalidateToken(token)
   }
 
   const createRedirectResponse = (url: string | URL): Response =>
@@ -138,7 +134,7 @@ export function Auth<TProviders extends Providers>({
     try {
       // User session verification endpoint
       if (pathName === '/api/auth') {
-        const session = await auth(request)
+        const session = await auth({ headers: request.headers })
         return Response.json(session)
       }
 
