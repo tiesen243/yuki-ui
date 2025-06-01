@@ -26,7 +26,7 @@ export default async function SSRPage() {
         <form
           action={async () => {
             'use server'
-            await signOut()
+            await signOut({ headers: await headers() })
           }}
         >
           <button>Sign Out</button>

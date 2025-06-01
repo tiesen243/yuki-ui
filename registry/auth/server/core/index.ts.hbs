@@ -23,10 +23,10 @@ export function Auth<TProviders extends Providers>({
     return validateToken(token)
   }
 
-  async function signOut(request: Request): Promise<void> {
+  async function signOut(opts: { headers: Headers }): Promise<void> {
     const token =
-      getCookie(cookieKey, request) ??
-      request.headers.get('Authorization')?.replace('Bearer ', '') ??
+      getCookie(cookieKey, opts as Request) ??
+      opts.headers.get('Authorization')?.replace('Bearer ', '') ??
       ''
     if (token) await invalidateToken(token)
   }
