@@ -6,7 +6,21 @@ Follow these steps to install Auth in your project. The installation process may
 
 ## Getting Started
 
-To begin, you'll need to create your database schema to store authentication data.
+### CLI
+
+1. Install Auth Package
+
+<Install name="auth" />
+
+<Callout>
+
+By default, Auth uses [`Scrypt`](https://github.com/lucia-auth/lucia/blob/v3/packages/lucia/src/scrypt/index.ts) for hashing passwords. You can change the hashing algorithm by passing a different hashing function to the `hash` and `verify` methods in the `server/auth/core/password.ts`.
+
+</Callout>
+
+2. Add Adapter (Optional)
+
+Frist, create your database schema to store authentication data.
 
 <Tabs items={['Drizzle', 'Prisma', 'MongoDb','Memory']}>
 
@@ -92,7 +106,7 @@ Export your database instance.
 ```ts title="server/db/index.ts"
 import { drizzle } from 'drizzle-orm/node-postgres'
 
-import * as schema from '@/serer/db/schema'
+import * as schema from '@/server/db/schema'
 
 const createDrizzleClient = () =>
   drizzle(process.env.DATABASE_URL, {
@@ -259,7 +273,7 @@ const accountSchema = new Schema(
   { timestamps: false },
 )
 
-accountSchema.index({ provider: 1, account_id: 1 }, { unique: true })
+accountSchema.index({ provider: 1, accountId: 1 }, { unique: true })
 
 export const account: Model<Account> =
   models.account ?? model<Account>('account', accountSchema)
@@ -373,11 +387,7 @@ if (process.env.NODE_ENV !== 'production') globalForMemory.db = db
 
 </Tabs>
 
-## Install the package.
-
-### Use the CLI
-
-First, install the database adapter for your database.
+Then, run this command to install adapter
 
 <Install name="auth-with-{database}" />
 
@@ -387,16 +397,6 @@ Replace `{database}` with your database adapter. Currently supported databases:
 - prisma
 - mongodb
 - memory
-
-Then, install the package.
-
-<Install name="auth" />
-
-<Callout>
-
-By default, Auth uses [`Scrypt`](https://github.com/lucia-auth/lucia/blob/v3/packages/lucia/src/scrypt/index.ts) for hashing passwords. You can change the hashing algorithm by passing a different hashing function to the `hash` and `verify` methods in the `server/auth/core/password.ts`.
-
-</Callout>
 
 3. Install OAuth providers.
 
@@ -411,6 +411,7 @@ Replace `{provider}` with the OAuth provider you want to use. Currently supporte
 - figma
 - github
 - google
+- microsoft (not recommended, it returns image blob instead of image url)
 - notion
 - spotify
 
@@ -453,56 +454,3 @@ export const authOptions = {
 ### Manual Installation
 
 You can find all the necessary code in our GitHub repository: [https://github.com/tiesen243/yuki-ui/tree/main/registry/auth](https://github.com/tiesen243/yuki-ui/tree/main/registry/auth).
-
-## Notes
-
-If you're implementing Auth in a framework other than Next.js, remember to remove any imports of `cookies` from `next/headers` and replace them with the appropriate cookie management solution for your framework.
-
-Example:
-
-<Tabs items={['Next.js', 'Other frameworks']}>
-<Tab value="Next.js">
-
-```ts title="server/auth/core/cookies.ts"
-async function getCookie(
-  key: string,
-  request?: Request,
-): Promise<string | undefined> {
-  if (request) {
-    const cookies = request.headers
-      .get('cookie')
-      ?.split(';')
-      .reduce((acc: Record<string, string>, cookie) => {
-        const [key, value] = cookie.trim().split('=')
-        return acc
-      }, {})
-    return cookies?.[key]
-  }
-  return (await cookies()).get(key)?.value
-}
-```
-
-</Tab>
-
-<Tab value="Other frameworks">
-
-```ts diff title="server/auth/core/cookies.ts"
-async function getCookie(
-  key: string,
-  request: Request, // make sure the `req` parameter is required
-): Promise<string | undefined> {
-  const cookies = request.headers
-    .get('cookie')
-    ?.split(';')
-    .reduce((acc: Record<string, string>, cookie) => {
-      const [key, value] = cookie.trim().split('=')
-      if (key && value) acc[key] = decodeURIComponent(value)
-      return acc
-    }, {})
-  return cookies?.[key]
-}
-```
-
-</Tab>
-
-</Tabs>

@@ -119,6 +119,71 @@
       "files": [{ "path": "registry/ui/typography.tsx", "type": "registry:ui" }]
     },
     {
+      "name": "auth",
+      "type": "registry:file",
+      "title": "Auth",
+      "description": "A simple authentication system from scratch.",
+      "categories": ["authentication"],
+      "dependencies": ["@oslojs/crypto", "@oslojs/encoding", "arctic"],
+      "files": [
+        {
+          "path": "registry/auth/server/core/password/scrypt.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/core/password/scrypt.ts"
+        },
+        {
+          "path": "registry/auth/server/core/password/index.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/core/password/index.ts"
+        },
+        {
+          "path": "registry/auth/server/core/cookies.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/core/cookies.ts"
+        },
+        {
+          "path": "registry/auth/server/core/index.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/core/index.ts"
+        },
+        {
+          "path": "registry/auth/server/core/queries.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/core/queries.ts"
+        },
+        {
+          "path": "registry/auth/server/providers/base.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/providers/base.ts"
+        },
+        {
+          "path": "registry/auth/server/config.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/config.ts"
+        },
+        {
+          "path": "registry/auth/server/index.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/index.ts"
+        },
+        {
+          "path": "registry/auth/server/types.ts.hbs",
+          "type": "registry:file",
+          "target": "server/auth/types.ts"
+        },
+        {
+          "path": "registry/auth/app/route.ts.hbs",
+          "type": "registry:page",
+          "target": "app/api/auth/[[...auth]]/route.ts"
+        },
+        {
+          "path": "registry/auth/hooks/use-session.tsx.hbs",
+          "type": "registry:hook",
+          "target": "hooks/use-session.tsx"
+        }
+      ]
+    },
+    {
       "name": "auth-with-drizzle",
       "type": "registry:file",
       "files": [
@@ -179,61 +244,6 @@
           "path": "registry/auth/server/types.memory.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/types.ts"
-        }
-      ]
-    },
-    {
-      "name": "auth",
-      "type": "registry:file",
-      "title": "Auth",
-      "description": "A simple authentication system from scratch.",
-      "categories": ["authentication"],
-      "dependencies": ["@oslojs/crypto", "@oslojs/encoding", "arctic"],
-      "files": [
-        {
-          "path": "registry/auth/server/core/password/scrypt.ts.hbs",
-          "type": "registry:file",
-          "target": "server/auth/core/password/scrypt.ts"
-        },
-        {
-          "path": "registry/auth/server/core/password/index.ts.hbs",
-          "type": "registry:file",
-          "target": "server/auth/core/password/index.ts"
-        },
-        {
-          "path": "registry/auth/server/core/cookies.ts.hbs",
-          "type": "registry:file",
-          "target": "server/auth/core/cookies.ts"
-        },
-        {
-          "path": "registry/auth/server/core/index.ts.hbs",
-          "type": "registry:file",
-          "target": "server/auth/core/index.ts"
-        },
-        {
-          "path": "registry/auth/server/providers/base.ts.hbs",
-          "type": "registry:file",
-          "target": "server/auth/providers/base.ts"
-        },
-        {
-          "path": "registry/auth/server/config.ts.hbs",
-          "type": "registry:file",
-          "target": "server/auth/config.ts"
-        },
-        {
-          "path": "registry/auth/server/index.ts.hbs",
-          "type": "registry:file",
-          "target": "server/auth/index.ts"
-        },
-        {
-          "path": "registry/auth/app/route.ts.hbs",
-          "type": "registry:page",
-          "target": "app/api/auth/[[...auth]]/route.ts"
-        },
-        {
-          "path": "registry/auth/hooks/use-session.tsx.hbs",
-          "type": "registry:hook",
-          "target": "hooks/use-session.tsx"
         }
       ]
     },
