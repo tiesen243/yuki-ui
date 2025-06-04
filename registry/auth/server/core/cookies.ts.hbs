@@ -8,10 +8,7 @@
  */
 import type { AuthOptions } from '@/server/auth/types'
 
-async function getCookie(
-  key: string,
-  request: Request,
-): Promise<string | undefined> {
+function getCookie(key: string, request: Request): string | undefined {
   const cookies = request.headers
     .get('cookie')
     ?.split(';')
@@ -23,12 +20,12 @@ async function getCookie(
   return cookies?.[key]
 }
 
-async function setCookie(
+function setCookie(
   key: string,
   value: string,
   options: Partial<AuthOptions['cookieOptions']> = {},
   response: Response,
-): Promise<void> {
+): void {
   delete options.key
 
   // Format Date objects to UTC string if present
@@ -42,7 +39,7 @@ async function setCookie(
   response.headers.append('set-cookie', cookieString)
 }
 
-async function deleteCookie(key: string, response: Response): Promise<void> {
+function deleteCookie(key: string, response: Response): void {
   response.headers.append(
     'set-cookie',
     `${key}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`,
