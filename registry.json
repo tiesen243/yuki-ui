@@ -236,6 +236,16 @@
       "type": "registry:file",
       "files": [
         {
+          "path": "registry/auth/server/db/schema.ts.hbs",
+          "type": "registry:file",
+          "target": "server/db/schema.ts"
+        },
+        {
+          "path": "registry/auth/server/db/index.ts.hbs",
+          "type": "registry:file",
+          "target": "server/db/index.ts"
+        },
+        {
           "path": "registry/auth/server/core/queries.memory.ts.hbs",
           "type": "registry:file",
           "target": "server/auth/core/queries.ts"

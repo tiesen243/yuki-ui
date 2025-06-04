@@ -1,0 +1,27 @@
+export interface User {
+  id: string
+  name: string
+  email: string
+  image: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface Account {
+  provider: string
+  accountId: string
+  userId: string
+  password?: string
+}
+
+export interface Session {
+  token: string
+  expires: Date
+  userId: string
+}
+
+export interface Database {
+  users: User[]
+  accounts: Account[]
+  sessions: Session[]
+}

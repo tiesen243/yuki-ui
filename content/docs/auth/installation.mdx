@@ -22,7 +22,7 @@ By default, Auth uses [`Scrypt`](https://github.com/lucia-auth/lucia/blob/v3/pac
 
 Frist, create your database schema to store authentication data.
 
-<Tabs items={['Drizzle', 'Prisma', 'MongoDb','Memory']}>
+<Tabs items={['Drizzle', 'Prisma', 'MongoDb']}>
 
 <Tab value="Drizzle">
 
@@ -322,67 +322,6 @@ if (process.env.NODE_ENV !== 'production') globalForMongoose.db = db
 
 </Steps>
 
-</Tab>
-
-<Tab value="Memory">
-
-<Steps>
-
-<Step>
-Create a schema
-
-```ts title="server/db/schema.ts"
-export interface User {
-  id: string
-  name: string
-  email: string
-  image: string
-  createdAt: Date
-  updatedAt: Date
-}
-
-export interface Account {
-  provider: string
-  accountId: string
-  userId: string
-  password?: string
-}
-
-export interface Session {
-  token: string
-  expires: Date
-  userId: string
-}
-
-export interface Database {
-  users: User[]
-  accounts: Account[]
-  sessions: Session[]
-}
-```
-
-</Step>
-
-<Step>
-Export your database instance.
-
-```ts title="server/db/index.ts"
-import type { Database } from '@/server/db/schema'
-
-const globalForMemory = globalThis as unknown as {
-  db: Database | undefined
-}
-export const db = globalForMemory.db ?? {
-  users: [],
-  accounts: [],
-  sessions: [],
-}
-if (process.env.NODE_ENV !== 'production') globalForMemory.db = db
-```
-
-</Step>
-
-</Steps>
 </Tab>
 
 </Tabs>
