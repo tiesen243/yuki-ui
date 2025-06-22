@@ -1,4 +1,0 @@
-User-Agent: *
-Allow: /
-
-Sitemap: http://yuki-ui.vercel.app/sitemap.xml
