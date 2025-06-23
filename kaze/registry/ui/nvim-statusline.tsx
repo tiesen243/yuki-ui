@@ -92,6 +92,7 @@ function NvimStatuslineSectionA({
         {children}
       </div>
       <NvimStatuslineSectionSeparator
+        data-slot="nvim-statusline-section-a-separator"
         className={cn('bg-background size-6 rotate-90', FILL_COLORS)}
       />
     </div>
@@ -120,7 +121,10 @@ function NvimStatuslineSectionB({
       >
         {children}
       </div>
-      <NvimStatuslineSectionSeparator className="fill-background bg-secondary size-6 rotate-90" />
+      <NvimStatuslineSectionSeparator
+        data-slot="nvim-statusline-section-b-separator"
+        className="fill-background bg-secondary size-6 rotate-90"
+      />
     </div>
   )
 }
@@ -170,7 +174,10 @@ function NvimStatuslineSectionY({
       )}
       {...props}
     >
-      <NvimStatuslineSectionSeparator className="fill-background bg-secondary size-6 rotate-270" />
+      <NvimStatuslineSectionSeparator
+        data-slot="nvim-statusline-section-y-separator"
+        className="fill-background bg-secondary size-6 rotate-270"
+      />
       <div
         className={cn(
           'bg-background inline-flex h-full items-center gap-2 pl-2 whitespace-nowrap',
@@ -194,6 +201,7 @@ function NvimStatuslineSectionZ({
       {...props}
     >
       <NvimStatuslineSectionSeparator
+        data-slot="nvim-statusline-section-z-separator"
         className={cn('bg-background size-6 rotate-270', FILL_COLORS)}
       />
       <div
