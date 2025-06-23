@@ -29,10 +29,10 @@ export default function RootLayout({
           geistMono.variable,
         )}
       >
-        <RootProvider>{children}</RootProvider>
+        <RootProvider search={{ enabled: false }}>{children}</RootProvider>
       </body>
     </html>
   )
 }
 
-export const metadata = createMetadata({ title: 'Next.js' })
+export const metadata = createMetadata()

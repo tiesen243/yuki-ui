@@ -1,22 +1,63 @@
 import Link from 'next/link'
 
 import { Button } from '@yuki/ui/button'
+import { GithubIcon, ShadcnIcon, SparklesIcon } from '@yuki/ui/icons'
 import { Typography } from '@yuki/ui/typography'
 
 export default function HomePage() {
   return (
-    <main className="container flex min-h-screen flex-col items-center justify-center py-16">
-      <Typography variant="h2" component="h1" className="text-center">
-        Welcome to Yuki UI
-      </Typography>
+    <main className="container flex flex-1 flex-col items-center justify-center py-16">
+      <div className="mx-auto max-w-4xl text-center">
+        <Typography
+          variant="h1"
+          component="h1"
+          className="mb-6 text-4xl font-bold tracking-tight sm:text-6xl"
+        >
+          Welcome to{' '}
+          <span className="from-normal to-insert bg-gradient-to-r bg-clip-text text-transparent">
+            Yuki UI
+          </span>
+        </Typography>
 
-      <Typography variant="h3" component="h2" className="mt-4 text-center">
-        A modern UI component library for React built on top of shadcn/ui
-      </Typography>
+        <Typography
+          variant="h3"
+          component="p"
+          className="text-muted-foreground mb-8 text-xl"
+        >
+          A modern UI component library for React built on top of shadcn/ui.
+          Beautiful, accessible, and customizable components for your next
+          project.
+        </Typography>
 
-      <Button size="lg" asChild>
-        <Link href="/docs/introduction">Get Started</Link>
-      </Button>
+        <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
+          <Button size="lg" asChild>
+            <Link href="/docs/introduction">
+              <SparklesIcon />
+              Get Started
+            </Link>
+          </Button>
+          <Button variant="secondary" size="lg" asChild>
+            <a
+              href="https://ui.shadcn.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ShadcnIcon />
+              Explore shadcn/ui
+            </a>
+          </Button>
+          <Button variant="outline" size="lg" asChild>
+            <a
+              href="https://github.com/tiesen243/yuki-ui"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <GithubIcon />
+              View on GitHub
+            </a>
+          </Button>
+        </div>
+      </div>
     </main>
   )
 }

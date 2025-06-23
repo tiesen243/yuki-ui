@@ -61,7 +61,7 @@ function NvimStatusline({
     <Comp
       data-slot="nvim-statusline"
       className={cn(
-        'bg-popover text-popover-foreground sticky bottom-0 left-0 z-50 flex h-6 w-full items-center justify-between gap-0 px-4 font-mono md:bottom-4',
+        'bg-secondary text-secondary-foreground sticky bottom-0 left-0 z-50 flex h-6 w-full items-center justify-between gap-0 px-4 font-mono md:bottom-4',
         "[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
@@ -106,7 +106,7 @@ function NvimStatuslineSectionB({
       <div className="bg-background group-data-[mode=terminal]:text-terminal group-data-[mode=command]:text-command group-data-[mode=normal]:text-normal group-data-[mode=insert]:text-insert group-data-[mode=replace]:text-replace group-data-[mode=visual]:text-visual inline-flex h-full items-center gap-2 pr-2 whitespace-nowrap">
         {children}
       </div>
-      <NvimStatuslineSectionSeparator className="fill-background bg-popover size-6 rotate-90" />
+      <NvimStatuslineSectionSeparator className="fill-background bg-secondary size-6 rotate-90" />
     </div>
   )
 }
@@ -119,7 +119,7 @@ function NvimStatuslineSectionC({
     <div
       data-slot="nvim-statusline-section-c"
       className={cn(
-        'bg-popover text-popover-foreground inline-flex h-full max-w-full flex-1 items-center gap-2 truncate overflow-hidden pr-2 text-ellipsis whitespace-nowrap',
+        'bg-secondary text-secondary-foreground inline-flex h-full max-w-full flex-1 items-center gap-2 truncate overflow-hidden pr-2 text-ellipsis whitespace-nowrap',
         className,
       )}
       {...props}
@@ -135,7 +135,7 @@ function NvimStatuslineSectionX({
     <div
       data-slot="nvim-statusline-section-x"
       className={cn(
-        'bg-popover text-popover-foreground inline-flex h-full items-center gap-2 truncate overflow-hidden pl-2 text-ellipsis whitespace-nowrap',
+        'bg-secondary text-secondary-foreground inline-flex h-full items-center gap-2 truncate overflow-hidden pl-2 text-ellipsis whitespace-nowrap',
         className,
       )}
       {...props}
@@ -156,7 +156,7 @@ function NvimStatuslineSectionY({
       )}
       {...props}
     >
-      <NvimStatuslineSectionSeparator className="fill-background bg-popover size-6 rotate-270" />
+      <NvimStatuslineSectionSeparator className="fill-background bg-secondary size-6 rotate-270" />
       <div className="bg-background group-data-[mode=terminal]:text-terminal group-data-[mode=command]:text-command group-data-[mode=normal]:text-normal group-data-[mode=insert]:text-insert group-data-[mode=replace]:text-replace group-data-[mode=visual]:text-visual inline-flex h-full items-center gap-2 pl-2 whitespace-nowrap">
         {props.children}
       </div>

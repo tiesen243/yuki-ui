@@ -1,11 +1,13 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared'
+import Image from 'next/image'
 
-import { createMetadata } from '@/lib/metadata'
-
-const meta = createMetadata()
+import Tiesen from '@/public/assets/tiesen.png'
 
 export const baseOptions: BaseLayoutProps = {
   nav: {
-    title: meta.title,
+    title: (
+      <Image src={Tiesen} alt="Tiesen Logo" className="w-2/3 object-cover" />
+    ),
   },
+  githubUrl: 'https://github.com/tiesen243/yuki-ui',
 }

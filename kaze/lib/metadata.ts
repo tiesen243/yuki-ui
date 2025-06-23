@@ -4,6 +4,7 @@ import { getBaseUrl } from '@/lib/utils'
 
 export interface Metadata extends NextMetadata {
   title?: string
+  keywords?: string[]
 }
 
 export function createMetadata(override: Metadata = {}): Metadata {
@@ -11,7 +12,8 @@ export function createMetadata(override: Metadata = {}): Metadata {
   const baseUrl = getBaseUrl()
 
   const title = override.title ? `${override.title} | ${siteName}` : siteName
-  const description = 'More stuff built on top of shadcn/ui'
+  const description =
+    'A modern UI component library for React built on top of shadcn/ui. Beautiful, accessible, and customizable components for your next project.'
   const url = override.openGraph?.url
     ? `${baseUrl}${override.openGraph.url}`
     : baseUrl
@@ -39,8 +41,22 @@ export function createMetadata(override: Metadata = {}): Metadata {
       url,
       images,
     },
-    twitter: { card: 'summary_large_image' },
-    icons: { icon: '/favicon.ico' },
+    keywords: [
+      'react',
+      'ui components',
+      'shadcn/ui',
+      'tailwindcss',
+      'accessible components',
+      'customizable components',
+      ...(override.keywords ?? []),
+    ],
+    twitter: { card: 'summary_large_image', creatorId: '@tiesen243' },
+    icons: {
+      icon: '/favicon.ico',
+      shortcut: '/favicon-32x32.png',
+      apple: '/apple-touch-icon.png',
+    },
+    manifest: `${baseUrl}/manifest.webmanifest`,
     alternates: { canonical: url },
   }
 }
