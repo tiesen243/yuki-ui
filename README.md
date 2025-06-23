@@ -1,6 +1,6 @@
 # Yuki UI
 
-A modern, accessible React component library and design system built with TypeScript and Tailwind CSS.
+A modern UI component library for React built on top of shadcn/ui. Beautiful, accessible, and customizable components for your next project.
 
 ## 🚀 Features
 
