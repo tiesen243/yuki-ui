@@ -12,6 +12,16 @@ export const registryUI = [
     files: [{ path: 'registry/ui/form.tsx', type: 'registry:ui' }],
   },
   {
+    name: 'nvim-statusline',
+    type: 'registry:ui',
+    title: 'Nvim Statusline',
+    author: 'tiesen243 <ttien56906@gmail.com>',
+    description:
+      'A customizable statusline component for Neovim, inspired by the nvim-lualine plugin',
+    dependencies: ['@radix-ui/react-slot'],
+    files: [{ path: 'registry/ui/nvim-statusline.tsx', type: 'registry:ui' }],
+  },
+  {
     name: 'typography',
     type: 'registry:ui',
     title: 'Typography',

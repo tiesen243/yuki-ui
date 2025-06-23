@@ -54,6 +54,7 @@ function ComponentSource(props: { comp: string }) {
 
 function PreviewComponent(props: { comp: string }) {
   const Comp = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const Component = Index[props.comp]?.component
     return <Component />
   }, [props.comp])
