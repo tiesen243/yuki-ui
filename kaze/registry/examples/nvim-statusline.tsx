@@ -39,7 +39,7 @@ function NvimStatuslineContent() {
       </NvimStatuslineSectionB>
       <NvimStatuslineSectionC>~/app/page.tsx</NvimStatuslineSectionC>
       <NvimStatuslineSectionX>+15</NvimStatuslineSectionX>
-      <NvimStatuslineSectionY>1:1</NvimStatuslineSectionY>
+      <NvimStatuslineSectionY>Top 1:1</NvimStatuslineSectionY>
       <NvimStatuslineSectionZ className="font-bold">
         {new Date().toLocaleTimeString('en-US', {
           hour12: false,
