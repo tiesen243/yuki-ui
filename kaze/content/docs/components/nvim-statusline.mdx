@@ -35,6 +35,43 @@ Install the following dependencies:
 </Step>
 
 <Step>
+Add the following CSS variables to your globals.css file:
+
+```css title="app/globals.css"
+@theme inline {
+  ...
+  --color-normal: var(--normal);
+  --color-visual: var(--visual);
+  --color-replace: var(--replace);
+  --color-insert: var(--insert);
+  --color-terminal: var(--terminal);
+  --color-command: var(--command);
+}
+
+:root {
+  ...
+  --normal: oklch(0.533 0.188299 256.8803);
+  --visual: oklch(0.5945 0.1522 48.09);
+  --replace: oklch(0.5352 0.1882 2.43);
+  --insert: oklch(0.6273 0.17 149.2);
+  --terminal: oklch(0.4706 0.2205 304.22);
+  --command: oklch(0.6424 0.18 45.27);
+}
+
+.dark {
+  ...
+  --normal: oklch(0.7178 0.1521 250.77);
+  --visual: oklch(0.8535 0.0907 84.06);
+  --replace: oklch(0.6931 0.1891 3.82);
+  --insert: oklch(0.6273 0.17 149.2);
+  --terminal: oklch(0.6986 0.1786 309.44);
+  --command: oklch(0.8124 0.1238 55.54);
+}
+```
+
+</Step>
+
+<Step>
   Copy and paste the following code into your project.
   <ComponentSource comp="nvim-statusline" />
 </Step>

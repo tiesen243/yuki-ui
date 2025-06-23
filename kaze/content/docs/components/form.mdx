@@ -40,3 +40,135 @@ Install the following dependencies:
 </Step>
 
 </Steps>
+
+## Usage
+
+<Steps>
+
+<Step>
+Create a form schema
+
+Define your form validation schema using one of the supported validation libraries. This schema will validate your form data and provide type safety.
+
+<Tabs items={['Zod','Arktype','Valibot', 'Function']}>
+
+<Tab value="Zod">
+
+```ts
+import * as z from 'zod/v4'
+
+const formSchema = z.object({
+  name: z.string().min(1),
+})
+```
+
+</Tab>
+
+<Tab value="Arktype">
+
+```ts
+import { type } from 'arktype'
+
+const formSchema = type({
+  name: 'string>1',
+})
+```
+
+</Tab>
+
+<Tab value="Valibot">
+
+```ts
+import * as v from 'valibot'
+
+const formSchema = v.object({
+  name: v.pipe(v.string(), v.minLength(1)),
+})
+```
+
+</Tab>
+
+<Tab value="Function">
+
+```ts
+function formSchema(value: { name: string }) {
+  if (value.name.length < 1)
+    return { issues: [{ path: ['name'], message: 'Name is required' }] }
+  return { value }
+}
+```
+
+</Tab>
+
+</Tabs>
+
+</Step>
+
+<Step>
+Define a form
+
+Set up your form component using the `useForm` hook. Configure default values, attach your validation schema, and define the submit handler.
+
+```tsx
+import { useForm } from '@/components/ui/form'
+
+export function MyForm() {
+  const form = useForm({
+    defaultValues: { name: '' },
+    validator: formSchema,
+    onSubmit: (data) => {
+      console.log('Form submitted:', data)
+    },
+  })
+
+  return <form></form>
+}
+```
+
+</Step>
+
+<Step>
+Build your form UI
+
+Create the form structure with fields, labels, inputs, and validation messages. Use the form's Field component to handle state management and validation automatically.
+
+```tsx
+import { Button } from '@yuki/ui/button'
+import { Input } from '@yuki/ui/input'
+
+export function MyForm() {
+  const form = useForm({
+    ...
+  })
+
+  return (
+    <form
+      className="grid gap-4"
+      onSubmit={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        form.handleSubmit()
+      }}
+    >
+      <form.Field
+        name="name"
+        render={({ field, meta }) => (
+          <div id={meta.id} className="grid gap-2">
+            <form.Label>Name</form.Label>
+            <form.Control {...field}>
+              <Input placeholder="Enter your name" />
+            </form.Control>
+            <form.Message />
+          </div>
+        )}
+      />
+
+      <Button disabled={form.state.isPending}>Submit</Button>
+    </form>
+  )
+}
+```
+
+</Step>
+
+</Steps>
