@@ -22,11 +22,13 @@ routeTree.gen.ts
 app.config.timestamp_*.js
 
 # production
+__registry__/
 build/
 dist/
 
 # misc
 .cache/
+.source/
 generated/
 .DS_Store
 *.pem

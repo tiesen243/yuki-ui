@@ -1,8 +1,9 @@
 import '@/app/globals.css'
 
 import { Geist, Geist_Mono } from 'next/font/google'
+import { RootProvider } from 'fumadocs-ui/provider'
 
-import { cn, ThemeProvider } from '@yuki/ui'
+import { cn } from '@yuki/ui'
 
 import { createMetadata } from '@/lib/metadata'
 
@@ -28,9 +29,7 @@ export default function RootLayout({
           geistMono.variable,
         )}
       >
-        <ThemeProvider attribute="class" disableTransitionOnChange enableSystem>
-          {children}
-        </ThemeProvider>
+        <RootProvider>{children}</RootProvider>
       </body>
     </html>
   )

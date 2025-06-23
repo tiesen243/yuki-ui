@@ -1,6 +1,9 @@
 import '@yuki/validators/env'
 
 import type { NextConfig } from 'next'
+import { createMDX } from 'fumadocs-mdx/next'
+
+const withMdx = createMDX()
 
 const nextConfig = {
   reactStrictMode: true,
@@ -17,4 +20,4 @@ const nextConfig = {
   ],
 } satisfies NextConfig
 
-export default nextConfig
+export default withMdx(nextConfig)
