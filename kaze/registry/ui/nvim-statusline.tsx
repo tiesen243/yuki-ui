@@ -14,6 +14,12 @@ const MODES = [
   'command',
 ] as const
 type Mode = (typeof MODES)[number]
+const BG_COLORS =
+  'group-data-[mode=normal]/statusline:bg-normal group-data-[mode=visual]/statusline:bg-visual group-data-[mode=insert]/statusline:bg-insert group-data-[mode=replace]/statusline:bg-replace group-data-[mode=command]/statusline:bg-command group-data-[mode=terminal]/statusline:bg-terminal'
+const TEXT_COLORS =
+  'group-data-[mode=normal]/statusline:text-normal group-data-[mode=visual]/statusline:text-visual group-data-[mode=insert]/statusline:text-insert group-data-[mode=replace]/statusline:text-replace group-data-[mode=command]/statusline:text-command group-data-[mode=terminal]/statusline:text-terminal'
+const FILL_COLORS =
+  'group-data-[mode=normal]/statusline:fill-normal group-data-[mode=visual]/statusline:fill-visual group-data-[mode=insert]/statusline:fill-insert group-data-[mode=replace]/statusline:fill-replace group-data-[mode=command]/statusline:fill-command group-data-[mode=terminal]/statusline:fill-terminal'
 
 interface NvimStatuslineContextValue {
   mode: Mode
@@ -41,13 +47,7 @@ function NvimStatuslineProvider({
   const [mode, setMode] = React.useState<Mode>('normal')
   const value = React.useMemo(() => ({ mode, modes: MODES, setMode }), [mode])
 
-  return (
-    <NvimStatuslineContext value={value}>
-      <Slot data-mode={mode} className="group">
-        {children}
-      </Slot>
-    </NvimStatuslineContext>
-  )
+  return <NvimStatuslineContext value={value}>{children}</NvimStatuslineContext>
 }
 
 function NvimStatusline({
@@ -55,13 +55,15 @@ function NvimStatusline({
   asChild = false,
   ...props
 }: React.ComponentProps<'footer'> & { asChild?: boolean }) {
+  const { mode } = useNvimStatusline()
   const Comp = asChild ? Slot : 'footer'
 
   return (
     <Comp
       data-slot="nvim-statusline"
+      data-mode={mode}
       className={cn(
-        'bg-secondary text-secondary-foreground sticky bottom-0 left-0 z-50 flex h-6 w-full items-center justify-between gap-0 px-4 font-mono md:bottom-4',
+        'group/statusline bg-secondary text-secondary-foreground sticky bottom-0 left-0 z-50 flex h-6 w-full items-center justify-between gap-0 px-4 font-mono md:bottom-4',
         "[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
@@ -81,10 +83,17 @@ function NvimStatuslineSectionA({
       className={cn('inline-flex h-full shrink-0 items-center', className)}
       {...props}
     >
-      <div className="group-data-[mode=terminal]:bg-terminal group-data-[mode=command]:bg-command group-data-[mode=normal]:bg-normal group-data-[mode=insert]:bg-insert group-data-[mode=replace]:bg-replace group-data-[mode=visual]:bg-visual text-background inline-flex h-full items-center gap-2 px-2">
+      <div
+        className={cn(
+          'text-background inline-flex h-full items-center gap-2 px-2',
+          BG_COLORS,
+        )}
+      >
         {children}
       </div>
-      <NvimStatuslineSectionSeparator className="group-data-[mode=terminal]:fill-terminal group-data-[mode=command]:fill-command group-data-[mode=normal]:fill-normal group-data-[mode=insert]:fill-insert group-data-[mode=replace]:fill-replace group-data-[mode=visual]:fill-visual bg-background size-6 rotate-90" />
+      <NvimStatuslineSectionSeparator
+        className={cn('bg-background size-6 rotate-90', FILL_COLORS)}
+      />
     </div>
   )
 }
@@ -103,7 +112,12 @@ function NvimStatuslineSectionB({
       )}
       {...props}
     >
-      <div className="bg-background group-data-[mode=terminal]:text-terminal group-data-[mode=command]:text-command group-data-[mode=normal]:text-normal group-data-[mode=insert]:text-insert group-data-[mode=replace]:text-replace group-data-[mode=visual]:text-visual inline-flex h-full items-center gap-2 pr-2 whitespace-nowrap">
+      <div
+        className={cn(
+          'bg-background inline-flex h-full items-center gap-2 pr-2 whitespace-nowrap',
+          TEXT_COLORS,
+        )}
+      >
         {children}
       </div>
       <NvimStatuslineSectionSeparator className="fill-background bg-secondary size-6 rotate-90" />
@@ -157,7 +171,12 @@ function NvimStatuslineSectionY({
       {...props}
     >
       <NvimStatuslineSectionSeparator className="fill-background bg-secondary size-6 rotate-270" />
-      <div className="bg-background group-data-[mode=terminal]:text-terminal group-data-[mode=command]:text-command group-data-[mode=normal]:text-normal group-data-[mode=insert]:text-insert group-data-[mode=replace]:text-replace group-data-[mode=visual]:text-visual inline-flex h-full items-center gap-2 pl-2 whitespace-nowrap">
+      <div
+        className={cn(
+          'bg-background inline-flex h-full items-center gap-2 pl-2 whitespace-nowrap',
+          TEXT_COLORS,
+        )}
+      >
         {props.children}
       </div>
     </div>
@@ -174,8 +193,15 @@ function NvimStatuslineSectionZ({
       className={cn('inline-flex h-full shrink-0 items-center', className)}
       {...props}
     >
-      <NvimStatuslineSectionSeparator className="group-data-[mode=terminal]:fill-terminal group-data-[mode=command]:fill-command group-data-[mode=normal]:fill-normal group-data-[mode=insert]:fill-insert group-data-[mode=replace]:fill-replace group-data-[mode=visual]:fill-visual bg-background size-6 rotate-270" />
-      <div className="group-data-[mode=terminal]:bg-terminal group-data-[mode=command]:bg-command group-data-[mode=normal]:bg-normal group-data-[mode=insert]:bg-insert group-data-[mode=replace]:bg-replace group-data-[mode=visual]:bg-visual text-background inline-flex h-full items-center gap-2 px-2 whitespace-nowrap">
+      <NvimStatuslineSectionSeparator
+        className={cn('bg-background size-6 rotate-270', FILL_COLORS)}
+      />
+      <div
+        className={cn(
+          'text-background inline-flex h-full items-center gap-2 px-2 whitespace-nowrap',
+          BG_COLORS,
+        )}
+      >
         {props.children}
       </div>
     </div>
