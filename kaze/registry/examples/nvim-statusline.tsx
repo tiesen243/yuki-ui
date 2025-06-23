@@ -31,7 +31,7 @@ function NvimStatuslineContent() {
 
   return (
     <NvimStatusline>
-      <NvimStatuslineSectionA className="text-sm font-bold">
+      <NvimStatuslineSectionA className="font-bold">
         {mode.toUpperCase()}
       </NvimStatuslineSectionA>
       <NvimStatuslineSectionB>
