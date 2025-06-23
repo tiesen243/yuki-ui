@@ -78,6 +78,22 @@ Add the following CSS variables to your globals.css file:
 
 </Steps>
 
+## Structure
+
+The `NvimStatusline` component follows a modular architecture with these key parts:
+
+- `NvimStatuslineProvider` - Context provider that manages statusline modes (normal, insert, visual, etc.)
+- `NvimStatusline` - Main container component that renders the statusline layout
+- `NvimStatuslineSection{A-Z}` - Individual section components for organizing content within the statusline
+
+The statusline is divided into six sections arranged as follows:
+
+```text
+┌───┬───┬───────────────┬───┬───┬───┐
+│ A │ B │ C             │ X │ Y │ Z │
+└───┴───┴───────────────┴───┴───┴───┘
+```
+
 ## Usage
 
 <Steps>
