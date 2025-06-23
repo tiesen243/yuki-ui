@@ -25,6 +25,7 @@ app.config.timestamp_*.js
 __registry__/
 build/
 dist/
+r/
 
 # misc
 .cache/

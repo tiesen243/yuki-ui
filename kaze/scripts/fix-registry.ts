@@ -9,7 +9,10 @@ async function fixRegistry() {
     files.map(async (file) => {
       const filePath = path.join(registryPath, file)
       const content = await fs.readFile(filePath, 'utf-8')
-      const updatedContent = content.replace('@yuki/ui', '@/lib/utils')
+      const updatedContent = content
+        .replace(/@\/registry\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
+        .replace(/@yuki\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
+        .replace(/@yuki\/ui/g, '@/lib/utils')
       await fs.writeFile(filePath, updatedContent, 'utf-8')
     }),
   )

@@ -10,7 +10,13 @@ export const registryExample = [
     description:
       'A simple login form example using Yuki UI and Zod for validation.',
     files: [{ path: 'registry/examples/form.tsx', type: 'registry:example' }],
-    registryDependencies: [`${getBaseUrl()}/r/form.json`],
+    dependencies: ['zod'],
+    registryDependencies: [
+      `${getBaseUrl()}/r/form.json`,
+      'button',
+      'card',
+      'input',
+    ],
   },
   {
     name: 'typography-demo',

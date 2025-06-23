@@ -29,7 +29,9 @@ async function buildRegistry(registry: Registry): Promise<void> {
   for (const item of registry.items) {
     if (!Array.isArray(item.files) || !item.files.length) continue
 
+    // @ts-expect-error - item.files is guaranteed to be an array by the schema
     const componentPath = `@/${item.files[0].path}`
+    // @ts-expect-error - item.files is guaranteed to be an array by the schema
     const srcPath = path.join(process.cwd(), item.files[0].path)
     index += `  '${item.name}': {\n    name: '${item.name}',\n    description: '${item.description}',\n    type: '${item.type}',\n    files: [${await Promise.all(
       item.files.map(async (file: { path: string; type: string }) => {
@@ -55,5 +57,8 @@ function parseContent(content: string): string {
     .replace(/\\/g, '\\\\')
     .replace(/"/g, '\\"')
     .replace(/\n/g, '\\n')
+    .replace(/@\/registry\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
+    .replace(/@yuki\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
+    .replace(/@yuki\/ui/g, '@/lib/utils')
     .trim()
 }
