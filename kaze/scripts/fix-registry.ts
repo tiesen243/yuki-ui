@@ -11,6 +11,7 @@ async function fixRegistry() {
       const content = await fs.readFile(filePath, 'utf-8')
       const updatedContent = content
         .replace(/@\/registry\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
+        .replace(/@yuki\/ui\/icons/g, 'lucide-react')
         .replace(/@yuki\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
         .replace(/@yuki\/ui/g, '@/lib/utils')
       await fs.writeFile(filePath, updatedContent, 'utf-8')

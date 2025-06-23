@@ -58,6 +58,7 @@ function parseContent(content: string): string {
     .replace(/"/g, '\\"')
     .replace(/\n/g, '\\n')
     .replace(/@\/registry\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
+    .replace(/@yuki\/ui\/icons/g, 'lucide-react')
     .replace(/@yuki\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
     .replace(/@yuki\/ui/g, '@/lib/utils')
     .trim()
