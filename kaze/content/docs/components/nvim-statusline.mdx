@@ -78,6 +78,110 @@ Add the following CSS variables to your globals.css file:
 
 </Steps>
 
+## Usage
+
+<Steps>
+
+<Step>
+Initialize the statusline provider to enable mode management across your application
+
+```tsx title="app/layout.tsx"
+import { NvimStatuslineProvider } from '@/components/ui/nvim-statusline'
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="en">
+      <body>
+        <NvimStatuslineProvider>{children}</NvimStatuslineProvider>
+      </body>
+    </html>
+  )
+}
+```
+
+</Step>
+
+<Step>
+Build your statusline layout using the provided section components
+
+```tsx title="components/statusline.tsx
+import {
+  NvimStatusline,
+  NvimStatuslineSectionA,
+  NvimStatuslineSectionB,
+  NvimStatuslineSectionC,
+  NvimStatuslineSectionX,
+  NvimStatuslineSectionY,
+  NvimStatuslineSectionZ,
+  useNvimStatusline,
+} from '@/components/ui/nvim-statusline'
+
+export function Statusline() {
+  return (
+    <NvimStatusline>
+      <NvimStatuslineSectionA />
+      <NvimStatuslineSectionB />
+      <NvimStatuslineSectionC />
+      <NvimStatuslineSectionX />
+      <NvimStatuslineSectionY />
+      <NvimStatuslineSectionZ />
+    </NvimStatusline>
+  )
+}
+```
+
+</Step>
+
+<Step>
+Integrate the statusline component into your application layout
+
+```tsx title="app/layout.tsx"
+import { Statusline } from '@/components/statusline.tsx'
+import { NvimStatuslineProvider } from '@/components/ui/nvim-statusline'
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="en">
+      <body>
+        <NvimStatuslineProvider>
+          {children}
+          <Statusline />
+        </NvimStatuslineProvider>
+      </body>
+    </html>
+  )
+}
+```
+
+</Step>
+
+<Step>
+Control statusline modes programmatically using the provided hook
+
+```ts
+const { setMode } = useNvimStatusline()
+
+setMode('insert')
+```
+
+</Step>
+
+</Steps>
+
+:::info
+
+If you don't use sections B or Y, add this class to `NvimStatusline` to hide the separators's background for sections A and Z:
+
+```tsx
+<NvimStatusline className="[&_[data-slot=nvim-statusline-section-a-separator]]:bg-transparent [&_[data-slot=nvim-statusline-section-z-separator]]:bg-transparent" />
+```
+
+:::
+
 ## References
 
 - [nvim-lualine/lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) - A blazing fast and easy to configure Neovim statusline plugin
