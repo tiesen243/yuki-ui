@@ -1,11 +1,22 @@
 import type { RegistryItem } from 'shadcn/registry'
 
+const author = 'tiesen243 <ttien56906@gmail.com>'
+
 export const registryUI = [
+  {
+    name: 'accordion',
+    type: 'registry:ui',
+    title: 'Accordion',
+    author,
+    description: 'A simple accordion component',
+    dependencies: ['@base-ui-components/react'],
+    files: [{ path: 'registry/ui/accordion.tsx', type: 'registry:ui' }],
+  },
   {
     name: 'form',
     type: 'registry:ui',
     title: 'Form',
-    author: 'tiesen243 <ttien56906@gmail.com>',
+    author,
     description:
       'A form component built from scratch that works with Standard Schema',
     dependencies: ['@radix-ui/react-slot'],
@@ -15,7 +26,7 @@ export const registryUI = [
     name: 'nvim-statusline',
     type: 'registry:ui',
     title: 'Nvim Statusline',
-    author: 'tiesen243 <ttien56906@gmail.com>',
+    author,
     description:
       'A customizable statusline component for Neovim, inspired by the nvim-lualine plugin',
     dependencies: ['@radix-ui/react-slot'],

@@ -4,6 +4,17 @@ import { getBaseUrl } from '@/lib/utils'
 
 export const registryExample = [
   {
+    name: 'accordion-demo',
+    type: 'registry:example',
+    title: 'Accordion',
+    description:
+      'A simple accordion component that can be used to display FAQs or collapsible content.',
+    files: [
+      { path: 'registry/examples/accordion.tsx', type: 'registry:example' },
+    ],
+    registryDependencies: [`${getBaseUrl()}/r/accordion.json`],
+  },
+  {
     name: 'form-demo',
     type: 'registry:example',
     title: 'Form',
@@ -32,7 +43,6 @@ export const registryExample = [
     ],
     registryDependencies: [`${getBaseUrl()}/r/nvim-statusline.json`],
   },
-
   {
     name: 'typography-demo',
     type: 'registry:example',
