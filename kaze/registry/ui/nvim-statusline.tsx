@@ -163,6 +163,7 @@ function NvimStatuslineSectionX({
 
 function NvimStatuslineSectionY({
   className,
+  children,
   ...props
 }: React.ComponentProps<'div'>) {
   return (
@@ -184,7 +185,7 @@ function NvimStatuslineSectionY({
           TEXT_COLORS,
         )}
       >
-        {props.children}
+        {children}
       </div>
     </div>
   )
@@ -192,6 +193,7 @@ function NvimStatuslineSectionY({
 
 function NvimStatuslineSectionZ({
   className,
+  children,
   ...props
 }: React.ComponentProps<'div'>) {
   return (
@@ -210,7 +212,7 @@ function NvimStatuslineSectionZ({
           BG_COLORS,
         )}
       >
-        {props.children}
+        {children}
       </div>
     </div>
   )
@@ -231,7 +233,9 @@ const NvimStatuslineSectionSeparator = (props: React.ComponentProps<'svg'>) => {
 }
 
 export {
+  useNvimStatusline,
   NvimStatusline,
+  NvimStatuslineProvider,
   NvimStatuslineSectionA,
   NvimStatuslineSectionB,
   NvimStatuslineSectionC,
@@ -239,6 +243,4 @@ export {
   NvimStatuslineSectionY,
   NvimStatuslineSectionZ,
   NvimStatuslineSectionSeparator,
-  useNvimStatusline,
-  NvimStatuslineProvider,
 }

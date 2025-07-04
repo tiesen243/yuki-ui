@@ -18,19 +18,18 @@
   },
   "prettier": "@yuki/prettier-config",
   "dependencies": {
-    "@base-ui-components/react": "^1.0.0-beta.0",
+    "@base-ui-components/react": "^1.0.0-beta.1",
     "@yuki/ui": "workspace:*",
     "@yuki/validators": "workspace:*",
-    "fumadocs-core": "^15.5.4",
-    "fumadocs-docgen": "^2.0.1",
-    "fumadocs-mdx": "^11.6.9",
-    "fumadocs-ui": "^15.5.4",
-    "next": "15.3.4",
+    "fumadocs-core": "^15.6.1",
+    "fumadocs-mdx": "^11.6.10",
+    "fumadocs-ui": "^15.6.1",
+    "next": "15.3.5",
     "react": "catalog:react",
     "react-dom": "catalog:react"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.10",
+    "@tailwindcss/postcss": "^4.1.11",
     "@types/mdx": "^2.0.13",
     "@types/node": "catalog:",
     "@types/react": "catalog:react",
@@ -40,7 +39,7 @@
     "@yuki/tsconfig": "workspace:*",
     "dotenv-cli": "catalog:",
     "shadcn": "^2.7.0",
-    "tailwindcss": "^4.1.10",
+    "tailwindcss": "^4.1.11",
     "typescript": "catalog:"
   }
 }
