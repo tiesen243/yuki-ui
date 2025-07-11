@@ -1,3 +1,4 @@
+import { remarkAdmonition } from 'fumadocs-core/mdx-plugins'
 import { defineConfig, defineDocs } from 'fumadocs-mdx/config'
 
 export const docs = defineDocs({
@@ -5,5 +6,7 @@ export const docs = defineDocs({
 })
 
 export default defineConfig({
-  mdxOptions: {},
+  mdxOptions: {
+    remarkPlugins: [remarkAdmonition],
+  },
 })
