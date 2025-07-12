@@ -23,8 +23,12 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
   }
 }
 
-function InstallComponent(props: { comp: string }) {
-  const url = `${getBaseUrl()}/r/${props.comp}.json`
+interface Props {
+  comp: string
+}
+
+function InstallComponent({ comp }: Props) {
+  const url = `${getBaseUrl()}/r/${comp}.json`
 
   return (
     <Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
@@ -44,20 +48,20 @@ function InstallComponent(props: { comp: string }) {
   )
 }
 
-function ComponentSource(props: { comp: string }) {
+function ComponentSource({ comp }: Props) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const code = String(Index[props.comp].files[0].content)
+  const code = String(Index[comp].files[0].content)
   if (code === 'undefined')
     return <Callout type="error">Source code not available</Callout>
   return <DynamicCodeBlock lang="tsx" code={code} />
 }
 
-function PreviewComponent(props: { comp: string }) {
+function PreviewComponent({ comp }: Props) {
   const Comp = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const Component = Index[props.comp]?.component
+    const Component = Index[comp]?.component
     return <Component />
-  }, [props.comp])
+  }, [comp])
 
   return (
     <div className="not-prose flex items-center justify-center">

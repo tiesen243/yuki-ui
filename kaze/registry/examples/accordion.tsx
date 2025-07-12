@@ -1,9 +1,4 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/registry/ui/accordion'
+import { Accordion, AccordionItem } from '@/registry/ui/accordion'
 
 export default function AccordionDemo() {
   const faqs = [
@@ -33,16 +28,23 @@ export default function AccordionDemo() {
     },
   ]
 
-  return (
-    <Accordion className="w-[500px]" openMultiple={false}>
+  return (['default', 'shadow', 'border', 'split'] as const).map((variant) => (
+    <Accordion
+      className="w-[400px]"
+      variant={variant}
+      defaultValue="getting-started"
+      key={variant}
+    >
       {faqs.map((faq) => (
-        <AccordionItem key={faq.id}>
-          <AccordionTrigger>{faq.question}</AccordionTrigger>
-          <AccordionContent>
-            <p className="pb-4 text-balance">{faq.answer}</p>
-          </AccordionContent>
+        <AccordionItem
+          key={faq.id}
+          value={faq.id}
+          title={faq.question}
+          subtitle="lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum."
+        >
+          {faq.answer}
         </AccordionItem>
       ))}
     </Accordion>
-  )
+  ))
 }
