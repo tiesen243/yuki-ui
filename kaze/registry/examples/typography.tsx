@@ -1,4 +1,4 @@
-import { Typography } from '@yuki/ui/typography'
+import { Typography } from '@/registry/ui/typography'
 
 export default function TypographyDemo() {
   const text = 'The quick brown fox jumps over the lazy dog.'
