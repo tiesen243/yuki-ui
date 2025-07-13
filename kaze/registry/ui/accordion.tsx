@@ -25,11 +25,11 @@ const accordionVariants = cva('px-4 pb-2', {
     variant: {
       default: '[&_[data-slot=accordion-item]]:border-b',
       shadow:
-        'bg-card text-card-foreground rounded-xl shadow-md [&_[data-slot=accordion-item]]:not-last:border-b',
+        'rounded-xl bg-card text-card-foreground shadow-md [&_[data-slot=accordion-item]]:not-last:border-b',
       border:
         'rounded-xl border shadow-md [&_[data-slot=accordion-item]]:not-last:border-b',
       split:
-        '[&_[data-slot=accordion-item]]:bg-card space-y-4 px-0 [&_[data-slot=accordion-item]]:rounded-xl [&_[data-slot=accordion-item]]:px-4 [&_[data-slot=accordion-item]]:pt-3',
+        'space-y-4 px-0 [&_[data-slot=accordion-item]]:rounded-xl [&_[data-slot=accordion-item]]:bg-card [&_[data-slot=accordion-item]]:px-4 [&_[data-slot=accordion-item]]:pt-3',
     },
   },
   defaultVariants: {
@@ -63,7 +63,7 @@ function Accordion({
   return (
     <AccordionContext value={contextValue}>
       <div
-        data-slot="accordion"
+        data-slot='accordion'
         className={cn(accordionVariants({ variant }), className)}
         {...props}
       />
@@ -93,7 +93,7 @@ function AccordionItem({
 
   return (
     <div
-      data-slot="accordion-item"
+      data-slot='accordion-item'
       data-value={value}
       data-expanded={isExpanded}
       ref={containerRef}
@@ -111,10 +111,10 @@ function AccordionItem({
       {...props}
     >
       <button
-        type="button"
+        type='button'
         ref={triggerRef}
-        data-slot="accordion-trigger"
-        className="flex w-full items-start justify-between gap-2 text-start"
+        data-slot='accordion-trigger'
+        className='flex w-full items-start justify-between gap-2 text-start'
         onClick={() => {
           setCurrentValue((prev) => {
             if (prev.includes(value)) return prev.filter((v) => v !== value)
@@ -124,16 +124,16 @@ function AccordionItem({
         }}
       >
         <div>
-          <p className="font-semibold">{title}</p>
+          <p className='font-semibold'>{title}</p>
           {subtitle && (
-            <span className="text-muted-foreground text-sm">{subtitle}</span>
+            <span className='text-sm text-muted-foreground'>{subtitle}</span>
           )}
         </div>
 
-        <ChevronDownIcon className="text-muted-foreground size-5 transition-[rotate] duration-200 ease-in-out group-data-[expanded=true]/accordion-item:rotate-180" />
+        <ChevronDownIcon className='size-5 text-muted-foreground transition-[rotate] duration-200 ease-in-out group-data-[expanded=true]/accordion-item:rotate-180' />
       </button>
 
-      <div data-slot="accordion-content" className="mt-6">
+      <div data-slot='accordion-content' className='mt-6'>
         {children}
       </div>
     </div>

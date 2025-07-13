@@ -29,7 +29,7 @@ export default function FormDemo() {
   })
 
   return (
-    <Card className="min-w-md">
+    <Card className='min-w-md'>
       <CardHeader>
         <CardTitle>Login Form</CardTitle>
         <CardDescription>
@@ -39,7 +39,7 @@ export default function FormDemo() {
 
       <CardContent>
         <form
-          className="grid gap-4"
+          className='grid gap-4'
           onSubmit={(e) => {
             e.preventDefault()
             e.stopPropagation()
@@ -47,12 +47,12 @@ export default function FormDemo() {
           }}
         >
           <form.Field
-            name="email"
+            name='email'
             render={({ field, meta }) => (
-              <div id={meta.id} className="grid gap-2">
+              <div id={meta.id} className='grid gap-2'>
                 <form.Label>Email</form.Label>
                 <form.Control {...field}>
-                  <Input type="email" placeholder="Enter your email" />
+                  <Input type='email' placeholder='Enter your email' />
                 </form.Control>
                 <form.Message />
               </div>
@@ -60,12 +60,12 @@ export default function FormDemo() {
           />
 
           <form.Field
-            name="password"
+            name='password'
             render={({ field, meta }) => (
-              <div id={meta.id} className="grid gap-2">
+              <div id={meta.id} className='grid gap-2'>
                 <form.Label>Password</form.Label>
                 <form.Control {...field}>
-                  <Input type="password" />
+                  <Input type='password' />
                 </form.Control>
                 <form.Message />
               </div>

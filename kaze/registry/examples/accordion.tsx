@@ -30,9 +30,9 @@ export default function AccordionDemo() {
 
   return (['default', 'shadow', 'border', 'split'] as const).map((variant) => (
     <Accordion
-      className="w-[400px]"
+      className='w-[400px]'
       variant={variant}
-      defaultValue="getting-started"
+      defaultValue='getting-started'
       key={variant}
     >
       {faqs.map((faq) => (
@@ -40,7 +40,7 @@ export default function AccordionDemo() {
           key={faq.id}
           value={faq.id}
           title={faq.question}
-          subtitle="lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum."
+          subtitle='lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.'
         >
           {faq.answer}
         </AccordionItem>

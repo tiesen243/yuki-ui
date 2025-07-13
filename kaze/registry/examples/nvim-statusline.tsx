@@ -18,7 +18,7 @@ import {
 export default function NvimStatuslineDemo() {
   return (
     <NvimStatuslineProvider>
-      <div className="flex min-h-40 w-full flex-col">
+      <div className='flex min-h-40 w-full flex-col'>
         <ChangeModeButtons />
         <NvimStatuslineContent />
       </div>
@@ -31,7 +31,7 @@ function NvimStatuslineContent() {
 
   return (
     <NvimStatusline>
-      <NvimStatuslineSectionA className="font-bold">
+      <NvimStatuslineSectionA className='font-bold'>
         {mode.toUpperCase()}
       </NvimStatuslineSectionA>
       <NvimStatuslineSectionB>
@@ -40,7 +40,7 @@ function NvimStatuslineContent() {
       <NvimStatuslineSectionC>~/app/page.tsx</NvimStatuslineSectionC>
       <NvimStatuslineSectionX>+15</NvimStatuslineSectionX>
       <NvimStatuslineSectionY>Top 1:1</NvimStatuslineSectionY>
-      <NvimStatuslineSectionZ className="font-bold">
+      <NvimStatuslineSectionZ className='font-bold'>
         {new Date().toLocaleTimeString('en-US', {
           hour12: false,
           hour: '2-digit',
@@ -55,15 +55,15 @@ function ChangeModeButtons() {
   const { modes, setMode } = useNvimStatusline()
 
   return (
-    <div className="container flex flex-1 flex-wrap items-center gap-4 py-6">
+    <div className='container flex flex-1 flex-wrap items-center gap-4 py-6'>
       {modes.map((mode) => (
         <Button
           key={mode}
-          variant="outline"
+          variant='outline'
           style={{
             color: `var(--${mode})`,
           }}
-          size="sm"
+          size='sm'
           onClick={() => {
             setMode(mode)
           }}

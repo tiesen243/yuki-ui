@@ -25,11 +25,11 @@ export default async function DocPage({
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
       {page.slugs.length > 1 && (
-        <Button variant="outline" size="sm" className="w-fit" asChild>
+        <Button variant='outline' size='sm' className='w-fit' asChild>
           <a
             href={`https://github.com/tiesen243/yuki-ui/blob/main/kaze/registry/ui/${page.slugs.at(-1)}.tsx`}
-            target="_blank"
-            rel="noopener noreferrer"
+            target='_blank'
+            rel='noopener noreferrer'
           >
             <GithubIcon />
             Component Source

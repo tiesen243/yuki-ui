@@ -32,17 +32,17 @@ function InstallComponent({ comp }: Props) {
 
   return (
     <Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
-      <Tab value="npm">
-        <DynamicCodeBlock lang="sh" code={`npx shadcn add ${url}`} />
+      <Tab value='npm'>
+        <DynamicCodeBlock lang='sh' code={`npx shadcn add ${url}`} />
       </Tab>
-      <Tab value="yarn">
-        <DynamicCodeBlock lang="sh" code={`npx shadcn add ${url}`} />
+      <Tab value='yarn'>
+        <DynamicCodeBlock lang='sh' code={`npx shadcn add ${url}`} />
       </Tab>
-      <Tab value="pnpm">
-        <DynamicCodeBlock lang="sh" code={`pnpm dlx shadcn add ${url}`} />
+      <Tab value='pnpm'>
+        <DynamicCodeBlock lang='sh' code={`pnpm dlx shadcn add ${url}`} />
       </Tab>
-      <Tab value="bun">
-        <DynamicCodeBlock lang="sh" code={`bunx --bun shadcn add ${url}`} />
+      <Tab value='bun'>
+        <DynamicCodeBlock lang='sh' code={`bunx --bun shadcn add ${url}`} />
       </Tab>
     </Tabs>
   )
@@ -52,8 +52,8 @@ function ComponentSource({ comp }: Props) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const code = String(Index[comp].files[0].content)
   if (code === 'undefined')
-    return <Callout type="error">Source code not available</Callout>
-  return <DynamicCodeBlock lang="tsx" code={code} />
+    return <Callout type='error'>Source code not available</Callout>
+  return <DynamicCodeBlock lang='tsx' code={code} />
 }
 
 function PreviewComponent({ comp }: Props) {
@@ -64,10 +64,10 @@ function PreviewComponent({ comp }: Props) {
   }, [comp])
 
   return (
-    <div className="not-prose flex items-center justify-center">
+    <div className='not-prose flex items-center justify-center'>
       <Suspense
         fallback={
-          <div className="bg-muted h-96 w-full animate-pulse rounded-md" />
+          <div className='h-96 w-full animate-pulse rounded-md bg-muted' />
         }
       >
         {Comp}
