@@ -29,7 +29,7 @@
     "react-dom": "catalog:react"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.11",
+    "@tailwindcss/postcss": "catalog:tailwind",
     "@types/mdx": "^2.0.13",
     "@types/node": "catalog:",
     "@types/react": "catalog:react",
@@ -38,8 +38,10 @@
     "@yuki/prettier-config": "workspace:*",
     "@yuki/tsconfig": "workspace:*",
     "dotenv-cli": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
     "shadcn": "^2.9.2",
-    "tailwindcss": "^4.1.11",
+    "tailwindcss": "catalog:tailwind",
     "typescript": "catalog:"
   }
 }
