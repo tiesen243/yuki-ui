@@ -21,9 +21,9 @@
     "@base-ui-components/react": "^1.0.0-beta.1",
     "@yuki/ui": "workspace:*",
     "@yuki/validators": "workspace:*",
-    "fumadocs-core": "^15.6.4",
-    "fumadocs-mdx": "^11.6.11",
-    "fumadocs-ui": "^15.6.4",
+    "fumadocs-core": "^15.6.5",
+    "fumadocs-mdx": "^11.7.0",
+    "fumadocs-ui": "^15.6.5",
     "next": "15.4.2",
     "react": "catalog:react",
     "react-dom": "catalog:react"
