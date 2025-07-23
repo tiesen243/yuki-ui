@@ -44,6 +44,20 @@ export const registryExample = [
     registryDependencies: [`${getBaseUrl()}/r/nvim-statusline.json`],
   },
   {
+    name: 'progress-button-demo',
+    type: 'registry:example',
+    title: 'Progress Button',
+    description:
+      'A button component that shows progress, useful for loading states.',
+    files: [
+      {
+        path: 'registry/examples/progress-button.tsx',
+        type: 'registry:example',
+      },
+    ],
+    registryDependencies: [`${getBaseUrl()}/r/progress-button.json`],
+  },
+  {
     name: 'typography-demo',
     type: 'registry:example',
     title: 'Typography',

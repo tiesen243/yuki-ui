@@ -51,6 +51,16 @@ export const registryUI = [
     },
   },
   {
+    name: 'progress-button',
+    type: 'registry:ui',
+    title: 'Progress Button',
+    author,
+    description:
+      'A button component that shows progress, useful for loading states',
+    registryDependencies: ['button'],
+    files: [{ path: 'registry/ui/progress-button.tsx', type: 'registry:ui' }],
+  },
+  {
     name: 'typography',
     type: 'registry:ui',
     title: 'Typography',
