@@ -1,5 +1,4 @@
 {
-  "name": "yuki-ui",
   "private": true,
   "workspaces": {
     "catalog": {
