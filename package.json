@@ -1,5 +1,13 @@
 {
   "private": true,
+  "homepage": "https://yuki-ui.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tiesen243/yuki-ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tiesen243/yuki-ui/issues"
+  },
   "workspaces": {
     "catalog": {
       "@types/node": "^24.0.0",
