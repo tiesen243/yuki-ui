@@ -1,14 +1,19 @@
 {
   "private": true,
   "homepage": "https://yuki-ui.vercel.app",
+  "bugs": {
+    "url": "https://github.com/tiesen243/yuki-ui/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tiesen243/yuki-ui.git"
   },
-  "bugs": {
-    "url": "https://github.com/tiesen243/yuki-ui/issues"
-  },
   "workspaces": {
+    "packages": [
+      "kaze",
+      "packages/*",
+      "tools/*"
+    ],
     "catalog": {
       "@types/node": "^24.0.0",
       "dotenv-cli": "^8.0.0",
@@ -28,12 +33,7 @@
         "@tailwindcss/vite": "^4.1.11",
         "tailwindcss": "^4.1.11"
       }
-    },
-    "packages": [
-      "kaze",
-      "packages/*",
-      "tools/*"
-    ]
+    }
   },
   "scripts": {
     "build": "turbo run build",
