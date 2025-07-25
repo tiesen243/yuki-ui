@@ -24,7 +24,7 @@
     "fumadocs-core": "^15.6.5",
     "fumadocs-mdx": "^11.7.0",
     "fumadocs-ui": "^15.6.5",
-    "next": "15.4.2",
+    "next": "15.4.4",
     "react": "catalog:react",
     "react-dom": "catalog:react"
   },
@@ -40,7 +40,7 @@
     "dotenv-cli": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "shadcn": "^2.9.2",
+    "shadcn": "^2.9.3",
     "tailwindcss": "catalog:tailwind",
     "typescript": "catalog:"
   }
