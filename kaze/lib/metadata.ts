@@ -33,6 +33,7 @@ export function createMetadata(override: Metadata = {}): Metadata {
     applicationName: siteName,
     title,
     description,
+    authors: { name: 'Tiesen', url: 'https://tiesen.id.vn' },
     openGraph: {
       ...override.openGraph,
       title,
@@ -50,13 +51,19 @@ export function createMetadata(override: Metadata = {}): Metadata {
       'customizable components',
       ...(override.keywords ?? []),
     ],
-    twitter: { card: 'summary_large_image', creatorId: '@tiesen243' },
+    twitter: {
+      ...override.twitter,
+      card: 'summary_large_image',
+      creatorId: '@tiesen243',
+    },
     icons: {
       icon: '/favicon.ico',
       shortcut: '/favicon-32x32.png',
       apple: '/apple-touch-icon.png',
     },
+    facebook: { appId: '625246206988524' },
+    verification: { google: 'IxxbL_t4Uj36PsfajteCHNpV6Ln9fr7WCkxmzFjW_ms' },
     manifest: `${baseUrl}/manifest.webmanifest`,
-    alternates: { canonical: url },
+    alternates: { ...override.alternates, canonical: url },
   }
 }
