@@ -16,8 +16,7 @@ const typographyVariants = cva('mb-1 text-base leading-7 font-normal', {
       p: 'text-base text-pretty lg:text-lg',
       ul: 'my-4 ml-6 list-disc [&>li]:mt-2',
       ol: '"my-4 ml-6 list-decimal [&>li]:mt-2',
-      blockquote:
-        'mt-6 inline-flex border-l-2 pl-6 italic before:content-["“"] after:content-["”"]',
+      blockquote: 'mt-6 border-l-2 pl-6 italic',
       code: 'relative w-fit rounded-md bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-medium',
       caption: 'block text-sm tracking-wide',
     },

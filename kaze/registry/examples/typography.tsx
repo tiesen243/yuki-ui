@@ -12,7 +12,7 @@ export default function TypographyDemo() {
       <Typography variant='h5'>H5. Heading 5</Typography>
       <Typography variant='h6'>H6. Heading 6</Typography>
       <Typography>{text}</Typography>
-      <Typography variant='blockquote'>{text}</Typography>
+      <Typography variant='blockquote'>“{text}”</Typography>
       <Typography variant='code'>{text}</Typography>
       <Typography variant='ul'>
         <li>List item 1</li>
