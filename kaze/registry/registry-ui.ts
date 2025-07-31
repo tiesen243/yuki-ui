@@ -51,6 +51,20 @@ export const registryUI = [
     },
   },
   {
+    name: 'open-graph',
+    type: 'registry:ui',
+    title: 'Open Graph',
+    author,
+    description: 'A component to generate Open Graph images',
+    files: [
+      {
+        path: 'registry/ui/open-graph.tsx',
+        target: 'app/api/og/route.tsx',
+        type: 'registry:ui',
+      },
+    ],
+  },
+  {
     name: 'progress-button',
     type: 'registry:ui',
     title: 'Progress Button',

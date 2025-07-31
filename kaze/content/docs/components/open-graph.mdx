@@ -1,0 +1,24 @@
+---
+title: Open Graph
+description: A component to generate Open Graph images
+---
+
+![Open Graph](https://yuki-ui.vercel.app/api/og)
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='open-graph' />
+
+### Manual
+
+Copy and paste the following code into your project. `app/api/og/route.tsx`
+
+<ComponentSource comp='open-graph' />
+
+## Usage
+
+This component uses `next/og` to dynamically generate Open Graph images at the `/api/og` endpoint. You can customize the title and description by passing search params to the URL.
+
+`/api/og?title=Your%20Title&description=Your%20Description`

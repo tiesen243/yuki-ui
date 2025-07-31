@@ -18,13 +18,13 @@
   },
   "prettier": "@yuki/prettier-config",
   "dependencies": {
-    "@base-ui-components/react": "^1.0.0-beta.1",
+    "@base-ui-components/react": "^1.0.0-beta.2",
     "@yuki/ui": "workspace:*",
     "@yuki/validators": "workspace:*",
-    "fumadocs-core": "^15.6.6",
+    "fumadocs-core": "^15.6.7",
     "fumadocs-mdx": "^11.7.1",
-    "fumadocs-ui": "^15.6.6",
-    "next": "15.4.4",
+    "fumadocs-ui": "^15.6.7",
+    "next": "15.4.5",
     "react": "catalog:react",
     "react-dom": "catalog:react"
   },
@@ -40,7 +40,7 @@
     "dotenv-cli": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "shadcn": "^2.9.3",
+    "shadcn": "^2.10.0",
     "tailwindcss": "catalog:tailwind",
     "typescript": "catalog:"
   }

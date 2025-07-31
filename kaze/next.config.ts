@@ -7,6 +7,7 @@ const withMdx = createMDX()
 
 const nextConfig = {
   reactStrictMode: true,
+  images: { unoptimized: true },
 
   typescript: { ignoreBuildErrors: true },
   eslint: { ignoreDuringBuilds: true },
