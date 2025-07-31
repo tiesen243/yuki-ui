@@ -33,7 +33,6 @@ export function GET(request: NextRequest) {
               'radial-gradient(circle at 25px 25px, #333 2%, transparent 0%), radial-gradient(circle at 75px 75px, #333 2%, transparent 0%)',
             backgroundSize: '100px 100px',
             padding: '64px',
-            fontFamily: 'Geist, sans-serif',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -62,7 +61,6 @@ export function GET(request: NextRequest) {
                 fontSize: '28px',
                 fontWeight: '500',
                 color: '#fff',
-                fontFamily: 'GeistMedium, sans-serif',
               }}
             >
               {appName}
@@ -87,7 +85,6 @@ export function GET(request: NextRequest) {
                 background: 'linear-gradient(135deg, #fff 0%, #888 100%)',
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
-                fontFamily: 'GeistBold, sans-serif',
               }}
             >
               {truncatedTitle}
@@ -100,7 +97,6 @@ export function GET(request: NextRequest) {
                 lineHeight: '1.5',
                 margin: '0',
                 fontWeight: '400',
-                fontFamily: 'Geist, sans-serif',
                 maxWidth: '800px',
                 overflow: 'hidden',
                 display: '-webkit-box',
@@ -141,7 +137,6 @@ export function GET(request: NextRequest) {
                   fontSize: '16px',
                   color: '#666',
                   fontWeight: '500',
-                  fontFamily: 'GeistMedium, sans-serif',
                 }}
               >
                 {new URL(request.url).hostname}

@@ -22,3 +22,86 @@ Copy and paste the following code into your project. `app/api/og/route.tsx`
 This component uses `next/og` to dynamically generate Open Graph images at the `/api/og` endpoint. You can customize the title and description by passing search params to the URL.
 
 `/api/og?title=Your%20Title&description=Your%20Description`
+
+### Change font
+
+1. Download font to public folder
+
+   Place your custom font files (Regular.ttf, Medium.ttf, Bold.ttf) in the `public/assets/fonts/` directory of your Next.js project.
+
+2. Create function to load font
+
+   Create helper functions to load your font files. These functions fetch the font files and return them as ArrayBuffer objects that can be used by the ImageResponse API.
+
+```tsx title="app/api/og/route.tsx"
+async function getRegularFont() {
+  const response = await fetch(
+    new URL('../../../public/assets/fonts/Regular.ttf', import.meta.url),
+  )
+  return response.arrayBuffer()
+}
+
+async function getMediumFont() {
+  const response = await fetch(
+    new URL('../../../public/assets/fonts/Medium.ttf', import.meta.url),
+  )
+  return response.arrayBuffer()
+}
+
+async function getBoldFont() {
+  const response = await fetch(
+    new URL('../../../public/assets/fonts/Bold.ttf', import.meta.url),
+  )
+  return response.arrayBuffer()
+}
+```
+
+3. Load font in your route handler
+
+   In your API route, load all fonts using Promise.all for better performance, then configure them in the ImageResponse options. Each font needs a unique name, the font data, style, and weight properties.
+
+```tsx title="app/api/og/route.tsx"
+export async function GET(request: NextRequest) {
+  const [fontRegular, fontMedium, fontBold] = await Promise.all([
+    getRegularFont(),
+    getMediumFont(),
+    getBoldFont(),
+  ])
+  // ... rest of the code
+
+  return new ImageResponse(
+    (
+    // Component
+    ),
+    {
+
+      {
+        width: 1200,
+        height: 630,
+        fonts: [
+          {
+            name: 'MyFontRegular',
+            data: fontRegular,
+            style: 'normal',
+            weight: 400,
+          },
+          {
+            name: 'MyFontMedium',
+            data: fontMedium,
+            style: 'normal',
+            weight: 500,
+          },
+          {
+            name: 'MyFontBold',
+            data: fontBold,
+            style: 'normal',
+            weight: 700,
+          },
+        ],
+      },
+    }
+  )
+}
+```
+
+See the complete implementation with custom font loading in this example: [here](https://github.com/tiesen243/yuki-ui/blob/main/kaze/app/api/og/route.tsx)
