@@ -12,5 +12,5 @@
     ".next/types/**/*.ts",
     ".source/*"
   ],
-  "exclude": ["node_modules", "registry/**/*.ts", "registry/**/*.tsx"]
+  "exclude": ["node_modules"]
 }
