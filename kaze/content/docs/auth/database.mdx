@@ -1,0 +1,72 @@
+---
+title: Database Concepts
+description: Understanding the database structure and table relationships for the authentication system
+---
+
+The authentication system uses a simplified three-table structure to manage users, authentication accounts, and sessions.
+
+## Tables Overview
+
+### User Table
+
+Stores core user information and profile data.
+
+| Field     | Type         | Key    | Description                                              |
+| --------- | ------------ | ------ | -------------------------------------------------------- |
+| id        | uuid         | PK     | Unique identifier for each user (auto-generated)         |
+| name      | varchar(255) |        | User's display name                                      |
+| email     | varchar(255) | UNIQUE | User's email address (required for authentication)       |
+| image     | varchar(255) |        | URL to user's profile image                              |
+| createdAt | timestamp    |        | Timestamp when user account was created (auto-set)       |
+| updatedAt | timestamp    |        | Timestamp when user data was last updated (auto-updated) |
+
+### Account Table
+
+Links users to their authentication providers (OAuth or credentials).
+
+| Field     | Type         | Key            | Description                                                         |
+| --------- | ------------ | -------------- | ------------------------------------------------------------------- |
+| provider  | varchar(255) | PK (composite) | Authentication provider name (google, github, discord, credentials) |
+| accountId | varchar(255) | PK (composite) | Unique account ID from the provider or email for credentials        |
+| userId    | uuid         | FK             | References User.id - the user this account belongs to               |
+| password  | varchar(255) |                | Hashed password (only for credentials provider, null for OAuth)     |
+
+**Primary Key:** Composite key of (provider, accountId) - ensures unique accounts per provider
+**Foreign Key:** userId references users.id with cascade delete
+
+### Session Table
+
+Manages user sessions for authentication state.
+
+| Field   | Type         | Key | Description                                           |
+| ------- | ------------ | --- | ----------------------------------------------------- |
+| token   | varchar(255) | PK  | Unique session token identifying the session          |
+| expires | timestamp    |     | Timestamp when session expires (with timezone)        |
+| userId  | uuid         | FK  | References User.id - the user this session belongs to |
+
+**Foreign Key:** userId references users.id with cascade delete
+
+## Relationships
+
+- **User → Account**: One-to-Many (a user can have multiple auth methods: OAuth + credentials)
+- **User → Session**: One-to-Many (a user can have multiple active sessions across devices)
+- **Account → User**: Many-to-One (each account belongs to one user)
+- **Session → User**: Many-to-One (each session belongs to one user)
+
+## Key Features
+
+- **Cascade Deletes**: When a user is deleted, all their accounts and sessions are automatically removed
+- **Composite Primary Key**: Accounts use (provider, accountId) to prevent duplicate provider accounts
+- **Timezone Support**: Sessions and user timestamps include timezone information
+- **Auto-Generated UUIDs**: User IDs are automatically generated UUIDs for security
+- **Auto-Update Timestamps**: User updatedAt field automatically updates on changes
+
+## Database Adapters
+
+The schema is implemented across different ORMs:
+
+- **Drizzle**: PostgreSQL schema with UUID and timestamp support
+- **Prisma**: Cross-database schema with auto-generated types
+- **Mongoose**: MongoDB schemas with document validation
+
+Each adapter maintains the same logical structure while optimizing for their respective database features.

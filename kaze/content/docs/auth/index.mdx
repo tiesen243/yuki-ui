@@ -1,0 +1,247 @@
+---
+title: Authentication
+description: Build your own authentication system from scratch with complete control over implementation
+---
+
+Build your own authentication system from scratch with complete control over implementation. This collection provides authentication components and utilities that you can customize to fit your exact requirements, supporting multiple database adapters and OAuth providers.
+
+## Installation
+
+### CLI
+
+1. Base
+   The core authentication components and utilities for building your own auth system.
+
+   <InstallComponent comp='auth-base' />
+
+   **Includes:**
+   - Authentication hooks and utilities
+   - Session management components
+   - Base UI components (sign-in/sign-out forms)
+   - TypeScript types and interfaces
+
+2. Drizzle
+   Authentication system with Drizzle ORM integration for SQL databases.
+
+   <InstallComponent comp='auth-drizzle' />
+
+   **Includes:**
+   - Everything from Base
+   - Drizzle schema definitions
+   - Database connection utilities
+   - SQL-optimized auth queries
+
+3. Prisma
+   Authentication system with Prisma ORM integration and type-safe database operations.
+
+   <InstallComponent comp='auth-prisma' />
+
+   **Includes:**
+   - Everything from Base
+   - Prisma schema models
+   - Type-safe database client
+   - Migration utilities
+
+4. Mongoose
+   Authentication system for MongoDB using Mongoose ODM for document-based storage.
+
+   <InstallComponent comp='auth-mongoose' />
+
+   **Includes:**
+   - Everything from Base
+   - Mongoose schemas and models
+   - MongoDB connection setup
+   - Document validation utilities
+
+### Manual
+
+Download and customize the source code directly from the registry:
+
+[Source](https://github.com/tiesen243/yuki-ui/tree/main/kaze/registry/auth)
+
+## OAuth Providers
+
+Configure OAuth authentication with supported providers:
+
+**Supported providers:**
+
+1. Discord
+2. Facebook
+3. GitHub
+4. Google
+
+**Environment variables:**
+
+```bash title=".env"
+AUTH_{PROVIDER}_ID={YOUR_ID}
+AUTH_{PROVIDER}_SECRET={YOUR_SECRET}
+```
+
+**Configuration:**
+
+```typescript title="server/auth/config.ts"
+import Provider from '@/server/auth/providers/{provider}'
+
+export const authOptions = {
+  // ... other options
+  providers: {
+    '{provider}': Provider({
+      clientId: process.env.AUTH_{PROVIDER}_ID ?? '',
+      clientSecret: process.env.AUTH_{PROVIDER}_SECRET ?? '',
+    }),
+  },
+}
+```
+
+## API Endpoints
+
+Configure authentication endpoints for your chosen framework:
+
+### Next.js API Routes
+
+```typescript title="app/api/auth/[...auth]/route.ts
+import { handlers } from '@/server/auth'
+
+export const { GET, POST } = handlers
+```
+
+### React Router (v7)
+
+Configure authentication routes for React Router v7:
+
+```typescript title="src/routes/api.auth.$.ts"
+import type { Route } from './+types/api.auth.$'
+import { handlers } from '@/server/auth'
+
+const { GET, POST } = handlers
+export const loader = ({ request }: Route.LoaderArgs) => GET(request)
+export const action = ({ request }: Route.ActionArgs) => POST(request)
+```
+
+### Tanstack Start
+
+Set up authentication routes for Tanstack Start:
+
+```typescript title="src/routes/api.auth.$.ts"
+import { handlers } from '@my-yuki-app/auth'
+import { createServerFileRoute } from '@tanstack/react-start/server'
+
+const { GET, POST } = handlers
+export const ServerRoute = createServerFileRoute('/api/auth/$').methods({
+  GET: ({ request }) => GET(request),
+  POST: ({ request }) => POST(request),
+})
+```
+
+## Usage
+
+### Server side
+
+1. **Get session data:**
+
+   Retrieve the current user's session information on the server:
+
+```typescript
+import { auth } from '@/server/auth'
+
+const session = await auth({ headers: request.headers })
+
+// Or for Next.js
+import { headers } from 'next/headers'
+const session = await auth({ headers: await headers() })
+```
+
+2. **Sign in a user:**
+
+   Authenticate a user and set the session cookie:
+
+```typescript
+import { cookies } from 'next/headers'
+
+import { signIn } from '@/server/auth'
+
+const result = await signIn({ email: '', password: '' })
+//      ^ Session data with token and expiry
+
+;(await cookies()).set({
+  name: 'auth.token',
+  value: result.token,
+  expires: result.expires,
+  path: '/',
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax',
+})
+```
+
+3. **Sign out a user:**
+
+   Clear the user's session and invalidate their token:
+
+```typescript
+import { headers } from 'next/headers'
+
+import { signOut } from '@/server/auth'
+
+await signOut({ headers: await headers() })
+```
+
+### Client side
+
+1. Wrap your app with the `SessionProvider`:
+
+   Set up the session context for your application:
+
+```tsx
+import { SessionProvider } from '@/hooks/use-session'
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return <SessionProvider>{children}</SessionProvider>
+}
+```
+
+2. Use the `useSession` hook to access session data:
+
+   Access session state and authentication methods in your components:
+
+```tsx
+import { useSession } from '@/hooks/use-session'
+
+export function MyComponent() {
+  const { session, status, signIn, signOut } = useSession()
+
+  if (status === 'loading') return <div>Loading...</div>
+  else if (status === 'unauthenticated')
+    return (
+      <button
+        onClick={() => {
+          void signIn(provider, options)
+          /*              ^ Provider name (e.g., 'credentials', 'google', etc.)
+           *  If provider is creadentials, options can include:
+           *    { email: '', password: '' }
+           *  If provider is OAuth, options can include:
+           *    { redirectUrl: '/' } // Optional redirect URL after sign in
+           */
+        }}
+      >
+        Sign in with {provider}
+      </button>
+    )
+
+  return (
+    <div>
+      <p>Welcome, {session.user.name}!</p>
+      <button
+        onClick={() => {
+          void signOut({ redirectUrl: '/' })
+          //                  ^ Optional redirect URL after sign out
+        }}
+      >
+        Sign out
+      </button>
+    </div>
+  )
+}
+```

@@ -24,7 +24,7 @@ export default async function DocPage({
     <DocsPage toc={page.data.toc} full={page.data.full}>
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
-      {page.slugs.length > 1 && (
+      {page.slugs.length > 1 && !page.slugs.includes('auth') && (
         <Button variant='outline' size='sm' className='w-fit' asChild>
           <a
             href={`https://github.com/tiesen243/yuki-ui/blob/main/kaze/registry/ui/${page.slugs.at(-1)}.tsx`}
