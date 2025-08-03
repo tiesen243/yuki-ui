@@ -10,6 +10,15 @@ export const registryAuth = [
     type: 'registry:file',
     title: 'Authentication Base',
     description: 'Authentication system with OAuth2 support',
+    dependencies: ['next-themes'],
+    registryDependencies: [
+      'avatar',
+      'button',
+      'card',
+      'dropdown-menu',
+      'input',
+      `${getBaseUrl()}/r/form.json`,
+    ],
     files: [
       // Password files
       {
@@ -48,6 +57,18 @@ export const registryAuth = [
         target: 'hooks/use-session.tsx',
         type: 'registry:hook',
       },
+
+      // Components
+      {
+        path: 'registry/auth/components/user-button.tsx',
+        target: 'components/user-button.tsx',
+        type: 'registry:component',
+      },
+      {
+        path: 'registry/auth/components/login-form.tsx',
+        target: 'components/login-form.tsx',
+        type: 'registry:component',
+      },
     ],
   },
 
@@ -72,7 +93,7 @@ export const registryAuth = [
     title: 'Authentication with Drizzle ORM',
     description: 'Authentication system with Drizzle ORM support',
     dependencies: ['drizzle-orm'],
-    devDependencies: ['dirzzle-kit'],
+    devDependencies: ['drizzle-kit'],
     registryDependencies: [`${getBaseUrl()}/r/auth.json`],
     files: [
       {
