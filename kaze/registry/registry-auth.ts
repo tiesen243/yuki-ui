@@ -140,7 +140,7 @@ export const registryAuth = [
     files: [
       {
         path: 'registry/auth/configs/mongoose.schema.ts',
-        target: 'server/db/auth.schema.ts',
+        target: 'server/db/auth.models.ts',
         type: 'registry:file',
       },
       {

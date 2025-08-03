@@ -5,7 +5,7 @@ import type {
 } from '@/server/db/auth.schema'
 import { encodeHex, hashSecret } from '@/server/auth/core/crypto'
 import Discord from '@/server/auth/providers/discord'
-import { accounts, sessions, users } from '@/server/db/auth.schema'
+import { accounts, sessions, users } from '@/server/db/auth.models'
 
 const adapter = getAdapter()
 export const authOptions = {
