@@ -49,12 +49,7 @@ export default function LoginForm() {
             name='email'
             render={({ field, meta }) => (
               <div id={meta.id} className='grid gap-2'>
-                <div className='flex items-center justify-baseline'>
-                  <form.Label>Email</form.Label>
-                  <a href='#' className='text-xs hover:underline'>
-                    Forgot your password?
-                  </a>
-                </div>
+                <form.Label>Email</form.Label>
                 <form.Control {...field}>
                   <Input type='email' placeholder='Enter your email' />
                 </form.Control>
@@ -67,7 +62,12 @@ export default function LoginForm() {
             name='password'
             render={({ field, meta }) => (
               <div id={meta.id} className='grid gap-2'>
-                <form.Label>Password</form.Label>
+                <div className='flex items-center justify-between'>
+                  <form.Label>Password</form.Label>
+                  <a href='#' className='text-xs hover:underline'>
+                    Forgot your password?
+                  </a>
+                </div>
                 <form.Control {...field}>
                   <Input type='password' placeholder='Enter your password' />
                 </form.Control>
