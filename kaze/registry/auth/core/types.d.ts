@@ -17,6 +17,7 @@ export interface OAuth2Token {
   expires_in: number
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface User {}
 
 export interface Account {
@@ -33,6 +34,7 @@ export interface OauthAccount {
   image: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface Session {}
 
 export interface SessionResult {

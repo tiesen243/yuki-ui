@@ -1,8 +1,5 @@
 import type { AuthOptions } from '@/server/auth/core/types'
-import type {
-  SessionUncheckedCreateInput,
-  UserUncheckedCreateInput,
-} from '@/server/db/generated/models'
+import type { SessionModel, UserModel } from '@/server/db/generated/models'
 import { encodeHex, hashSecret } from '@/server/auth/core/crypto'
 import Discord from '@/server/auth/providers/discord'
 import { db } from '@/server/db'
@@ -76,8 +73,10 @@ function getAdapter(): AuthOptions['adapter'] {
 }
 
 declare module '@/server/auth/core/types.d.ts' {
-  interface User extends UserUncheckedCreateInput {
+  interface User extends UserModel {
     id: string
   }
-  interface Session extends SessionUncheckedCreateInput {}
+  interface Session extends SessionModel {
+    token: string
+  }
 }
