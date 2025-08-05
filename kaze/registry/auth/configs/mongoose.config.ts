@@ -8,6 +8,7 @@ import Discord from '@/server/auth/providers/discord'
 import { accounts, sessions, users } from '@/server/db/auth.models'
 
 const adapter = getAdapter()
+
 export const authOptions = {
   adapter,
   session: {

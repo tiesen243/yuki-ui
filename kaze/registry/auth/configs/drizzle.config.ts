@@ -7,6 +7,7 @@ import { db } from '@/server/db'
 import { accounts, sessions, users } from '@/server/db/schema'
 
 const adapter = getAdapter()
+
 export const authOptions = {
   adapter,
   session: {
