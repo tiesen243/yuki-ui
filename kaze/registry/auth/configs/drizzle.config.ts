@@ -89,5 +89,7 @@ declare module '@/server/auth/core/types.d.ts' {
   interface User extends IUser {
     id: string
   }
-  interface Session extends ISession {}
+  interface Session extends ISession {
+    token: string
+  }
 }
