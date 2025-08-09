@@ -32,6 +32,7 @@ Links users to their authentication providers (OAuth or credentials).
 | password  | varchar(255) |                | Hashed password (only for credentials provider, null for OAuth)     |
 
 **Primary Key:** Composite key of (provider, accountId) - ensures unique accounts per provider
+
 **Foreign Key:** userId references users.id with cascade delete
 
 ### Session Table

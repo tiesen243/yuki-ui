@@ -11,7 +11,7 @@ export const baseOptions: BaseLayoutProps = {
       <Image
         src={Tiesen}
         alt='Tiesen Logo'
-        className='w-2/3 object-cover'
+        className='h-12 w-auto object-cover md:h-auto md:w-2/3'
         sizes='(max-width: 768px) 45vw, (max-width: 1200px) 33vw, 20vw'
         priority
       />
