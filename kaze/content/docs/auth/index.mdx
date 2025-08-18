@@ -174,12 +174,13 @@ export const ServerRoute = createServerFileRoute('/api/auth/$').methods({
    Retrieve the current user's session information on the server:
 
    ```typescript
+   // Or for Next.js
+   import { headers } from 'next/headers'
+
    import { auth } from '@/server/auth'
 
    const session = await auth({ headers: request.headers })
 
-   // Or for Next.js
-   import { headers } from 'next/headers'
    const session = await auth({ headers: await headers() })
    ```
 

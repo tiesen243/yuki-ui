@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { RootProvider } from 'fumadocs-ui/provider'
 
 import { cn } from '@yuki/ui'
+import { Toaster } from '@yuki/ui/sonner'
 
 import { createMetadata } from '@/lib/metadata'
 
@@ -29,7 +30,10 @@ export default function RootLayout({
           geistMono.variable,
         )}
       >
-        <RootProvider search={{ enabled: false }}>{children}</RootProvider>
+        <RootProvider search={{ enabled: false }}>
+          {children}
+          <Toaster />
+        </RootProvider>
       </body>
     </html>
   )

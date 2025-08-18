@@ -59,6 +59,14 @@ export const registryUI = [
     ],
   },
   {
+    name: 'password-input',
+    type: 'registry:ui',
+    title: 'Password Input',
+    description:
+      'A password input component with a toggle to show/hide the password',
+    files: [{ path: 'registry/ui/password-input.tsx', type: 'registry:ui' }],
+  },
+  {
     name: 'progress-button',
     type: 'registry:ui',
     title: 'Progress Button',

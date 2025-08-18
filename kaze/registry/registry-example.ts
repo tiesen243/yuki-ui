@@ -44,6 +44,20 @@ export const registryExample = [
     ],
   },
   {
+    name: 'password-input-demo',
+    type: 'registry:example',
+    title: 'Password Input',
+    description:
+      'A password input component that allows users to toggle visibility and strength indicators.',
+    registryDependencies: [`${getBaseUrl()}/r/password-input.json`],
+    files: [
+      {
+        path: 'registry/examples/password-input.tsx',
+        type: 'registry:example',
+      },
+    ],
+  },
+  {
     name: 'progress-button-demo',
     type: 'registry:example',
     title: 'Progress Button',
