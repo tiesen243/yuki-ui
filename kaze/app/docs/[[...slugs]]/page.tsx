@@ -21,7 +21,11 @@ export default async function DocPage({
   if (!page) return notFound()
 
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full}>
+    <DocsPage
+      tableOfContent={{ style: 'clerk' }}
+      toc={page.data.toc}
+      full={page.data.full}
+    >
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
       {page.slugs.length > 1 && !page.slugs.includes('auth') && (
