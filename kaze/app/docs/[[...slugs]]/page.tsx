@@ -15,7 +15,7 @@ import { getMDXComponents } from '@/mdx-components'
 
 export default async function DocPage({
   params,
-}: Readonly<{ params: Promise<{ slugs: string[] }> }>) {
+}: PageProps<'/docs/[[...slugs]]'>) {
   const { slugs } = await params
   const page = source.getPage(slugs)
   if (!page) return notFound()
@@ -49,7 +49,7 @@ export default async function DocPage({
 
 export async function generateMetadata({
   params,
-}: Readonly<{ params: Promise<{ slugs: string[] }> }>) {
+}: PageProps<'/docs/[[...slugs]]'>) {
   const { slugs } = await params
   const page = source.getPage(slugs)
   if (!page) return notFound()

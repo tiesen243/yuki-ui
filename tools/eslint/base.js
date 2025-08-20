@@ -68,6 +68,12 @@ export default tseslint.config(
     },
   },
   {
+    files: ['next-env.d.ts'],
+    rules: {
+      '@typescript-eslint/triple-slash-reference': 'off',
+    },
+  },
+  {
     plugins: { turbo: turboPlugin },
     rules: {
       ...turboPlugin.configs.recommended.rules,

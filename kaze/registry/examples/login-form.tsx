@@ -11,6 +11,7 @@ import {
 import { Input } from '@yuki/ui/input'
 
 import { useForm } from '@/registry/ui/form'
+import { PasswordInput } from '@/registry/ui/password-input'
 
 export default function LoginForm() {
   const form = useForm({
@@ -51,7 +52,11 @@ export default function LoginForm() {
               <div id={meta.id} className='grid gap-2'>
                 <form.Label>Email</form.Label>
                 <form.Control {...field}>
-                  <Input type='email' placeholder='Enter your email' />
+                  <Input
+                    type='email'
+                    placeholder='Enter your email'
+                    tabIndex={1}
+                  />
                 </form.Control>
                 <form.Message />
               </div>
@@ -64,19 +69,24 @@ export default function LoginForm() {
               <div id={meta.id} className='grid gap-2'>
                 <div className='flex items-center justify-between'>
                   <form.Label>Password</form.Label>
-                  <a href='#' className='text-xs hover:underline'>
+                  <a href='#' tabIndex={4} className='text-xs hover:underline'>
                     Forgot your password?
                   </a>
                 </div>
                 <form.Control {...field}>
-                  <Input type='password' placeholder='Enter your password' />
+                  <PasswordInput
+                    placeholder='Enter your password'
+                    tabIndex={2}
+                  />
                 </form.Control>
                 <form.Message />
               </div>
             )}
           />
 
-          <Button disabled={form.state.isPending}>Login</Button>
+          <Button tabIndex={3} disabled={form.state.isPending}>
+            Login
+          </Button>
         </form>
       </CardContent>
     </Card>

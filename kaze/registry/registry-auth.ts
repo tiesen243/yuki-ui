@@ -18,6 +18,7 @@ export const registryAuth = [
       'dropdown-menu',
       'input',
       `${getBaseUrl()}/r/form.json`,
+      `${getBaseUrl()}/r/password-input.json`,
     ],
     files: [
       // Password files

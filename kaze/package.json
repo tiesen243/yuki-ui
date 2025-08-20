@@ -11,9 +11,9 @@
     "dev": "bun with-env next dev --turbopack --port 3000",
     "format": "prettier --check . --ignore-path ../.gitignore",
     "postinstall": "fumadocs-mdx",
-    "lint": "eslint",
+    "lint": "bun with-env next typegen && eslint",
     "start": "bun with-env next start  --port 3000",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "bun with-env next typegen && tsc --noEmit",
     "with-env": "dotenv -e ../.env --"
   },
   "prettier": "@yuki/prettier-config",
@@ -24,7 +24,7 @@
     "fumadocs-core": "^15.6.12",
     "fumadocs-mdx": "^11.7.5",
     "fumadocs-ui": "^15.6.12",
-    "next": "15.4.7",
+    "next": "15.5.0",
     "react": "catalog:react",
     "react-dom": "catalog:react"
   },
