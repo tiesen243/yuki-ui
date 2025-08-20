@@ -28,6 +28,7 @@ function PasswordInput({
       <button
         data-slot='password-input-toggle'
         type='button'
+        tabIndex={props.tabIndex ? props.tabIndex + 1 : undefined}
         onClick={() => {
           setIsShow(!isShow)
         }}

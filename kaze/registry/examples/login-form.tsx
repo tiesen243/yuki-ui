@@ -69,7 +69,7 @@ export default function LoginForm() {
               <div id={meta.id} className='grid gap-2'>
                 <div className='flex items-center justify-between'>
                   <form.Label>Password</form.Label>
-                  <a href='#' tabIndex={4} className='text-xs hover:underline'>
+                  <a href='#' tabIndex={5} className='text-xs hover:underline'>
                     Forgot your password?
                   </a>
                 </div>
@@ -84,7 +84,7 @@ export default function LoginForm() {
             )}
           />
 
-          <Button tabIndex={3} disabled={form.state.isPending}>
+          <Button tabIndex={4} disabled={form.state.isPending}>
             Login
           </Button>
         </form>
