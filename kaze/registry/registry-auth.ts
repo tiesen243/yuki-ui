@@ -21,20 +21,8 @@ export const registryAuth = [
       `${getBaseUrl()}/r/password-input.json`,
     ],
     files: [
-      // Password files
-      {
-        path: 'registry/auth/core/password/index.ts',
-        target: 'server/auth/core/password/index.ts',
-        type: 'registry:file',
-      },
-      {
-        path: 'registry/auth/core/password/scrypt.ts',
-        target: 'server/auth/core/password/scrypt.ts',
-        type: 'registry:file',
-      },
-
       // Core files
-      ...['cookies', 'crypto', 'index', 'types.d'].map((file) => ({
+      ...['cookies', 'crypto', 'index', 'password', 'types.d'].map((file) => ({
         path: `registry/auth/core/${file}.ts`,
         target: `server/auth/core/${file}.ts`,
         type: 'registry:file' as const,
