@@ -1,6 +1,7 @@
 import type { Registry } from 'shadcn/registry'
 
 import { registryAuth } from '@/registry/registry-auth'
+import { registryLib } from '@/registry/registry-lib'
 import { registryBlocks } from './registry-blocks'
 import { registryExample } from './registry-example'
 import { registryHooks } from './registry-hooks'
@@ -14,6 +15,7 @@ export const registry = {
     ...registryBlocks,
     ...registryExample,
     ...registryHooks,
+    ...registryLib,
     ...registryUI,
   ].map((item) => ({
     ...item,

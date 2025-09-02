@@ -53,6 +53,13 @@ function useFormField<
   return formField
 }
 
+type NoUndefined<T extends StandardSchemaV1> = {
+  [K in keyof Required<InferInput<T>>]: Exclude<
+    Required<InferInput<T>>[K],
+    undefined
+  >
+}
+
 function useForm<
   TValue extends Record<string, unknown>,
   TSchema extends StandardSchemaV1 | ((value: TValue) => TValue),
@@ -67,9 +74,9 @@ function useForm<
 }: {
   defaultValues: TValue
   validator?: TSchema extends StandardSchemaV1
-    ? Required<InferInput<TSchema>> extends TValue
+    ? NoUndefined<TSchema> extends TValue
       ? TSchema
-      : Types<TValue>['input']
+      : never
     : (value: TValue) => Result<TValue>
   onSubmit: (value: TValue) => TData | Promise<TData>
   onSuccess?: (data: TData) => void | Promise<void>
@@ -78,6 +85,7 @@ function useForm<
   const formValueRef = React.useRef<TValue>(defaultValues)
   const formDataRef = React.useRef<TData | null>(null)
   const formErrorRef = React.useRef<TError>(null)
+  const [version, setVersion] = React.useState(0)
 
   const [isPending, startTransition] = React.useTransition()
 
@@ -142,6 +150,14 @@ function useForm<
       }
     })
   }, [onError, onSubmit, onSuccess, validateField])
+
+  const setValue = React.useCallback(
+    <TKey extends keyof TValue>(key: TKey, value: TValue[TKey]) => {
+      formValueRef.current[key] = value
+      setVersion((v) => v + 1)
+    },
+    [],
+  )
 
   const Field = React.useCallback(
     function FormField<TFieldName extends keyof TValue>({
@@ -222,7 +238,7 @@ function useForm<
         </FormFieldContext>
       )
     },
-    [isPending, validateField],
+    [isPending, validateField, version],
   )
 
   const Label = React.useCallback(function FormLabel({
@@ -317,6 +333,7 @@ function useForm<
     Object.assign(formValueRef.current, defaultValues)
     formErrorRef.current = null
     formDataRef.current = null
+    setVersion((v) => v + 1)
   }, [defaultValues])
 
   return React.useMemo(
@@ -326,6 +343,7 @@ function useForm<
       Control,
       Description,
       Message,
+      setValue,
       handleSubmit,
       reset,
 

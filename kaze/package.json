@@ -21,10 +21,10 @@
     "@base-ui-components/react": "^1.0.0-beta.2",
     "@yuki/ui": "workspace:*",
     "@yuki/validators": "workspace:*",
-    "fumadocs-core": "^15.6.12",
-    "fumadocs-mdx": "^11.7.5",
-    "fumadocs-ui": "^15.6.12",
-    "next": "15.5.0",
+    "fumadocs-core": "^15.7.8",
+    "fumadocs-mdx": "^11.8.3",
+    "fumadocs-ui": "^15.7.8",
+    "next": "15.5.2",
     "react": "catalog:react",
     "react-dom": "catalog:react"
   },
@@ -40,7 +40,7 @@
     "dotenv-cli": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "shadcn": "^2.10.0",
+    "shadcn": "^3.1.0",
     "tailwindcss": "catalog:tailwind",
     "typescript": "catalog:"
   }
