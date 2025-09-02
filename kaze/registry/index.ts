@@ -1,4 +1,4 @@
-import type { Registry } from 'shadcn/registry'
+import type { Registry } from 'shadcn/schema'
 
 import { registryAuth } from '@/registry/registry-auth'
 import { registryLib } from '@/registry/registry-lib'

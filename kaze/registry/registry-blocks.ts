@@ -1,3 +1,3 @@
-import type { RegistryItem } from 'shadcn/registry'
+import type { RegistryItem } from 'shadcn/schema'
 
 export const registryBlocks = [] satisfies RegistryItem[]

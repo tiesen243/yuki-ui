@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import type { Registry } from 'shadcn/registry'
-import { registrySchema } from 'shadcn/registry'
+import type { Registry } from 'shadcn/schema'
+import { registrySchema } from 'shadcn/schema'
 
 import { registry } from '@/registry'
 
