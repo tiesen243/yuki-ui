@@ -4,17 +4,6 @@ import { getBaseUrl } from '@/lib/utils'
 
 export const registryExample = [
   {
-    name: 'accordion-demo',
-    type: 'registry:example',
-    title: 'Accordion',
-    description:
-      'A simple accordion component that can be used to display FAQs or collapsible content.',
-    registryDependencies: [`${getBaseUrl()}/r/accordion.json`],
-    files: [
-      { path: 'registry/examples/accordion.tsx', type: 'registry:example' },
-    ],
-  },
-  {
     name: 'form-demo',
     type: 'registry:example',
     title: 'Form',
