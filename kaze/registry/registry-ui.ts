@@ -2,14 +2,6 @@ import type { RegistryItem } from 'shadcn/schema'
 
 export const registryUI = [
   {
-    name: 'accordion',
-    type: 'registry:ui',
-    title: 'Accordion',
-    description: 'A simple accordion component',
-    dependencies: ['@base-ui-components/react'],
-    files: [{ path: 'registry/ui/accordion.tsx', type: 'registry:ui' }],
-  },
-  {
     name: 'form',
     type: 'registry:ui',
     title: 'Form',

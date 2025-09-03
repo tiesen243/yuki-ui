@@ -18,7 +18,6 @@
   },
   "prettier": "@yuki/prettier-config",
   "dependencies": {
-    "@base-ui-components/react": "^1.0.0-beta.2",
     "@yuki/ui": "workspace:*",
     "@yuki/validators": "workspace:*",
     "fumadocs-core": "^15.7.8",

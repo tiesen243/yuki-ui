@@ -3,7 +3,7 @@
 import { Button } from '@yuki/ui/button'
 import { toast } from '@yuki/ui/sonner'
 
-import { useForm } from '@/registry/ui/form'
+import { FormControl, FormField, FormLabel, useForm } from '@/registry/ui/form'
 import { PasswordInput } from '@/registry/ui/password-input'
 
 export default function PasswordInputDemo() {
@@ -17,22 +17,16 @@ export default function PasswordInputDemo() {
   })
 
   return (
-    <form
-      className='grid gap-4'
-      onSubmit={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        form.handleSubmit()
-      }}
-    >
-      <form.Field
+    <form className='grid gap-4' onSubmit={form.handleSubmit}>
+      <FormField
+        control={form.control}
         name='password'
         render={({ field, meta }) => (
           <div id={meta.id} className='grid gap-2'>
-            <form.Label>Password</form.Label>
-            <form.Control {...field}>
+            <FormLabel>Password</FormLabel>
+            <FormControl {...field}>
               <PasswordInput placeholder='Enter your password' />
-            </form.Control>
+            </FormControl>
           </div>
         )}
       />

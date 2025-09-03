@@ -10,7 +10,13 @@ import {
 } from '@yuki/ui/card'
 import { Input } from '@yuki/ui/input'
 
-import { useForm } from '@/registry/ui/form'
+import {
+  FormControl,
+  FormField,
+  FormLabel,
+  FormMessage,
+  useForm,
+} from '@/registry/ui/form'
 import { PasswordInput } from '@/registry/ui/password-input'
 
 export default function LoginForm() {
@@ -38,55 +44,41 @@ export default function LoginForm() {
       </CardHeader>
 
       <CardContent>
-        <form
-          className='grid gap-4'
-          onSubmit={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            form.handleSubmit()
-          }}
-        >
-          <form.Field
+        <form className='grid gap-4' onSubmit={form.handleSubmit}>
+          <FormField
+            control={form.control}
             name='email'
             render={({ field, meta }) => (
               <div id={meta.id} className='grid gap-2'>
-                <form.Label>Email</form.Label>
-                <form.Control {...field}>
-                  <Input
-                    type='email'
-                    placeholder='Enter your email'
-                    tabIndex={1}
-                  />
-                </form.Control>
-                <form.Message />
+                <FormLabel>Email</FormLabel>
+                <FormControl {...field}>
+                  <Input type='email' placeholder='Enter your email' />
+                </FormControl>
+                <FormMessage />
               </div>
             )}
           />
 
-          <form.Field
+          <FormField
+            control={form.control}
             name='password'
             render={({ field, meta }) => (
               <div id={meta.id} className='grid gap-2'>
                 <div className='flex items-center justify-between'>
-                  <form.Label>Password</form.Label>
-                  <a href='#' tabIndex={5} className='text-xs hover:underline'>
+                  <FormLabel>Password</FormLabel>
+                  <a href='#' tabIndex={-1} className='text-xs hover:underline'>
                     Forgot your password?
                   </a>
                 </div>
-                <form.Control {...field}>
-                  <PasswordInput
-                    placeholder='Enter your password'
-                    tabIndex={2}
-                  />
-                </form.Control>
-                <form.Message />
+                <FormControl {...field}>
+                  <PasswordInput placeholder='Enter your password' />
+                </FormControl>
+                <FormMessage />
               </div>
             )}
           />
 
-          <Button tabIndex={4} disabled={form.state.isPending}>
-            Login
-          </Button>
+          <Button disabled={form.state.isPending}>Login</Button>
         </form>
       </CardContent>
     </Card>

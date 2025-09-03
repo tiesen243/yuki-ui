@@ -12,7 +12,13 @@ import {
 } from '@yuki/ui/card'
 import { Input } from '@yuki/ui/input'
 
-import { useForm } from '@/registry/ui/form'
+import {
+  FormControl,
+  FormField,
+  FormLabel,
+  FormMessage,
+  useForm,
+} from '@/registry/ui/form'
 
 const formSchema = z.object({
   email: z.email('Invalid email address'),
@@ -38,36 +44,31 @@ export default function FormDemo() {
       </CardHeader>
 
       <CardContent>
-        <form
-          className='grid gap-4'
-          onSubmit={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            form.handleSubmit()
-          }}
-        >
-          <form.Field
+        <form className='grid gap-4' onSubmit={form.handleSubmit}>
+          <FormField
+            control={form.control}
             name='email'
             render={({ field, meta }) => (
               <div id={meta.id} className='grid gap-2'>
-                <form.Label>Email</form.Label>
-                <form.Control {...field}>
+                <FormLabel>Email</FormLabel>
+                <FormControl {...field}>
                   <Input type='email' placeholder='Enter your email' />
-                </form.Control>
-                <form.Message />
+                </FormControl>
+                <FormMessage />
               </div>
             )}
           />
 
-          <form.Field
+          <FormField
+            control={form.control}
             name='password'
             render={({ field, meta }) => (
               <div id={meta.id} className='grid gap-2'>
-                <form.Label>Password</form.Label>
-                <form.Control {...field}>
+                <FormLabel>Password</FormLabel>
+                <FormControl {...field}>
                   <Input type='password' />
-                </form.Control>
-                <form.Message />
+                </FormControl>
+                <FormMessage />
               </div>
             )}
           />
