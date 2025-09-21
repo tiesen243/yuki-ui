@@ -38,7 +38,7 @@ function useForm<
   defaultValues: TValue
   validator?: TSchema extends StandardSchemaV1
     ? NoUndefined<TSchema> extends TValue
-      ? TSchema
+      ? StandardSchemaV1<TValue>
       : never
     : (value: TValue) => StandardSchemaV1.Result<TValue>
   onSubmit: (value: TValue) => TData | Promise<TData>
@@ -49,7 +49,7 @@ function useForm<
 
   const formValueRef = React.useRef<TValue>({ ...defaultValues })
   const formDataRef = React.useRef<TData | null>(null)
-  const formErrorRef = React.useRef<TError>(null)
+  const formErrorRef = React.useRef<TError | null>(null)
   const [isPending, startTransition] = React.useTransition()
   const [version, setVersion] = React.useState(0)
 
@@ -71,9 +71,8 @@ function useForm<
       if (typeof validator === 'function')
         validationResult = validator(valueToValidate)
       else
-        validationResult = await (validator as StandardSchemaV1<TValue>)[
-          '~standard'
-        ].validate(valueToValidate)
+        validationResult =
+          await validator['~standard'].validate(valueToValidate)
 
       if (validationResult.issues) {
         const errors = Object.fromEntries(
