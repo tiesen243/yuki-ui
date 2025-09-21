@@ -22,25 +22,19 @@ interface Control<TValue extends Record<string, unknown>> {
   version: number
 }
 
-type NoUndefined<T extends StandardSchemaV1> = {
-  [K in keyof Required<StandardSchemaV1.InferInput<T>>]: Exclude<
-    Required<StandardSchemaV1.InferInput<T>>[K],
-    undefined
-  >
-}
+type Validator<T> =
+  | StandardSchemaV1<unknown, T>
+  | ((
+      value: T,
+    ) => StandardSchemaV1.Result<T> | Promise<StandardSchemaV1.Result<T>>)
 
 function useForm<
   TValue extends Record<string, unknown>,
-  TSchema extends StandardSchemaV1 | ((value: TValue) => TValue),
   TData,
   TError extends FormError<TValue>,
 >(params: {
   defaultValues: TValue
-  validator?: TSchema extends StandardSchemaV1
-    ? NoUndefined<TSchema> extends TValue
-      ? StandardSchemaV1<TValue>
-      : never
-    : (value: TValue) => StandardSchemaV1.Result<TValue>
+  validator?: Validator<TValue>
   onSubmit: (value: TValue) => TData | Promise<TData>
   onSuccess?: (data: TData) => void | Promise<void>
   onError?: (error: TError) => void | Promise<void>
@@ -68,11 +62,12 @@ function useForm<
       if (!validator) return { isValid: true, data: valueToValidate }
 
       let validationResult: StandardSchemaV1.Result<TValue> = { issues: [] }
-      if (typeof validator === 'function')
-        validationResult = validator(valueToValidate)
-      else
+      if (typeof validator === 'function') {
+        validationResult = await validator(valueToValidate)
+      } else {
         validationResult =
           await validator['~standard'].validate(valueToValidate)
+      }
 
       if (validationResult.issues) {
         const errors = Object.fromEntries(
@@ -170,7 +165,7 @@ type ChangeEvent =
 
 interface FormFieldContextValue<
   TValue extends Record<string, unknown>,
-  TName extends keyof TValue = keyof TValue,
+  TName extends keyof TValue,
 > {
   field: {
     name: TName
@@ -192,12 +187,13 @@ interface FormFieldContextValue<
 }
 
 const FormFieldContext = React.createContext<FormFieldContextValue<
-  Record<string, unknown>
+  Record<string, unknown>,
+  never
 > | null>(null)
 
 function useFormField<
   TForm extends ReturnType<typeof useForm>,
-  TName extends keyof TForm['state']['value'] = keyof TForm['state']['value'],
+  TName extends keyof TForm['state']['value'],
 >() {
   const formField = React.use(
     FormFieldContext,
@@ -292,7 +288,7 @@ function FormField<
 }
 
 function FormLabel({ className, ...props }: React.ComponentProps<'label'>) {
-  const { state, meta } = useFormField<never>()
+  const { state, meta } = useFormField()
 
   return (
     <label

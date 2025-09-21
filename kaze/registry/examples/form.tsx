@@ -1,6 +1,6 @@
 'use client'
 
-import * as z from 'zod/v4'
+import * as z from 'zod'
 
 import { Button } from '@yuki/ui/button'
 import {
@@ -48,8 +48,8 @@ export default function FormDemo() {
           <FormField
             control={form.control}
             name='email'
-            render={({ field, meta }) => (
-              <div id={meta.id} className='grid gap-2'>
+            render={({ field }) => (
+              <div className='grid gap-2'>
                 <FormLabel>Email</FormLabel>
                 <FormControl {...field}>
                   <Input type='email' placeholder='Enter your email' />
@@ -62,8 +62,8 @@ export default function FormDemo() {
           <FormField
             control={form.control}
             name='password'
-            render={({ field, meta }) => (
-              <div id={meta.id} className='grid gap-2'>
+            render={({ field }) => (
+              <div className='grid gap-2'>
                 <FormLabel>Password</FormLabel>
                 <FormControl {...field}>
                   <Input type='password' />
