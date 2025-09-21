@@ -1,16 +1,12 @@
 {
   "extends": "@yuki/tsconfig/next.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
+      "@/.source": ["./.source/index.ts"],
       "@/*": ["./*"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
-    ".source/*"
-  ],
+  "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", ".next/types/**/*.ts"],
   "exclude": ["node_modules", "registry/auth"]
 }
