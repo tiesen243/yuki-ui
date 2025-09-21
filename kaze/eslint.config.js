@@ -5,7 +5,7 @@ import reactConfig from '@yuki/eslint-config/react'
 /** @type {import('typescript-eslint').Config} */
 export default [
   {
-    ignores: ['.next/**', '.source/**', 'registry/**'],
+    ignores: ['.next/**', '.source/**', 'registry/auth/**'],
   },
   ...baseConfig,
   ...reactConfig,
