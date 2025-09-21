@@ -8,7 +8,7 @@ export const registryLib = [
     description: 'A utility to validate environment variables using Zod',
     dependencies: ['zod'],
     files: [
-      { path: 'registry/lib/env.tsx', type: 'registry:lib', target: 'env.ts' },
+      { path: 'registry/lib/env.ts', type: 'registry:lib', target: 'env.ts' },
     ],
   },
 ] satisfies RegistryItem[]

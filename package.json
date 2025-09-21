@@ -16,23 +16,23 @@
       "tools/*"
     ],
     "catalog": {
-      "@types/node": "^24.3.0",
+      "@types/node": "^24.5.2",
       "dotenv-cli": "^10.0.0",
-      "eslint": "^9.33.0",
+      "eslint": "^9.36.0",
       "prettier": "^3.6.2",
-      "typescript": "^5.8.3"
+      "typescript": "^5.9.2"
     },
     "catalogs": {
       "react": {
-        "@types/react": "^19.1.10",
-        "@types/react-dom": "^19.1.6",
+        "@types/react": "^19.1.13",
+        "@types/react-dom": "^19.1.9",
         "react": "^19.1.1",
         "react-dom": "^19.1.1"
       },
       "tailwind": {
-        "@tailwindcss/postcss": "^4.1.12",
-        "@tailwindcss/vite": "^4.1.12",
-        "tailwindcss": "^4.1.12"
+        "@tailwindcss/postcss": "^4.1.13",
+        "@tailwindcss/vite": "^4.1.13",
+        "tailwindcss": "^4.1.13"
       }
     }
   },
@@ -56,5 +56,5 @@
     "@yuki/tsconfig": "workspace:*",
     "turbo": "^2.5.6"
   },
-  "packageManager": "bun@1.2.21"
+  "packageManager": "bun@1.2.22"
 }
