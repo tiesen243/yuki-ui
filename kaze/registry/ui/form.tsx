@@ -67,7 +67,7 @@ function useForm<
 
       if (!validator) return { isValid: true, data: valueToValidate }
 
-      let validationResult: StandardSchemaV1.Result<TValue>
+      let validationResult: StandardSchemaV1.Result<TValue> = { issues: [] }
       if (typeof validator === 'function')
         validationResult = validator(valueToValidate)
       else
