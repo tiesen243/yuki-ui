@@ -233,7 +233,7 @@ function FormField<
   React.useEffect(() => {
     const newValue = formValueRef.current[name]
     if (newValue !== value) setValue(newValue)
-  }, [name, value, version, formValueRef, version])
+  }, [name, value, version, formValueRef])
 
   const parseValue = React.useCallback((target: HTMLInputElement) => {
     switch (target.type) {
