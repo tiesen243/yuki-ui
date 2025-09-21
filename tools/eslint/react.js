@@ -35,10 +35,4 @@ export default [
     },
     settings: reactPlugin.configs['recommended-typescript'].settings,
   },
-  {
-    files: ['**/use-*.tsx'],
-    rules: {
-      '@eslint-react/naming-convention/filename-extension': ['warn', 'always'],
-    },
-  },
 ]

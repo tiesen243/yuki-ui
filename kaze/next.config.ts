@@ -6,20 +6,14 @@ import { createMDX } from 'fumadocs-mdx/next'
 const withMdx = createMDX()
 
 const nextConfig = {
+  images: { unoptimized: true },
   reactStrictMode: true,
   typedRoutes: true,
-  images: { unoptimized: true },
 
   typescript: { ignoreBuildErrors: true },
   eslint: { ignoreDuringBuilds: true },
 
-  transpilePackages: [
-    '@yuki/api',
-    '@yuki/auth',
-    '@yuki/db',
-    '@yuki/ui',
-    '@yuki/validators',
-  ],
+  transpilePackages: ['@yuki/ui', '@yuki/validators'],
 } satisfies NextConfig
 
 export default withMdx(nextConfig)
