@@ -196,6 +196,11 @@ bun run format           # Prettier formatting check
 - **Node.js** (for compatibility with some tools)
 - **Git** (for repository operations)
 
+### Bun Configuration
+- `bunfig.toml` enables workspace package linking and bun runtime
+- Workspace packages are linked automatically during install
+- Use `bun install` instead of npm/yarn/pnpm for consistency
+
 ### Environment Variables
 - Basic `.env.example` provided but mostly empty
 - Environment validation handled via `@yuki/validators` package
@@ -213,6 +218,13 @@ bun run format           # Prettier formatting check
 - Use `bun add` in appropriate workspace
 - Update catalog entries in root `package.json` for shared dependencies
 - Run `bun run lint:ws` to validate workspace consistency
+
+### Generated Files to Ignore
+- `kaze/__registry__/` - Auto-generated registry files
+- `kaze/.next/` - Next.js build output
+- `kaze/.source/` - Auto-generated MDX source files
+- `packages/*/dist/` - TypeScript build output
+- `.cache/` and `.turbo/` - Build caches
 
 ### Documentation Changes
 - Edit MDX files in `kaze/content/docs/`
