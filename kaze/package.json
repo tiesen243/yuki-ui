@@ -20,10 +20,10 @@
   "dependencies": {
     "@yuki/ui": "workspace:*",
     "@yuki/validators": "workspace:*",
-    "fumadocs-core": "^15.7.13",
-    "fumadocs-mdx": "^12.0.0",
-    "fumadocs-ui": "^15.7.13",
-    "next": "15.5.3",
+    "fumadocs-core": "^15.8.2",
+    "fumadocs-mdx": "^12.0.1",
+    "fumadocs-ui": "15.8.0",
+    "next": "15.5.4",
     "react": "catalog:react",
     "react-dom": "catalog:react"
   },
