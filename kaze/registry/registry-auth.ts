@@ -53,8 +53,8 @@ export const registryAuth = [
         type: 'registry:component',
       },
       {
-        path: 'registry/auth/components/login-form.tsx',
-        target: 'components/form.tsx',
+        path: 'registry/examples/form.tsx',
+        target: 'components/login-form.tsx',
         type: 'registry:component',
       },
     ],

@@ -13,7 +13,7 @@ type ExtractValues<T extends StandardSchemaV1> = {
   >[K]
 }
 
-interface TControl<TValues extends Record<string, unknown>> {
+interface Control<TValues extends Record<string, unknown>> {
   valuesRef: React.RefObject<TValues>
   errorRef: React.RefObject<FormError<TValues>>
   isPending: boolean
@@ -170,7 +170,7 @@ function FormField<
   name,
   render,
 }: {
-  control: TControl<TValues>
+  control: Control<TValues>
   name: TFieldName
   render: (props: RenderProps<TValues, TFieldName>) => React.ReactNode
 }) {
