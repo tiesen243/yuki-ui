@@ -77,6 +77,23 @@ export const registryExample = [
 
   // Auth
   {
+    name: 'login-form-demo',
+    type: 'registry:example',
+    title: 'Login Form',
+    description:
+      'A simple login form example using Yuki UI and Zod for validation.',
+    dependencies: ['zod'],
+    registryDependencies: [
+      `${getBaseUrl()}/r/form.json`,
+      'button',
+      'field',
+      'input',
+    ],
+    files: [
+      { path: 'registry/examples/login-form.tsx', type: 'registry:example' },
+    ],
+  },
+  {
     name: 'user-button-demo',
     type: 'registry:example',
     title: 'User Button',

@@ -27,6 +27,15 @@ Copy and paste the following code into your project.
 
 <ComponentSource comp='form' />
 
+<Callout>
+**Note:**
+
+You also need to install the [Field
+components](https://ui.shadcn.com/docs/components/field) after installing the
+Form component.
+
+</Callout>
+
 ## Usage
 
 <Steps>
@@ -121,13 +130,15 @@ Create the form structure with fields, labels, inputs, and validation messages. 
 ```tsx
 import { Button } from '@/components/ui/button'
 import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field'
+import { FormField, useForm } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
 export function MyForm() {
@@ -136,25 +147,29 @@ export function MyForm() {
   })
 
   return (
-    <form className="grid gap-4" onSubmit={form.handleSubmit}>
-      <FormField
-        control={form.control}
-        name="name"
-        render={({ field, meta }) => (
-          <div id={meta.id} className="grid gap-2">
-            <FormLabel>Name</FormLabel>
-            <FormControl {...field}>
-              <Input placeholder="Enter your name" />
-            </FormControl>
-            <FormDescription>
-              Please enter your full name.
-            </FormDescription>
-            <FormMessage />
-          </div>
-        )}
-      />
+    <form onSubmit={form.handleSubmit}>
+      <FieldSet>
+        <FieldLegend>...</FieldLegend>
+        <FieldDescription>...</FieldDescription>
 
-      <Button disabled={form.state.isPending}>Submit</Button>
+        <FieldGroup>
+          <FormField
+            control={form.control}
+            name='name'
+            render={({ meta, field, state }) => (
+              <Field data-invalid={state.hasError}>
+                <FieldLabel htmlFor={meta.fieldId}>Name</FieldLabel>
+                <Input {...field} />
+                <FieldError id={meta.errorId} errors={state.errors} />
+              </Field>
+            )}
+          />
+
+          <Button type='submit' disabled={form.formState.isSubmitting}>
+            Submit
+          </Button>
+        </FieldGroup>
+      </FieldSet>
     </form>
   )
 }
