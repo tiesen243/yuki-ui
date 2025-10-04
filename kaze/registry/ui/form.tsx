@@ -157,7 +157,7 @@ interface RenderProps<
   state: {
     value: TValues[TFieldName]
     hasError: boolean
-    error: StandardSchemaV1.Issue[]
+    errors: StandardSchemaV1.Issue[]
     isPending: boolean
   }
 }
@@ -181,9 +181,16 @@ function FormField<
   const [value, setValue] = React.useState(valuesRef.current[name])
   const prevValueRef = React.useRef(value)
 
-  const [error, setError] = React.useState<StandardSchemaV1.Issue[]>(
+  const [errors, setErrors] = React.useState<StandardSchemaV1.Issue[]>(
     errorRef.current.errors?.[name] ?? [],
   )
+
+  React.useEffect(() => {
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    setValue(valuesRef.current[name])
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    setErrors(errorRef.current.errors?.[name] ?? [])
+  }, [name, valuesRef.current[name], errorRef.current.errors?.[name]])
 
   const handleChange = React.useCallback(
     (
@@ -214,13 +221,13 @@ function FormField<
         [name]: value,
       })
 
-      if (!success) setError(error.errors?.[name] ?? [])
-      else setError([])
+      if (!success) setErrors(error.errors?.[name] ?? [])
+      else setErrors([])
     },
     [name, value, validateValues],
   )
 
-  const hasError = error.length > 0
+  const hasError = errors.length > 0
 
   const meta = React.useMemo(
     () => ({
@@ -244,9 +251,9 @@ function FormField<
           .filter(Boolean)
           .join(' '),
       },
-      state: { value, error, hasError, isPending },
+      state: { value, errors, hasError, isPending },
     }),
-    [meta, name, value, handleChange, handleBlur, hasError, error, isPending],
+    [meta, name, value, handleChange, handleBlur, hasError, errors, isPending],
   )
 
   return render(props)

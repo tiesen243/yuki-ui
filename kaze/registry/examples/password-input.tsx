@@ -27,7 +27,7 @@ export default function PasswordInputDemo() {
             <Field data-invalid={state.hasError}>
               <FieldLabel htmlFor={meta.fieldId}>Password</FieldLabel>
               <PasswordInput placeholder='Enter your password' {...field} />
-              <FieldError id={meta.errorId} errors={state.error} />
+              <FieldError id={meta.errorId} errors={state.errors} />
             </Field>
           )}
         />

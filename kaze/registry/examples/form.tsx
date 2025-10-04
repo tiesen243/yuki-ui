@@ -49,7 +49,7 @@ export default function FormDemo() {
               <Field data-invalid={state.hasError}>
                 <FieldLabel htmlFor={meta.fieldId}>Email</FieldLabel>
                 <Input type='email' {...field} />
-                <FieldError id={meta.errorId} errors={state.error} />
+                <FieldError id={meta.errorId} errors={state.errors} />
               </Field>
             )}
           />
@@ -61,7 +61,7 @@ export default function FormDemo() {
               <Field data-invalid={state.hasError} className='mt-4'>
                 <FieldLabel htmlFor={meta.fieldId}>Password</FieldLabel>
                 <Input type='password' {...field} />
-                <FieldError id={meta.errorId} errors={state.error} />
+                <FieldError id={meta.errorId} errors={state.errors} />
               </Field>
             )}
           />
