@@ -13,7 +13,7 @@ export const registryExample = [
     registryDependencies: [
       `${getBaseUrl()}/r/form.json`,
       'button',
-      'card',
+      'field',
       'input',
     ],
     files: [{ path: 'registry/examples/form.tsx', type: 'registry:example' }],
@@ -38,7 +38,11 @@ export const registryExample = [
     title: 'Password Input',
     description:
       'A password input component that allows users to toggle visibility and strength indicators.',
-    registryDependencies: [`${getBaseUrl()}/r/password-input.json`],
+    registryDependencies: [
+      `${getBaseUrl()}/r/password-input.json`,
+      `${getBaseUrl()}/r/form.json`,
+      'field',
+    ],
     files: [
       {
         path: 'registry/examples/password-input.tsx',
@@ -72,22 +76,6 @@ export const registryExample = [
   },
 
   // Auth
-  {
-    name: 'login-form-demo',
-    type: 'registry:example',
-    title: 'Login Form',
-    description:
-      'A simple login form example using Yuki UI and Zod for validation.',
-    registryDependencies: [
-      'button',
-      'card',
-      'input',
-      `${getBaseUrl()}/r/form.json`,
-    ],
-    files: [
-      { path: 'registry/examples/login-form.tsx', type: 'registry:example' },
-    ],
-  },
   {
     name: 'user-button-demo',
     type: 'registry:example',

@@ -4,21 +4,17 @@ import * as z from 'zod'
 
 import { Button } from '@yuki/ui/button'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@yuki/ui/card'
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from '@yuki/ui/field'
 import { Input } from '@yuki/ui/input'
 
-import {
-  FormControl,
-  FormField,
-  FormLabel,
-  FormMessage,
-  useForm,
-} from '@/registry/ui/form'
+import { FormField, useForm } from '@/registry/ui/form'
 
 const formSchema = z.object({
   email: z.email('Invalid email address'),
@@ -28,54 +24,51 @@ const formSchema = z.object({
 export default function FormDemo() {
   const form = useForm({
     defaultValues: { email: '', password: '' },
-    validator: formSchema,
+    schema: formSchema,
     onSubmit: (data) => {
       console.log('Form submitted:', data)
     },
   })
 
   return (
-    <Card className='min-w-md'>
-      <CardHeader>
-        <CardTitle>Login Form</CardTitle>
-        <CardDescription>
+    <form
+      className='rounded-xl border bg-card p-6 text-card-foreground shadow-sm'
+      onSubmit={form.handleSubmit}
+    >
+      <FieldSet>
+        <FieldLegend>Login Form</FieldLegend>
+        <FieldDescription>
           A simple login form example using Yuki UI and Zod for validation.
-        </CardDescription>
-      </CardHeader>
+        </FieldDescription>
 
-      <CardContent>
-        <form className='grid gap-4' onSubmit={form.handleSubmit}>
+        <FieldGroup>
           <FormField
             control={form.control}
             name='email'
-            render={({ field }) => (
-              <div className='grid gap-2'>
-                <FormLabel>Email</FormLabel>
-                <FormControl {...field}>
-                  <Input type='email' placeholder='Enter your email' />
-                </FormControl>
-                <FormMessage />
-              </div>
+            render={({ meta, field, state }) => (
+              <Field data-invalid={state.hasError}>
+                <FieldLabel htmlFor={meta.fieldId}>Email</FieldLabel>
+                <Input type='email' {...field} />
+                <FieldError id={meta.errorId} errors={state.error} />
+              </Field>
             )}
           />
 
           <FormField
             control={form.control}
             name='password'
-            render={({ field }) => (
-              <div className='grid gap-2'>
-                <FormLabel>Password</FormLabel>
-                <FormControl {...field}>
-                  <Input type='password' />
-                </FormControl>
-                <FormMessage />
-              </div>
+            render={({ meta, field, state }) => (
+              <Field data-invalid={state.hasError} className='mt-4'>
+                <FieldLabel htmlFor={meta.fieldId}>Password</FieldLabel>
+                <Input type='password' {...field} />
+                <FieldError id={meta.errorId} errors={state.error} />
+              </Field>
             )}
           />
 
           <Button disabled={form.state.isPending}>Log in</Button>
-        </form>
-      </CardContent>
-    </Card>
+        </FieldGroup>
+      </FieldSet>
+    </form>
   )
 }

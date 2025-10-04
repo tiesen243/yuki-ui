@@ -1,9 +1,10 @@
 'use client'
 
 import { Button } from '@yuki/ui/button'
+import { Field, FieldError, FieldLabel } from '@yuki/ui/field'
 import { toast } from '@yuki/ui/sonner'
 
-import { FormControl, FormField, FormLabel, useForm } from '@/registry/ui/form'
+import { FormField, useForm } from '@/registry/ui/form'
 import { PasswordInput } from '@/registry/ui/password-input'
 
 export default function PasswordInputDemo() {
@@ -17,21 +18,22 @@ export default function PasswordInputDemo() {
   })
 
   return (
-    <form className='grid gap-4' onSubmit={form.handleSubmit}>
-      <FormField
-        control={form.control}
-        name='password'
-        render={({ field, meta }) => (
-          <div id={meta.id} className='grid gap-2'>
-            <FormLabel>Password</FormLabel>
-            <FormControl {...field}>
-              <PasswordInput placeholder='Enter your password' />
-            </FormControl>
-          </div>
-        )}
-      />
+    <form onSubmit={form.handleSubmit}>
+      <Field>
+        <FormField
+          control={form.control}
+          name='password'
+          render={({ meta, field, state }) => (
+            <Field data-invalid={state.hasError}>
+              <FieldLabel htmlFor={meta.fieldId}>Password</FieldLabel>
+              <PasswordInput placeholder='Enter your password' {...field} />
+              <FieldError id={meta.errorId} errors={state.error} />
+            </Field>
+          )}
+        />
 
-      <Button>Submit</Button>
+        <Button>Submit</Button>
+      </Field>
     </form>
   )
 }

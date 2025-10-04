@@ -7,7 +7,6 @@ export const registryUI = [
     title: 'Form',
     description:
       'A form component built from scratch that works with Standard Schema',
-    dependencies: ['@radix-ui/react-slot'],
     files: [{ path: 'registry/ui/form.tsx', type: 'registry:ui' }],
   },
   {
