@@ -58,7 +58,7 @@ export default function FormDemo() {
             control={form.control}
             name='password'
             render={({ meta, field, state }) => (
-              <Field data-invalid={state.hasError} className='mt-4'>
+              <Field data-invalid={state.hasError}>
                 <FieldLabel htmlFor={meta.fieldId}>Password</FieldLabel>
                 <Input type='password' {...field} />
                 <FieldError id={meta.errorId} errors={state.errors} />
