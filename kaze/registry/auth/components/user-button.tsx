@@ -33,7 +33,7 @@ import {
 
 import { useSession } from '@/hooks/use-session'
 
-export const UserButton: React.FC = () => {
+export function UserButton() {
   const { status, session, signOut } = useSession()
   const { theme, setTheme } = useTheme()
 
