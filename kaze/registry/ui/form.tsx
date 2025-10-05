@@ -45,11 +45,35 @@ const useForm = <
   onSuccess?: (data: TData) => unknown
   onError?: (error: TError) => unknown
 }) => {
-  const valuesRef = React.useRef<TValues>(opts.defaultValues)
+  const { defaultValues, schema, onSubmit, onSuccess, onError } = opts
+
+  const valuesRef = React.useRef<TValues>(defaultValues)
   const dataRef = React.useRef<TData | null>(null)
   const errorRef = React.useRef<TError>({ message: null, errors: {} } as TError)
   const [isPending, startTransition] = React.useTransition()
   const [version, setVersion] = React.useState(0)
+
+  const parseIssues = React.useCallback(
+    (
+      issues: readonly StandardSchemaV1.Issue[],
+    ): Record<string, StandardSchemaV1.Issue[]> => {
+      return issues.reduce<Record<string, StandardSchemaV1.Issue[]>>(
+        (acc, issue) => {
+          if (!issue.path || issue.path.length === 0) return acc
+
+          const key =
+            typeof issue.path[0] === 'string' ? issue.path[0] : undefined
+          if (!key) return acc
+
+          acc[key] ??= []
+          acc[key].push(issue)
+          return acc
+        },
+        {},
+      )
+    },
+    [],
+  )
 
   const validateValues = React.useCallback(
     async (
@@ -58,12 +82,12 @@ const useForm = <
       | { success: true; data: TValues; error: null }
       | { success: false; data: null; error: TError }
     > => {
-      if (!opts.schema) return { success: true, data: values, error: null }
+      if (!schema) return { success: true, data: values, error: null }
 
       let result: TResults
-      if ('~standard' in opts.schema)
-        result = (await opts.schema['~standard'].validate(values)) as TResults
-      else result = await opts.schema(values)
+      if ('~standard' in schema)
+        result = (await schema['~standard'].validate(values)) as TResults
+      else result = await schema(values)
 
       if (result.issues)
         return {
@@ -77,7 +101,7 @@ const useForm = <
 
       return { success: true, data: result.value, error: null }
     },
-    [opts.schema],
+    [parseIssues, schema],
   )
 
   const handleSubmit = React.useCallback(
@@ -93,18 +117,20 @@ const useForm = <
         if (!success) return void (errorRef.current = error)
 
         try {
-          dataRef.current = await opts.onSubmit(data)
+          dataRef.current = await onSubmit(data)
           errorRef.current = { message: null, errors: {} } as TError
-          return void opts.onSuccess?.(dataRef.current)
+          return void onSuccess?.(dataRef.current)
         } catch (e: unknown) {
           const message = e instanceof Error ? e.message : String(e)
           dataRef.current = null
           errorRef.current = { message, errors: {} } as TError
-          return void opts.onError?.(errorRef.current)
+          return void onError?.(errorRef.current)
         }
       })
+
+      setVersion((v) => v + 1)
     },
-    [validateValues, opts],
+    [onSubmit, onSuccess, onError, validateValues],
   )
 
   const setValue = React.useCallback(
@@ -115,9 +141,16 @@ const useForm = <
     [],
   )
 
+  const reset = React.useCallback(() => {
+    valuesRef.current = defaultValues
+    dataRef.current = null
+    errorRef.current = { message: null, errors: {} } as TError
+    setVersion((v) => v + 1)
+  }, [defaultValues])
+
   const control = React.useMemo(
     () => ({ valuesRef, errorRef, isPending, version, validateValues }),
-    [isPending, version, validateValues],
+    [isPending, validateValues, version],
   )
 
   return React.useMemo(
@@ -131,8 +164,9 @@ const useForm = <
       control,
       setValue,
       handleSubmit,
+      reset,
     }),
-    [isPending, control, version, setValue, handleSubmit],
+    [control, handleSubmit, isPending, reset, setValue],
   )
 }
 
@@ -190,7 +224,7 @@ function FormField<
     setValue(valuesRef.current[name])
     // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setErrors(errorRef.current.errors?.[name] ?? [])
-  }, [name, valuesRef.current[name], errorRef.current.errors?.[name]])
+  }, [errorRef, errorRef.current.errors?.[name], name, valuesRef])
 
   const handleChange = React.useCallback(
     (
@@ -224,7 +258,7 @@ function FormField<
       if (!success) setErrors(error.errors?.[name] ?? [])
       else setErrors([])
     },
-    [name, value, validateValues],
+    [name, validateValues, value, valuesRef],
   )
 
   const hasError = errors.length > 0
@@ -253,28 +287,10 @@ function FormField<
       },
       state: { value, errors, hasError, isPending },
     }),
-    [meta, name, value, handleChange, handleBlur, hasError, errors, isPending],
+    [errors, handleBlur, handleChange, hasError, isPending, meta, name, value],
   )
 
   return render(props)
-}
-
-function parseIssues(
-  issues: readonly StandardSchemaV1.Issue[],
-): Record<string, StandardSchemaV1.Issue[]> {
-  return issues.reduce<Record<string, StandardSchemaV1.Issue[]>>(
-    (acc, issue) => {
-      if (!issue.path || issue.path.length === 0) return acc
-
-      const key = typeof issue.path[0] === 'string' ? issue.path[0] : undefined
-      if (!key) return acc
-
-      acc[key] ??= []
-      acc[key].push(issue)
-      return acc
-    },
-    {},
-  )
 }
 
 export { useForm, FormField }
