@@ -170,6 +170,8 @@ const useForm = <
   )
 }
 
+type FormInputElement = HTMLInputElement | HTMLTextAreaElement
+
 interface RenderProps<
   TValues extends Record<string, unknown>,
   TFieldName extends keyof TValues,
@@ -179,9 +181,9 @@ interface RenderProps<
     name: TFieldName
     value: TValues[TFieldName]
     onChange: (
-      value: React.ChangeEvent<HTMLInputElement> | string | number | boolean,
+      value: React.ChangeEvent<FormInputElement> | string | number | boolean,
     ) => unknown
-    onBlur: (event: React.FocusEvent<HTMLInputElement>) => unknown
+    onBlur: (event: React.FocusEvent<FormInputElement>) => unknown
   }
   meta: {
     fieldId: string
@@ -232,7 +234,8 @@ function FormField<
     ) => {
       let newValue
       if (typeof val === 'object' && 'target' in val) {
-        const { type, checked, value, valueAsNumber } = val.target
+        const { type, checked, value, valueAsNumber } =
+          val.target as HTMLInputElement
         if (type === 'checkbox') newValue = checked
         else if (type === 'number')
           newValue = isNaN(valueAsNumber) ? '' : valueAsNumber
@@ -246,7 +249,7 @@ function FormField<
   )
 
   const handleBlur = React.useCallback(
-    async (_: React.FocusEvent<HTMLInputElement>) => {
+    async (_: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       if (prevValueRef.current === value) return
       prevValueRef.current = value
 
