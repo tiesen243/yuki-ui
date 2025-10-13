@@ -12,7 +12,7 @@ export const registryAuth = [
     description: 'Authentication system with OAuth2 support',
     dependencies: ['next-themes'],
     registryDependencies: [
-      `${getBaseUrl()}/r/form.json`,
+      `${getBaseUrl()}/r/use-form.json`,
       'dropdown-menu',
       'avatar',
       'button',

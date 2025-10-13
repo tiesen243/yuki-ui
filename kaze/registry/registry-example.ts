@@ -25,7 +25,7 @@ export const registryExample = [
       'A password input component that allows users to toggle visibility and strength indicators.',
     registryDependencies: [
       `${getBaseUrl()}/r/password-input.json`,
-      `${getBaseUrl()}/r/form.json`,
+      `${getBaseUrl()}/r/use-form.json`,
       'field',
     ],
     files: [
@@ -86,7 +86,7 @@ export const registryExample = [
       'A simple login form example using Yuki UI and Zod for validation.',
     dependencies: ['zod'],
     registryDependencies: [
-      `${getBaseUrl()}/r/form.json`,
+      `${getBaseUrl()}/r/use-form.json`,
       'button',
       'field',
       'input',
