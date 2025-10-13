@@ -10,7 +10,7 @@ export const registryAuth = [
     type: 'registry:file',
     title: 'Authentication Base',
     description: 'Authentication system with OAuth2 support',
-    dependencies: ['next-themes'],
+    dependencies: ['next-themes', 'zod'],
     registryDependencies: [
       `${getBaseUrl()}/r/use-form.json`,
       'dropdown-menu',
@@ -48,13 +48,13 @@ export const registryAuth = [
 
       // Components
       {
-        path: 'registry/auth/components/user-button.tsx',
-        target: 'components/user-button.tsx',
+        path: 'registry/auth/components/login-form.tsx',
+        target: 'components/login-form.tsx',
         type: 'registry:component',
       },
       {
-        path: 'registry/auth/components/login-form.tsx',
-        target: 'components/login-form.tsx',
+        path: 'registry/auth/components/user-button.tsx',
+        target: 'components/user-button.tsx',
         type: 'registry:component',
       },
     ],
