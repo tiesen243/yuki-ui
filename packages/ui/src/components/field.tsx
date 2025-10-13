@@ -201,6 +201,7 @@ function FieldError({
       <ul className='ml-4 flex list-disc flex-col gap-1'>
         {errors.map(
           (error, index) =>
+            // eslint-disable-next-line @eslint-react/no-array-index-key
             error?.message && <li key={index}>{error.message}</li>,
         )}
       </ul>

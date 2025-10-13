@@ -4,21 +4,6 @@ import { getBaseUrl } from '@/lib/utils'
 
 export const registryExample = [
   {
-    name: 'form-demo',
-    type: 'registry:example',
-    title: 'Form',
-    description:
-      'A simple login form example using Yuki UI and Zod for validation.',
-    dependencies: ['zod'],
-    registryDependencies: [
-      `${getBaseUrl()}/r/form.json`,
-      'button',
-      'field',
-      'input',
-    ],
-    files: [{ path: 'registry/examples/form.tsx', type: 'registry:example' }],
-  },
-  {
     name: 'nvim-statusline-demo',
     type: 'registry:example',
     title: 'Nvim Statusline',
@@ -72,6 +57,23 @@ export const registryExample = [
     registryDependencies: [`${getBaseUrl()}/r/typography.json`],
     files: [
       { path: 'registry/examples/typography.tsx', type: 'registry:example' },
+    ],
+  },
+  {
+    name: 'use-form-demo',
+    type: 'registry:example',
+    title: 'useForm',
+    description:
+      'A simple login form example using Yuki UI and Zod for validation.',
+    dependencies: ['zod'],
+    registryDependencies: [
+      `${getBaseUrl()}/r/use-form.json`,
+      'button',
+      'field',
+      'input',
+    ],
+    files: [
+      { path: 'registry/examples/use-form.tsx', type: 'registry:example' },
     ],
   },
 

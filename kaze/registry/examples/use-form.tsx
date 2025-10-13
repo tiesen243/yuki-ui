@@ -14,14 +14,17 @@ import {
 } from '@yuki/ui/field'
 import { Input } from '@yuki/ui/input'
 
-import { FormField, useForm } from '@/registry/ui/form'
+import { useForm } from '@/registry/hooks/use-form'
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long'),
-  age: z.number().min(18, 'You must be at least 18 years old'),
+  age: z
+    .number('Age must be a number')
+    .min(7, 'Age nust be between 7 and 12')
+    .max(12, 'Age nust be between 7 and 12'),
 })
 
-export default function FormDemo() {
+export default function UseFormDemo() {
   const form = useForm({
     defaultValues: { name: '', age: 0 },
     schema: formSchema,
@@ -42,33 +45,33 @@ export default function FormDemo() {
         </FieldDescription>
 
         <FieldGroup>
-          <FormField
-            control={form.control}
+          <form.Field
             name='name'
-            render={({ meta, field, state }) => (
-              <Field data-invalid={state.hasError}>
-                <FieldLabel htmlFor={meta.fieldId}>Email</FieldLabel>
+            render={({ meta, field }) => (
+              <Field data-invalid={meta.errors.length > 0}>
+                <FieldLabel htmlFor={meta.fieldId}>Name</FieldLabel>
                 <Input {...field} placeholder='Enter your name' />
-                <FieldError id={meta.errorId} errors={state.errors} />
+                <FieldError id={meta.errorId} errors={meta.errors} />
               </Field>
             )}
           />
 
-          <FormField
-            control={form.control}
+          <form.Field
             name='age'
-            render={({ meta, field, state }) => (
-              <Field data-invalid={state.hasError}>
-                <FieldLabel htmlFor={meta.fieldId}>Password</FieldLabel>
+            render={({ meta, field }) => (
+              <Field data-invalid={meta.errors.length > 0}>
+                <FieldLabel htmlFor={meta.fieldId}>Age</FieldLabel>
                 <Input {...field} type='number' placeholder='Enter your age' />
-                <FieldError id={meta.errorId} errors={state.errors} />
+                <FieldError id={meta.errorId} errors={meta.errors} />
               </Field>
             )}
           />
 
-          <Button type='submit' disabled={form.state.isPending}>
-            Submit
-          </Button>
+          <Field>
+            <Button type='submit' disabled={form.state.isPending}>
+              Submit
+            </Button>
+          </Field>
         </FieldGroup>
       </FieldSet>
     </form>

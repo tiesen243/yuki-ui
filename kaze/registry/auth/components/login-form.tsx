@@ -15,20 +15,21 @@ import {
 } from '@yuki/ui/field'
 import { Input } from '@yuki/ui/input'
 
-import { FormField, useForm } from '@/registry/ui/form'
+import { useForm } from '@/registry/hooks/use-form'
+import { useSession } from '@/registry/hooks/use-session'
 
 const formSchema = z.object({
   email: z.email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters long'),
 })
 
-export function LoginForm() {
+export default function LoginForm() {
+  const { signIn } = useSession()
+
   const form = useForm({
     defaultValues: { email: '', password: '' },
     schema: formSchema,
-    onSubmit: (data) => {
-      console.log('Form submitted:', data)
-    },
+    onSubmit: (data) => signIn('credentials', data),
   })
 
   return (
@@ -43,46 +44,47 @@ export function LoginForm() {
         </FieldDescription>
 
         <FieldGroup>
-          <FormField
-            control={form.control}
+          <form.Field
             name='email'
-            render={({ meta, field, state }) => (
-              <Field data-invalid={state.hasError}>
+            render={({ meta, field }) => (
+              <Field data-invalid={meta.errors.length > 0}>
                 <FieldLabel htmlFor={meta.fieldId}>Email</FieldLabel>
                 <Input {...field} type='email' placeholder='abc@example.com' />
-                <FieldError id={meta.errorId} errors={state.errors} />
+                <FieldError id={meta.errorId} errors={meta.errors} />
               </Field>
             )}
           />
 
-          <FormField
-            control={form.control}
+          <form.Field
             name='password'
-            render={({ meta, field, state }) => (
-              <Field data-invalid={state.hasError}>
+            render={({ meta, field }) => (
+              <Field data-invalid={meta.errors.length > 0}>
                 <FieldLabel htmlFor={meta.fieldId}>Password</FieldLabel>
                 <Input {...field} type='password' placeholder='******' />
-                <FieldError id={meta.errorId} errors={state.errors} />
+                <FieldError id={meta.errorId} errors={meta.errors} />
               </Field>
             )}
           />
 
-          <Button disabled={form.state.isPending}>Log in</Button>
+          <Field>
+            <Button disabled={form.state.isPending}>Log in</Button>
+          </Field>
         </FieldGroup>
 
         <FieldSeparator className='[&>[data-slot=field-separator-content]]:bg-card'>
           or
         </FieldSeparator>
 
-        <FieldGroup>
+        <Field>
           <Button
             type='button'
             variant='outline'
             disabled={form.state.isPending}
+            onClick={() => signIn('google')}
           >
             Sign in with Google
           </Button>
-        </FieldGroup>
+        </Field>
       </FieldSet>
     </form>
   )

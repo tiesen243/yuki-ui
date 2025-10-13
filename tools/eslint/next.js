@@ -1,13 +1,13 @@
 import nextPlugin from '@next/eslint-plugin-next'
+import { defineConfig } from 'eslint/config'
 
-/** @type {Awaited<import('typescript-eslint').Config>} */
-export default [
-  {
-    files: ['**/*.ts', '**/*.tsx'],
-    plugins: { '@next/next': nextPlugin },
-    rules: {
-      ...nextPlugin.flatConfig.recommended.rules,
-      ...nextPlugin.flatConfig.coreWebVitals.rules,
-    },
+export default defineConfig({
+  files: ['**/*.ts', '**/*.tsx'],
+  // @ts-ignore
+  plugins: { '@next/next': nextPlugin },
+  // @ts-ignore
+  rules: {
+    ...nextPlugin.configs.recommended.rules,
+    ...nextPlugin.configs['core-web-vitals'].rules,
   },
-]
+})
