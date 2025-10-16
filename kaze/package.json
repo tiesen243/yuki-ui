@@ -37,7 +37,7 @@
     "@yuki/tsconfig": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "shadcn": "^3.4.0",
+    "shadcn": "^3.4.2",
     "tailwindcss": "catalog:tailwind",
     "typescript": "catalog:"
   },
