@@ -4,6 +4,7 @@ import { Button } from '@yuki/ui/button'
 import { ArrowRightIcon } from '@yuki/ui/icons'
 
 import { CopyButton } from '@/app/_components/copy-button'
+import { getBaseUrl } from '@/lib/utils'
 
 export function HeroSection() {
   return (
@@ -42,7 +43,7 @@ export function HeroSection() {
             <pre className='overflow-x-auto rounded-md bg-background py-4'>
               <code className='block font-mono text-sm break-all text-foreground md:text-base'>
                 <span className='text-muted-foreground'>$</span> bunx --bun
-                shadcn@latest add https://yuki-ui.vercel.app/r/{`{name}`}.json
+                shadcn@latest add {getBaseUrl()}/r/{`{name}`}.json
               </code>
             </pre>
           </div>
