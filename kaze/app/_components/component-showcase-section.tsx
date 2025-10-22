@@ -26,7 +26,7 @@ const categories = [
   {
     title: 'Hooks',
     description: 'React utilities',
-    items: ['useForm'],
+    items: ['useDebounce', 'useForm'],
   },
   {
     title: 'Utilities',

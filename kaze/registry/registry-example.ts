@@ -60,6 +60,21 @@ export const registryExample = [
     ],
   },
   {
+    name: 'use-debounce-demo',
+    type: 'registry:example',
+    title: 'useDebounce',
+    description:
+      'A simple search input example demonstrating the useDebounce hook.',
+    registryDependencies: [
+      `${getBaseUrl()}/r/use-debounce.json`,
+      'input',
+      'label',
+    ],
+    files: [
+      { path: 'registry/examples/use-debounce.tsx', type: 'registry:example' },
+    ],
+  },
+  {
     name: 'use-form-demo',
     type: 'registry:example',
     title: 'useForm',

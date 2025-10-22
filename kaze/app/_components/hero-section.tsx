@@ -41,9 +41,8 @@ export function HeroSection() {
             </div>
 
             <pre className='overflow-x-auto rounded-md bg-background py-4'>
-              <code className='block font-mono text-sm break-all text-foreground md:text-base'>
-                <span className='text-muted-foreground'>$</span> bunx --bun
-                shadcn@latest add {getBaseUrl()}/r/{`{name}`}.json
+              <code className='block font-mono text-sm break-all text-foreground before:mr-2 before:text-muted-foreground before:content-["$"] md:text-base'>
+                bunx --bun shadcn@latest add {getBaseUrl()}/r/{`{name}`}.json
               </code>
             </pre>
           </div>
