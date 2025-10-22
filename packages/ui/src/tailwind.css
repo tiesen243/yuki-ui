@@ -18,7 +18,6 @@
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -81,7 +80,6 @@
 
   --background: oklch(0.99 0 0);
   --foreground: oklch(0 0 0);
-
   --card: oklch(1 0 0);
   --card-foreground: oklch(0 0 0);
   --popover: oklch(0.99 0 0);
@@ -146,7 +144,6 @@
 .dark {
   --background: oklch(0 0 0);
   --foreground: oklch(1 0 0);
-
   --card: oklch(0.14 0 0);
   --card-foreground: oklch(1 0 0);
   --popover: oklch(0.18 0 0);
