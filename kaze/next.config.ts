@@ -11,7 +11,6 @@ const nextConfig = {
   images: { unoptimized: true },
   typescript: { ignoreBuildErrors: true },
 
-  serverExternalPackages: ['shiki'],
   transpilePackages: ['@yuki/ui', '@yuki/validators'],
 } satisfies NextConfig
 
