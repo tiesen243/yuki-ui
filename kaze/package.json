@@ -19,9 +19,9 @@
   "dependencies": {
     "@yuki/ui": "workspace:*",
     "@yuki/validators": "workspace:*",
-    "fumadocs-core": "^16.0.1",
+    "fumadocs-core": "^16.0.2",
     "fumadocs-mdx": "^13.0.0",
-    "fumadocs-ui": "16.0.1",
+    "fumadocs-ui": "16.0.2",
     "next": "16.0.0",
     "react": "catalog:react",
     "react-dom": "catalog:react"
@@ -37,7 +37,7 @@
     "@yuki/tsconfig": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "shadcn": "^3.4.2",
+    "shadcn": "^3.5.0",
     "tailwindcss": "catalog:tailwind",
     "typescript": "catalog:"
   },
