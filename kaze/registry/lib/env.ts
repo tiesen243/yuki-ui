@@ -9,9 +9,16 @@ export const env = createEnv({
   },
 
   clientPrefix: 'NEXT_PUBLIC_',
-  client: {},
+  client: {
+    // NEXT_PUBLIC_CLIENT_VAR: z.string()
+  },
 
-  runtimeEnv: process.env,
+  runtimeEnv: {
+    ...process.env,
+    // Explicitly define client environment variables here because Next.js does not
+    // make them available on process.env at runtime for the client bundle.
+    // NEXT_PUBLIC_CLIENT_VAR: process.env.NEXT_PUBLIC_CLIENT_VAR,
+  },
 
   skipValidation:
     !!process.env.SKIP_ENV_VALIDATION ||

@@ -28,7 +28,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           geistMono.variable,
         )}
       >
-        <RootProvider search={{ enabled: false }}>
+        <RootProvider>
           {children}
           <Toaster />
         </RootProvider>
