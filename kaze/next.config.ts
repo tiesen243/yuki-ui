@@ -10,6 +10,9 @@ const nextConfig = {
   reactStrictMode: true,
   images: { unoptimized: true },
   typescript: { ignoreBuildErrors: true },
+  experimental: {
+    turbopackFileSystemCacheForDev: true,
+  },
 
   transpilePackages: ['@yuki/ui', '@yuki/validators'],
 } satisfies NextConfig

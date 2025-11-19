@@ -8,6 +8,7 @@ export default defineConfig({
   files: ['**/*.ts', '**/*.tsx'],
   extends: [reactPlugin.configs['recommended-type-checked']],
   plugins: {
+    // @ts-expect-error - No types available
     'react-hooks': hooksPlugin,
     'jsx-a11y': a11yPlugin,
   },
