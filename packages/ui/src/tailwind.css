@@ -56,20 +56,12 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
-  --color-normal: var(--normal);
-  --color-visual: var(--visual);
-  --color-replace: var(--replace);
-  --color-insert: var(--insert);
-  --color-terminal: var(--terminal);
-  --color-command: var(--command);
-
   --color-shadow-color: var(--shadow-color);
   --shadow-opacity: var(--shadow-opacity);
   --shadow-blur: var(--shadow-blur);
   --shadow-spread: var(--shadow-spread);
   --shadow-offset-x: var(--shadow-offset-x);
   --shadow-offset-y: var(--shadow-offset-y);
-
   --shadow-2xs: var(--shadow-2xs);
   --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);
@@ -78,6 +70,13 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+
+  --color-normal: var(--normal);
+  --color-visual: var(--visual);
+  --color-replace: var(--replace);
+  --color-insert: var(--insert);
+  --color-terminal: var(--terminal);
+  --color-command: var(--command);
 }
 
 :root {
