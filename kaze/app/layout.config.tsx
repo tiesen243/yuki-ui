@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 import { GalleryThumbnailsIcon } from '@yuki/ui/icons'
 
-import Tiesen from '@/public/assets/images/tiesen.png'
+import Tiesen from '@/public/assets/logotype.png'
 
 export const baseOptions: BaseLayoutProps = {
   nav: {

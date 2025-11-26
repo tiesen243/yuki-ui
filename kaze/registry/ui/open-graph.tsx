@@ -8,16 +8,16 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
 
-    const appName = 'Yuki'
-    const title = searchParams.get('title') ?? 'Yuki'
-    const description = searchParams.get('description') ?? 'This is awesome app'
+    const appName = 'Yuki UI'
+    const title = searchParams.get('title') ?? ''
+    const description = searchParams.get('description') ?? ''
     const image = searchParams.get('image') ?? ''
     const logoUrl = `https://yuki-ui.vercel.app/assets/logo.svg`
     const theme = searchParams.get('theme') ?? 'dark'
 
     const backgroundColor = theme === 'dark' ? '#000000' : '#fafafa'
     const foregroundColor = theme === 'dark' ? '#ffffff' : '#000000'
-    const primaryColor = theme === 'dark' ? '#e2dfff' : '#16134a'
+    const primaryColor = theme === 'dark' ? '#dbe6f6' : '#293478'
 
     const [geistRegular, geistMedium, geistBold] = await Promise.all([
       getFont('Geist-Regular', 400),
@@ -40,11 +40,6 @@ export async function GET(request: NextRequest) {
             padding: '32px 40px',
 
             backgroundColor,
-            backgroundImage:
-              theme === 'dark'
-                ? 'radial-gradient(circle at 25px 25px, #333 2%, transparent 0%), radial-gradient(circle at 75px 75px, #333 2%, transparent 0%)'
-                : 'radial-gradient(circle at 25px 25px, #ddd 2%, transparent 0%), radial-gradient(circle at 75px 75px, #ddd 2%, transparent 0%)',
-            backgroundSize: '100px 100px',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -212,11 +207,7 @@ export async function GET(request: NextRequest) {
 
 async function getFont(font: string, weight = 400) {
   const response = await fetch(
-    new URL(
-      `https://yuki-ui.vercel.app/assets/fonts/${font}.ttf`,
-      import.meta.url,
-    ),
-    { cache: 'force-cache' },
+    new URL(`../../../public/assets/fonts/${font}.ttf`, import.meta.url),
   )
   return {
     name: font,
