@@ -58,12 +58,12 @@ export function createMetadata(override: Metadata = {}): Metadata {
     },
     icons: {
       icon: '/favicon.ico',
-      shortcut: '/favicon-32x32.png',
+      shortcut: '/favicon.ico',
       apple: '/apple-touch-icon.png',
     },
     facebook: { appId: '625246206988524' },
     verification: { google: 'IxxbL_t4Uj36PsfajteCHNpV6Ln9fr7WCkxmzFjW_ms' },
-    manifest: `${baseUrl}/manifest.webmanifest`,
+    manifest: `${baseUrl}/site.webmanifest`,
     alternates: { ...override.alternates, canonical: url },
   }
 }
