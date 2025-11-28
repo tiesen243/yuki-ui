@@ -1,7 +1,7 @@
 import { cache } from 'react'
 
 import { authConfig } from '@/server/auth/config.drizzle'
-import { Auth } from '@/server/auth/core/index'
+import { Auth } from '@/server/auth/core'
 
 const { auth: uncachedAuth, signIn, signOut, handler } = Auth(authConfig)
 
