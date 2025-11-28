@@ -4,18 +4,23 @@
   "private": true,
   "type": "module",
   "exports": {
+    ".": "./dist/index.mjs",
     "./*": {
-      "types": "./dist/*.d.ts",
-      "default": "./src/*.ts"
-    }
+      "default": "./dist/*.mjs",
+      "types": "./dist/*.d.mts"
+    },
+    "./package.json": "./package.json"
   },
+  "main": "./dist/env.mjs",
+  "module": "./dist/env.mjs",
+  "types": "./dist/env.d.mts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsdown",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc --watch",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "~dev": "tsdown --watch"
   },
   "prettier": "@yuki/prettier-config",
   "dependencies": {
@@ -27,6 +32,7 @@
     "@yuki/tsconfig": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
+    "tsdown": "catalog:",
     "typescript": "catalog:"
   },
   "peerDependencies": {

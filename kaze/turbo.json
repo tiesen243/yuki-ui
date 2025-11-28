@@ -9,6 +9,9 @@
         "!.next/dev/**",
         "next-env.d.ts"
       ]
+    },
+    "dev": {
+      "dependsOn": ["^build"]
     }
   }
 }
