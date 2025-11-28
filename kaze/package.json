@@ -22,7 +22,7 @@
     "fumadocs-core": "^16.1.0",
     "fumadocs-mdx": "^14.0.3",
     "fumadocs-ui": "16.1.0",
-    "next": "16.0.4",
+    "next": "16.0.5",
     "react": "catalog:react",
     "react-dom": "catalog:react"
   },
@@ -37,7 +37,7 @@
     "@yuki/tsconfig": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "shadcn": "^3.5.0",
+    "shadcn": "^3.5.1",
     "tailwindcss": "catalog:tailwind",
     "typescript": "catalog:"
   },
@@ -47,7 +47,7 @@
     "class-variance-authority": "^0.7.1",
     "next-themes": "^0.4.6",
     "prettier-plugin-tailwindcss": "catalog:",
-    "shiki": "^3.15.0",
+    "shiki": "^3.17.0",
     "zod": "^4.1.13"
   }
 }
