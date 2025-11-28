@@ -87,6 +87,16 @@ Download and customize the source code directly from the registry: [Source](http
     AUTH_{PROVIDER}_SECRET=your-client-secret
     ```
 
+    Supported OAuth Providers:
+    - Discord
+    - Facebook
+    - Figma
+    - Github
+    - Google
+    - Vercel
+
+    You can add custom providers by implementing the `BaseProvider` abstract class.
+
 2.  Create API Route
 
     To handle authentication requests, create an API route in your server framework of choice and export the `handler` function from the authentication package.
