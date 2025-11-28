@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@yuki/ui/card'
-import { Blocks, Code2, Palette, Zap } from '@yuki/ui/icons'
+import { BlocksIcon, Code2Icon, PaletteIcon, ZapIcon } from '@yuki/ui/icons'
 
 export function FeaturesSection() {
   return (
@@ -40,25 +40,25 @@ export function FeaturesSection() {
 
 const features = [
   {
-    icon: Blocks,
+    icon: BlocksIcon,
     title: 'Rich Component Library',
     description:
       'Over 50+ production-ready components including forms, navigation, overlays, and data display elements.',
   },
   {
-    icon: Zap,
+    icon: ZapIcon,
     title: 'Powerful Hooks',
     description:
       'Custom React hooks for common patterns like media queries, local storage, debouncing, and more.',
   },
   {
-    icon: Palette,
+    icon: PaletteIcon,
     title: 'Fully Customizable',
     description:
       'Built with Tailwind CSS and CSS variables. Easily theme and customize to match your brand.',
   },
   {
-    icon: Code2,
+    icon: Code2Icon,
     title: 'TypeScript First',
     description:
       'Written in TypeScript with full type definitions for excellent developer experience and autocomplete.',

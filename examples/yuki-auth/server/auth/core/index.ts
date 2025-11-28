@@ -125,7 +125,7 @@ export function Auth(config: AuthConfig) {
     if (id) await adapter.session.delete(id)
   }
 
-  async function handleGet(request: Request): Promise<Response> {
+  const handleGet = async (request: Request): Promise<Response> => {
     let response: Response = new Response('Not Found', { status: 404 })
     const { pathname, searchParams } = new URL(request.url)
 
@@ -212,7 +212,7 @@ export function Auth(config: AuthConfig) {
     return response
   }
 
-  async function handlePost(request: Request): Promise<Response> {
+  const handlePost = async (request: Request): Promise<Response> => {
     let response: Response = new Response('Not Found', { status: 404 })
     const { origin, pathname, searchParams } = new URL(request.url)
 
@@ -302,25 +302,22 @@ export function Auth(config: AuthConfig) {
     return response
   }
 
-  return {
-    auth,
-    signIn,
-    signOut,
-    async handler(request: Request): Promise<Response> {
-      let response: Response
-      if (request.method === 'OPTIONS')
-        response = new Response(null, { status: 204 })
-      else if (request.method === 'GET') response = await handleGet(request)
-      else if (request.method === 'POST') response = await handlePost(request)
-      else response = new Response('Method Not Allowed', { status: 405 })
+  async function handler(request: Request): Promise<Response> {
+    let response: Response
+    if (request.method === 'OPTIONS')
+      response = new Response(null, { status: 204 })
+    else if (request.method === 'GET') response = await handleGet(request)
+    else if (request.method === 'POST') response = await handlePost(request)
+    else response = new Response('Method Not Allowed', { status: 405 })
 
-      response.headers.set('Access-Control-Allow-Origin', '*')
-      response.headers.set('Access-Control-Allow-Headers', '*')
-      response.headers.set('Access-Control-Request-Method', '*')
-      response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-      return response
-    },
+    response.headers.set('Access-Control-Allow-Origin', '*')
+    response.headers.set('Access-Control-Allow-Headers', '*')
+    response.headers.set('Access-Control-Request-Method', '*')
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    return response
   }
+
+  return { auth, signIn, signOut, handler }
 }
 
 function parseCookies(cookieHeader: string | null): Record<string, string> {

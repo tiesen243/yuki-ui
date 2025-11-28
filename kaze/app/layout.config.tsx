@@ -3,18 +3,20 @@ import Image from 'next/image'
 
 import { GalleryThumbnailsIcon } from '@yuki/ui/icons'
 
-import Tiesen from '@/public/assets/logotype.png'
-
 export const baseOptions: BaseLayoutProps = {
   nav: {
     title: (
-      <Image
-        src={Tiesen}
-        alt='Tiesen Logo'
-        className='h-12 w-auto object-cover md:h-auto md:w-2/3'
-        sizes='(max-width: 768px) 45vw, (max-width: 1200px) 33vw, 20vw'
-        priority
-      />
+      <>
+        <Image
+          src='/assets/logo.svg'
+          alt='Tiesen Logo'
+          className='object-cover dark:invert'
+          width={24}
+          height={24}
+          priority
+        />
+        <span className='text-xl font-bold'>Yuki UI</span>
+      </>
     ),
   },
   githubUrl: 'https://github.com/tiesen243/yuki-ui',

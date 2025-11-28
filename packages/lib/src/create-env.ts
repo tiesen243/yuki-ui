@@ -1,12 +1,12 @@
 import * as z from 'zod/mini'
 
 export function createEnv<
-  TPrefix extends string,
   TServer extends Record<string, z.ZodMiniType>,
   TClient extends Record<string, z.ZodMiniType>,
   TResult extends {
     [TKey in keyof (TServer & TClient)]: z.infer<(TServer & TClient)[TKey]>
   },
+  TPrefix extends string = 'PUBLIC_',
   TDeriveEnv extends Record<string, unknown> = Record<string, unknown>,
 >(
   opts: {
@@ -15,7 +15,7 @@ export function createEnv<
         ? `${TKey} should not prefix with ${TPrefix}`
         : TServer[TKey]
     }
-    clientPrefix: TPrefix
+    clientPrefix?: TPrefix
     client: {
       [TKey in keyof TClient]: TKey extends `${TPrefix}${string}`
         ? TClient[TKey]
@@ -24,7 +24,7 @@ export function createEnv<
     runtimeEnv:
       | { [TKey in keyof TResult]: string | undefined }
       | Record<string, unknown>
-    skipValidation: boolean
+    skipValidation?: boolean
   },
   deriveEnv: (env: TResult) => TDeriveEnv = () => ({}) as TDeriveEnv,
 ): TResult & TDeriveEnv {

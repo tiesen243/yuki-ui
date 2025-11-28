@@ -1,5 +1,5 @@
+// @ts-nocheck
 import reactPlugin from '@eslint-react/eslint-plugin'
-// @ts-ignore
 import a11yPlugin from 'eslint-plugin-jsx-a11y'
 import hooksPlugin from 'eslint-plugin-react-hooks'
 import { defineConfig } from 'eslint/config'
@@ -8,7 +8,6 @@ export default defineConfig({
   files: ['**/*.ts', '**/*.tsx'],
   extends: [reactPlugin.configs['recommended-type-checked']],
   plugins: {
-    // @ts-expect-error - No types available
     'react-hooks': hooksPlugin,
     'jsx-a11y': a11yPlugin,
   },
