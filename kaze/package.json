@@ -10,7 +10,7 @@
     "clean": "git clean -xdf .cache .next .source .turbo __registry__ node_modules",
     "dev": "bun --env-file ../.env next dev",
     "format": "prettier --check . --ignore-path ../.gitignore",
-    "postinstall": "fumadocs-mdx && bun run build:registry",
+    "postinstall": "fumadocs-mdx",
     "lint": "bun --env-file ../.env next typegen && eslint",
     "start": "bun --env-file ../.env next start",
     "typecheck": "bun --env-file ../.env next typegen && tsc --noEmit"
