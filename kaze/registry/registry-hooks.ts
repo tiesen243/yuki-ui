@@ -13,6 +13,7 @@ export const registryHooks = [
     type: 'registry:hook',
     title: 'useForm Hook',
     description: 'A custom React hook for form state management and validation',
+    registryDependencies: ['field'],
     files: [{ type: 'registry:hook', path: 'registry/hooks/use-form.tsx' }],
   },
 ] satisfies RegistryItem[]
