@@ -27,8 +27,7 @@ const typographyVariants = cva('mb-1 text-base leading-7 font-normal', {
 })
 
 interface TypographyProps
-  extends React.ComponentProps<'p'>,
-    VariantProps<typeof typographyVariants> {
+  extends React.ComponentProps<'p'>, VariantProps<typeof typographyVariants> {
   component?: React.ElementType
 }
 

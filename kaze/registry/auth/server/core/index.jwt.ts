@@ -1,7 +1,7 @@
 import type { AuthConfig, Session, SessionWithUser } from '@/server/auth/types'
 import { generateStateOrCode } from '@/server/auth/core/crypto'
-import { Password } from '@/server/auth/core/password'
 import { JWT } from '@/server/auth/core/jwt'
+import { Password } from '@/server/auth/core/password'
 
 const PATH_REGEXS = {
   getSession: /^(?:\/([^/]+))?\/api\/auth\/get-session$/,
