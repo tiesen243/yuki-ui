@@ -2,139 +2,152 @@ import type { RegistryItem } from 'shadcn/schema'
 
 import { getBaseUrl } from '@/lib/utils'
 
-const supportedProviders = ['discord', 'facebook', 'github', 'google']
+const core = ['crypto', 'jwt', 'password']
+const supportedProviders = [
+  'base',
+  'discord',
+  'facebook',
+  'figma',
+  'github',
+  'google',
+  'vercel',
+]
 
 export const registryAuth = [
   {
     name: 'auth',
-    type: 'registry:file',
-    title: 'Authentication Base',
-    description: 'Authentication system with OAuth2 support',
-    dependencies: ['next-themes', 'zod'],
-    registryDependencies: [
-      `${getBaseUrl()}/r/use-form.json`,
-      'dropdown-menu',
-      'avatar',
-      'button',
-      'field',
-      'input',
-    ],
+    type: 'registry:block',
+    title: 'Authentication',
+    description: 'Core authentication utilities and hooks',
+    dependencies: ['@tanstack/react-query', 'react'],
     files: [
-      // Core files
-      ...['cookies', 'crypto', 'index', 'password', 'types.d'].map((file) => ({
-        path: `registry/auth/core/${file}.ts`,
-        target: `server/auth/core/${file}.ts`,
-        type: 'registry:file' as const,
+      ...core.map((item) => ({
+        type: 'registry:item' as const,
+        path: `registry/auth/server/core/${item}.ts`,
+        target: `server/auth/core/${item}.ts`,
       })),
-
-      // Providers files
-      ...['base', ...supportedProviders].map((file) => ({
-        path: `registry/auth/providers/${file}.ts`,
-        target: `server/auth/providers/${file}.ts`,
-        type: 'registry:file' as const,
-      })),
-
-      // Auth files
-      ...['csrf', 'index', 'rate-limit'].map((file) => ({
-        path: `registry/auth/${file}.ts`,
-        target: `server/auth/${file}.ts`,
-        type: 'registry:file' as const,
+      ...supportedProviders.map((provider) => ({
+        type: 'registry:item' as const,
+        path: `registry/auth/server/providers/${provider}.ts`,
+        target: `server/auth/providers/${provider}.ts`,
       })),
       {
-        path: 'registry/auth/react.tsx',
-        target: 'hooks/use-session.tsx',
+        type: 'registry:item',
+        path: 'registry/auth/server/config.ts',
+        target: 'server/auth/server/config.ts',
+      },
+      {
+        type: 'registry:item',
+        path: 'registry/auth/server/types.ts',
+        target: 'server/auth/types.ts',
+      },
+      {
+        type: 'registry:lib',
+        path: 'registry/auth/lib/cuid.ts',
+      },
+      {
         type: 'registry:hook',
-      },
-
-      // Components
-      {
-        path: 'registry/auth/components/login-form.tsx',
-        target: 'components/login-form.tsx',
-        type: 'registry:component',
-      },
-      {
-        path: 'registry/auth/components/user-button.tsx',
-        target: 'components/user-button.tsx',
-        type: 'registry:component',
+        path: 'registry/auth/hooks/use-session.tsx',
       },
     ],
   },
 
   {
-    name: 'auth-base',
-    type: 'registry:file',
-    title: 'Authentication',
-    description: 'Authentication system with OAuth2 support',
+    name: 'auth-session',
+    type: 'registry:block',
+    title: 'Session Authentication',
+    description: 'Session based authentication',
     registryDependencies: [`${getBaseUrl()}/r/auth.json`],
     files: [
       {
-        path: 'registry/auth/config.ts',
-        target: 'server/auth/config.ts',
-        type: 'registry:file',
+        type: 'registry:item',
+        path: 'registry/auth/server/core/index.ts',
+        target: 'server/auth/core/index.ts',
+      },
+      {
+        type: 'registry:item',
+        path: 'registry/auth/server/index.ts',
+        target: 'server/auth/index.ts',
+      },
+    ],
+  },
+
+  {
+    name: 'auth-jwt',
+    type: 'registry:block',
+    title: 'JWT Authentication',
+    description: 'JWT based authentication',
+    registryDependencies: [`${getBaseUrl()}/r/auth.json`],
+    files: [
+      {
+        type: 'registry:item',
+        path: 'registry/auth/server/core/index.jwt.ts',
+        target: 'server/auth/core/index.ts',
+      },
+      {
+        type: 'registry:item',
+        path: 'registry/auth/server/index.jwt.ts',
+        target: 'server/auth/index.ts',
       },
     ],
   },
 
   {
     name: 'auth-drizzle',
-    type: 'registry:file',
-    title: 'Authentication with Drizzle ORM',
-    description: 'Authentication system with Drizzle ORM support',
+    type: 'registry:block',
+    title: 'Drizzle ORM Integration',
+    description: 'Integrate authentication with Drizzle ORM',
     dependencies: ['drizzle-orm'],
-    devDependencies: ['drizzle-kit'],
-    registryDependencies: [`${getBaseUrl()}/r/auth.json`],
     files: [
       {
-        path: 'registry/auth/configs/drizzle.schema.ts',
-        target: 'server/db/auth-schema.ts',
-        type: 'registry:file',
+        type: 'registry:item',
+        path: 'registry/auth/schemas/drizzle.schema',
+        target: 'server/db/schema.auth.ts',
       },
       {
-        path: 'registry/auth/configs/drizzle.config.ts',
+        type: 'registry:item',
+        path: 'registry/auth/server/config.drizzle.ts',
         target: 'server/auth/config.ts',
-        type: 'registry:file',
       },
     ],
   },
 
   {
     name: 'auth-prisma',
-    type: 'registry:file',
-    title: 'Authentication with Prisma ORM',
-    description: 'Authentication system with Prisma ORM support',
-    devDependencies: ['prisma'],
-    registryDependencies: [`${getBaseUrl()}/r/auth.json`],
+    type: 'registry:block',
+    title: 'Prisma ORM Integration',
+    description: 'Integrate authentication with Prisma ORM',
+    dependencies: ['@prisma/client'],
     files: [
       {
-        path: 'registry/auth/configs/prisma.schema.prisma',
-        target: 'prisma/auth-schema.prisma',
-        type: 'registry:file',
+        type: 'registry:item',
+        path: 'registry/auth/schemas/prisma.schema',
+        target: 'prisma/schema.auth.prisma',
       },
       {
-        path: 'registry/auth/configs/prisma.config.ts',
+        type: 'registry:item',
+        path: 'registry/auth/server/config.prisma.ts',
         target: 'server/auth/config.ts',
-        type: 'registry:file',
       },
     ],
   },
 
   {
     name: 'auth-mongoose',
-    type: 'registry:file',
-    title: 'Authentication with Mongoose ODM',
-    description: 'Authentication system with Mongoose ODM support',
+    type: 'registry:block',
+    title: 'Mongoose ORM Integration',
+    description: 'Integrate authentication with Mongoose ORM',
     dependencies: ['mongoose'],
-    registryDependencies: [`${getBaseUrl()}/r/auth.json`],
     files: [
       {
-        path: 'registry/auth/configs/mongoose.schema.ts',
-        target: 'server/db/auth.models.ts',
-        type: 'registry:file',
+        type: 'registry:item',
+        path: 'registry/auth/schemas/mongoose.schema',
+        target: 'server/db/schema.auth.ts',
       },
       {
-        path: 'registry/auth/configs/mongoose.config.ts',
+        type: 'registry:item',
+        path: 'registry/auth/server/config.mongoose.ts',
         target: 'server/auth/config.ts',
-        type: 'registry:file',
       },
     ],
   },

@@ -1,0 +1,97 @@
+import { and, eq, or } from 'drizzle-orm'
+
+import type { AuthConfig } from '@/server/auth/types'
+import { Discord } from '@/server/auth/providers/discord'
+import { db } from '@/server/db'
+import { accounts, sessions, users } from '@/server/db/schema'
+
+export const authConfig = {
+  secret: process.env.AUTH_SECRET,
+
+  providers: [
+    new Discord(
+      process.env.AUTH_DISCORD_ID ?? '',
+      process.env.AUTH_DISCORD_SECRET ?? '',
+    ),
+  ],
+
+  adapter: {
+    user: {
+      async find(identifier) {
+        const [record] = await db
+          .select()
+          .from(users)
+          .where(or(eq(users.id, identifier), eq(users.email, identifier)))
+          .limit(1)
+
+        return record ?? null
+      },
+      async create(data) {
+        const [result] = await db
+          .insert(users)
+          .values(data)
+          .returning({ id: users.id })
+
+        return result
+      },
+    },
+
+    account: {
+      async find(provider, accountId) {
+        const [record] = await db
+          .select()
+          .from(accounts)
+          .where(
+            and(
+              eq(accounts.provider, provider),
+              eq(accounts.accountId, accountId),
+            ),
+          )
+          .limit(1)
+
+        return record ?? null
+      },
+      async create(data) {
+        const [result] = await db
+          .insert(accounts)
+          .values(data)
+          .returning({ id: accounts.id })
+
+        return result
+      },
+    },
+
+    session: {
+      async find(id) {
+        const [record] = await db
+          .select({
+            user: {
+              id: users.id,
+              name: users.name,
+              email: users.email,
+              image: users.image,
+            },
+            token: sessions.token,
+            expiresAt: sessions.expiresAt,
+            ipAddress: sessions.ipAddress,
+            userAgent: sessions.userAgent,
+          })
+          .from(sessions)
+          .where(eq(sessions.id, id))
+          .innerJoin(users, eq(sessions.userId, users.id))
+          .limit(1)
+
+        return record ?? null
+      },
+      async create(data) {
+        await db.insert(sessions).values(data)
+      },
+      async update(id, data) {
+        await db.update(sessions).set(data).where(eq(sessions.id, id))
+      },
+      async delete(id) {
+        await db.delete(sessions).where(eq(sessions.id, id))
+      },
+    },
+  },
+} as const satisfies AuthConfig

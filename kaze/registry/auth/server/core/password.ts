@@ -7,15 +7,15 @@ import {
 } from '@/server/auth/core/crypto'
 
 export class Password {
-  private static dkLen: number = 64
+  constructor(private readonly dkLen = 64) {}
 
-  static async hash(password: string): Promise<string> {
+  async hash(password: string): Promise<string> {
     const salt = encodeHex(crypto.getRandomValues(new Uint8Array(16)))
     const key = await this.generateKey(password.normalize('NFKC'), salt)
     return `${salt}:${encodeHex(key)}`
   }
 
-  static async verify(hash: string, password: string): Promise<boolean> {
+  async verify(hash: string, password: string): Promise<boolean> {
     const parts = hash.split(':')
     if (parts.length !== 2) return false
 
@@ -24,10 +24,7 @@ export class Password {
     return constantTimeEqual(targetKey, decodeHex(key ?? ''))
   }
 
-  private static async generateKey(
-    data: string,
-    salt?: string,
-  ): Promise<Uint8Array> {
+  private async generateKey(data: string, salt?: string): Promise<Uint8Array> {
     const textEncoder = new TextEncoder()
     return new Promise((resolve, reject) => {
       scrypt(
