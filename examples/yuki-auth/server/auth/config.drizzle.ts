@@ -1,0 +1,122 @@
+import { and, eq, or } from 'drizzle-orm'
+
+import type { AuthConfig } from '@/server/auth/types'
+import { Discord } from '@/server/auth/providers/discord'
+import { Facebook } from '@/server/auth/providers/facebook'
+import { Figma } from '@/server/auth/providers/figma'
+import { Github } from '@/server/auth/providers/github'
+import { Google } from '@/server/auth/providers/google'
+import { Vercel } from '@/server/auth/providers/vercel'
+import { db } from '@/server/drizzle'
+import { accounts, sessions, users } from '@/server/drizzle/schema'
+
+export const authConfig = {
+  secret: process.env.AUTH_SECRET,
+
+  providers: [
+    new Discord(
+      process.env.AUTH_DISCORD_ID ?? '',
+      process.env.AUTH_DISCORD_SECRET ?? '',
+    ),
+    new Facebook(
+      process.env.AUTH_FACEBOOK_ID ?? '',
+      process.env.AUTH_FACEBOOK_SECRET ?? '',
+    ),
+    new Figma(
+      process.env.AUTH_FIGMA_ID ?? '',
+      process.env.AUTH_FIGMA_SECRET ?? '',
+    ),
+    new Github(
+      process.env.AUTH_GITHUB_ID ?? '',
+      process.env.AUTH_GITHUB_SECRET ?? '',
+    ),
+    new Google(
+      process.env.AUTH_GOOGLE_ID ?? '',
+      process.env.AUTH_GOOGLE_SECRET ?? '',
+    ),
+    new Vercel(
+      process.env.AUTH_VERCEL_ID ?? '',
+      process.env.AUTH_VERCEL_SECRET ?? '',
+    ),
+  ],
+
+  adapter: {
+    user: {
+      async find(identifier) {
+        const [record] = await db
+          .select()
+          .from(users)
+          .where(or(eq(users.id, identifier), eq(users.email, identifier)))
+          .limit(1)
+
+        return record ?? null
+      },
+      async create(data) {
+        const [result] = await db
+          .insert(users)
+          .values(data)
+          .returning({ id: users.id })
+
+        return result
+      },
+    },
+
+    account: {
+      async find(provider, accountId) {
+        const [record] = await db
+          .select()
+          .from(accounts)
+          .where(
+            and(
+              eq(accounts.provider, provider),
+              eq(accounts.accountId, accountId),
+            ),
+          )
+          .limit(1)
+
+        return record ?? null
+      },
+      async create(data) {
+        const [result] = await db
+          .insert(accounts)
+          .values(data)
+          .returning({ id: accounts.id })
+
+        return result
+      },
+    },
+
+    session: {
+      async find(id) {
+        const [record] = await db
+          .select({
+            user: {
+              id: users.id,
+              name: users.name,
+              email: users.email,
+              image: users.image,
+            },
+            token: sessions.token,
+            expiresAt: sessions.expiresAt,
+            ipAddress: sessions.ipAddress,
+            userAgent: sessions.userAgent,
+          })
+          .from(sessions)
+          .where(eq(sessions.id, id))
+          .innerJoin(users, eq(sessions.userId, users.id))
+          .limit(1)
+
+        return record ?? null
+      },
+      async create(data) {
+        await db.insert(sessions).values(data)
+      },
+      async update(id, data) {
+        await db.update(sessions).set(data).where(eq(sessions.id, id))
+      },
+      async delete(id) {
+        await db.delete(sessions).where(eq(sessions.id, id))
+      },
+    },
+  },
+} as const satisfies AuthConfig

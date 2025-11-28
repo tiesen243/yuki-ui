@@ -8,7 +8,7 @@ export const registryUI = [
     description:
       'A customizable statusline component for Neovim, inspired by the nvim-lualine plugin',
     dependencies: ['@radix-ui/react-slot'],
-    files: [{ path: 'registry/ui/nvim-statusline.tsx', type: 'registry:ui' }],
+    files: [{ type: 'registry:ui', path: 'registry/ui/nvim-statusline.tsx' }],
     cssVars: {
       light: {
         normal: 'oklch(0.533 0.188299 256.8803)',
@@ -28,6 +28,7 @@ export const registryUI = [
       },
     },
   },
+
   {
     name: 'open-graph',
     type: 'registry:ui',
@@ -35,35 +36,19 @@ export const registryUI = [
     description: 'A component to generate Open Graph images',
     files: [
       {
+        type: 'registry:ui',
         path: 'registry/ui/open-graph.tsx',
         target: 'app/api/og/route.tsx',
-        type: 'registry:ui',
       },
     ],
   },
-  {
-    name: 'password-input',
-    type: 'registry:ui',
-    title: 'Password Input',
-    description:
-      'A password input component with a toggle to show/hide the password',
-    files: [{ path: 'registry/ui/password-input.tsx', type: 'registry:ui' }],
-  },
-  {
-    name: 'progress-button',
-    type: 'registry:ui',
-    title: 'Progress Button',
-    description:
-      'A button component that shows progress, useful for loading states',
-    registryDependencies: ['button'],
-    files: [{ path: 'registry/ui/progress-button.tsx', type: 'registry:ui' }],
-  },
+
   {
     name: 'typography',
     type: 'registry:ui',
     title: 'Typography',
     author: 'tiesen243 <ttien56906@gmail.com>',
     description: 'A simple typography component',
-    files: [{ path: 'registry/ui/typography.tsx', type: 'registry:ui' }],
+    files: [{ type: 'registry:ui', path: 'registry/ui/typography.tsx' }],
   },
 ] satisfies RegistryItem[]

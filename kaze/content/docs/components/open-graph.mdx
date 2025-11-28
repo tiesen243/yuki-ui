@@ -29,44 +29,17 @@ This component uses `next/og` to dynamically generate Open Graph images at the `
 
    Place your custom font files (Regular.ttf, Medium.ttf, Bold.ttf) in the `public/assets/fonts/` directory of your Next.js project.
 
-2. Create function to load font
-
-   Create helper functions to load your font files. These functions fetch the font files and return them as ArrayBuffer objects that can be used by the ImageResponse API.
-
-```tsx title="app/api/og/route.tsx"
-async function getRegularFont() {
-  const response = await fetch(
-    new URL('../../../public/assets/fonts/Regular.ttf', import.meta.url),
-  )
-  return response.arrayBuffer()
-}
-
-async function getMediumFont() {
-  const response = await fetch(
-    new URL('../../../public/assets/fonts/Medium.ttf', import.meta.url),
-  )
-  return response.arrayBuffer()
-}
-
-async function getBoldFont() {
-  const response = await fetch(
-    new URL('../../../public/assets/fonts/Bold.ttf', import.meta.url),
-  )
-  return response.arrayBuffer()
-}
-```
-
-3. Load font in your route handler
+2. Load font in your route handler
 
    In your API route, load all fonts using Promise.all for better performance, then configure them in the ImageResponse options. Each font needs a unique name, the font data, style, and weight properties.
 
 ```tsx title="app/api/og/route.tsx"
 export async function GET(request: NextRequest) {
-  const [fontRegular, fontMedium, fontBold] = await Promise.all([
-    getRegularFont(),
-    getMediumFont(),
-    getBoldFont(),
-  ])
+   const [regular, medium, bold] = await Promise.all([
+     getFont('Regular', 400),
+     getFont('Medium', 500),
+     getFont('Bold', 700),
+   ])
   // ... rest of the code
 
   return new ImageResponse(
@@ -81,19 +54,19 @@ export async function GET(request: NextRequest) {
         fonts: [
           {
             name: 'MyFontRegular',
-            data: fontRegular,
+            data: regular,
             style: 'normal',
             weight: 400,
           },
           {
             name: 'MyFontMedium',
-            data: fontMedium,
+            data: medium,
             style: 'normal',
             weight: 500,
           },
           {
             name: 'MyFontBold',
-            data: fontBold,
+            data: bold,
             style: 'normal',
             weight: 700,
           },

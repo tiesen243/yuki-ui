@@ -15,13 +15,7 @@ const categories = [
   {
     title: 'Components',
     description: 'UI building blocks',
-    items: [
-      'Nvim Statusline',
-      'Open Graph Image',
-      'Password Input',
-      'Progress Button',
-      'Typography',
-    ],
+    items: ['Nvim Statusline', 'Open Graph Image', 'Typography'],
   },
   {
     title: 'Hooks',
