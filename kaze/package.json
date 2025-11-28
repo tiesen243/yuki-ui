@@ -17,8 +17,8 @@
   },
   "prettier": "@yuki/prettier-config",
   "dependencies": {
+    "@yuki/lib": "workspace:*",
     "@yuki/ui": "workspace:*",
-    "@yuki/validators": "workspace:*",
     "fumadocs-core": "^16.1.0",
     "fumadocs-mdx": "^14.0.3",
     "fumadocs-ui": "16.1.0",
@@ -48,6 +48,6 @@
     "next-themes": "^0.4.6",
     "prettier-plugin-tailwindcss": "catalog:",
     "shiki": "^3.17.0",
-    "zod": "^4.1.13"
+    "zod": "catalog:"
   }
 }

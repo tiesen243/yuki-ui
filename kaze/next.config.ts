@@ -1,4 +1,4 @@
-import '@yuki/validators/env'
+import '@/env'
 
 import type { NextConfig } from 'next'
 import { createMDX } from 'fumadocs-mdx/next'
@@ -14,7 +14,7 @@ const nextConfig = {
     turbopackFileSystemCacheForDev: true,
   },
 
-  transpilePackages: ['@yuki/ui', '@yuki/validators'],
+  transpilePackages: ['@yuki/lib', '@yuki/ui'],
 } satisfies NextConfig
 
 export default withMdx(nextConfig)

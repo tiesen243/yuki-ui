@@ -1,5 +1,5 @@
 {
-  "name": "@yuki/validators",
+  "name": "@yuki/lib",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -11,9 +11,9 @@
     },
     "./package.json": "./package.json"
   },
-  "main": "./dist/env.mjs",
-  "module": "./dist/env.mjs",
-  "types": "./dist/env.d.mts",
+  "main": "./dist/create-env.mjs",
+  "module": "./dist/create-env.mjs",
+  "types": "./dist/create-env.d.mts",
   "scripts": {
     "build": "tsdown",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
