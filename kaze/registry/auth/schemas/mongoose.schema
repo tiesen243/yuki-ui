@@ -38,6 +38,7 @@ AccountSchema.index({ provider: 1, accountId: 1 }, { unique: true })
 export const account =
   mongoose.models.Account ?? mongoose.model<IAccount>('Account', AccountSchema)
 
+// Remove this schema if you use JWT auth
 export interface ISession extends Document {
   id: string
   userId: mongoose.Types.ObjectId

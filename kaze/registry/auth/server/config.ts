@@ -30,6 +30,13 @@ export const authConfig = {
       },
     },
 
+    /**
+     * If you use JWT authentication, session management may not be necessary.
+     * To disable sessions when using JWT, you can throw an error in the session methods:
+     * ```ts
+     * throw new Error("Sessions are not supported with JWT auth.");
+     * ```
+     */
     session: {
       async find(id) {
         throw new Error('Not implemented')

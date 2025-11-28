@@ -3,7 +3,7 @@ import { decodeBase64Url, encodeBase64Url } from '@/server/auth/core/crypto'
 export type JWTAlgorithm = 'HS256' | 'HS384' | 'HS512'
 
 export interface JWTOptions {
-  headers?: Record<any, any>
+  headers?: Record<string, unknown>
   expiresIn?: number
   issuer?: string
   subject?: string

@@ -39,6 +39,7 @@ export const accounts = pgTable(
   ],
 )
 
+// Remove this table if you use JWT auth
 export const sessions = pgTable(
   'sessions',
   (t) => ({

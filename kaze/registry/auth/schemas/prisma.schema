@@ -37,6 +37,7 @@ model Account {
   @@map("accounts")
 }
 
+// Remove this model if you use JWT auth
 model Session {
   id         String   @id @db.VarChar(24)
   userId     String   @db.VarChar(24) @map("user_id")

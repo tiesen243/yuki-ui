@@ -34,7 +34,7 @@ export const registryAuth = [
       {
         type: 'registry:item',
         path: 'registry/auth/server/config.ts',
-        target: 'server/auth/server/config.ts',
+        target: 'server/auth/config.ts',
       },
       {
         type: 'registry:item',
@@ -98,6 +98,7 @@ export const registryAuth = [
     title: 'Drizzle ORM Integration',
     description: 'Integrate authentication with Drizzle ORM',
     dependencies: ['drizzle-orm'],
+    devDependencies: ['drizzle-kit'],
     files: [
       {
         type: 'registry:item',
@@ -118,6 +119,7 @@ export const registryAuth = [
     title: 'Prisma ORM Integration',
     description: 'Integrate authentication with Prisma ORM',
     dependencies: ['@prisma/client'],
+    devDependencies: ['prisma'],
     files: [
       {
         type: 'registry:item',
