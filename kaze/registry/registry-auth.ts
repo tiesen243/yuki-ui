@@ -93,7 +93,7 @@ export const registryAuth = [
   },
 
   {
-    name: 'auth-drizzle',
+    name: 'auth-adapter-drizzle',
     type: 'registry:block',
     title: 'Drizzle ORM Integration',
     description: 'Integrate authentication with Drizzle ORM',
@@ -114,7 +114,7 @@ export const registryAuth = [
   },
 
   {
-    name: 'auth-prisma',
+    name: 'auth-adapter-prisma',
     type: 'registry:block',
     title: 'Prisma ORM Integration',
     description: 'Integrate authentication with Prisma ORM',
@@ -135,7 +135,7 @@ export const registryAuth = [
   },
 
   {
-    name: 'auth-mongoose',
+    name: 'auth-adapter-mongoose',
     type: 'registry:block',
     title: 'Mongoose ORM Integration',
     description: 'Integrate authentication with Mongoose ORM',

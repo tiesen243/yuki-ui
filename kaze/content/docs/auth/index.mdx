@@ -9,272 +9,253 @@ Build your own authentication system from scratch with complete control over imp
 
 ### CLI
 
-1. Base
-   The core authentication components and utilities for building your own auth system.
+<Steps>
+  <Step>
+    ### Install core utilities
 
-   <InstallComponent comp='auth-base' />
+    This will install the main authentication package along with required dependencies.
 
-   **Includes:**
-   - Authentication hooks and utilities
-   - Session management components
-   - Base UI components (sign-in/sign-out forms)
-   - TypeScript types and interfaces
+    <Tabs items={['Session Based', "JWT Based"]}>
+      <Tab value='Session Based'>
+        <InstallComponent comp='auth-session' />
+      </Tab>
+      <Tab value='JWT Based'>
+        <InstallComponent comp='auth-jwt' />
+      </Tab>
+    </Tabs>
 
-2. Drizzle
-   Authentication system with Drizzle ORM integration for SQL databases.
+  </Step>
 
-   <InstallComponent comp='auth-drizzle' />
+  <Step>
+    ### Install database adapter
 
-   **Includes:**
-   - Everything from Base
-   - Drizzle schema definitions
-   - Database connection utilities
-   - SQL-optimized auth queries
+    Choose and install a database adapter that matches your database technology.
 
-3. Prisma
-   Authentication system with Prisma ORM integration and type-safe database operations.
+    <Tabs items={['Dirzzle', 'Prisma', 'Mongoose']}>
+      <Tab value='Dirzzle'>
+        <InstallComponent comp='auth-adapter-dirzzle' />
+      </Tab>
+      <Tab value='Prisma'>
+        <InstallComponent comp='auth-adapter-prisma' />
+      </Tab>
+      <Tab value='Mongoose'>
+        <InstallComponent comp='auth-adapter-mongoose' />
+      </Tab>
+    </Tabs>
 
-   <InstallComponent comp='auth-prisma' />
+  </Step>
 
-   **Includes:**
-   - Everything from Base
-   - Prisma schema models
-   - Type-safe database client
-   - Migration utilities
-
-4. Mongoose
-   Authentication system for MongoDB using Mongoose ODM for document-based storage.
-
-   <InstallComponent comp='auth-mongoose' />
-
-   **Includes:**
-   - Everything from Base
-   - Mongoose schemas and models
-   - MongoDB connection setup
-   - Document validation utilities
+</Steps>
 
 ### Manual
 
 Download and customize the source code directly from the registry: [Source](https://github.com/tiesen243/yuki-ui/tree/main/kaze/registry/auth)
 
-### Schema Setup
+## Quick Start
 
-After installation, the database schema will be added to your project. Depending on your chosen adapter:
+1.  Configure Authentication
 
-- **Drizzle**: Schema added to `server/db/auth-schema.ts`
-- **Prisma**: Schema added to `prisma/auth-schema.prisma`
-- **Mongoose**: Models added to `server/db/auth.models.ts`
+    Edit a configuration file to define your authentication settings, including secret keys, OAuth providers, and database adapters.
 
-For **Drizzle** and **Prisma**, you'll need to integrate this with your existing database setup:
+    ```ts title="server/auth/config.ts"
+    import type { AuthConfig } from '@/server/auth/types'
 
-1. Copy the schema content to your main database schema file, or
-2. Rename the generated file to your preferred naming convention
-3. Ensure your database instance is properly exported:
+    export const authConfig = {
+      secret: process.env.AUTH_SECRET,
 
-   ```typescript
-   // server/db/index.ts or server/db.ts
-   const db = ... // your database instance
-   export { db }
-   ```
+      providers: [
+        // Add OAuth providers here
+      ],
 
-You can customize the `Session` and `User` interfaces by extending them with additional fields. By default, these interfaces extend from your database schema.
+      // This will be implemented after installing a database adapter
+      adapter: {
+        user: {},
+        account: {},
+        session: {}, // Only for session-based auth
+      },
+    } as const satisfies AuthConfig
+    ```
 
-```typescript title="server/auth/config.ts"
-declare module '@/server/auth/core/types.d.ts' {
-  interface User {
-    // Add custom user fields here
-  }
-  interface Session {
-    // Add custom session fields here
-  }
-}
-```
+    Set environment variables for your secret key and OAuth provider credentials.
 
-## OAuth Providers
+    ```bash title=".env"
+    # You can generate a secure random key using `openssl rand -base64 32`
+    AUTH_SECRET=your-secret-key
 
-Configure OAuth authentication with supported providers:
+    # OAuth provider credentials
+    AUTH_{PROVIDER}_ID=your-client-id
+    AUTH_{PROVIDER}_SECRET=your-client-secret
+    ```
 
-**Supported providers:**
+2.  Create API Route
 
-1. Discord
-2. Facebook
-3. GitHub
-4. Google
+    To handle authentication requests, create an API route in your server framework of choice and export the `handler` function from the authentication package.
 
-**Environment variables:**
+      <Tabs items={['Next.js', 'React Router', 'Tanstack Router', 'Express', 'Elysia', 'Nitro']}>
 
-```bash title=".env"
-AUTH_{PROVIDER}_ID={YOUR_ID}
-AUTH_{PROVIDER}_SECRET={YOUR_SECRET}
-```
+        <Tab value='Next.js'>
+          ```ts title="app/api/auth/[...auth]/route.ts"
+          export {
+            handler as GET,
+            handler as POST,
+            handler as OPTIONS,
+          } from '@/server/auth'
+          ```
+        </Tab>
 
-**Configuration:**
+        <Tab value='React Router'>
 
-```typescript title="server/auth/config.ts"
-import Provider from '@/server/auth/providers/{provider}'
+          1.  Export api route handlers
 
-export const authOptions = {
-  // ... other options
-  providers: {
-    '{provider}': Provider({
-      clientId: process.env.AUTH_{PROVIDER}_ID ?? '',
-      clientSecret: process.env.AUTH_{PROVIDER}_SECRET ?? '',
-    }),
-  },
-}
-```
+            ```ts title="app/routes/api/auth.ts"
+            import type { Route } from './+types/auth'
+            import { handler } from '@/server/auth'
 
-## API Endpoints
+            export const loader = ({ request }: Route.LoaderArgs) => handler(request)
+            export const action = ({ request }: Route.ActionArgs) => handler(request)
+            ```
 
-Configure authentication endpoints for your chosen framework:
+          2. Register route
 
-### Next.js API Routes
+            ```ts title="app/routes.ts"
+            import type { RouteConfig } from '@react-router/dev/routes'
+            import { route } from '@react-router/dev/routes'
 
-```typescript title="app/api/auth/[...auth]/route.ts
-import { handlers } from '@/server/auth'
+            export default [
+              route('/api/auth/*', './routes/api/auth'),
+              // ...other routes
+            ] satisfies RouteConfig
+            ```
 
-export const { GET, POST } = handlers
-```
+        </Tab>
+        <Tab value='Tanstack Router'>
+          ```ts title="src/routes/api/auth.$.ts"
+          import { createFileRoute } from '@tanstack/react-router'
 
-### React Router (v7)
+          import { handler } from '@/server/auth'
 
-Configure authentication routes for React Router v7:
+          export const Route = createFileRoute('/api/auth/$')({
+            server: {
+              handlers: {
+                GET: async ({ request }) => handler(request),
+                POST: async ({ request }) => handler(request),
+                OPTIONS: async ({ request }) => handler(request),
+              },
+            },
+          })
+          ```
+        </Tab>
 
-```typescript title="src/routes/api.auth.$.ts"
-import type { Route } from './+types/api.auth.$'
-import { handlers } from '@/server/auth'
+        <Tab value='Express'>
+          ```ts title="src/routes/api/auth.ts"
+          import { Router } from 'express'
 
-const { GET, POST } = handlers
-export const loader = ({ request }: Route.LoaderArgs) => GET(request)
-export const action = ({ request }: Route.ActionArgs) => POST(request)
-```
+          import { handler } from '@/server/auth'
 
-### Tanstack Start
+          const authRouter = Router()
 
-Set up authentication routes for Tanstack Start:
+          router.use('/api/auth/*', async (req, res) => {
+            const response = handler(req)
 
-```typescript title="src/routes/api.auth.$.ts"
-import { createServerFileRoute } from '@tanstack/react-start/server'
+            res.status(response.status)
+            response.headers.forEach((value, key) => {
+              res.setHeader(key, value)
+            })
 
-import { handlers } from '@/server/auth'
+            if (response.status === 204) return res.send()
 
-const { GET, POST } = handlers
-export const ServerRoute = createServerFileRoute('/api/auth/$').methods({
-  GET: ({ request }) => GET(request),
-  POST: ({ request }) => POST(request),
-})
-```
+            if (response.status === 302 && response.headers.get('Location'))
+              return res.redirect(response.headers.get('Location'))
 
-## Usage
+            const contentType = response.headers.get('content-type') ?? ''
+            if (contentType.includes('application/json')) {
+              const body = await response.json()
+              return res.json(body)
+            } else {
+              const body = await response.text()
+              return res.send(body)
+            }
 
-### Server side
+            res.send(body)
+          })
 
-1. **Get session data:**
+          export { authRouter }
+          ```
+        </Tab>
+        <Tab value='Elysia'>
+          ```ts title="src/routes/auth.ts"
+          import { Elysia } from 'elysia'
 
-   Retrieve the current user's session information on the server:
+          import { handler } from '@/server/auth'
 
-   ```typescript
-   // Or for Next.js
-   import { headers } from 'next/headers'
+          export const authRouter = new Elysia({ name: 'Auth Router' }).all(
+            '/api/auth/*',
+            ({ request }) => handler(request),
+          )
+          ```
+        </Tab>
+        <Tab value='Nitro'>
+          ```ts title="server/api/auth/[...auth].ts"
+          import { handler } from '@/server/auth'
 
-   import { auth } from '@/server/auth'
+          export default defineEventHandler(event => handler(event.node.req))
+          ```
+        </Tab>
 
-   const session = await auth({ headers: request.headers })
+    </Tabs>
 
-   const session = await auth({ headers: await headers() })
-   ```
+3.  Set Up Query Client and Providers
 
-2. **Sign in a user:**
+    Configure React Query and session providers for your application. This ensures efficient data fetching, caching, and session management across your app.
 
-   Authenticate a user and set the session cookie:
+    ```ts title="lib/query-client.ts"
+    import {
+      defaultShouldDehydrateQuery,
+      QueryClient,
+    } from '@tanstack/react-query'
 
-   ```typescript
-   import { cookies } from 'next/headers'
+    export const createQueryClient = () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            // With SSR, we usually want to set some default staleTime
+            // above 0 to avoid refetching immediately on the client
+            staleTime: 60 * 1000,
+          },
+          dehydrate: {
+            shouldDehydrateQuery: (query) =>
+              defaultShouldDehydrateQuery(query) ||
+              query.state.status === 'pending',
+          },
+          hydrate: {},
+        },
+      })
+    ```
 
-   import { signIn } from '@/server/auth'
+    ```tsx title="components/providers.tsx"
+    'use client'
 
-   const result = await signIn({ email: '', password: '' })
-   //      ^ Session data with token and expiry
+    import type { QueryClient } from '@tanstack/react-query'
+    import { QueryClientProvider } from '@tanstack/react-query'
 
-   ;(await cookies()).set({
-     name: 'auth.token',
-     value: result.token,
-     expires: result.expires,
-     path: '/',
-     httpOnly: true,
-     secure: process.env.NODE_ENV === 'production',
-     sameSite: 'lax',
-   })
-   ```
+    import { SessionProvider } from '@/hooks/use-session'
+    import { createQueryClient } from '@/lib/query-client'
 
-3. **Sign out a user:**
+    let clientQueryClientSingleton: QueryClient | undefined = undefined
+    const getQueryClient = () => {
+      if (typeof window === 'undefined') return createQueryClient()
+      else return (clientQueryClientSingleton ??= createQueryClient())
+    }
 
-   Clear the user's session and invalidate their token:
+    export function Providers({
+      children,
+    }: Readonly<{ children: React.ReactNode }>) {
+      const queryClient = getQueryClient()
 
-   ```typescript
-   import { headers } from 'next/headers'
-
-   import { signOut } from '@/server/auth'
-
-   await signOut({ headers: await headers() })
-   ```
-
-### Client side
-
-1. Wrap your app with the `SessionProvider`:
-
-   Set up the session context for your application:
-
-   ```tsx
-   import { SessionProvider } from '@/hooks/use-session'
-
-   export default function RootLayout({
-     children,
-   }: Readonly<{ children: React.ReactNode }>) {
-     return <SessionProvider>{children}</SessionProvider>
-   }
-   ```
-
-2. Use the `useSession` hook to access session data:
-
-   Access session state and authentication methods in your components:
-
-   ```tsx
-   import { useSession } from '@/hooks/use-session'
-
-   export function MyComponent() {
-     const { session, status, signIn, signOut } = useSession()
-
-     if (status === 'loading') return <div>Loading...</div>
-     else if (status === 'unauthenticated')
-       return (
-         <button
-           onClick={() => {
-             void signIn(provider, options)
-             /*              ^ Provider name (e.g., 'credentials', 'google', etc.)
-              *  If provider is creadentials, options can include:
-              *    { email: '', password: '' }
-              *  If provider is OAuth, options can include:
-              *    { redirectUrl: '/' } // Optional redirect URL after sign in
-              */
-           }}
-         >
-           Sign in with {provider}
-         </button>
-       )
-
-     return (
-       <div>
-         <p>Welcome, {session.user.name}!</p>
-         <button
-           onClick={() => {
-             void signOut({ redirectUrl: '/' })
-             //                  ^ Optional redirect URL after sign out
-           }}
-         >
-           Sign out
-         </button>
-       </div>
-     )
-   }
-   ```
+      return (
+        <QueryClientProvider client={queryClient}>
+          <SessionProvider>{children}</SessionProvider>
+        </QueryClientProvider>
+      )
+    }
+    ```

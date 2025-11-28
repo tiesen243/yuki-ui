@@ -1,0 +1,86 @@
+---
+title: Usage
+description: How to use the authentication system in your Next.js application
+---
+
+This guide explains how to use the authentication system in your Next.js application, including session retrieval, sign-in, sign-out, and usage in React components.
+
+## Get session data
+
+Use the `auth` function to retrieve the current session. This can be done in API routes or server components.
+
+```ts
+import { headers } from 'next/headers'
+
+import { auth } from '@/server/auth'
+
+// In API Route
+const session = await auth({ headers: request.headers })
+// or in Next.js App Router
+const session = await auth({ headers: await headers() })
+//      ^ { user: User | null; expiresAt: Date }
+```
+
+## Sign in
+
+Call `signIn` with user credentials to authenticate and receive a token. Store the token in a secure, HTTP-only cookie.
+
+```ts
+import { cookies } from 'next/headers'
+
+import { signIn } from '@/server/auth'
+
+const result = await signIn({ email, password })
+//     ^ { token: string; expiresAt: Date }
+
+// Store the token in a cookie for subsequent requests
+;(await cookies()).set('auth.token', result.token, {
+  path: '/',
+  httpOnly: true,
+  sameSite: 'lax',
+  secure: process.env.NODE_ENV === 'production',
+  expires: result.expiresAt,
+})
+```
+
+## Sign out
+
+Call `signOut` to invalidate the session and remove the authentication token.
+
+```ts
+import { cookies, headers } from 'next/headers'
+
+import { signOut } from '@/server/auth'
+
+await signOut({ headers: request.headers })
+// or in Next.js App Router
+await signOut({ headers: await headers() })
+
+// Clear the auth token cookie
+;(await cookies()).delete('auth.token')
+```
+
+## Use in React components
+
+Use the `useSession` hook to access authentication state and actions in client components.
+
+```tsx
+'use client'
+
+import { useSession } from '@/hooks/use-session'
+
+export const UserProfile = () => {
+  const { status, session, signIn, signOut } = useSession()
+
+  if (status === 'loading') return <div>Loading...</div>
+  if (status === 'unauthenticated')
+    return <button onClick={() => signIn({ email, password })}>Sign In</button>
+
+  return (
+    <div>
+      <p>Welcome, {session.user.name}!</p>
+      <button onClick={() => signOut()}>Sign Out</button>
+    </div>
+  )
+}
+```
