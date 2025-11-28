@@ -1,0 +1,108 @@
+---
+title: Create Yuki Stack
+description: A CLI tool for scaffolding type-safe, full-stack TypeScript applications with best practices and customizable.
+---
+
+<div className='flex items-center justify-center gap-2'>
+  <a href='https://npmjs.com/package/create-yuki-stack'>
+    <img
+      src='https://img.shields.io/npm/dm/create-yuki-stack'
+      alt='Total Downloads'
+    />
+  </a>
+  <a href='https://npmjs.com/package/create-yuki-stack'>
+    <img
+      src='https://img.shields.io/npm/v/create-yuki-stack'
+      alt='Latest Stable Version'
+    />
+  </a>
+  <a href='https://packagist.org/packages/tiesen243/create-yuki-stack'>
+    <img src='https://img.shields.io/npm/l/create-yuki-stack' alt='License' />
+  </a>
+</div>
+
+## Overview
+
+`create-yuki-stack` is a CLI tool for scaffolding type-safe, full-stack TypeScript applications with best practices and customizable options. It enables you to quickly bootstrap a new project with your preferred frontend, backend, database, authentication, and additional tooling, all configured for a smooth developer experience.
+
+Whether you want a minimal setup or a production-ready stack, `create-yuki-stack` provides interactive prompts and sensible defaults to get you started fast. You can also automate the process using CLI flags for scripting or CI/CD workflows.
+
+## Getting Started
+
+To create a new project, run one of the following commands in your terminal. Replace `my-yuki-app` with your desired project name.
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+    <Tab value='npm'>
+
+    ```bash
+    npm create yuki-stack@latest my-yuki-app
+    ```
+    </Tab>
+    <Tab value='yarn'>
+
+    ```bash
+    yarn create yuki-stack my-yuki-app
+    ```
+    </Tab>
+    <Tab value='pnpm'>
+
+    ```bash
+    pnpm create yuki-stack@latest my-yuki-app
+    ```
+    </Tab>
+    <Tab value='bun'>
+
+    ```bash
+    bun create yuki-stack@latest my-yuki-app
+    ```
+    </Tab>
+
+</Tabs>
+
+After running the command, you'll be prompted to select your preferred stack options. You can skip the prompts and use default settings with the `-y` or `--yes` flag.
+
+## CLI Options
+
+| Option                       | Description                                                                |
+| ---------------------------- | -------------------------------------------------------------------------- |
+| `-y, --yes`                  | Skip all prompts and use [default settings](#default-options-with--y-flag) |
+| `--no-yes`                   | Negate `--yes` option                                                      |
+| `--frontend [values...]`     | Frontend frameworks (choices: nextjs, react-router, tanstack-start)        |
+| `--database [string]`        | Database option (choices: none, drizzle, prisma, mongoose)                 |
+| `--adapter [string]`         | Database adapter (choices: none, neon)                                     |
+| `--backend [string]`         | Backend framework (choices: none, express, elysia, hono, spring-boot       |
+| `--api [string]`             | API type (choices: none, eden, trpc, orpc)                                 |
+| `--auth [string]`            | Authentication (choices: none, basic-auth, better-auth, next-auth)         |
+| `--extras [values...]`       | Add extra packages and tooling (choices: gh-actions, email)                |
+| `--package-manager [string]` | Package manager (choices: npm, yarn, pnpm, bun)                            |
+| `--install`                  | Install dependencies after setup                                           |
+| `--no-install`               | Negate `--install` option                                                  |
+| `--git`                      | Initialize git repository                                                  |
+| `--no-git`                   | Negate `--git` option                                                      |
+| `-h, --help`                 | Display help information                                                   |
+| `-V, --version`              | Display version number                                                     |
+
+You can combine these options to fully automate project creation, for example:
+
+```bash
+npm create yuki-stack@latest my-app -- --frontend nextjs --database drizzle --auth next-auth --install --git
+```
+
+### Default Options with `--yes` Flag
+
+When using the `--yes` or `-y` flag, the following default options will be applied:
+
+- **Frontend**: [`Next.js`]
+- **Database**: `none`
+- **Adapter**: none
+- **Backend**: `none`
+- **API**: `none`
+- **Auth**: none
+- **Extras**: []
+- **Package Manager**: Auto-detected from environment
+- **Install Dependencies**: `true`
+- **Initialize Git**: `true`
+
+## Contributing
+
+Contributions are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request on the [GitHub repository](https://github.com/tiesen243/create-yuki-stack).

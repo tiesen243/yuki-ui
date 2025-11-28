@@ -20,14 +20,6 @@ export default async function DocPage({
   const page = source.getPage(slugs)
   if (!page) return notFound()
 
-  const registryMap = {
-    components: 'ui',
-    hooks: 'hooks',
-    lib: 'lib',
-  }
-  const registryKey = (page.slugs.at(0) ??
-    'components') as keyof typeof registryMap
-
   return (
     <DocsPage
       tableOfContent={{ style: 'clerk' }}
@@ -36,10 +28,10 @@ export default async function DocPage({
     >
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
-      {page.slugs.length > 1 && !page.slugs.includes('auth') && (
+      {page.data.source && (
         <Button variant='outline' size='sm' className='w-fit' asChild>
           <a
-            href={`https://github.com/tiesen243/yuki-ui/blob/main/kaze/registry/${registryMap[registryKey]}/${page.slugs.at(-1)}.tsx`}
+            href={`https://github.com/tiesen243/yuki-ui/blob/main/kaze/registry/${page.data.source}`}
             target='_blank'
             rel='noopener noreferrer'
           >
