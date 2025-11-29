@@ -5,10 +5,7 @@
 
 @theme inline {
   --font-sans: var(--font-geist-sans), 'Geist', sans-serif;
-  --font-serif: var(--font-yuji-syuky), 'Yuji Syuku', serif;
   --font-mono: var(--font-geist-mono), 'Geist Mono', monospace;
-
-  --spacing: var(--spacing);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
