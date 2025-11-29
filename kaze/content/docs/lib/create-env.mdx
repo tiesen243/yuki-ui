@@ -1,7 +1,7 @@
 ---
-title: Environment Variables Validation
+title: Create Env
 description: A utility to validate environment variables using Zod
-source: lib/env.ts
+source: lib/create-env.ts
 ---
 
 ## Environment Variables Validation
@@ -10,8 +10,10 @@ This utility leverages Zod to ensure your environment variables are correctly ty
 
 ### Example Usage
 
-```ts
-import * as z from 'zod/v4-mini'
+```ts title="env.ts"
+import * as z from 'zod/mini'
+
+import { createEnv } from '@/lib/create-env'
 
 export const env = createEnv({
   server: {
@@ -21,9 +23,17 @@ export const env = createEnv({
     ),
   },
 
-  client: {},
+  clientPrefix: 'NEXT_PUBLIC_',
+  client: {
+    // NEXT_PUBLIC_CLIENT_VAR: z.string()
+  },
 
-  runtimeEnv: process.env,
+  runtimeEnv: {
+    ...process.env,
+    // Explicitly define client environment variables here because Next.js does not
+    // make them available on process.env at runtime for the client bundle.
+    // NEXT_PUBLIC_CLIENT_VAR: process.env.NEXT_PUBLIC_CLIENT_VAR,
+  },
 
   skipValidation:
     !!process.env.SKIP_ENV_VALIDATION ||
@@ -36,7 +46,7 @@ export const env = createEnv({
 
 ### CLI
 
-<InstallComponent comp='env' />
+<InstallComponent comp='create-env' />
 
 ### Manual
 
@@ -53,7 +63,7 @@ zod
 
 <Step>
   Copy and paste the following code into your project.
-  <ComponentSource comp='env' />
+  <ComponentSource comp='create-env' />
 </Step>
 
 </Steps>

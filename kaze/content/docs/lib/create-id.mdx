@@ -1,0 +1,30 @@
+---
+title: Create ID
+description: A utility to generate CUID identifiers
+source: lib/create-id.ts
+---
+
+## CUID Generation
+
+This utility provides a simple way to generate CUID (Collision-resistant Unique Identifier) strings, which are useful for creating unique IDs in your applications.
+
+### Example Usage
+
+```ts
+import { createId } from '@/lib/create-id'
+
+const id1 = createId() // e.g., 'ckz5j0h3a0000l3rmn6i4v8xg'
+const id2 = createId() // e.g., 'ckz5j0h3b0001l3rmn7j9y1h'
+```
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='create-id' />
+
+### Manual
+
+Copy the following file into your project:
+
+<ComponentSource comp='create-id' />

@@ -1,32 +1,6 @@
-import * as z from 'zod/v4-mini'
+import * as z from 'zod/mini'
 
-export const env = createEnv({
-  server: {
-    NODE_ENV: z._default(
-      z.enum(['development', 'production', 'test']),
-      'development',
-    ),
-  },
-
-  clientPrefix: 'NEXT_PUBLIC_',
-  client: {
-    // NEXT_PUBLIC_CLIENT_VAR: z.string()
-  },
-
-  runtimeEnv: {
-    ...process.env,
-    // Explicitly define client environment variables here because Next.js does not
-    // make them available on process.env at runtime for the client bundle.
-    // NEXT_PUBLIC_CLIENT_VAR: process.env.NEXT_PUBLIC_CLIENT_VAR,
-  },
-
-  skipValidation:
-    !!process.env.SKIP_ENV_VALIDATION ||
-    !!process.env.CI ||
-    process.env.npm_lifecycle_event === 'lint',
-})
-
-function createEnv<
+export function createEnv<
   TPrefix extends string,
   TServer extends Record<string, z.ZodMiniType>,
   TClient extends Record<string, z.ZodMiniType>,

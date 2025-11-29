@@ -25,7 +25,7 @@ const categories = [
   {
     title: 'Utilities',
     description: 'Helper functions',
-    items: ['createEnv()'],
+    items: ['createEnv()', 'createId()'],
   },
 ]
 

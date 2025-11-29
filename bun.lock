@@ -119,10 +119,6 @@
         "prettier": "catalog:",
         "typescript": "catalog:",
       },
-      "peerDependencies": {
-        "@ianvs/prettier-plugin-sort-imports": "catalog:",
-        "prettier-plugin-tailwindcss": "catalog:",
-      },
     },
     "tools/github": {
       "name": "@yuki/github",
