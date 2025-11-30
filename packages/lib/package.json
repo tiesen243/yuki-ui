@@ -4,11 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./dist/index.mjs",
-    "./*": {
-      "types": "./dist/*.d.mts",
-      "default": "./dist/*.mjs"
-    },
+    "./create-env": "./dist/create-env.mjs",
+    "./create-id": "./dist/create-id.mjs",
     "./package.json": "./package.json"
   },
   "main": "./dist/create-env.mjs",
@@ -24,7 +21,7 @@
   },
   "prettier": "@yuki/prettier-config",
   "dependencies": {
-    "zod": "^4.1.13"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@yuki/eslint-config": "workspace:*",
