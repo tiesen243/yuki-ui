@@ -28,14 +28,11 @@
     "lint:ws": "bunx sherif@latest",
     "typecheck": "turbo run typecheck"
   },
-  "prettier": {
-    "printWidth": 80,
-    "semi": false,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "all"
-  },
+  "prettier": "@yuki/prettier-config",
   "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "catalog:",
+    "@yuki/prettier-config": "workspace:*",
+    "prettier-plugin-tailwindcss": "catalog:",
     "turbo": "^2.6.1"
   },
   "packageManager": "bun@1.3.1",

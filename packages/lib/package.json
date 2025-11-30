@@ -6,8 +6,8 @@
   "exports": {
     ".": "./dist/index.mjs",
     "./*": {
-      "default": "./dist/*.mjs",
-      "types": "./dist/*.d.mts"
+      "types": "./dist/*.d.mts",
+      "default": "./dist/*.mjs"
     },
     "./package.json": "./package.json"
   },
