@@ -1,6 +1,6 @@
 import { index, pgTable, uniqueIndex } from 'drizzle-orm/pg-core'
 
-import { createId } from '@/lib/cuid'
+import { createId } from '@/lib/create-id'
 
 export const users = pgTable(
   'users',

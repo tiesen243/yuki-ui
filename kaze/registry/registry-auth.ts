@@ -43,7 +43,7 @@ export const registryAuth = [
       },
       {
         type: 'registry:lib',
-        path: 'registry/auth/lib/cuid.ts',
+        path: 'registry/lib/create-id.ts',
       },
       {
         type: 'registry:hook',
