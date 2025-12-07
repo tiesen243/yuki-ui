@@ -43,5 +43,8 @@
     "shadcn": "^3.5.1",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3"
+  },
+  "peerDependencies": {
+    "shiki": "^3.19.0"
   }
 }
