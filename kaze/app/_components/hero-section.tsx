@@ -9,7 +9,7 @@ import { getBaseUrl } from '@/lib/utils'
 export function HeroSection() {
   return (
     <section id='hero' className='relative overflow-hidden py-20 md:py-32'>
-      <div className='absolute inset-0 -z-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]' />
+      <div className='absolute inset-0 -z-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]' />
 
       <div className='container max-w-4xl text-center'>
         <h2 className='mb-6 text-5xl font-bold tracking-tight text-balance md:text-7xl'>
@@ -24,11 +24,18 @@ export function HeroSection() {
           command.
         </p>
 
-        <Button size='lg' className='mb-12 gap-2 text-base' asChild>
-          <Link href={'/docs' as '/docs/[[...slugs]]'}>
-            Get Started
-            <ArrowRightIcon />
-          </Link>
+        <Button
+          size='lg'
+          className='mb-12 gap-2 text-base'
+          render={
+            <Link
+              href={'/docs' as '/docs/[[...slugs]]'}
+              aria-label='Get started with Yuki UI documentation'
+            />
+          }
+        >
+          Get Started
+          <ArrowRightIcon />
         </Button>
 
         <div className='mx-auto max-w-3xl'>

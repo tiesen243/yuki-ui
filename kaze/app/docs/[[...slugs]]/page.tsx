@@ -29,15 +29,21 @@ export default async function DocPage({
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
       {page.data.source && (
-        <Button variant='outline' size='sm' className='w-fit' asChild>
-          <a
-            href={`https://github.com/tiesen243/yuki-ui/blob/main/kaze/registry/${page.data.source}`}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <GithubIcon />
-            Component Source
-          </a>
+        <Button
+          variant='outline'
+          size='sm'
+          className='w-fit'
+          render={
+            <a
+              href={`https://github.com/tiesen243/yuki-ui/blob/main/kaze/registry/${page.data.source}`}
+              target='_blank'
+              rel='noopener noreferrer'
+              aria-label={`View source for ${page.data.title} on GitHub`}
+            />
+          }
+        >
+          <GithubIcon />
+          Component Source
         </Button>
       )}
       <DocsBody>
