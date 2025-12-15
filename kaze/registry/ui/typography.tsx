@@ -39,7 +39,7 @@ function Typography({
   ...props
 }: TypographyProps) {
   return useRender({
-    defaultTagName: 'p',
+    defaultTagName: variant ?? 'p',
     props: mergeProps<'p'>(
       { className: cn(typographyVariants({ variant, className })) },
       props,
