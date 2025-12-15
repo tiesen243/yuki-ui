@@ -37,7 +37,9 @@ function Badge({
   return useRender({
     defaultTagName: 'span',
     props: mergeProps<'span'>(
-      { className: cn(badgeVariants({ className, variant })) },
+      {
+        className: cn(badgeVariants({ className, variant })),
+      },
       props,
     ),
     render,
