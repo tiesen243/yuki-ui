@@ -7,7 +7,7 @@ export const registryUI = [
     title: 'Nvim Statusline',
     description:
       'A customizable statusline component for Neovim, inspired by the nvim-lualine plugin',
-    dependencies: ['@radix-ui/react-slot'],
+    dependencies: ['@base-ui/react'],
     files: [{ type: 'registry:ui', path: 'registry/ui/nvim-statusline.tsx' }],
     cssVars: {
       light: {
@@ -47,8 +47,8 @@ export const registryUI = [
     name: 'typography',
     type: 'registry:ui',
     title: 'Typography',
-    author: 'tiesen243 <ttien56906@gmail.com>',
     description: 'A simple typography component',
+    dependencies: ['@base-ui/react'],
     files: [{ type: 'registry:ui', path: 'registry/ui/typography.tsx' }],
   },
 ] satisfies RegistryItem[]

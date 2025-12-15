@@ -19,7 +19,7 @@ export const registryAuth = [
     type: 'registry:block',
     title: 'Authentication',
     description: 'Core authentication utilities and hooks',
-    dependencies: ['@tanstack/react-query', 'react'],
+    dependencies: ['@tanstack/react-query'],
     files: [
       ...core.map((item) => ({
         type: 'registry:item' as const,

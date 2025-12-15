@@ -17,34 +17,35 @@
   },
   "prettier": "@yuki/prettier-config",
   "dependencies": {
+    "@base-ui/react": "^1.0.0",
     "@radix-ui/react-slot": "^1.2.4",
     "@yuki/lib": "workspace:*",
     "@yuki/ui": "workspace:*",
     "class-variance-authority": "^0.7.1",
-    "fumadocs-core": "^16.2.3",
+    "fumadocs-core": "^16.2.5",
     "fumadocs-mdx": "^14.1.0",
-    "fumadocs-ui": "^16.2.3",
-    "next": "^16.0.8",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
-    "zod": "^4.1.13"
+    "fumadocs-ui": "^16.2.5",
+    "next": "^16.0.10",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.17",
+    "@tailwindcss/postcss": "catalog:tailwind",
     "@types/mdx": "^2.0.13",
-    "@types/node": "^24.10.1",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
     "@yuki/eslint-config": "workspace:*",
     "@yuki/prettier-config": "workspace:*",
     "@yuki/tsconfig": "workspace:*",
-    "eslint": "^9.39.1",
-    "prettier": "^3.7.4",
-    "shadcn": "^3.5.1",
-    "tailwindcss": "^4.1.17",
-    "typescript": "^5.9.3"
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "shadcn": "^3.6.1",
+    "tailwindcss": "catalog:tailwind",
+    "typescript": "catalog:"
   },
   "peerDependencies": {
-    "shiki": "^3.19.0"
+    "shiki": "^3.20.0"
   }
 }

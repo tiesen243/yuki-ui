@@ -1,7 +1,8 @@
 'use client'
 
 import * as React from 'react'
-import { Slot } from '@radix-ui/react-slot'
+import { mergeProps } from '@base-ui/react'
+import { useRender } from '@base-ui/react/use-render'
 
 import { cn } from '@yuki/ui'
 
@@ -51,24 +52,29 @@ function NvimStatuslineProvider({
 
 function NvimStatusline({
   className,
-  asChild = false,
+  render,
   ...props
-}: React.ComponentProps<'footer'> & { asChild?: boolean }) {
+}: useRender.ComponentProps<'footer'>) {
   const { mode } = useNvimStatusline()
-  const Comp = asChild ? Slot : 'footer'
 
-  return (
-    <Comp
-      data-slot='nvim-statusline'
-      data-mode={mode}
-      className={cn(
-        'group/statusline sticky bottom-0 left-0 z-50 flex h-6 w-full items-center justify-between gap-0 bg-input px-4 font-mono text-secondary-foreground md:bottom-4',
-        "[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        className,
-      )}
-      {...props}
-    />
-  )
+  return useRender({
+    defaultTagName: 'footer',
+    props: mergeProps<'footer'>(
+      {
+        className: cn(
+          'group/statusline sticky bottom-0 left-0 z-50 flex h-6 w-full items-center justify-between gap-0 bg-popover px-4 font-mono text-popover-foreground md:bottom-4',
+          "[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+          className,
+        ),
+      },
+      props,
+    ),
+    render,
+    state: {
+      slot: 'nvim-statusline',
+      mode,
+    },
+  })
 }
 
 function NvimStatuslineSectionA({
@@ -122,7 +128,7 @@ function NvimStatuslineSectionB({
       </div>
       <NvimStatuslineSectionSeparator
         data-slot='nvim-statusline-section-b-separator'
-        className='size-6 rotate-90 bg-input fill-background'
+        className='size-6 rotate-90 bg-popover fill-background'
       />
     </div>
   )
@@ -136,7 +142,7 @@ function NvimStatuslineSectionC({
     <div
       data-slot='nvim-statusline-section-c'
       className={cn(
-        'inline-flex h-full max-w-full flex-1 items-center gap-2 truncate overflow-hidden bg-input pr-2 text-ellipsis whitespace-nowrap text-secondary-foreground',
+        'inline-flex h-full max-w-full flex-1 items-center gap-2 truncate overflow-hidden pr-2 text-ellipsis whitespace-nowrap',
         className,
       )}
       {...props}
@@ -152,7 +158,7 @@ function NvimStatuslineSectionX({
     <div
       data-slot='nvim-statusline-section-x'
       className={cn(
-        'inline-flex h-full items-center gap-2 truncate overflow-hidden bg-input pl-2 text-ellipsis whitespace-nowrap text-secondary-foreground',
+        'inline-flex h-full items-center gap-2 truncate overflow-hidden pl-2 text-ellipsis whitespace-nowrap',
         className,
       )}
       {...props}
@@ -175,7 +181,7 @@ function NvimStatuslineSectionY({
     >
       <NvimStatuslineSectionSeparator
         data-slot='nvim-statusline-section-y-separator'
-        className='size-6 rotate-270 bg-input fill-background'
+        className='size-6 rotate-270 bg-popover fill-background'
       />
       <div
         className={cn(

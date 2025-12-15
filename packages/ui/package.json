@@ -29,12 +29,13 @@
   },
   "prettier": "@yuki/prettier-config",
   "dependencies": {
+    "@base-ui/react": "^1.0.0",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.556.0",
+    "lucide-react": "^0.561.0",
     "next-themes": "^0.4.6",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0"
@@ -50,9 +51,7 @@
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "catalog:",
     "@types/react": "catalog:react",
-    "prettier-plugin-tailwindcss": "catalog:",
     "react": "catalog:react",
     "tailwindcss": "catalog:tailwind"
   }
