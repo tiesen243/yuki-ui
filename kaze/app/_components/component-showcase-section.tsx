@@ -68,11 +68,18 @@ export function ComponentShowcaseSection() {
         </div>
 
         <div className='flex justify-center'>
-          <Button size='lg' variant='outline' asChild>
-            <Link href={'/docs' as '/docs/[[...slugs]]'}>
-              Browse All Components
-              <ArrowRightIcon />
-            </Link>
+          <Button
+            size='lg'
+            variant='outline'
+            render={
+              <Link
+                href={'/docs' as '/docs/[[...slugs]]'}
+                araia-label={'Browse All Components'}
+              />
+            }
+          >
+            Browse All Components
+            <ArrowRightIcon />
           </Button>
         </div>
       </div>

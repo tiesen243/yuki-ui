@@ -6,7 +6,7 @@ import { BookOpenIcon, GithubIcon } from '@yuki/ui/icons'
 
 export function Header() {
   return (
-    <header className='sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
+    <header className='sticky inset-0 z-50 flex h-14 items-center border-b bg-popover/60 text-popover-foreground backdrop-blur-xl backdrop-saturate-150'>
       <div className='container flex h-16 items-center justify-between'>
         <Link href='/' className='flex items-center gap-2'>
           <Image
@@ -20,23 +20,31 @@ export function Header() {
         </Link>
 
         <div className='flex items-center gap-2'>
-          <Button variant='ghost' size='icon' asChild>
-            <a
-              href='https://github.com/tiesen243/yuki-ui'
-              target='_blank'
-              rel='noopener noreferrer'
-              aria-label='GitHub'
-            >
-              <GithubIcon />
-            </a>
+          <Button
+            variant='ghost'
+            size='icon'
+            render={
+              <a
+                href='https://github.com/tiesen243/yuki-ui'
+                target='_blank'
+                rel='noopener noreferrer'
+                aria-label='GitHub Repository'
+              />
+            }
+          >
+            <GithubIcon />
           </Button>
-          <Button variant='ghost' size='icon' asChild>
-            <Link
-              href={'/docs' as '/docs/[[...slugs]]'}
-              aria-label='Documentation'
-            >
-              <BookOpenIcon />
-            </Link>
+          <Button
+            variant='ghost'
+            size='icon'
+            render={
+              <Link
+                href={'/docs' as '/docs/[[...slugs]]'}
+                aria-label='Documentation'
+              />
+            }
+          >
+            <BookOpenIcon />
           </Button>
         </div>
       </div>
