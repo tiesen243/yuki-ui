@@ -23,6 +23,7 @@ export function Header() {
           <Button
             variant='ghost'
             size='icon'
+            nativeButton={false}
             render={
               <a
                 href='https://github.com/tiesen243/yuki-ui'
@@ -37,6 +38,7 @@ export function Header() {
           <Button
             variant='ghost'
             size='icon'
+            nativeButton={false}
             render={
               <Link
                 href={'/docs' as '/docs/[[...slugs]]'}

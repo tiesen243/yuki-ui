@@ -27,6 +27,7 @@ export function HeroSection() {
         <Button
           size='lg'
           className='mb-12 gap-2 text-base'
+          nativeButton={false}
           render={
             <Link
               href={'/docs' as '/docs/[[...slugs]]'}

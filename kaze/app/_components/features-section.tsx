@@ -17,11 +17,8 @@ export function FeaturesSection() {
 
         <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
           {features.map((feature) => (
-            <Card
-              key={feature.title}
-              className='border-border/50 bg-card/50 backdrop-blur'
-            >
-              <CardContent className='pt-6'>
+            <Card key={feature.title}>
+              <CardContent>
                 <div className='mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10'>
                   <feature.icon className='h-6 w-6 text-primary' />
                 </div>

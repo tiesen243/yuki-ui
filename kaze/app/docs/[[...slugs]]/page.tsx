@@ -33,6 +33,7 @@ export default async function DocPage({
           variant='outline'
           size='sm'
           className='w-fit'
+          nativeButton={false}
           render={
             <a
               href={`https://github.com/tiesen243/yuki-ui/blob/main/kaze/registry/${page.data.source}`}

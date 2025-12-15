@@ -71,6 +71,7 @@ export function ComponentShowcaseSection() {
           <Button
             size='lg'
             variant='outline'
+            nativeButton={false}
             render={
               <Link
                 href={'/docs' as '/docs/[[...slugs]]'}
