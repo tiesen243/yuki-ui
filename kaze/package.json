@@ -21,10 +21,10 @@
     "@yuki/lib": "workspace:*",
     "@yuki/ui": "workspace:*",
     "class-variance-authority": "^0.7.1",
-    "fumadocs-core": "^16.2.5",
-    "fumadocs-mdx": "^14.1.0",
-    "fumadocs-ui": "^16.2.5",
-    "next": "^16.0.10",
+    "fumadocs-core": "^16.3.1",
+    "fumadocs-mdx": "^14.2.1",
+    "fumadocs-ui": "^16.3.1",
+    "next": "^16.1.0",
     "react": "catalog:react",
     "react-dom": "catalog:react",
     "zod": "catalog:"
@@ -40,7 +40,7 @@
     "@yuki/tsconfig": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "shadcn": "^3.6.1",
+    "shadcn": "^3.6.2",
     "tailwindcss": "catalog:tailwind",
     "typescript": "catalog:"
   },
