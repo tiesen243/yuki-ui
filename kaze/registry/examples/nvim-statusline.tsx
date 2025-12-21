@@ -18,10 +18,9 @@ import {
 export default function NvimStatuslineDemo() {
   return (
     <NvimStatuslineProvider>
-      <div className='flex min-h-40 w-full flex-col'>
-        <ChangeModeButtons />
-        <NvimStatuslineContent />
-      </div>
+      <ChangeModeButtons />
+      <div className='flex-1' />
+      <NvimStatuslineContent />
     </NvimStatuslineProvider>
   )
 }
@@ -53,18 +52,14 @@ function ChangeModeButtons() {
   const { modes, setMode } = useNvimStatusline()
 
   return (
-    <div className='container flex flex-1 flex-wrap items-center gap-4 py-6'>
+    <div className='container flex flex-wrap items-center gap-4 py-6'>
       {modes.map((mode) => (
         <Button
           key={mode}
           variant='outline'
-          style={{
-            color: `var(--${mode})`,
-          }}
+          style={{ color: `var(--${mode})` }}
           size='sm'
-          onClick={() => {
-            setMode(mode)
-          }}
+          onClick={() => setMode(mode)}
         >
           {mode.toUpperCase()}
         </Button>

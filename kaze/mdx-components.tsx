@@ -63,14 +63,14 @@ function PreviewComponent({ comp }: Props) {
   }, [comp])
 
   return (
-    <div className='not-prose flex items-center justify-center'>
-      <Suspense
-        fallback={
-          <div className='h-96 w-full animate-pulse rounded-md bg-muted' />
-        }
-      >
+    <Suspense
+      fallback={
+        <div className='h-96 w-full animate-pulse rounded-sm bg-muted' />
+      }
+    >
+      <div className='not-prose flex flex-col items-center justify-center overflow-x-auto min-h-96 overflow-y-hidden'>
         {Comp}
-      </Suspense>
-    </div>
+      </div>
+    </Suspense>
   )
 }
