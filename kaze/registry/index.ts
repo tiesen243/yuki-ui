@@ -1,20 +1,18 @@
 import type { Registry } from 'shadcn/schema'
 
-import { registryAuth } from '@/registry/registry-auth'
-import { registryLib } from '@/registry/registry-lib'
-
-import { registryBlocks } from './registry-blocks'
-import { registryExample } from './registry-example'
-import { registryHooks } from './registry-hooks'
-import { registryUI } from './registry-ui'
+// @ts-ignore
+import { registryAuth } from '@/registry/auth/_registry'
+import { registryExamples } from '@/registry/examples/_registry'
+import { registryHooks } from '@/registry/hooks/_registry'
+import { registryLib } from '@/registry/lib/_registry'
+import { registryUI } from '@/registry/ui/_registry'
 
 export const registry = {
   name: 'Yuki UI',
   homepage: 'https://yuki-ui.vercel.app',
   items: [
     ...registryAuth,
-    ...registryBlocks,
-    ...registryExample,
+    ...registryExamples,
     ...registryHooks,
     ...registryLib,
     ...registryUI,
