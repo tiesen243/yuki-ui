@@ -1,7 +1,5 @@
 'use client'
 
-import * as z from 'zod'
-
 import { Button } from '@yuki/ui/button'
 import {
   Field,
@@ -13,6 +11,7 @@ import {
   FieldSet,
 } from '@yuki/ui/field'
 import { Input } from '@yuki/ui/input'
+import * as z from 'zod'
 
 import { useForm } from '@/registry/hooks/use-form'
 

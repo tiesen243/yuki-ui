@@ -3,16 +3,13 @@ import * as React from 'react'
 const useDebounce = <T>(callback: (...args: T[]) => void, delay: number) => {
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
 
-  const debouncedCallback = React.useCallback(
-    (...args: T[]) => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+  const debouncedCallback = React.useCallback((...args: T[]) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
 
-      timeoutRef.current = setTimeout(() => {
-        callback(...args)
-      }, delay)
-    },
-    [callback, delay],
-  )
+    timeoutRef.current = setTimeout(() => {
+      callback(...args)
+    }, delay)
+  }, [callback, delay])
 
   return debouncedCallback
 }

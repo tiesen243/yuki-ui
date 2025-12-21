@@ -1,9 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-
 import { Button } from '@yuki/ui/button'
 import { Check, Copy } from '@yuki/ui/icons'
+import { useState } from 'react'
 
 interface CopyButtonProps {
   text: string

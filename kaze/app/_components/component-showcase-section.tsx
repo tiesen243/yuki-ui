@@ -1,5 +1,3 @@
-import Link from 'next/link'
-
 import { Badge } from '@yuki/ui/badge'
 import { Button } from '@yuki/ui/button'
 import {
@@ -10,6 +8,7 @@ import {
   CardTitle,
 } from '@yuki/ui/card'
 import { ArrowRightIcon } from '@yuki/ui/icons'
+import Link from 'next/link'
 
 const categories = [
   {

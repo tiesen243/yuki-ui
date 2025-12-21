@@ -14,21 +14,14 @@
   "scripts": {
     "build": "tsdown",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "~dev": "tsdown --watch"
   },
-  "prettier": "@yuki/prettier-config",
   "dependencies": {
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@yuki/eslint-config": "workspace:*",
-    "@yuki/prettier-config": "workspace:*",
     "@yuki/tsconfig": "workspace:*",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:"
   },

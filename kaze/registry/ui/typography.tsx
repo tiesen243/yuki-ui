@@ -1,9 +1,9 @@
 import type { VariantProps } from 'class-variance-authority'
+
 import { mergeProps } from '@base-ui/react'
 import { useRender } from '@base-ui/react/use-render'
-import { cva } from 'class-variance-authority'
-
 import { cn } from '@yuki/ui'
+import { cva } from 'class-variance-authority'
 
 const typographyVariants = cva('text-foreground', {
   variants: {

@@ -1,5 +1,5 @@
-name: "Setup and install"
-description: "Common setup steps for Actions"
+name: 'Setup and install'
+description: 'Common setup steps for Actions'
 
 runs:
   using: composite
@@ -7,7 +7,7 @@ runs:
     - uses: oven-sh/setup-bun@v2
     - uses: actions/setup-node@v6
       with:
-        node-version-file: ".nvmrc"
+        node-version-file: '.nvmrc'
 
     - shell: bash
       run: bun add -g turbo
@@ -16,7 +16,4 @@ runs:
       run: bun ci
 
     - shell: bash
-      run: bun run build -F './packages/*'
-
-    - shell: bash
-      run: bun --filter @yuki/kaze build:registry
+      run: turbo run build -F './packages/*' && turbo run build:registry

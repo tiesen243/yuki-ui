@@ -1,4 +1,5 @@
 import type { OAuth2Token, OAuthAccount } from '@/server/auth/types'
+
 import { BaseProvider } from '@/server/auth/providers/base'
 
 export class Google extends BaseProvider {

@@ -1,6 +1,7 @@
 import { and, eq, or } from 'drizzle-orm'
 
 import type { AuthConfig } from '@/server/auth/types'
+
 import { Discord } from '@/server/auth/providers/discord'
 import { db } from '@/server/db'
 import { accounts, sessions, users } from '@/server/db/schema'

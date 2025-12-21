@@ -1,4 +1,5 @@
 import type { OAuthAccount } from '@/server/auth/types'
+
 import { generateCodeChallenge } from '@/server/auth/core/crypto'
 
 export abstract class BaseProvider {

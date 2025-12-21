@@ -1,0 +1,86 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["unicorn", "typescript", "oxc"],
+  "categories": {
+    "correctness": "error",
+    "perf": "error",
+    "suspicious": "error"
+  },
+  "env": {
+    "builtin": true
+  },
+  "globals": {},
+  "ignorePatterns": [],
+  "overrides": [
+    {
+      "files": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+      "rules": {
+        "@typescript-eslint/consistent-type-imports": [
+          "warn",
+          { "prefer": "type-imports", "fixStyle": "separate-type-imports" }
+        ],
+        "@typescript-eslint/no-misused-promises": [
+          "error",
+          { "checksVoidReturn": { "attributes": false } }
+        ],
+        "@typescript-eslint/no-namespace": "off",
+        "@typescript-eslint/no-unnecessary-condition": [
+          "error",
+          { "allowConstantLoopConditions": true }
+        ],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+        ],
+        "@typescript-eslint/prefer-promise-reject-errors": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/unified-signatures": "off",
+        "import/no-anonymous-default-export": "warn",
+        "import/no-unassigned-import": "off"
+      },
+      "plugins": ["import"]
+    },
+    {
+      "files": ["**/*.jsx", "**/*.tsx"],
+      "rules": {
+        "react/button-has-type": "error",
+        "react/jsx-filename-extension": [
+          "error",
+          { "extensions": ["jsx", "tsx"] }
+        ],
+        "react/jsx-no-target-blank": "warn",
+        "react/jsx-no-useless-fragment": "warn",
+        "react/no-array-index-key": "off",
+        "react/no-danger": "warn",
+        "react/no-unescaped-entities": "error",
+        "react/no-unknown-property": "error",
+        "react/react-in-jsx-scope": "off",
+        "react/rules-of-hooks": "error"
+      },
+      "plugins": ["react"]
+    }
+  ],
+  "settings": {
+    "jsx-a11y": {
+      "polymorphicPropName": null,
+      "components": {
+        "Button": "button"
+      },
+      "attributes": {}
+    },
+    "react": {
+      "formComponents": [],
+      "linkComponents": [{ "name": "Link", "attributes": ["href", "to"] }]
+    },
+    "jsdoc": {
+      "ignorePrivate": false,
+      "ignoreInternal": false,
+      "ignoreReplacesDocs": true,
+      "overrideReplacesDocs": true,
+      "augmentsExtendsReplacesDocs": false,
+      "implementsReplacesDocs": false,
+      "exemptDestructuredRootsFromChecks": false,
+      "tagNamePreference": {}
+    }
+  }
+}

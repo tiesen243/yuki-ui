@@ -1,4 +1,4 @@
-import { BaseProvider } from '@/server/auth/providers/base'
+import type { BaseProvider } from '@/server/auth/providers/base'
 
 export interface User {
   id: string

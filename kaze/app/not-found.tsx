@@ -1,9 +1,8 @@
 'use client'
 
+import { buttonVariants } from '@yuki/ui/button'
 import Image from 'next/image'
 import Link from 'next/link'
-
-import { buttonVariants } from '@yuki/ui/button'
 
 import { Typography } from '@/registry/ui/typography'
 

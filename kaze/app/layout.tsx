@@ -1,10 +1,9 @@
 import '@/app/globals.css'
 
-import { Geist, Geist_Mono } from 'next/font/google'
-import { RootProvider } from 'fumadocs-ui/provider/next'
-
 import { cn } from '@yuki/ui'
 import { Toaster } from '@yuki/ui/sonner'
+import { RootProvider } from 'fumadocs-ui/provider/next'
+import { Geist, Geist_Mono } from 'next/font/google'
 
 import { createMetadata } from '@/lib/metadata'
 

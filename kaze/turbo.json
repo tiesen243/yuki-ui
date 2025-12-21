@@ -3,12 +3,20 @@
   "extends": ["//"],
   "tasks": {
     "build": {
+      "dependsOn": ["^build", "^@yuki/kaze#build:shadcn"],
       "outputs": [
         ".next/**",
         "!.next/cache/**",
         "!.next/dev/**",
         "next-env.d.ts"
       ]
+    },
+    "build:registry": {
+      "outputs": ["__registry__"]
+    },
+    "build:shadcn": {
+      "dependsOn": ["^@yuki/kaze#build:registry"],
+      "outputs": ["public/r"]
     },
     "dev": {
       "dependsOn": ["^build"]

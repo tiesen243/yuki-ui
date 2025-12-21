@@ -1,7 +1,6 @@
-import Link from 'next/link'
-
 import { Button } from '@yuki/ui/button'
 import { ArrowRightIcon } from '@yuki/ui/icons'
+import Link from 'next/link'
 
 import { CopyButton } from '@/app/_components/copy-button'
 import { getBaseUrl } from '@/lib/utils'

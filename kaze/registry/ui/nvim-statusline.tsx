@@ -1,10 +1,9 @@
 'use client'
 
-import * as React from 'react'
 import { mergeProps } from '@base-ui/react'
 import { useRender } from '@base-ui/react/use-render'
-
 import { cn } from '@yuki/ui'
+import * as React from 'react'
 
 const MODES = [
   'normal',

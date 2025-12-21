@@ -1,13 +1,12 @@
-import { notFound } from 'next/navigation'
+import { Button } from '@yuki/ui/button'
+import { GithubIcon } from '@yuki/ui/icons'
 import {
   DocsBody,
   DocsDescription,
   DocsPage,
   DocsTitle,
 } from 'fumadocs-ui/page'
-
-import { Button } from '@yuki/ui/button'
-import { GithubIcon } from '@yuki/ui/icons'
+import { notFound } from 'next/navigation'
 
 import { createMetadata } from '@/lib/metadata'
 import { source } from '@/lib/source'
