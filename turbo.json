@@ -17,16 +17,6 @@
       "cache": false,
       "persistent": true
     },
-    "format": {
-      "dependsOn": ["^format"],
-      "outputs": [".cache/prettiercache"],
-      "outputLogs": "new-only"
-    },
-    "lint": {
-      "dependsOn": ["^lint"],
-      "outputs": [".cache/eslintcache"],
-      "outputLogs": "new-only"
-    },
     "typecheck": {
       "dependsOn": ["^typecheck"],
       "outputs": [".cache/tsbuildinfo.json"],

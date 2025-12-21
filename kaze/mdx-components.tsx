@@ -50,7 +50,6 @@ function InstallComponent({ comp }: Props) {
 }
 
 function ComponentSource({ comp }: Props) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const code = String(Index[comp].files[0].content)
   if (code === 'undefined')
     return <Callout type='error'>Source code not available</Callout>
@@ -59,7 +58,6 @@ function ComponentSource({ comp }: Props) {
 
 function PreviewComponent({ comp }: Props) {
   const Comp = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const Component = Index[comp]?.component
     return <Component />
   }, [comp])

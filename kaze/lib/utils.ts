@@ -5,6 +5,5 @@ export function getBaseUrl(): string {
   else if (env.VERCEL_PROJECT_PRODUCTION_URL)
     return `https://${env.VERCEL_PROJECT_PRODUCTION_URL}`
   else if (env.VERCEL_URL) return `https://${env.VERCEL_URL}`
-  // eslint-disable-next-line no-restricted-properties
   return `http://localhost:${process.env.PORT ?? 3000}`
 }

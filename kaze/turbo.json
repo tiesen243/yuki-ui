@@ -3,7 +3,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build", "^@yuki/kaze#build:shadcn"],
+      "dependsOn": ["^@yuki/kaze#build:shadcn"],
       "outputs": [
         ".next/**",
         "!.next/cache/**",
@@ -12,6 +12,7 @@
       ]
     },
     "build:registry": {
+      "dependsOn": ["^build"],
       "outputs": ["__registry__"]
     },
     "build:shadcn": {

@@ -28,10 +28,8 @@ export function createEnv<
   },
   deriveEnv: (env: TResult) => TDeriveEnv = () => ({}) as TDeriveEnv,
 ): TResult & TDeriveEnv {
-  for (const [key, value] of Object.entries(opts.runtimeEnv)) {
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+  for (const [key, value] of Object.entries(opts.runtimeEnv))
     if (value === '') delete opts.runtimeEnv[key]
-  }
 
   const globalThisForWindow = globalThis as unknown as {
     window: Record<string, unknown> | undefined
