@@ -31,16 +31,14 @@ function NvimStatuslineContent() {
 
   return (
     <NvimStatusline>
-      <NvimStatuslineSectionA className='font-bold'>
-        {mode.toUpperCase()}
-      </NvimStatuslineSectionA>
+      <NvimStatuslineSectionA>{mode.toUpperCase()}</NvimStatuslineSectionA>
       <NvimStatuslineSectionB>
         <GitBranchIcon /> main
       </NvimStatuslineSectionB>
       <NvimStatuslineSectionC>~/app/page.tsx</NvimStatuslineSectionC>
       <NvimStatuslineSectionX>+15</NvimStatuslineSectionX>
       <NvimStatuslineSectionY>Top 1:1</NvimStatuslineSectionY>
-      <NvimStatuslineSectionZ className='font-bold'>
+      <NvimStatuslineSectionZ>
         {new Date().toLocaleTimeString('en-US', {
           hour12: false,
           hour: '2-digit',
