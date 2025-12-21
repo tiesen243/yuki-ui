@@ -33,6 +33,7 @@
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "@yuki/tsconfig": "workspace:*",
+    "shadcn": "^3.6.2",
     "tailwindcss": "catalog:tailwind",
     "typescript": "catalog:"
   },
