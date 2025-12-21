@@ -188,15 +188,15 @@ setMode('insert')
 
 </Steps>
 
-:::info
+<Callout>
 
 If you don't use sections B or Y, add this class to `NvimStatusline` to hide the separators's background for sections A and Z:
 
 ```tsx
-<NvimStatusline className='[&_[data-slot=nvim-statusline-section-a-separator]]:bg-transparent [&_[data-slot=nvim-statusline-section-z-separator]]:bg-transparent' />
+<NvimStatusline className='[&_[data-slot=nvim-statusline-section-separator-1]]:bg-border' />
 ```
 
-:::
+</Callout>
 
 ## References
 
