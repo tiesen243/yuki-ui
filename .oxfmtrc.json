@@ -10,15 +10,7 @@
   "trailingComma": "all",
 
   "experimentalSortImports": {
-    "groups": [
-      ["side-effect"],
-      ["type-external"],
-      ["builtin"],
-      ["external"],
-      ["type-internal"],
-      ["tsconfig-path"],
-      ["parent"],
-      ["sibling"]
-    ]
+    "groups": ["side-effect", "type", "external", "internal"],
+    "partitionByComment": true
   }
 }

@@ -3,7 +3,7 @@ import { createHash, randomBytes } from 'node:crypto'
 const createEntropy = (len = 24) => {
   return randomBytes(len)
     .toString('base64')
-    .replace(/[^a-zA-Z0-9]/g, '')
+    .replaceAll(/[^a-zA-Z0-9]/g, '')
     .slice(0, len)
 }
 
@@ -22,5 +22,5 @@ export function createId(): string {
   const time = Date.now().toString(36)
   const salt = createEntropy(24)
   const hashInput = time + salt
-  return `c${hash(hashInput).substring(1, 24)}`
+  return `c${hash(hashInput).slice(1, 24)}`
 }

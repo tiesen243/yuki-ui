@@ -10,20 +10,19 @@ async function fixRegistry() {
       const filePath = path.join(registryPath, file)
       const content = await fs.readFile(filePath, 'utf-8')
       const updatedContent = content
-        .replace(/@\/registry\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
-        .replace(/@yuki\/ui\/icons/g, 'lucide-react')
-        .replace(/@yuki\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
-        .replace(/@yuki\/ui/g, '@/lib/utils')
+        .replaceAll(/@\/registry\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
+        .replaceAll('@yuki/ui/icons', 'lucide-react')
+        .replaceAll(/@yuki\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
+        .replaceAll('@yuki/ui', '@/lib/utils')
       await fs.writeFile(filePath, updatedContent, 'utf-8')
     }),
   )
 }
 
-void (async () => {
-  try {
-    await fixRegistry()
+await fixRegistry()
+  .then(() => {
     console.log('Registry fixed successfully.')
-  } catch (error) {
+  })
+  .catch((error) => {
     console.error('Failed to fix registry:', error)
-  }
-})()
+  })

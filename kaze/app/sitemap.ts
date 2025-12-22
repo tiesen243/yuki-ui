@@ -5,11 +5,11 @@ import { getBaseUrl } from '@/lib/utils'
 
 export const revalidate = false
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): MetadataRoute.Sitemap {
   const url = (path: string): string => new URL(path, getBaseUrl()).toString()
   const pages = source.getPages()
 
-  return Promise.resolve([
+  return [
     {
       url: url('/'),
       changeFrequency: 'yearly',
@@ -20,5 +20,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
-  ])
+  ]
 }

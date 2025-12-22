@@ -1,6 +1,6 @@
-import { and, eq, or } from 'drizzle-orm'
-
 import type { AuthConfig } from '@/server/auth/types'
+
+import { and, eq, or } from 'drizzle-orm'
 
 import { Discord } from '@/server/auth/providers/discord'
 import { db } from '@/server/db'

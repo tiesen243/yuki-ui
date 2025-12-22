@@ -34,7 +34,7 @@ export function createEnv<
   const globalThisForWindow = globalThis as unknown as {
     window: Record<string, unknown> | undefined
   }
-  const isServer = typeof globalThisForWindow.window === 'undefined'
+  const isServer = globalThisForWindow.window === undefined
 
   const _server = typeof opts.server === 'object' ? opts.server : {}
   const _client = typeof opts.client === 'object' ? opts.client : {}

@@ -16,4 +16,4 @@ runs:
       run: bun ci
 
     - shell: bash
-      run: turbo run build -F './packages/*' && turbo run build:registry
+      run: turbo run build:registry
