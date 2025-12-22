@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "main": "./dist/create-env.mjs",
+  "module": "./dist/create-env.mjs",
+  "types": "./dist/create-env.d.mts",
   "exports": {
     "./create-env": "./dist/create-env.mjs",
     "./create-id": "./dist/create-id.mjs",
     "./package.json": "./package.json"
   },
-  "main": "./dist/create-env.mjs",
-  "module": "./dist/create-env.mjs",
-  "types": "./dist/create-env.d.mts",
   "scripts": {
     "build": "tsdown",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
