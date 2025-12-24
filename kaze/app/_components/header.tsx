@@ -39,7 +39,7 @@ export function Header() {
             variant='ghost'
             size='icon'
             nativeButton={false}
-            render={<Link href='/docs' />}
+            render={<Link href={'/docs' as '/docs/[[...slugs]]'} />}
           >
             <BookOpenIcon />
           </Button>
