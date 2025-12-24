@@ -27,8 +27,8 @@ jobs:
       - name: Setup
         uses: ./tools/github/setup
 
-      # - name: Format
-      #   run: bun format
+      - name: Format
+        run: npx oxfmt
 
   lint:
     runs-on: ubuntu-latest
