@@ -46,10 +46,8 @@ export function ComponentShowcaseSection() {
           {categories.map((category) => (
             <Card key={category.title} className='relative overflow-hidden'>
               <CardHeader>
-                <CardTitle className='text-2xl'>{category.title}</CardTitle>
-                <CardDescription className='text-base'>
-                  {category.description}
-                </CardDescription>
+                <CardTitle>{category.title}</CardTitle>
+                <CardDescription>{category.description}</CardDescription>
               </CardHeader>
               <CardContent className='flex flex-wrap gap-2'>
                 {category.items.map((item) => (
