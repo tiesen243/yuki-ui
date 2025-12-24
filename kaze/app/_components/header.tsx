@@ -11,9 +11,10 @@ export function Header() {
           <Image
             src='/assets/logo.svg'
             alt='Yuki UI Logo'
+            className='object-cover dark:invert'
             width={32}
             height={32}
-            className='dark:invert'
+            priority
           />
           <span className='text-lg font-bold'>Yuki UI</span>
         </Link>
@@ -38,12 +39,7 @@ export function Header() {
             variant='ghost'
             size='icon'
             nativeButton={false}
-            render={
-              <Link
-                href={'/docs' as '/docs/[[...slugs]]'}
-                aria-label='Documentation'
-              />
-            }
+            render={<Link href='/docs' />}
           >
             <BookOpenIcon />
           </Button>

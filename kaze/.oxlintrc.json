@@ -1,5 +1,13 @@
 {
   "$schema": "../node_modules/oxlint/configuration_schema.json",
   "extends": ["../.oxlintrc.json"],
-  "ignorePatterns": ["registry/**"]
+  "plugins": ["nextjs"],
+  "ignorePatterns": ["registry/auth/**"],
+  "overrides": [
+    {
+      "files": ["**/*.jsx", "**/*.tsx"],
+      "rules": {},
+      "plugins": ["nextjs"]
+    }
+  ]
 }

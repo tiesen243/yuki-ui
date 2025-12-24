@@ -3,8 +3,3 @@
 @import '@yuki/ui/tailwind.css';
 
 @source '../../packages/ui/src/**/*.tsx';
-
-@theme inline {
-  --color-fd-secondary: var(--color-muted);
-  --color-fd-secondary-foreground: var(--color-muted-foreground);
-}

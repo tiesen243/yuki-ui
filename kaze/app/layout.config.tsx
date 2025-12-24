@@ -11,11 +11,11 @@ export const baseOptions: BaseLayoutProps = {
           src='/assets/logo.svg'
           alt='Tiesen Logo'
           className='object-cover dark:invert'
-          width={24}
-          height={24}
+          width={32}
+          height={32}
           priority
         />
-        <span className='text-xl font-bold'>Yuki UI</span>
+        <span className='text-lg font-bold'>Yuki UI</span>
       </>
     ),
   },

@@ -31,9 +31,10 @@ export default async function DocPage({
         <Button
           variant='outline'
           size='sm'
-          className='w-fit'
+          className='w-fit -mt-4'
           nativeButton={false}
           render={
+            // oxlint-disable-next-line no-html-link-for-pages
             <a
               href={`https://github.com/tiesen243/yuki-ui/blob/main/kaze/registry/${page.data.source}`}
               target='_blank'

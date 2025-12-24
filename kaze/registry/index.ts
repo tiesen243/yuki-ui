@@ -1,7 +1,6 @@
 import type { Registry } from 'shadcn/schema'
 
-// @ts-ignore
-import { registryAuth } from '@/registry/auth/_registry'
+import { registryAuth } from '@/registry/auth.registry'
 import { registryExamples } from '@/registry/examples/_registry'
 import { registryHooks } from '@/registry/hooks/_registry'
 import { registryLib } from '@/registry/lib/_registry'
@@ -16,8 +15,9 @@ export const registry = {
     ...registryHooks,
     ...registryLib,
     ...registryUI,
-  ].map((item) => ({
-    ...item,
-    author: 'tiesen243 <ttien56906@gmail.com>',
-  })),
+  ].map((item) =>
+    Object.assign(item, {
+      author: 'tiesen243 <ttien56906@gmail.com>',
+    }),
+  ),
 } satisfies Registry
