@@ -29,7 +29,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       >
         <RootProvider>
           {children}
-          <Toaster />
+          <Toaster richColors />
         </RootProvider>
       </body>
     </html>
