@@ -18,14 +18,12 @@
     "~dev": "tsdown --watch"
   },
   "dependencies": {
-    "zod": "catalog:"
+    "zod": "catalog:prod"
   },
   "devDependencies": {
+    "@types/node": "catalog:dev",
     "@yuki/tsconfig": "workspace:*",
-    "tsdown": "catalog:",
-    "typescript": "catalog:"
-  },
-  "peerDependencies": {
-    "@types/node": "catalog:"
+    "tsdown": "catalog:dev",
+    "typescript": "catalog:dev"
   }
 }

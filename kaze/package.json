@@ -24,18 +24,18 @@
     "next": "^16.1.1",
     "react": "catalog:react",
     "react-dom": "catalog:react",
-    "zod": "catalog:"
+    "zod": "catalog:prod"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "catalog:tailwind",
     "@types/mdx": "^2.0.13",
-    "@types/node": "catalog:",
+    "@types/node": "catalog:dev",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "@yuki/tsconfig": "workspace:*",
     "shadcn": "^3.6.2",
     "tailwindcss": "catalog:tailwind",
-    "typescript": "catalog:"
+    "typescript": "catalog:dev"
   },
   "peerDependencies": {
     "shiki": "^3.20.0"
