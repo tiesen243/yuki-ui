@@ -5,7 +5,7 @@ import { useRender } from '@base-ui/react/use-render'
 import { cn } from '@yuki/ui'
 import { cva } from 'class-variance-authority'
 
-const typographyVariants = cva('text-foreground', {
+const typographyVariants = cva('text-base font-normal', {
   variants: {
     variant: {
       h1: 'my-8 scroll-m-20 text-4xl font-extrabold tracking-tight text-balance',
@@ -14,7 +14,7 @@ const typographyVariants = cva('text-foreground', {
       h4: 'my-3 scroll-m-20 text-xl font-semibold tracking-tight text-balance',
       h5: 'my-2.5 scroll-m-20 text-lg font-medium tracking-tight text-balance',
       h6: 'my-2 scroll-m-20 text-base font-medium tracking-tight text-balance',
-      p: 'text-base leading-7 text-pretty [&:not(:first-child)]:mt-2',
+      p: 'leading-7 text-pretty [&:not(:first-child)]:mt-2',
       small: 'text-sm leading-none font-medium',
       ul: 'my-4 ml-6 list-disc text-base [&>li]:mt-2 [&>li]:first:mt-0',
       ol: 'my-4 ml-6 list-decimal text-base [&>li]:mt-2 [&>li]:first:mt-0',
