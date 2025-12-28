@@ -19,7 +19,7 @@ const typographyVariants = cva('text-base font-normal', {
       ul: 'my-4 ml-6 list-disc text-base [&>li]:mt-2 [&>li]:first:mt-0',
       ol: 'my-4 ml-6 list-decimal text-base [&>li]:mt-2 [&>li]:first:mt-0',
       blockquote:
-        'my-2 border-l-2 pl-6 italic before:content-["“"] after:content-["”"]',
+        'my-2 inline-flex border-l-2 pl-6 italic before:content-["“"] after:content-["”"]',
       code: 'relative w-fit border border-accent rounded-sm bg-accent/40 text-accent-foreground px-[0.3rem] py-[0.2rem] font-mono text-sm font-medium',
       caption: 'block text-sm tracking-wide',
     },
