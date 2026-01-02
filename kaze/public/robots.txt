@@ -1,4 +1,5 @@
 User-Agent: *
 Allow: /
+Disable: /api/
 
 Sitemap: https://yuki-ui.vercel.app/sitemap.xml
