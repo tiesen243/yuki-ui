@@ -23,6 +23,7 @@ import {
   StrikethroughIcon,
   UnderlineIcon,
 } from 'lucide-react'
+import { useMemo } from 'react'
 
 import { cn } from '@/lib/utils'
 
@@ -61,6 +62,78 @@ function Editor({
     onBlur: ({ event }) => onBlur?.(event),
   })
 
+  const leftToolbars = useMemo(
+    () => [
+      {
+        label: 'Heading 1',
+        icon: Heading1Icon,
+        action: () => editor?.chain().focus().toggleHeading({ level: 1 }).run(),
+        isActive: editor?.isActive('heading', { level: 1 }),
+      },
+      {
+        label: 'Heading 2',
+        icon: Heading2Icon,
+        action: () => editor?.chain().focus().toggleHeading({ level: 2 }).run(),
+        isActive: editor?.isActive('heading', { level: 2 }),
+      },
+      {
+        label: 'Heading 3',
+        icon: Heading3Icon,
+        action: () => editor?.chain().focus().toggleHeading({ level: 3 }).run(),
+        isActive: editor?.isActive('heading', { level: 3 }),
+      },
+      {
+        label: 'Bold',
+        icon: BoldIcon,
+        action: () => editor?.chain().focus().toggleBold().run(),
+        isActive: editor?.isActive('bold'),
+      },
+      {
+        label: 'Italic',
+        icon: ItalicIcon,
+        action: () => editor?.chain().focus().toggleItalic().run(),
+        isActive: editor?.isActive('italic'),
+      },
+      {
+        label: 'Underline',
+        icon: UnderlineIcon,
+        action: () => editor?.chain().focus().toggleUnderline().run(),
+        isActive: editor?.isActive('underline'),
+      },
+      {
+        label: 'Strikethrough',
+        icon: StrikethroughIcon,
+        action: () => editor?.chain().focus().toggleStrike().run(),
+        isActive: editor?.isActive('strike'),
+      },
+      {
+        label: 'Blockquote',
+        icon: QuoteIcon,
+        action: () => editor?.chain().focus().toggleBlockquote().run(),
+        isActive: editor?.isActive('blockquote'),
+      },
+    ],
+    [editor],
+  )
+
+  const rightToolbars = useMemo(
+    () => [
+      {
+        label: 'Bullet List',
+        icon: ListIcon,
+        action: () => editor?.chain().focus().toggleBulletList().run(),
+        isActive: editor?.isActive('bulletList'),
+      },
+      {
+        label: 'Ordered List',
+        icon: ListOrderedIcon,
+        action: () => editor?.chain().focus().toggleOrderedList().run(),
+        isActive: editor?.isActive('orderedList'),
+      },
+    ],
+    [editor],
+  )
+
   if (!editor) return null
 
   return (
@@ -80,78 +153,31 @@ function Editor({
           'w-full flex items-stretch bg-popover border-b border-border rounded-t-lg',
         )}
       >
-        {[Heading1Icon, Heading2Icon, Heading3Icon].map((Icon, index) => (
+        {leftToolbars.map(({ label, icon: Icon, action, isActive }) => (
           <ToggleButton
-            key={Icon.displayName}
+            key={label}
             data-position='start'
-            onClick={() =>
-              editor
-                .chain()
-                .focus()
-                .toggleHeading({ level: (index + 1) as 1 | 2 | 3 })
-                .run()
-            }
-            isActive={editor.isActive('heading', { level: index + 1 })}
+            onClick={action}
+            isActive={isActive}
           >
             <Icon />
+            <span className='sr-only'>Toggle {label}</span>
           </ToggleButton>
         ))}
 
-        <ToggleButton
-          data-position='start'
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          isActive={editor.isActive('bold')}
-        >
-          <BoldIcon />
-        </ToggleButton>
-
-        <ToggleButton
-          data-position='start'
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          isActive={editor.isActive('italic')}
-        >
-          <ItalicIcon />
-        </ToggleButton>
-
-        <ToggleButton
-          data-position='start'
-          onClick={() => editor.chain().focus().toggleUnderline().run()}
-          isActive={editor.isActive('underline')}
-        >
-          <UnderlineIcon />
-        </ToggleButton>
-
-        <ToggleButton
-          data-position='start'
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          isActive={editor.isActive('strike')}
-        >
-          <StrikethroughIcon />
-        </ToggleButton>
-
-        <ToggleButton
-          data-position='start'
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          isActive={editor.isActive('blockquote')}
-        >
-          <QuoteIcon />
-        </ToggleButton>
-
         <div className='flex-1' />
 
-        <ToggleButton
-          data-position='end'
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-        >
-          <ListIcon />
-        </ToggleButton>
-
-        <ToggleButton
-          data-position='end'
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        >
-          <ListOrderedIcon />
-        </ToggleButton>
+        {rightToolbars.map(({ label, icon: Icon, action }) => (
+          <ToggleButton
+            key={label}
+            data-position='end'
+            onClick={action}
+            isActive={false}
+          >
+            <Icon />
+            <span className='sr-only'>Toggle {label}</span>
+          </ToggleButton>
+        ))}
       </div>
 
       <EditorContent
