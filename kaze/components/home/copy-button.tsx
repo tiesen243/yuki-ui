@@ -23,7 +23,7 @@ export function CopyButton({ text }: CopyButtonProps) {
   return (
     <Button
       variant='ghost'
-      size='icon-xs'
+      size='icon-sm'
       onClick={handleCopy}
       aria-label={copied ? 'Copied' : 'Copy to clipboard'}
     >

@@ -1,10 +1,10 @@
 import { HomeLayout } from 'fumadocs-ui/layouts/home'
 
-import { ComponentShowcaseSection } from '@/app/_components/component-showcase-section'
-import { FeaturesSection } from '@/app/_components/features-section'
-import { Footer } from '@/app/_components/footer'
-import { HeroSection } from '@/app/_components/hero-section'
 import { baseOptions } from '@/app/layout.config'
+import { ComponentShowcaseSection } from '@/components/home/component-showcase-section'
+import { FeaturesSection } from '@/components/home/features-section'
+import { Footer } from '@/components/home/footer'
+import { HeroSection } from '@/components/home/hero-section'
 
 export default function HomePage() {
   return (

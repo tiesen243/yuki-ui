@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
 import { Typography } from '@/registry/ui/typography'
 
-export default function DocsNotFoundError() {
+export default function NotFoundPage() {
   return (
     <main className='container flex min-h-[calc(100dvh-1.5rem)] flex-col items-center justify-center gap-8'>
       <Image

@@ -1,7 +1,7 @@
 import { ArrowRightIcon } from 'lucide-react'
 import Link from 'next/link'
 
-import { CopyButton } from '@/app/_components/copy-button'
+import { CopyButton } from '@/components/home/copy-button'
 import { Button } from '@/components/ui/button'
 import { getBaseUrl } from '@/lib/utils'
 

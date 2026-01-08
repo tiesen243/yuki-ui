@@ -63,12 +63,10 @@ try {
 }
 
 function parseContent(content: string): string {
-  return (
-    content
-      .replaceAll('\\', '\\\\')
-      .replaceAll('"', '\\"')
-      .replaceAll('\n', '\\n')
-      .replaceAll(/@\/registry\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
-      .trim()
-  )
+  return content
+    .replaceAll('\\', '\\\\')
+    .replaceAll('"', '\\"')
+    .replaceAll('\n', '\\n')
+    .replaceAll(/@\/registry\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
+    .trim()
 }
