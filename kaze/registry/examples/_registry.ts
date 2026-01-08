@@ -19,6 +19,15 @@ export const registryExamples = [
   },
 
   {
+    name: 'tiptap-demo',
+    type: 'registry:example',
+    title: 'Tiptap Editor',
+    description: 'A rich text editor example using Tiptap and Yuki UI.',
+    registryDependencies: [`${getBaseUrl()}/r/tiptap.json`],
+    files: [{ type: 'registry:example', path: 'registry/examples/tiptap.tsx' }],
+  },
+
+  {
     name: 'typography-demo',
     type: 'registry:example',
     title: 'Typography',

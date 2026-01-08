@@ -1,0 +1,59 @@
+---
+title: Tiptap Editor
+description: A rich text editor component using Tiptap
+source: components/tiptap.tsx
+---
+
+<Tabs items={['Preview', 'Code']}>
+
+<Tab value='Preview'>
+  <PreviewComponent comp='tiptap-demo' />
+</Tab>
+
+<Tab value='Code'>
+  <ComponentSource comp='tiptap-demo' />
+</Tab>
+
+</Tabs>
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='tiptap' />
+
+### Manual
+
+<Steps>
+
+<Step>
+
+Install the following dependencies:
+
+```package-install
+@tiptap/extension-blockquote @tiptap/extension-bold @tiptap/extension-document @tiptap/extension-heading @tiptap/extension-italic @tiptap/extension-list @tiptap/extension-paragraph @tiptap/extension-strike @tiptap/extension-text @tiptap/extension-underline @tiptap/react lucide-react
+```
+
+</Step>
+
+<Step>
+  Copy and paste the following code into your project.
+
+  <ComponentSource comp='tiptap' />
+</Step>
+
+</Steps>
+
+## Usage
+
+```tsx title="App.tsx"
+import { useState } from 'react'
+
+import { Editor } from '@/components/ui/tiptap'
+
+export default function App() {
+  const [content, setContent] = useState('<p>Hello, Tiptap!</p>');
+
+  return <Editor value={content} onValueChange={setContent} />;
+}
+```

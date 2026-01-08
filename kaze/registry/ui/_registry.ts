@@ -44,6 +44,29 @@ export const registryUI = [
   },
 
   {
+    name: 'tiptap',
+    type: 'registry:ui',
+    title: 'Tiptap Editor',
+    description: 'A rich text editor component using Tiptap',
+    dependencies: [
+      '@tiptap/extension-blockquote',
+      '@tiptap/extension-bold',
+      '@tiptap/extension-document',
+      '@tiptap/extension-heading',
+      '@tiptap/extension-italic',
+      '@tiptap/extension-list',
+      '@tiptap/extension-paragraph',
+      '@tiptap/extension-strike',
+      '@tiptap/extension-text',
+      '@tiptap/extension-underline',
+      '@tiptap/react',
+      'lucide-react',
+    ],
+
+    files: [{ type: 'registry:ui', path: 'registry/ui/tiptap.tsx' }],
+  },
+
+  {
     name: 'typography',
     type: 'registry:ui',
     title: 'Typography',
