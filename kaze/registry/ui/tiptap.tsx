@@ -171,6 +171,30 @@ function Editor({
   )
 }
 
+function RichTextViewer({
+  content,
+  className,
+  ...props
+}: React.ComponentProps<'div'> & {
+  content: string
+}) {
+  return (
+    <div
+      {...props}
+      data-slot='rich-text-viewer'
+      className={cn(
+        '[&_h1]:text-2xl [&_h1]:font-bold',
+        '[&_h2]:text-xl [&_h2]:font-semibold',
+        '[&_h3]:text-lg [&_h3]:font-semibold',
+        '[&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-2',
+        '[&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-2',
+        className,
+      )}
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
+  )
+}
+
 function ToggleButton({
   className,
   isActive,
@@ -193,4 +217,4 @@ function ToggleButton({
   )
 }
 
-export { Editor }
+export { Editor, RichTextViewer }
