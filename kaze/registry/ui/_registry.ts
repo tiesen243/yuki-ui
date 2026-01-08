@@ -52,6 +52,7 @@ export const registryUI = [
       '@tiptap/extension-blockquote',
       '@tiptap/extension-bold',
       '@tiptap/extension-document',
+      '@tiptap/extension-hard-break',
       '@tiptap/extension-heading',
       '@tiptap/extension-italic',
       '@tiptap/extension-list',

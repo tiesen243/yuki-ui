@@ -18,6 +18,7 @@
     "@tiptap/extension-blockquote": "^3.15.3",
     "@tiptap/extension-bold": "^3.15.3",
     "@tiptap/extension-document": "^3.15.3",
+    "@tiptap/extension-hard-break": "^3.15.3",
     "@tiptap/extension-heading": "^3.15.3",
     "@tiptap/extension-italic": "^3.15.3",
     "@tiptap/extension-list": "^3.15.3",

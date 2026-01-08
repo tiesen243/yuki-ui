@@ -3,6 +3,7 @@
 import { Blockquote } from '@tiptap/extension-blockquote'
 import { Bold } from '@tiptap/extension-bold'
 import { Document } from '@tiptap/extension-document'
+import { HardBreak } from '@tiptap/extension-hard-break'
 import { Heading } from '@tiptap/extension-heading'
 import { Italic } from '@tiptap/extension-italic'
 import { BulletList, ListItem, OrderedList } from '@tiptap/extension-list'
@@ -30,6 +31,16 @@ import { useMemo } from 'react'
 
 import { cn } from '@/lib/utils'
 
+const TYPOGRAPHY = [
+  '[&_h1]:text-2xl [&_h1]:font-bold [&_h1]:text-pretty',
+  '[&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-pretty',
+  '[&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-pretty',
+  '[&_p]:text-balance [&_p]:leading-7',
+  '[&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-2',
+  '[&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-2',
+  '[&_blockquote]:border-l-2 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-2',
+]
+
 interface EditorProps extends Omit<React.ComponentProps<'div'>, 'onBlur'> {
   value: string
   onValueChange: (value: string) => unknown
@@ -51,6 +62,27 @@ function Editor({
       Blockquote,
       Bold,
       Document,
+      HardBreak.extend({
+        addKeyboardShortcuts() {
+          return {
+            Enter: () => {
+              const { state } = this.editor
+              const nodeBefore = state.selection.$from.nodeBefore
+
+              if (
+                nodeBefore?.type.name !== 'hardBreak' &&
+                this.editor.isActive('paragraph') &&
+                !(
+                  this.editor.isActive('bulletList') ||
+                  this.editor.isActive('orderedList')
+                )
+              )
+                return this.editor.commands.setHardBreak()
+              return this.editor.chain().createParagraphNear().run()
+            },
+          }
+        },
+      }),
       Heading.configure({ levels: [1, 2, 3] }),
       Italic,
       BulletList,
@@ -222,13 +254,8 @@ function Editor({
         editor={editor}
         className={cn(
           'bg-transparent dark:bg-input/30 aria-disabled:bg-input/80 [&_.ProseMirror]:px-2.5 [&_.ProseMirror]:py-2 [&_.ProseMirror]:text-base [&_.ProseMirror]:md:text-sm [&_.ProseMirror]:field-sizing-content [&_.ProseMirror]:min-h-20 [&_.ProseMirror]:w-full [&_.ProseMirror]:outline-none',
-          '[&_h1]:text-2xl [&_h1]:font-bold',
-          '[&_h2]:text-xl [&_h2]:font-semibold',
-          '[&_h3]:text-lg [&_h3]:font-semibold',
-          '[&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-2',
-          '[&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-2',
-          '[&_blockquote]:border-l [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-2',
           '[&_p:is(.is-editor-empty):first-child]:before:content-[attr(data-placeholder)] [&_p:is(.is-editor-empty):first-child]:before:text-muted-foreground [&_p:is(.is-editor-empty):first-child]:before:text-sm [&_p:is(.is-editor-empty):first-child]:before:h-0 [&_p:is(.is-editor-empty):first-child]:before:float-left [&_p:is(.is-editor-empty):first-child]:before:pointer-events-none',
+          ...TYPOGRAPHY,
         )}
         aria-disabled={disabled}
       />
@@ -247,14 +274,7 @@ function RichTextViewer({
     <div
       {...props}
       data-slot='rich-text-viewer'
-      className={cn(
-        '[&_h1]:text-2xl [&_h1]:font-bold',
-        '[&_h2]:text-xl [&_h2]:font-semibold',
-        '[&_h3]:text-lg [&_h3]:font-semibold',
-        '[&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-2',
-        '[&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-2',
-        className,
-      )}
+      className={cn(...TYPOGRAPHY, className)}
       dangerouslySetInnerHTML={{ __html: content }}
     />
   )
