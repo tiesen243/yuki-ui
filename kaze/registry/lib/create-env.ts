@@ -110,7 +110,7 @@ export function createEnv<
 
   const isServer = opts.isServer
     ? opts.isServer
-    : globalThis.window === undefined
+    : (globalThis as unknown as { window: unknown }).window === undefined
 
   const envs = isServer
     ? { ...opts.shared, ...opts.client, ...opts.server }
