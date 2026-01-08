@@ -77,8 +77,7 @@ export function ComponentShowcaseSection() {
               />
             }
           >
-            Browse All Components
-            <ArrowRightIcon />
+            Browse All Components <ArrowRightIcon />
           </Button>
         </div>
       </div>

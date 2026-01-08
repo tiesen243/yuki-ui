@@ -1,6 +1,5 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared'
 
-import { GalleryThumbnailsIcon } from 'lucide-react'
 import Image from 'next/image'
 
 export const baseOptions = (): BaseLayoutProps => ({
@@ -20,12 +19,4 @@ export const baseOptions = (): BaseLayoutProps => ({
     ),
   },
   githubUrl: 'https://github.com/tiesen243/yuki-ui',
-  links: [
-    {
-      icon: <GalleryThumbnailsIcon />,
-      type: 'icon',
-      text: 'Portfolio',
-      url: 'https://tiesen.id.vn',
-    },
-  ],
 })

@@ -1,6 +1,6 @@
 'use client'
 
-import { Check, Copy } from 'lucide-react'
+import { CheckIcon, CopyIcon } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -23,15 +23,14 @@ export function CopyButton({ text }: CopyButtonProps) {
   return (
     <Button
       variant='ghost'
-      size='icon'
-      className='h-6 w-6'
+      size='icon-xs'
       onClick={handleCopy}
       aria-label={copied ? 'Copied' : 'Copy to clipboard'}
     >
       {copied ? (
-        <Check className='h-3 w-3 text-green-500' />
+        <CheckIcon className='size-3 text-success' />
       ) : (
-        <Copy className='h-3 w-3' />
+        <CopyIcon className='size-3' />
       )}
     </Button>
   )
