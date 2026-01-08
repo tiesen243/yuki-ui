@@ -87,6 +87,21 @@ export function createEnv<
      */
     skipValidation?: boolean
   },
+
+  /*
+   * A function to derive additional environment variables based on the validated ones.
+   * @param env The validated environment variables.
+   * @returns An object containing derived environment variables.
+   * @example
+   * ```ts
+   * const env = createEnv({
+   *   ...
+   * }, (env) => ({
+   *   IS_PRODUCTION: env.NODE_ENV === 'production',
+   * }))
+   *
+   * env.IS_PRODUCTION // true or false
+   */
   deriveEnv: (env: TResult) => TDeriveEnv = () => ({}) as TDeriveEnv,
 ): TResult & TDeriveEnv {
   if (opts.emptyStringAsUndefined)
