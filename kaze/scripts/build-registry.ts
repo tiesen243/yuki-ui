@@ -35,12 +35,13 @@ async function buildRegistry(registry: Registry): Promise<void> {
  */
 import * as React from 'react'
 
-export const Index: Record<string, unknown> = {\n`
+// oxlint-disable-next-line no-explicit-any
+export const Index: Record<string, any> = {\n`
   for (const item of registry.items) {
     if (!Array.isArray(item.files) || item.files.length === 0) continue
 
     // @ts-expect-error - item.files is guaranteed to be an array by the schema
-    const componentPath = `@/${item.files[0].path}`
+    const componentPath = `@/${item.files[0].path.replace(/\.[^/.]+$/, '')}`
     // @ts-expect-error - item.files is guaranteed to be an array by the schema
     const srcPath = path.join(process.cwd(), item.files[0].path)
     index += `  '${item.name}': {\n    name: '${item.name}',\n    description: '${item.description}',\n    type: '${item.type}',\n    files: [${await Promise.all(
