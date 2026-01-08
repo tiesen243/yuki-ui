@@ -20,7 +20,7 @@ import { createEnv } from '@/lib/create-env'
 export const env = createEnv({
   shared: {
     NODE_ENV: validator.enum(['development', 'production', 'test']),
-    // NODE_ENV: validator('string') // arktype
+    // NODE_ENV: validator("'development'|'production'|'test'") // arktype
   },
 
   server: {
