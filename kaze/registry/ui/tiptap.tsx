@@ -15,6 +15,7 @@ import { Dropcursor, Placeholder, UndoRedo } from '@tiptap/extensions'
 import { EditorContent, useEditor } from '@tiptap/react'
 import {
   BoldIcon,
+  EraserIcon,
   Heading1Icon,
   Heading2Icon,
   Heading3Icon,
@@ -97,6 +98,7 @@ function Editor({
       UndoRedo,
     ],
     content: value,
+    editable: !disabled,
     immediatelyRender: false,
     onUpdate: ({ editor }) => !disabled && onValueChange(editor.getHTML()),
     onBlur: ({ event }) => onBlur?.(event),
@@ -161,6 +163,14 @@ function Editor({
         isDisabled: disabled,
       },
       {
+        label: 'Clear Formatting',
+        icon: EraserIcon,
+        action: () =>
+          editor?.chain().focus().clearNodes().unsetAllMarks().run(),
+        isActive: false,
+        isDisabled: disabled,
+      },
+      {
         label: 'Bullet List',
         icon: ListIcon,
         action: () => editor?.chain().focus().toggleBulletList().run(),
@@ -198,7 +208,13 @@ function Editor({
     [editor, disabled],
   )
 
-  if (!editor) return null
+  if (!editor)
+    return (
+      <div className='animate-pulse rounded-lg border border-input'>
+        <div className='h-8 bg-popover border-b border-input rounded-t-lg' />
+        <div className='h-20 bg-transparent dark:bg-input/30 rounded-b-lg' />
+      </div>
+    )
 
   return (
     <div
@@ -295,6 +311,7 @@ function ToggleButton({
       className={cn(
         'size-8 hover:bg-input dark:hover:bg-input/50 inline-flex items-center justify-center text-sm font-medium first:rounded-tl-lg last:rounded-tr-lg data-[position=start]:border-r data-[position=end]:border-l border-input [&_svg:not([class*="size-"])]:size-4 data-[active=true]:bg-input dark:data-[active=true]:bg-input/50',
         'focus-visible:ring-[3px] focus-visible:ring-ring/50',
+        'disabled:opacity-50 disabled:cursor-not-allowed',
         className,
       )}
       {...props}
