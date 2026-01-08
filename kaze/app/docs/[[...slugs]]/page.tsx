@@ -1,13 +1,13 @@
-import { Button } from '@yuki/ui/button'
-import { GithubIcon } from '@yuki/ui/icons'
 import {
   DocsBody,
   DocsDescription,
   DocsPage,
   DocsTitle,
 } from 'fumadocs-ui/page'
+import { GithubIcon } from 'lucide-react'
 import { notFound } from 'next/navigation'
 
+import { Button } from '@/components/ui/button'
 import { createMetadata } from '@/lib/metadata'
 import { source } from '@/lib/source'
 import { getMDXComponents } from '@/mdx-components'
@@ -19,6 +19,8 @@ export default async function DocPage({
   const page = source.getPage(slugs)
   if (!page) return notFound()
 
+  const MDX = page.data.body
+
   return (
     <DocsPage
       tableOfContent={{ style: 'clerk' }}
@@ -26,12 +28,14 @@ export default async function DocPage({
       full={page.data.full}
     >
       <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription>{page.data.description}</DocsDescription>
+      <DocsDescription className='mb-0'>
+        {page.data.description}
+      </DocsDescription>
       {page.data.source && (
         <Button
           variant='outline'
           size='sm'
-          className='w-fit -mt-4'
+          className='w-fit'
           nativeButton={false}
           render={
             // oxlint-disable-next-line no-html-link-for-pages
@@ -43,12 +47,11 @@ export default async function DocPage({
             />
           }
         >
-          <GithubIcon />
-          Component Source
+          <GithubIcon /> Component Source
         </Button>
       )}
       <DocsBody>
-        <page.data.body components={getMDXComponents()} />
+        <MDX components={getMDXComponents()} />
       </DocsBody>
     </DocsPage>
   )

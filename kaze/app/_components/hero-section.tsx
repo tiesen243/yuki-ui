@@ -1,8 +1,8 @@
-import { Button } from '@yuki/ui/button'
-import { ArrowRightIcon } from '@yuki/ui/icons'
+import { ArrowRightIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { CopyButton } from '@/app/_components/copy-button'
+import { Button } from '@/components/ui/button'
 import { getBaseUrl } from '@/lib/utils'
 
 export function HeroSection() {

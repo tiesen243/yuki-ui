@@ -1,14 +1,15 @@
-import { Badge } from '@yuki/ui/badge'
-import { Button } from '@yuki/ui/button'
+import { ArrowRightIcon } from 'lucide-react'
+import Link from 'next/link'
+
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@yuki/ui/card'
-import { ArrowRightIcon } from '@yuki/ui/icons'
-import Link from 'next/link'
+} from '@/components/ui/card'
 
 const categories = [
   {

@@ -1,5 +1,6 @@
-import { createEnv } from '@yuki/lib/create-env'
 import * as z from 'zod/mini'
+
+import { createEnv } from '@/registry/lib/create-env'
 
 export const env = createEnv({
   server: {

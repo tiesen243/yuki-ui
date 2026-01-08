@@ -1,9 +1,9 @@
 'use client'
 
-import { Input } from '@yuki/ui/input'
-import { Label } from '@yuki/ui/label'
 import * as React from 'react'
 
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { useDebounce } from '@/registry/hooks/use-debounce'
 
 export default function UseDebounceDemo() {

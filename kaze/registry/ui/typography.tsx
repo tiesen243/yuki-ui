@@ -2,8 +2,9 @@ import type { VariantProps } from 'class-variance-authority'
 
 import { mergeProps } from '@base-ui/react'
 import { useRender } from '@base-ui/react/use-render'
-import { cn } from '@yuki/ui'
 import { cva } from 'class-variance-authority'
+
+import { cn } from '@/lib/utils'
 
 const typographyVariants = cva('text-base font-normal', {
   variants: {

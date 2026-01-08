@@ -5,7 +5,7 @@ import { source } from '@/lib/source'
 
 export default function DocsLayout({ children }: LayoutProps<'/docs'>) {
   return (
-    <FumaDocsLayout tree={source.pageTree} {...baseOptions}>
+    <FumaDocsLayout tree={source.pageTree} {...baseOptions()}>
       {children}
     </FumaDocsLayout>
   )

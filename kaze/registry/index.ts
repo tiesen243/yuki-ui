@@ -1,8 +1,7 @@
-// oxlint-disable-next-line ban-ts-comment
-// @ts-nocheck
-
 import type { Registry } from 'shadcn/schema'
 
+// oxlint-disable-next-line ban-ts-comment prefer-ts-expect-error
+// @ts-ignore
 import { registryAuth } from '@/registry/auth/_registry'
 import { registryExamples } from '@/registry/examples/_registry'
 import { registryHooks } from '@/registry/hooks/_registry'

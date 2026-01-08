@@ -1,8 +1,8 @@
 'use client'
 
-import { Button } from '@yuki/ui/button'
-import { GitBranchIcon } from '@yuki/ui/icons'
+import { GitBranchIcon } from 'lucide-react'
 
+import { Button } from '@/components/ui/button'
 import {
   NvimStatusline,
   NvimStatuslineProvider,

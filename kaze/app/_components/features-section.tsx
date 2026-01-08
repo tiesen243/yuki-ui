@@ -1,5 +1,6 @@
-import { Card, CardContent } from '@yuki/ui/card'
-import { BlocksIcon, Code2Icon, PaletteIcon, ZapIcon } from '@yuki/ui/icons'
+import { BlocksIcon, Code2Icon, PaletteIcon, ZapIcon } from 'lucide-react'
+
+import { Card, CardContent } from '@/components/ui/card'
 
 export function FeaturesSection() {
   return (

@@ -1,18 +1,18 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared'
 
-import { GalleryThumbnailsIcon } from '@yuki/ui/icons'
+import { GalleryThumbnailsIcon } from 'lucide-react'
 import Image from 'next/image'
 
-export const baseOptions: BaseLayoutProps = {
+export const baseOptions = (): BaseLayoutProps => ({
   nav: {
     title: (
       <>
         <Image
-          src='/assets/logo.svg'
+          src='/favicon.svg'
           alt='Tiesen Logo'
-          className='object-cover dark:invert'
-          width={32}
-          height={32}
+          className='object-cover'
+          width={28}
+          height={28}
           priority
         />
         <span className='text-lg font-bold'>Yuki UI</span>
@@ -28,4 +28,4 @@ export const baseOptions: BaseLayoutProps = {
       url: 'https://tiesen.id.vn',
     },
   ],
-}
+})

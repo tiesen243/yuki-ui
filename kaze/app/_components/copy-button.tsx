@@ -1,8 +1,9 @@
 'use client'
 
-import { Button } from '@yuki/ui/button'
-import { Check, Copy } from '@yuki/ui/icons'
+import { Check, Copy } from 'lucide-react'
 import { useState } from 'react'
+
+import { Button } from '@/components/ui/button'
 
 interface CopyButtonProps {
   text: string

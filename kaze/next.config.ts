@@ -11,8 +11,6 @@ const nextConfig = {
   reactStrictMode: true,
   images: { unoptimized: true },
   typescript: { ignoreBuildErrors: true },
-
-  transpilePackages: ['@yuki/lib', '@yuki/ui'],
 } satisfies NextConfig
 
 export default withMdx(nextConfig)

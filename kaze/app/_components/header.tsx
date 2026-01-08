@@ -1,7 +1,8 @@
-import { Button } from '@yuki/ui/button'
-import { BookOpenIcon, GithubIcon } from '@yuki/ui/icons'
+import { BookOpenIcon, GithubIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+
+import { Button } from '@/components/ui/button'
 
 export function Header() {
   return (

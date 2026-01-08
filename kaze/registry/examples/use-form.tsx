@@ -1,6 +1,8 @@
 'use client'
 
-import { Button } from '@yuki/ui/button'
+import * as z from 'zod'
+
+import { Button } from '@/components/ui/button'
 import {
   Field,
   FieldDescription,
@@ -9,10 +11,8 @@ import {
   FieldLabel,
   FieldLegend,
   FieldSet,
-} from '@yuki/ui/field'
-import { Input } from '@yuki/ui/input'
-import * as z from 'zod'
-
+} from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 import { useForm } from '@/registry/hooks/use-form'
 
 const formSchema = z.object({

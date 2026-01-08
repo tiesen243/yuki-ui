@@ -6,7 +6,7 @@ import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
 
-export async function GET(request: NextRequest) {
+export function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
 
@@ -21,11 +21,14 @@ export async function GET(request: NextRequest) {
     const foregroundColor = theme === 'dark' ? '#ffffff' : '#000000'
     const primaryColor = theme === 'dark' ? '#dbe6f6' : '#293478'
 
-    const [geistRegular, geistMedium, geistBold] = await Promise.all([
-      getFont('Geist-Regular', 400),
-      getFont('Geist-Medium', 500),
-      getFont('Geist-Bold', 700),
-    ])
+    /*
+     * Load custom fonts if needed.
+     * const [geistRegular, geistMedium, geistBold] = await Promise.all([
+     *  _getFont('Geist-Regular', 400),
+     *  _getFont('Geist-Medium', 500),
+     *  _getFont('Geist-Bold', 700),
+     * ])
+     */
 
     return new ImageResponse(
       <div
@@ -73,7 +76,6 @@ export async function GET(request: NextRequest) {
 
           <h1
             style={{
-              fontFamily: 'Geist-Medium, sans-serif',
               fontSize: '28px',
               fontWeight: '500',
               color: foregroundColor,
@@ -106,7 +108,6 @@ export async function GET(request: NextRequest) {
           >
             <h2
               style={{
-                fontFamily: 'Geist-Bold, sans-serif',
                 fontSize: '48px',
                 lineHeight: '1.1',
                 fontWeight: '700',
@@ -119,7 +120,6 @@ export async function GET(request: NextRequest) {
             </h2>
             <p
               style={{
-                fontFamily: 'Geist-Regular, sans-serif',
                 fontSize: '24px',
                 lineHeight: '1.2',
                 fontWeight: '400',
@@ -177,7 +177,6 @@ export async function GET(request: NextRequest) {
             />
             <p
               style={{
-                fontFamily: 'Geist-Medium, sans-serif',
                 fontSize: '16px',
                 fontWeight: '500',
                 color: foregroundColor,
@@ -194,9 +193,9 @@ export async function GET(request: NextRequest) {
       {
         width: 1200,
         height: 630,
-        // @ts-expect-error The 'weight' property in the returned font object is a number,
-        // but 'FontOptions' expects a specific type. This is intentional for font loading.
-        fonts: [geistRegular, geistMedium, geistBold],
+        /* Register custom fonts if needed.
+         * fonts: [geistRegular, geistMedium, geistBold],
+         */
       },
     )
   } catch (e: unknown) {
@@ -205,7 +204,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-async function getFont(font: string, weight = 400) {
+async function _getFont(font: string, weight = 400) {
   const response = await fetch(
     new URL(`../../../public/assets/fonts/${font}.ttf`, import.meta.url),
   )
