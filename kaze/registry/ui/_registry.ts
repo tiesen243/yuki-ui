@@ -59,6 +59,7 @@ export const registryUI = [
       '@tiptap/extension-strike',
       '@tiptap/extension-text',
       '@tiptap/extension-underline',
+      '@tiptap/extensions',
       '@tiptap/react',
       'lucide-react',
     ],
