@@ -252,6 +252,7 @@ export declare namespace StandardSchemaV1 {
     /** Validates unknown input values. */
     readonly validate: (
       value: unknown,
+      options?: StandardSchemaV1.Options | undefined,
     ) => Result<Output> | Promise<Result<Output>>
     /** Inferred types associated with the schema. */
     readonly types?: Types<Input, Output> | undefined
@@ -264,14 +265,19 @@ export declare namespace StandardSchemaV1 {
   export interface SuccessResult<Output> {
     /** The typed output value. */
     readonly value: Output
-    /** The non-existent issues. */
+    /** A falsy value for `issues` indicates success. */
     readonly issues?: undefined
+  }
+
+  export interface Options {
+    /** Explicit support for additional vendor-specific parameters, if needed. */
+    readonly libraryOptions?: Record<string, unknown> | undefined
   }
 
   /** The result interface if validation fails. */
   export interface FailureResult {
     /** The issues of failed validation. */
-    readonly issues: readonly Issue[]
+    readonly issues: ReadonlyArray<Issue>
   }
 
   /** The issue interface of the failure output. */
@@ -279,7 +285,7 @@ export declare namespace StandardSchemaV1 {
     /** The error message of the issue. */
     readonly message: string
     /** The path of the issue, if any. */
-    readonly path?: readonly (PropertyKey | PathSegment)[] | undefined
+    readonly path?: ReadonlyArray<PropertyKey | PathSegment> | undefined
   }
 
   /** The path segment interface of the issue. */
