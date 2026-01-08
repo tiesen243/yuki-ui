@@ -6,39 +6,43 @@ source: lib/create-env.ts
 
 ## Environment Variables Validation
 
-This utility leverages Zod to ensure your environment variables are correctly typed and present. It provides a simple API to define server and client variables, set defaults, and skip validation in specific scenarios (like CI or linting).
+This utility leverages Standard Schema to ensure your environment variables are correctly typed and present. It provides a simple API to define server and client variables, set defaults, and skip validation in specific scenarios (like CI or linting).
 
 ### Example Usage
 
 ```ts title="env.ts"
-import * as z from 'zod/mini'
+import * as validator from 'zod'
+// or import { type as validator } from 'arktype'
+// or import { valibot as validator } from 'valibot'
 
 import { createEnv } from '@/lib/create-env'
 
 export const env = createEnv({
+  shared: {
+    NODE_ENV: validator.enum(['development', 'production', 'test']),
+    // NODE_ENV: validator('string') // arktype
+  },
+
   server: {
-    NODE_ENV: z._default(
-      z.enum(['development', 'production', 'test']),
-      'development',
-    ),
+    SERVER_VAR: validator.string(),
+    // SERVER_VAR: validator('string') // arktype
   },
 
   clientPrefix: 'NEXT_PUBLIC_',
   client: {
-    // NEXT_PUBLIC_CLIENT_VAR: z.string()
+    NEXT_PUBLIC_CLIENT_VAR: z.string()
+    // NEXT_PUBLIC_CLIENT_VAR: validator('string') // arktype
   },
 
   runtimeEnv: {
     ...process.env,
-    // Explicitly define client environment variables here because Next.js does not
-    // make them available on process.env at runtime for the client bundle.
-    // NEXT_PUBLIC_CLIENT_VAR: process.env.NEXT_PUBLIC_CLIENT_VAR,
+    NEXT_PUBLIC_CLIENT_VAR: process.env.NEXT_PUBLIC_CLIENT_VAR,
   },
 
+  emptyStringAsUndefined: true,
+
   skipValidation:
-    !!process.env.SKIP_ENV_VALIDATION ||
-    !!process.env.CI ||
-    process.env.npm_lifecycle_event === 'lint',
+    !!process.env.CI || process.env.npm_lifecycle_event === 'lint',
 })
 ```
 
@@ -56,7 +60,7 @@ export const env = createEnv({
 Install the following dependencies:
 
 ```package-install
-zod
+zod #or arktype, valibot or any other Standard Schema compatible library
 ```
 
 </Step>
