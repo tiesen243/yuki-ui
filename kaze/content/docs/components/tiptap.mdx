@@ -49,11 +49,16 @@ Install the following dependencies:
 ```tsx title="App.tsx"
 import { useState } from 'react'
 
-import { Editor } from '@/components/ui/tiptap'
+import { Editor, RichTextViewer } from '@/components/ui/tiptap'
 
 export default function App() {
   const [content, setContent] = useState('<p>Hello, Tiptap!</p>');
 
-  return <Editor value={content} onValueChange={setContent} />;
+  return (
+    <>
+      <Editor value={content} onValueChange={setContent} />
+      <RichTextViewer content={content} />
+    </>
+  )
 }
 ```
