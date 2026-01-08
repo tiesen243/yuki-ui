@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { Editor, RichTextViewer } from '@/registry/ui/tiptap'
 
 export default function TiptapDemo() {
-  const [value, setValue] = useState('<p>Hello World!</p>')
+  const [value, setValue] = useState('')
 
   return (
     <div className='flex flex-col w-full'>

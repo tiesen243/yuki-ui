@@ -10,6 +10,7 @@ import { Paragraph } from '@tiptap/extension-paragraph'
 import { Strike } from '@tiptap/extension-strike'
 import { Text } from '@tiptap/extension-text'
 import { Underline } from '@tiptap/extension-underline'
+import { Dropcursor, Placeholder, UndoRedo } from '@tiptap/extensions'
 import { EditorContent, useEditor } from '@tiptap/react'
 import {
   BoldIcon,
@@ -20,8 +21,10 @@ import {
   ListIcon,
   ListOrderedIcon,
   QuoteIcon,
+  RedoIcon,
   StrikethroughIcon,
   UnderlineIcon,
+  UndoIcon,
 } from 'lucide-react'
 import { useMemo } from 'react'
 
@@ -31,6 +34,7 @@ interface EditorProps extends Omit<React.ComponentProps<'div'>, 'onBlur'> {
   value: string
   onValueChange: (value: string) => unknown
   onBlur?: (event: FocusEvent) => unknown
+  placeholder?: string
   disabled?: boolean
 }
 
@@ -38,6 +42,7 @@ function Editor({
   value,
   onValueChange,
   onBlur,
+  placeholder = 'Start typing...',
   disabled,
   ...props
 }: EditorProps) {
@@ -55,6 +60,9 @@ function Editor({
       Strike,
       Text,
       Underline,
+      Dropcursor,
+      Placeholder.configure({ placeholder }),
+      UndoRedo,
     ],
     content: value,
     immediatelyRender: false,
@@ -69,69 +77,93 @@ function Editor({
         icon: Heading1Icon,
         action: () => editor?.chain().focus().toggleHeading({ level: 1 }).run(),
         isActive: editor?.isActive('heading', { level: 1 }),
+        isDisabled: disabled,
       },
       {
         label: 'Heading 2',
         icon: Heading2Icon,
         action: () => editor?.chain().focus().toggleHeading({ level: 2 }).run(),
         isActive: editor?.isActive('heading', { level: 2 }),
+        isDisabled: disabled,
       },
       {
         label: 'Heading 3',
         icon: Heading3Icon,
         action: () => editor?.chain().focus().toggleHeading({ level: 3 }).run(),
         isActive: editor?.isActive('heading', { level: 3 }),
+        isDisabled: disabled,
       },
       {
         label: 'Bold',
         icon: BoldIcon,
         action: () => editor?.chain().focus().toggleBold().run(),
         isActive: editor?.isActive('bold'),
+        isDisabled: disabled,
       },
       {
         label: 'Italic',
         icon: ItalicIcon,
         action: () => editor?.chain().focus().toggleItalic().run(),
         isActive: editor?.isActive('italic'),
+        isDisabled: disabled,
       },
       {
         label: 'Underline',
         icon: UnderlineIcon,
         action: () => editor?.chain().focus().toggleUnderline().run(),
         isActive: editor?.isActive('underline'),
+        isDisabled: disabled,
       },
       {
         label: 'Strikethrough',
         icon: StrikethroughIcon,
         action: () => editor?.chain().focus().toggleStrike().run(),
         isActive: editor?.isActive('strike'),
+        isDisabled: disabled,
       },
       {
         label: 'Blockquote',
         icon: QuoteIcon,
         action: () => editor?.chain().focus().toggleBlockquote().run(),
         isActive: editor?.isActive('blockquote'),
+        isDisabled: disabled,
       },
-    ],
-    [editor],
-  )
-
-  const rightToolbars = useMemo(
-    () => [
       {
         label: 'Bullet List',
         icon: ListIcon,
         action: () => editor?.chain().focus().toggleBulletList().run(),
         isActive: editor?.isActive('bulletList'),
+        isDisabled: disabled,
       },
       {
         label: 'Ordered List',
         icon: ListOrderedIcon,
         action: () => editor?.chain().focus().toggleOrderedList().run(),
         isActive: editor?.isActive('orderedList'),
+        isDisabled: disabled,
       },
     ],
-    [editor],
+    [editor, disabled],
+  )
+
+  const rightToolbars = useMemo(
+    () => [
+      {
+        label: 'Undo',
+        icon: UndoIcon,
+        action: () => editor?.chain().focus().undo().run(),
+        isActive: false,
+        isDisabled: !editor?.can().chain().undo().run() || disabled,
+      },
+      {
+        label: 'Redo',
+        icon: RedoIcon,
+        action: () => editor?.chain().focus().redo().run(),
+        isActive: false,
+        isDisabled: !editor?.can().chain().redo().run() || disabled,
+      },
+    ],
+    [editor, disabled],
   )
 
   if (!editor) return null
@@ -153,31 +185,37 @@ function Editor({
           'w-full flex items-stretch bg-popover border-b border-border rounded-t-lg',
         )}
       >
-        {leftToolbars.map(({ label, icon: Icon, action, isActive }) => (
-          <ToggleButton
-            key={label}
-            data-position='start'
-            onClick={action}
-            isActive={isActive}
-          >
-            <Icon />
-            <span className='sr-only'>Toggle {label}</span>
-          </ToggleButton>
-        ))}
+        {leftToolbars.map(
+          ({ label, icon: Icon, action, isActive, isDisabled }) => (
+            <ToggleButton
+              key={label}
+              data-position='start'
+              onClick={action}
+              isActive={isActive}
+              disabled={isDisabled}
+            >
+              <Icon />
+              <span className='sr-only'>Toggle {label}</span>
+            </ToggleButton>
+          ),
+        )}
 
         <div className='flex-1' />
 
-        {rightToolbars.map(({ label, icon: Icon, action }) => (
-          <ToggleButton
-            key={label}
-            data-position='end'
-            onClick={action}
-            isActive={false}
-          >
-            <Icon />
-            <span className='sr-only'>Toggle {label}</span>
-          </ToggleButton>
-        ))}
+        {rightToolbars.map(
+          ({ label, icon: Icon, action, isActive, isDisabled }) => (
+            <ToggleButton
+              key={label}
+              data-position='end'
+              onClick={action}
+              isActive={isActive}
+              disabled={isDisabled}
+            >
+              <Icon />
+              <span className='sr-only'>Toggle {label}</span>
+            </ToggleButton>
+          ),
+        )}
       </div>
 
       <EditorContent
@@ -190,6 +228,7 @@ function Editor({
           '[&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-2',
           '[&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-2',
           '[&_blockquote]:border-l [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-2',
+          '[&_p:is(.is-editor-empty):first-child]:before:content-[attr(data-placeholder)] [&_p:is(.is-editor-empty):first-child]:before:text-muted-foreground [&_p:is(.is-editor-empty):first-child]:before:text-sm [&_p:is(.is-editor-empty):first-child]:before:h-0 [&_p:is(.is-editor-empty):first-child]:before:float-left [&_p:is(.is-editor-empty):first-child]:before:pointer-events-none',
         )}
         aria-disabled={disabled}
       />
