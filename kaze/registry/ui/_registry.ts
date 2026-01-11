@@ -2,6 +2,15 @@ import type { RegistryItem } from 'shadcn/schema'
 
 export const registryUI = [
   {
+    name: 'form',
+    type: 'registry:ui',
+    title: 'Form',
+    description: 'A flexible form component with validation support',
+    dependencies: ['@base-ui/react'],
+    registryDependencies: ['separator'],
+    files: [{ type: 'registry:ui', path: 'registry/ui/form.tsx' }],
+  },
+  {
     name: 'nvim-statusline',
     type: 'registry:ui',
     title: 'Nvim Statusline',

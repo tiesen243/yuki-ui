@@ -23,7 +23,8 @@
           { "allowSeparateTypeImports": true }
         ],
         "eslint/no-empty": "error",
-        "eslint/no-inline-comments": "off"
+        "eslint/no-inline-comments": "off",
+        "eslint/no-promise-executor-return": "off"
       },
       "plugins": ["eslint"]
     },
