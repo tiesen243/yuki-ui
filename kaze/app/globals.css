@@ -211,12 +211,12 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --color-shadow-color: var(--shadow-color);
-  --shadow-opacity: var(--shadow-opacity);
-  --shadow-blur: var(--shadow-blur);
-  --shadow-spread: var(--shadow-spread);
   --shadow-offset-x: var(--shadow-offset-x);
   --shadow-offset-y: var(--shadow-offset-y);
+  --shadow-blur: var(--shadow-blur);
+  --shadow-spread: var(--shadow-spread);
+  --shadow-opacity: var(--shadow-opacity);
+  --color-shadow-color: var(--shadow-color);
   --shadow-2xs: var(--shadow-2xs);
   --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);
@@ -360,4 +360,3 @@
     max-width: 1400px;
   }
 }
-
