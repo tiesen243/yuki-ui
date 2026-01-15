@@ -1,5 +1,6 @@
 'use client'
 
+import { toast } from 'sonner'
 import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -28,7 +29,13 @@ export default function UseFormDemo() {
     defaultValues: { name: '', age: 0 },
     schema: formSchema,
     onSubmit: (data) => {
-      console.log('Form submitted:', data)
+      toast('Form submitted successfully!', {
+        description: (
+          <pre className='mt-4 w-max rounded-md bg-input md:w-[calc(var(--width)-2rem)]'>
+            {JSON.stringify(data, null, 2)}
+          </pre>
+        ),
+      })
     },
   })
 

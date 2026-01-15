@@ -1,6 +1,6 @@
 'use client'
 
-import { type } from 'arktype'
+import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -18,9 +18,12 @@ import { useForm } from '@/registry/hooks/use-form'
 export default function PlaygroundPage() {
   const { formId, FormField, handleSubmit, state } = useForm({
     defaultValues: { name: '', age: 0 },
-    schema: type({
-      name: '2<string<255',
-      age: '2<number<150',
+    schema: z.object({
+      name: z.string().min(2, 'Name must be at least 2 characters long'),
+      age: z
+        .number('Age must be a number')
+        .min(7, 'Age must be between 7 and 12')
+        .max(12, 'Age must be between 7 and 12'),
     }),
     onSubmit: async (data) => {
       await new Promise((resolve) => setTimeout(resolve, 1000))
@@ -48,7 +51,7 @@ export default function PlaygroundPage() {
                   <FieldDescription id={meta.descriptionId}>
                     Please enter your full name.
                   </FieldDescription>
-                  <FieldError id={meta.erorrId} errors={meta.errors} />
+                  <FieldError id={meta.errorId} errors={meta.errors} />
                 </Field>
               )}
             />
@@ -66,7 +69,7 @@ export default function PlaygroundPage() {
                   <FieldDescription id={meta.descriptionId}>
                     Please enter your age in years.
                   </FieldDescription>
-                  <FieldError id={`${field.name}-error`} errors={meta.errors} />
+                  <FieldError id={meta.errorId} errors={meta.errors} />
                 </Field>
               )}
             />
