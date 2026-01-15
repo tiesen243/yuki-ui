@@ -5,11 +5,11 @@ interface FormError {
   issues?: StandardSchemaV1.Issue[]
 }
 
-type OnChangeParam =
-  | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  | string
-  | number
-  | boolean
+type OnChangeParam<TValue> =
+  | React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  | TValue
 
 interface FormFieldProps<TName extends keyof TValues, TValues> {
   name: TName
@@ -18,7 +18,7 @@ interface FormFieldProps<TName extends keyof TValues, TValues> {
       id: string
       name: TName
       value: TValues[TName]
-      onChange: (params: OnChangeParam) => void
+      onChange: (params: OnChangeParam<TValues[TName]>) => void
       onBlur: () => void
 
       // Accessibility attributes
@@ -30,6 +30,7 @@ interface FormFieldProps<TName extends keyof TValues, TValues> {
       descriptionId: string
       errorId: string
       errors: StandardSchemaV1.Issue[]
+      isPending: boolean
     }
   }) => React.ReactNode
 }
@@ -147,7 +148,9 @@ export function useForm<
       )
 
       const onChange = React.useCallback(
-        (param: OnChangeParam) => {
+        (param: OnChangeParam<TValues[TName]>) => {
+          if (!param) return
+
           setErrors([])
 
           let newValue
@@ -187,6 +190,7 @@ export function useForm<
           descriptionId: `form-${formId}-field-${id}-description`,
           errorId: `form-${formId}-field-${id}-error`,
           errors,
+          isPending,
         }),
         [id, errors],
       )
@@ -209,7 +213,7 @@ export function useForm<
         meta,
       })
     },
-    [formId, setFormValue, validate],
+    [formId, setFormValue, validate, isPending],
   )
 
   return React.useMemo(
