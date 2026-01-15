@@ -57,8 +57,8 @@ export function useForm<
   defaultValues: TValues
   schema?: TSchema
   onSubmit: (data: TValues) => TData | Promise<TData>
-  onSuccess?: (data: TData) => void | Promise<void>
-  onError?: (error: TError) => void | Promise<void>
+  onSuccess?: (data: TData) => unknown | Promise<unknown>
+  onError?: (error: TError) => unknown | Promise<unknown>
 }): {
   formId: string
   FormField: <TName extends keyof TValues>(
