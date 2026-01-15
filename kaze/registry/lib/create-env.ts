@@ -9,84 +9,70 @@ export function createEnv<
     >
   },
   TDeriveEnv extends Record<string, unknown> = Record<string, unknown>,
->(
-  opts: {
-    /*
-     * Whather the code is running on server or client side
-     * @default window === undefined
-     */
-    isServer?: boolean
+>(opts: {
+  /*
+   * Whather the code is running on server or client side
+   * @default window === undefined
+   */
+  isServer?: boolean
 
-    /*
-     * Environment variable schemas shared between server and client
-     * @example: NODE_ENV, VERCEL_URL, etc.
-     */
-    shared: TShared
+  /*
+   * Environment variable schemas shared between server and client
+   * @example: NODE_ENV, VERCEL_URL, etc.
+   */
+  shared: TShared
 
-    /*
-     * Server-only environment variable schemas
-     * @example: DATABASE_URL, SECRET_KEY, etc.
-     */
-    server: {
-      [TKey in keyof TServer]: TKey extends `${TPrefix}${string}`
-        ? `${TKey} should not prefix with ${TPrefix}`
-        : TServer[TKey]
-    }
+  /*
+   * Server-only environment variable schemas
+   * @example: DATABASE_URL, SECRET_KEY, etc.
+   */
+  server: {
+    [TKey in keyof TServer]: TKey extends `${TPrefix}${string}`
+      ? `${TKey} should not prefix with ${TPrefix}`
+      : TServer[TKey]
+  }
 
-    /*
-     * Client-only environment variable schemas
-     * @example: NEXT_PUBLIC_API_URL, etc.
-     */
-    clientPrefix: TPrefix
-    client: {
-      [TKey in keyof TClient]: TKey extends `${TPrefix}${string}`
-        ? TClient[TKey]
-        : `${TKey extends string ? TKey : never} should prefix with ${TPrefix}`
-    }
+  /*
+   * Client-only environment variable schemas
+   * @example: NEXT_PUBLIC_API_URL, etc.
+   */
+  clientPrefix: TPrefix
+  client: {
+    [TKey in keyof TClient]: TKey extends `${TPrefix}${string}`
+      ? TClient[TKey]
+      : `${TKey extends string ? TKey : never} should prefix with ${TPrefix}`
+  }
 
-    /*
-     * The runtime environment variables to validate, typically process.env.
-     *
-     * For client-only variables, avoid spreading process.env directly.
-     * @see https://github.com/vercel/next.js/discussions/34957
-     *
-     * @example
-     * ```ts
-     * // Incorrect: client variable will be undefined
-     * const env = createEnv({
-     *   ...
-     *   client: { PUBLIC_VAR: z.string() },
-     *   runtimeEnv: { ...process.env }
-     * })
-     *
-     * env.PUBLIC_VAR // undefined
-     *
-     * // Correct: client variable is set properly
-     * const env = createEnv({
-     *   ...
-     *   client: { PUBLIC_VAR: z.string() },
-     *   runtimeEnv: { PUBLIC_VAR: process.env.PUBLIC_VAR }
-     * })
-     *
-     * env.PUBLIC_VAR // 'some-value'
-     * ```
-     */
-    runtimeEnv:
-      | { [TKey in keyof TResult]: string | number | boolean | undefined }
-      | Record<string, unknown>
-
-    /*
-     * Whether to treat empty strings as undefined values.
-     * @default false
-     */
-    emptyStringAsUndefined?: boolean
-
-    /*
-     * Whether to skip validation of environment variables.
-     * @default false
-     */
-    skipValidation?: boolean
-  },
+  /*
+   * The runtime environment variables to validate, typically process.env.
+   *
+   * For client-only variables, avoid spreading process.env directly.
+   * @see https://github.com/vercel/next.js/discussions/34957
+   *
+   * @example
+   * ```ts
+   * // Incorrect: client variable will be undefined
+   * const env = createEnv({
+   *   ...
+   *   client: { PUBLIC_VAR: z.string() },
+   *   runtimeEnv: { ...process.env }
+   * })
+   *
+   * env.PUBLIC_VAR // undefined
+   *
+   * // Correct: client variable is set properly
+   * const env = createEnv({
+   *   ...
+   *   client: { PUBLIC_VAR: z.string() },
+   *   runtimeEnv: { PUBLIC_VAR: process.env.PUBLIC_VAR }
+   * })
+   *
+   * env.PUBLIC_VAR // 'some-value'
+   * ```
+   */
+  runtimeEnv:
+    | { [TKey in keyof TResult]: string | number | boolean | undefined }
+    | Record<string, unknown>
 
   /*
    * A function to derive additional environment variables based on the validated ones.
@@ -102,8 +88,20 @@ export function createEnv<
    *
    * env.IS_PRODUCTION // true or false
    */
-  deriveEnv: (env: TResult) => TDeriveEnv = () => ({}) as TDeriveEnv,
-): TResult & TDeriveEnv {
+  deriveEnv?: (env: TResult) => TDeriveEnv
+
+  /*
+   * Whether to treat empty strings as undefined values.
+   * @default false
+   */
+  emptyStringAsUndefined?: boolean
+
+  /*
+   * Whether to skip validation of environment variables.
+   * @default false
+   */
+  skipValidation?: boolean
+}): TResult & TDeriveEnv {
   if (opts.emptyStringAsUndefined)
     for (const [key, value] of Object.entries(opts.runtimeEnv))
       if (value === '') delete opts.runtimeEnv[key]
@@ -123,7 +121,7 @@ export function createEnv<
     )
 
   const envData = parsedEnvs.success ? parsedEnvs.data : {}
-  Object.assign(envData, deriveEnv(envData as TResult))
+  if (opts.deriveEnv) Object.assign(envData, opts.deriveEnv(envData as TResult))
 
   return new Proxy(envData as TResult & TDeriveEnv, {
     get(target, prop) {
@@ -145,19 +143,13 @@ function parseEnvs<
   data: Record<string, unknown>,
   schemas: TSchemas,
 ):
-  | {
-      success: true
-      data: TData
-    }
-  | {
-      success: false
-      issues: StandardSchemaV1.FailureResult['issues']
-    } {
+  | { success: true; data: TData }
+  | { success: false; issues: StandardSchemaV1.Issue[] } {
   if (Object.keys(schemas).length === 0)
     return { success: true, data: {} as TData }
 
   const results: TData = {} as TData
-  const issues: Mutable<StandardSchemaV1.FailureResult['issues']> = []
+  const issues: StandardSchemaV1.Issue[] = []
 
   for (const [key, schema] of Object.entries(schemas)) {
     const value = data[key]
@@ -253,8 +245,4 @@ declare namespace StandardSchemaV1 {
   export type InferOutput<Schema extends StandardSchemaV1> = NonNullable<
     Schema['~standard']['types']
   >['output']
-}
-
-type Mutable<T> = {
-  -readonly [P in keyof T]: T[P]
 }

@@ -6,6 +6,7 @@ import z from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { env } from '@/env'
 import {
   Form,
   Fieldset,
@@ -21,6 +22,7 @@ export default function PlaygroundPage() {
   return (
     <HomeLayout>
       <main className='container py-12'>
+        {env.VERCEL_URL}
         <Form
           schema={z.object({ email: z.email(), password: z.string().min(6) })}
           onSubmit={async (data) => {

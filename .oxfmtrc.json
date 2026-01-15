@@ -11,5 +11,14 @@
   "experimentalSortImports": {
     "groups": ["side-effect", "type", "external", "internal"],
     "partitionByComment": true
+  },
+
+  "experimentalSortPackageJson": {
+    "sortScripts": true
+  },
+
+  "experimentalTailwindcss": {
+    "functions": ["clsx", "cva", "cn"],
+    "stylesheet": "./kaze/app/globals.css"
   }
 }

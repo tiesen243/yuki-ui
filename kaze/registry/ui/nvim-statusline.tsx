@@ -88,7 +88,7 @@ function NvimStatuslineSectionA({
     >
       <div
         className={cn(
-          'inline-flex h-6 items-center gap-2 pl-2 pr-1 text-background font-medium',
+          'inline-flex h-6 items-center gap-2 pr-1 pl-2 font-medium text-background',
           BG_COLORS,
         )}
       >
@@ -205,7 +205,7 @@ function NvimStatuslineSectionZ({
       />
       <div
         className={cn(
-          'inline-flex h-full items-center gap-2 pr-2 pl-1 whitespace-nowrap text-background font-medium',
+          'inline-flex h-full items-center gap-2 pr-2 pl-1 font-medium whitespace-nowrap text-background',
           BG_COLORS,
         )}
       >

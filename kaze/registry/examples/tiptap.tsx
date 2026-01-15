@@ -12,7 +12,7 @@ export default function TiptapDemo() {
   )
 
   return (
-    <div className='flex flex-col w-full'>
+    <div className='flex w-full flex-col'>
       <Editor value={value} onValueChange={setValue} />
 
       <Tabs items={['Preview', 'HTML']} defaultValue='preview'>

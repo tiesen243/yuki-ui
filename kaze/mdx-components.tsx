@@ -68,7 +68,7 @@ function PreviewComponent({ comp }: Props) {
         <div className='h-96 w-full animate-pulse rounded-sm bg-muted' />
       }
     >
-      <div className='not-prose flex flex-col items-center justify-center overflow-x-auto min-h-96 overflow-y-hidden'>
+      <div className='not-prose flex min-h-96 flex-col items-center justify-center overflow-x-auto overflow-y-hidden'>
         {Comp}
       </div>
     </Suspense>

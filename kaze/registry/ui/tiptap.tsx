@@ -211,8 +211,8 @@ function Editor({
   if (!editor)
     return (
       <div className='animate-pulse rounded-lg border border-input'>
-        <div className='h-8 bg-popover border-b border-input rounded-t-lg' />
-        <div className='h-20 bg-transparent dark:bg-input/30 rounded-b-lg' />
+        <div className='h-8 rounded-t-lg border-b border-input bg-popover' />
+        <div className='h-20 rounded-b-lg bg-transparent dark:bg-input/30' />
       </div>
     )
 
@@ -222,15 +222,15 @@ function Editor({
       data-slot='editor'
       role='textbox'
       className={cn(
-        'group/editor border border-input rounded-lg transition-colors',
-        'aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50',
-        'aria-disabled:opacity-50 aria-disabled:cursor-not-allowed',
+        'group/editor rounded-lg border border-input transition-colors',
+        'aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40',
+        'aria-disabled:cursor-not-allowed aria-disabled:opacity-50',
       )}
       aria-disabled={disabled}
     >
       <div
         className={cn(
-          'w-full flex items-stretch bg-popover border-b border-border rounded-t-lg',
+          'flex w-full items-stretch rounded-t-lg border-b border-border bg-popover',
         )}
       >
         {leftToolbars.map(
@@ -269,8 +269,8 @@ function Editor({
       <EditorContent
         editor={editor}
         className={cn(
-          'bg-transparent dark:bg-input/30 aria-disabled:bg-input/80 [&_.ProseMirror]:px-2.5 [&_.ProseMirror]:py-2 [&_.ProseMirror]:text-base [&_.ProseMirror]:md:text-sm [&_.ProseMirror]:field-sizing-content [&_.ProseMirror]:min-h-20 [&_.ProseMirror]:w-full [&_.ProseMirror]:outline-none',
-          '[&_p:is(.is-editor-empty):first-child]:before:content-[attr(data-placeholder)] [&_p:is(.is-editor-empty):first-child]:before:text-muted-foreground [&_p:is(.is-editor-empty):first-child]:before:text-sm [&_p:is(.is-editor-empty):first-child]:before:h-0 [&_p:is(.is-editor-empty):first-child]:before:float-left [&_p:is(.is-editor-empty):first-child]:before:pointer-events-none',
+          'bg-transparent aria-disabled:bg-input/80 dark:bg-input/30 [&_.ProseMirror]:field-sizing-content [&_.ProseMirror]:min-h-20 [&_.ProseMirror]:w-full [&_.ProseMirror]:px-2.5 [&_.ProseMirror]:py-2 [&_.ProseMirror]:text-base [&_.ProseMirror]:outline-none [&_.ProseMirror]:md:text-sm',
+          '[&_p:is(.is-editor-empty):first-child]:before:pointer-events-none [&_p:is(.is-editor-empty):first-child]:before:float-left [&_p:is(.is-editor-empty):first-child]:before:h-0 [&_p:is(.is-editor-empty):first-child]:before:text-sm [&_p:is(.is-editor-empty):first-child]:before:text-muted-foreground [&_p:is(.is-editor-empty):first-child]:before:content-[attr(data-placeholder)]',
           ...TYPOGRAPHY,
         )}
         aria-disabled={disabled}
@@ -309,9 +309,9 @@ function ToggleButton({
       data-slot='editor-toggle-button'
       data-active={isActive ? 'true' : 'false'}
       className={cn(
-        'size-8 hover:bg-input dark:hover:bg-input/50 inline-flex items-center justify-center text-sm font-medium first:rounded-tl-lg last:rounded-tr-lg data-[position=start]:border-r data-[position=end]:border-l border-input [&_svg:not([class*="size-"])]:size-4 data-[active=true]:bg-input dark:data-[active=true]:bg-input/50',
+        'inline-flex size-8 items-center justify-center border-input text-sm font-medium first:rounded-tl-lg last:rounded-tr-lg hover:bg-input data-[active=true]:bg-input data-[position=end]:border-l data-[position=start]:border-r dark:hover:bg-input/50 dark:data-[active=true]:bg-input/50 [&_svg:not([class*="size-"])]:size-4',
         'focus-visible:ring-[3px] focus-visible:ring-ring/50',
-        'disabled:opacity-50 disabled:cursor-not-allowed',
+        'disabled:cursor-not-allowed disabled:opacity-50',
         className,
       )}
       {...props}

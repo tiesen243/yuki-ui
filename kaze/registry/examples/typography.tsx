@@ -4,7 +4,7 @@ export default function TypographyDemo() {
   const text = 'The quick brown fox jumps over the lazy dog.'
 
   return (
-    <article className='w-full flex flex-col'>
+    <article className='flex w-full flex-col'>
       <Typography variant='h1'>H1. Heading 1</Typography>
       <Typography variant='h2'>H2. Heading 2</Typography>
       <Typography variant='h3'>H3. Heading 3</Typography>
