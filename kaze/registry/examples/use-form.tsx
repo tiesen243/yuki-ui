@@ -24,7 +24,7 @@ const formSchema = z.object({
 })
 
 export default function UseFormDemo() {
-  const form = useForm({
+  const { formId, FormField, handleSubmit, state } = useForm({
     defaultValues: { name: '', age: 0 },
     schema: formSchema,
     onSubmit: (data) => {
@@ -34,8 +34,9 @@ export default function UseFormDemo() {
 
   return (
     <form
+      id={formId}
       className='rounded-xl border bg-card p-6 text-card-foreground shadow-sm'
-      onSubmit={form.handleSubmit}
+      onSubmit={handleSubmit}
     >
       <FieldSet>
         <FieldLegend>Login Form</FieldLegend>
@@ -44,22 +45,22 @@ export default function UseFormDemo() {
         </FieldDescription>
 
         <FieldGroup>
-          <form.Field
+          <FormField
             name='name'
             render={({ meta, field }) => (
               <Field data-invalid={meta.errors.length > 0}>
-                <FieldLabel htmlFor={meta.fieldId}>Name</FieldLabel>
+                <FieldLabel htmlFor={field.id}>Name</FieldLabel>
                 <Input {...field} placeholder='Enter your name' />
                 <FieldError id={meta.errorId} errors={meta.errors} />
               </Field>
             )}
           />
 
-          <form.Field
+          <FormField
             name='age'
             render={({ meta, field }) => (
               <Field data-invalid={meta.errors.length > 0}>
-                <FieldLabel htmlFor={meta.fieldId}>Age</FieldLabel>
+                <FieldLabel htmlFor={field.id}>Age</FieldLabel>
                 <Input {...field} type='number' placeholder='Enter your age' />
                 <FieldError id={meta.errorId} errors={meta.errors} />
               </Field>
@@ -67,7 +68,7 @@ export default function UseFormDemo() {
           />
 
           <Field>
-            <Button type='submit' disabled={form.state.isPending}>
+            <Button type='submit' disabled={state.isPending}>
               Submit
             </Button>
           </Field>

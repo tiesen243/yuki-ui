@@ -28,7 +28,7 @@ interface FormFieldProps<TName extends keyof TValues, TValues> {
     }
     meta: {
       descriptionId: string
-      erorrId: string
+      errorId: string
       errors: StandardSchemaV1.Issue[]
     }
   }) => React.ReactNode
@@ -185,7 +185,7 @@ export function useForm<
       const meta = React.useMemo(
         () => ({
           descriptionId: `form-${formId}-field-${id}-description`,
-          erorrId: `form-${formId}-field-${id}-error`,
+          errorId: `form-${formId}-field-${id}-error`,
           errors,
         }),
         [id, errors],
@@ -202,7 +202,7 @@ export function useForm<
           form: `form-${formId}`,
           'aria-describedby':
             meta.errors.length > 0
-              ? `${meta.descriptionId} ${meta.erorrId}`
+              ? `${meta.descriptionId} ${meta.errorId}`
               : meta.descriptionId,
           'aria-invalid': meta.errors.length > 0,
         },
