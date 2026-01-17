@@ -244,11 +244,17 @@ function AnchoredToaster() {
                 toast={toast}
               >
                 {tooltipStyle ? (
-                  <ToastPrimitive.Content className='pointer-events-auto px-2 py-1'>
-                    <ToastPrimitive.Title data-slot='toast-title' />
+                  <ToastPrimitive.Content
+                    data-slot='anchored-toast-tooltip-content'
+                    className='pointer-events-auto px-2 py-1'
+                  >
+                    <ToastPrimitive.Title data-slot='anchored-toast-title' />
                   </ToastPrimitive.Content>
                 ) : (
-                  <ToastPrimitive.Content className='flex items-center justify-between gap-0.5 px-2 py-3 transition-opacity data-behind:pointer-events-none data-behind:opacity-0 data-expanded:opacity-100'>
+                  <ToastPrimitive.Content
+                    data-slot='anchored-toast-content'
+                    className='flex items-center justify-between gap-0.5 px-2 py-3 transition-opacity data-behind:pointer-events-none data-behind:opacity-0 data-expanded:opacity-100'
+                  >
                     <div
                       data-slot='anchored-toast-message'
                       className={cn('flex flex-1', {
@@ -281,7 +287,7 @@ function AnchoredToaster() {
 
                     {toast.actionProps && (
                       <ToastPrimitive.Action
-                        data-slot='toast-action'
+                        data-slot='anchored-toast-action'
                         className={cn(
                           buttonVariants({ variant: 'ghost', size: 'xs' }),
                           'hover:bg-current/20 hover:text-current dark:hover:bg-current/20',
@@ -301,9 +307,3 @@ function AnchoredToaster() {
 }
 
 export { toast, anchoredToast, StackedToastProvider, AnchoredToastProvider }
-
-toast.add({
-  title: 'Sample Toast',
-  description: 'This is a sample toast notification.',
-  type: 'success',
-})
