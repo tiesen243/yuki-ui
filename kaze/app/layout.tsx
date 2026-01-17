@@ -3,9 +3,9 @@ import '@/app/globals.css'
 import { RootProvider } from 'fumadocs-ui/provider/next'
 import { Geist, Geist_Mono } from 'next/font/google'
 
-import { Toaster } from '@/components/ui/sonner'
 import { createMetadata } from '@/lib/metadata'
 import { cn } from '@/lib/utils'
+import { StackedToastProvider } from '@/registry/ui/toast'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,9 +28,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         )}
       >
         <RootProvider>
-          {children}
-
-          <Toaster richColors />
+          <StackedToastProvider>{children}</StackedToastProvider>
         </RootProvider>
       </body>
     </html>

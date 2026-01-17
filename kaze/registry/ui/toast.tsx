@@ -1,3 +1,5 @@
+'use client'
+
 import { Toast as ToastPrimitive } from '@base-ui/react'
 import {
   CircleCheckIcon,
@@ -138,7 +140,7 @@ function Toaster({
             >
               <ToastPrimitive.Content
                 data-slot='toast-content'
-                className='flex items-center justify-between gap-0.5 px-3 py-2 transition-opacity data-behind:pointer-events-none data-behind:opacity-0 data-expanded:opacity-100'
+                className='flex items-center justify-between gap-0.5 px-4 py-3 transition-opacity data-behind:pointer-events-none data-behind:opacity-0 data-expanded:opacity-100'
               >
                 <div
                   data-slot='toast-message'

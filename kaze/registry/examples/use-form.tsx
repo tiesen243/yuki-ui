@@ -1,6 +1,5 @@
 'use client'
 
-import { toast } from 'sonner'
 import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -15,6 +14,7 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { useForm } from '@/registry/hooks/use-form'
+import { toast } from '@/registry/ui/toast'
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long'),
@@ -29,9 +29,10 @@ export default function UseFormDemo() {
     defaultValues: { name: '', age: 0 },
     schema: formSchema,
     onSubmit: (data) => {
-      toast('Form submitted successfully!', {
+      toast.add({
+        title: 'Form submitted successfully!',
         description: (
-          <pre className='mt-4 w-max rounded-md bg-input md:w-[calc(var(--width)-2rem)]'>
+          <pre className='w-full rounded-md bg-input p-2 text-foreground'>
             {JSON.stringify(data, null, 2)}
           </pre>
         ),
