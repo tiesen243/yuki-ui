@@ -78,6 +78,15 @@ export const registryUI = [
   },
 
   {
+    name: 'toast',
+    type: 'registry:ui',
+    title: 'Toast Notifications',
+    description: 'A toast notification system',
+    dependencies: ['@base-ui/react'],
+    files: [{ type: 'registry:ui', path: 'registry/ui/toast.tsx' }],
+  },
+
+  {
     name: 'typography',
     type: 'registry:ui',
     title: 'Typography',

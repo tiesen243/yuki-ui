@@ -28,6 +28,15 @@ export const registryExamples = [
   },
 
   {
+    name: 'toast-demo',
+    type: 'registry:example',
+    title: 'Toast Notifications',
+    description: 'An example demonstrating toast notifications using Yuki UI.',
+    registryDependencies: [`${getBaseUrl()}/r/toast.json`],
+    files: [{ type: 'registry:example', path: 'registry/examples/toast.tsx' }],
+  },
+
+  {
     name: 'typography-demo',
     type: 'registry:example',
     title: 'Typography',
