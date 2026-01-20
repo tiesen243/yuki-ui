@@ -28,9 +28,9 @@
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
-    "oxfmt": "^0.24.0",
-    "oxlint": "^1.39.0",
-    "turbo": "^2.7.4"
+    "oxfmt": "^0.26.0",
+    "oxlint": "^1.41.0",
+    "turbo": "^2.7.5"
   },
   "packageManager": "bun@1.3.0",
   "catalogs": {
@@ -45,7 +45,7 @@
       "typescript": "^5.9.3"
     },
     "react": {
-      "@types/react": "^19.2.8",
+      "@types/react": "^19.2.9",
       "@types/react-dom": "^19.2.3",
       "react": "^19.2.3",
       "react-dom": "^19.2.3"
