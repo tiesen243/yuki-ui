@@ -61,16 +61,17 @@ export function useForm<
   onError?: (error: TError) => unknown | Promise<unknown>
 }): {
   formId: string
-  FormField: <TName extends keyof TValues>(
+  Field: <TName extends keyof TValues>(
     props: FormFieldProps<TName, TValues>,
   ) => React.ReactNode
-  handleSubmit: (event?: React.FormEvent) => void
+  handleSubmit: (event?: React.SubmitEvent) => void
   state: {
     values: TValues
     data: TData | null
     error: TError | null
     isPending: boolean
   }
+  reset: () => void
 } {
   const { defaultValues, schema, onSubmit, onSuccess, onError } = props
 
@@ -102,9 +103,12 @@ export function useForm<
   )
 
   const handleSubmit = React.useCallback(
-    (event?: React.FormEvent) => {
-      event?.preventDefault()
-      event?.stopPropagation()
+    (event?: React.SubmitEvent) => {
+      if (event) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
       formDataRef.current = null
       formErrorRef.current = null
 
@@ -131,7 +135,7 @@ export function useForm<
     [onSubmit, onSuccess, onError, validate],
   )
 
-  const FormField = React.useCallback(
+  const Field = React.useCallback(
     function FormField<TName extends keyof TValues>({
       name,
       render,
@@ -216,10 +220,20 @@ export function useForm<
     [formId, setFormValue, validate, isPending],
   )
 
+  const reset = React.useCallback(
+    () =>
+      startTransition(() => {
+        formValuesRef.current = defaultValues
+        formDataRef.current = null
+        formErrorRef.current = null
+      }),
+    [defaultValues],
+  )
+
   return React.useMemo(
     () => ({
       formId: `form-${formId}`,
-      FormField,
+      Field,
       handleSubmit,
       state: {
         get values() {
@@ -235,8 +249,9 @@ export function useForm<
           return isPending
         },
       },
+      reset,
     }),
-    [formId, FormField, handleSubmit, isPending],
+    [formId, Field, handleSubmit, isPending, reset],
   )
 }
 

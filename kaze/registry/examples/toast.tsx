@@ -1,26 +1,13 @@
 'use client'
 
-import { useRef } from 'react'
-
 import { Button } from '@/components/ui/button'
-import {
-  anchoredToast,
-  AnchoredToastProvider,
-  StackedToastProvider,
-  toast,
-} from '@/registry/ui/toast'
+import { ToastProvider, toast } from '@/registry/ui/toast'
 
 export default function ToastDemo() {
   return (
-    <StackedToastProvider>
-      <AnchoredToastProvider>
-        <ToastDemoContent />
-
-        <hr className='my-8 w-full border-t' />
-
-        <ToastAnchorDemoContent />
-      </AnchoredToastProvider>
-    </StackedToastProvider>
+    <ToastProvider>
+      <ToastDemoContent />
+    </ToastProvider>
   )
 }
 
@@ -86,33 +73,6 @@ function ToastDemoContent() {
           {label}
         </Button>
       ))}
-    </div>
-  )
-}
-
-function ToastAnchorDemoContent() {
-  const anchorRef = useRef<HTMLButtonElement>(null)
-
-  return (
-    <div className='flex flex-col items-center justify-center gap-4'>
-      <Button ref={anchorRef} variant='outline'>
-        Anchor Toasts Here
-      </Button>
-      <div className='flex flex-wrap items-center justify-center gap-4'>
-        <Button
-          variant='outline'
-          onClick={() =>
-            anchoredToast.add({
-              title: 'This toast is anchored to the button.',
-              description: 'It appears next to the button when triggered.',
-              type: 'error',
-              positionerProps: { anchor: anchorRef.current },
-            })
-          }
-        >
-          Show Anchored Toast
-        </Button>
-      </div>
     </div>
   )
 }

@@ -5,7 +5,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 
 import { createMetadata } from '@/lib/metadata'
 import { cn } from '@/lib/utils'
-import { StackedToastProvider } from '@/registry/ui/toast'
+import { ToastProvider } from '@/registry/ui/toast'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         )}
       >
         <RootProvider>
-          <StackedToastProvider>{children}</StackedToastProvider>
+          <ToastProvider>{children}</ToastProvider>
         </RootProvider>
       </body>
     </html>

@@ -139,7 +139,7 @@ import {
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
-import { FormField, useForm } from '@/components/ui/form'
+import { useForm } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
 export function MyForm() {
@@ -154,8 +154,7 @@ export function MyForm() {
         <FieldDescription>...</FieldDescription>
 
         <FieldGroup>
-          <FormField
-            control={form.control}
+          <form.Field
             name='name'
             render={({ meta, field, state }) => (
               <Field data-invalid={state.hasError}>
@@ -168,6 +167,17 @@ export function MyForm() {
 
           <Button type='submit' disabled={form.formState.isSubmitting}>
             Submit
+          </Button>
+          <Button
+            type='reset'
+            variant='outline'
+            onClick={(e) => {
+              e.preventDefault()
+              form.reset()
+            }}
+            disabled={form.formState.isSubmitting}
+          >
+            Reset
           </Button>
         </FieldGroup>
       </FieldSet>
