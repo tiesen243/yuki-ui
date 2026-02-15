@@ -46,7 +46,7 @@ function ToastDemoContent() {
             setTimeout(() => resolve('Data loaded'), 3000),
           ),
           {
-            loading: 'Loading...',
+            loading: 'Loading data...',
             success: (data) => `Success: ${data}`,
             error: (err) => `Error: ${err}`,
           },

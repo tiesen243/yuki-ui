@@ -7,7 +7,6 @@ import {
   Loader2Icon,
   OctagonXIcon,
   TriangleAlertIcon,
-  XIcon,
 } from 'lucide-react'
 
 import { buttonVariants } from '@/components/ui/button'
@@ -40,13 +39,6 @@ function ToastProvider({
   children,
   ...props
 }: ToastProviderProps) {
-  let swipeDirection: ToastPrimitive.Root.Props['swipeDirection'] = []
-  if (position.includes('top')) swipeDirection.push('up')
-  if (position.includes('bottom')) swipeDirection.push('down')
-  if (position.includes('left')) swipeDirection.push('left')
-  if (position.includes('right')) swipeDirection.push('right')
-  if (position.includes('center')) swipeDirection.push('right', 'left')
-
   return (
     <ToastPrimitive.Provider toastManager={toast} {...props}>
       {children}
@@ -150,9 +142,12 @@ function Toaster({
         >
           <div
             data-slot='toast-message'
-            className='group/toast-content @container/toast-content grid flex-1 auto-rows-min grid-cols-[1fr_auto] items-start gap-1 has-data-[slot=toast-description]:grid-rows-[auto_auto]'
+            className='@container/toast-content grid flex-1 auto-rows-min items-start gap-1 not-has-data-[slot=toast-title]:flex not-has-data-[slot=toast-title]:items-center has-data-[slot=toast-action]:grid-cols-[1fr_auto] has-data-[slot=toast-description]:grid-rows-[auto_auto]'
           >
-            <div data-slot='toast-header' className='flex items-center gap-2'>
+            <div
+              data-slot='toast-header'
+              className='flex flex-row items-center gap-2'
+            >
               {Icon && (
                 <Icon
                   data-slot='toast-icon'
@@ -170,18 +165,6 @@ function Toaster({
               data-slot='toast-description'
               className='text-sm not-in-data-type:text-muted-foreground in-data-[type=loading]:text-muted-foreground'
             />
-
-            <ToastPrimitive.Close
-              data-slot='toast-close'
-              className={cn(
-                buttonVariants({ variant: 'ghost', size: 'icon-xs' }),
-                'col-start-2 row-span-2 row-start-1 self-start justify-self-end',
-                'hover:bg-current/20 hover:text-current dark:hover:bg-current/20',
-              )}
-            >
-              <XIcon />
-              <span className='sr-only'>Close Toast</span>
-            </ToastPrimitive.Close>
           </div>
 
           {toast.actionProps && (
