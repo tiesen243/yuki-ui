@@ -1,17 +1,9 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { ToastProvider, toast } from '@/registry/ui/toast'
+import { toast } from '@/registry/ui/toast'
 
 export default function ToastDemo() {
-  return (
-    <ToastProvider>
-      <ToastDemoContent />
-    </ToastProvider>
-  )
-}
-
-function ToastDemoContent() {
   const toasts = [
     {
       label: 'Show Simple Toast',
