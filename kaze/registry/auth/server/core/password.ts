@@ -1,10 +1,10 @@
+import { scrypt } from 'node:crypto'
+
 import {
   constantTimeEqual,
   decodeHex,
   encodeHex,
 } from '@/server/auth/core/crypto'
-
-import { scrypt } from 'node:crypto'
 
 export class Password {
   constructor(private readonly dkLen = 64) {}

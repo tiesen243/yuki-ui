@@ -1,6 +1,6 @@
-import { decodeBase64Url, encodeBase64Url } from '@/server/auth/core/crypto'
-
 import crypto from 'node:crypto'
+
+import { decodeBase64Url, encodeBase64Url } from '@/server/auth/core/crypto'
 
 export type JWTAlgorithm = 'HS256' | 'HS384' | 'HS512'
 

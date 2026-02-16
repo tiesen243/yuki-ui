@@ -1,7 +1,7 @@
-import type { SessionWithUser } from '@/server/auth/types'
-
 import { useMutation, useQuery } from '@tanstack/react-query'
 import * as React from 'react'
+
+import type { SessionWithUser } from '@/server/auth/types'
 
 type SessionContextValue = (
   | { status: 'loading'; session: SessionWithUser }
