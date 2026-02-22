@@ -100,7 +100,7 @@ function Editor({
     content: value,
     editable: !disabled,
     immediatelyRender: false,
-    onUpdate: ({ editor }) => !disabled && onValueChange(editor.getHTML()),
+    onUpdate: (ctx) => !disabled && onValueChange(ctx.editor.getHTML()),
     onBlur: ({ event }) => onBlur?.(event),
   })
 

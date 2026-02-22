@@ -77,16 +77,16 @@ function Toaster({
   if (position.includes('right')) swipeDirection.push('right')
   if (position.includes('center')) swipeDirection.push('right', 'left')
 
-  return toasts.map((toast) => {
-    const Icon = toast.type ? icons[toast.type as keyof typeof icons] : null
+  return toasts.map((_toast) => {
+    const Icon = _toast.type ? icons[_toast.type as keyof typeof icons] : null
 
     return (
       <ToastPrimitive.Root
-        key={toast.id}
+        key={_toast.id}
         data-slot='toast-root'
         data-position={position}
-        data-type={toast.type}
-        toast={toast}
+        data-type={_toast.type}
+        toast={_toast}
         className={cn(
           'group/toast absolute z-[calc(1000-var(--toast-index))] h-(--toast-calc-height) w-full rounded-lg bg-clip-padding shadow-lg/5 select-none [transition:transform_0.5s_cubic-bezier(0.22,1,0.36,1),opacity_0.5s,height_0.15s]',
           // Variables for calculating position and animation
@@ -152,14 +152,14 @@ function Toaster({
             />
           </div>
 
-          {toast.actionProps && (
+          {_toast.actionProps && (
             <ToastPrimitive.Action
               data-slot='toast-action'
               className={cn(
                 buttonVariants({ variant: 'ghost', size: 'xs' }),
                 'hover:bg-current/20 hover:text-current dark:hover:bg-current/20',
               )}
-              {...toast.actionProps}
+              {..._toast.actionProps}
             />
           )}
         </ToastPrimitive.Content>

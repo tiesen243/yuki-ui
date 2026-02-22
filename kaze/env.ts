@@ -21,14 +21,7 @@ export const env = createEnv({
   clientPrefix: 'NEXT_PUBLIC_',
   client: {},
 
-  runtimeEnv: { ...process.env },
-  deriveEnv(env) {
-    return {
-      isDev: env.NODE_ENV === 'development',
-      isProd: env.NODE_ENV === 'production',
-      isTest: env.NODE_ENV === 'test',
-    }
-  },
+  runtimeEnv: process.env,
 
   emptyStringAsUndefined: true,
   skipValidation:
