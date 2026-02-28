@@ -10,6 +10,7 @@ export default function PlaygroundLayout({
         crossOrigin='anonymous'
         src='//unpkg.com/react-scan/dist/auto.global.js'
       />
+
       {children}
     </>
   )
