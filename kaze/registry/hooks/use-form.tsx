@@ -1,3 +1,4 @@
+// oxlint-disable max-statements
 import * as React from 'react'
 
 interface FormError {
@@ -38,7 +39,7 @@ interface FormFieldProps<TName extends keyof TValues, TValues> {
 function extractError(errors: StandardSchemaV1.Issue[], name: string) {
   return errors.filter((issue) => {
     if (!issue.path || issue.path.length === 0) return false
-    const firstPath = issue.path[0]
+    const [firstPath] = issue.path
     if (typeof firstPath === 'object' && 'key' in firstPath)
       return firstPath.key === name
     return firstPath === name
@@ -62,7 +63,7 @@ export function useForm<
 }): {
   formId: string
   Field: <TName extends keyof TValues>(
-    props: FormFieldProps<TName, TValues>,
+    props: FormFieldProps<TName, TValues>
   ) => React.ReactNode
   handleSubmit: (event?: React.SubmitEvent) => void
   state: {
@@ -85,21 +86,22 @@ export function useForm<
     <TKey extends keyof TValues>(field: TKey, value: TValues[TKey]) => {
       formValuesRef.current = { ...formValuesRef.current, [field]: value }
     },
-    [],
+    []
   )
 
   const validate = React.useCallback(
     async (values: TValues): Promise<TValues> => {
       if (!schema) return values
 
-      let result
-      if (typeof schema === 'function') result = await schema(values)
-      else result = await schema['~standard'].validate(values)
+      const result =
+        typeof schema === 'function'
+          ? await schema(values)
+          : await schema['~standard'].validate(values)
 
       if ('issues' in result) throw result.issues
       return (result.value ?? result) as TValues
     },
-    [schema],
+    [schema]
   )
 
   const handleSubmit = React.useCallback(
@@ -125,14 +127,14 @@ export function useForm<
           if (Array.isArray(error)) issues = error
 
           let message = 'Validate failed'
-          if (error instanceof Error) message = error.message
+          if (error instanceof Error) ({ message } = error)
 
           formErrorRef.current = { message, issues } as TError
           await onError?.(formErrorRef.current)
         }
       })
     },
-    [onSubmit, onSuccess, onError, validate],
+    [onSubmit, onSuccess, onError, validate]
   )
 
   const Field = React.useCallback(
@@ -143,12 +145,12 @@ export function useForm<
       const id = React.useId()
 
       const [value, setValue] = React.useState(
-        () => formValuesRef.current[name],
+        () => formValuesRef.current[name]
       )
       const prevValueRef = React.useRef(value)
 
       const [errors, setErrors] = React.useState<StandardSchemaV1.Issue[]>(() =>
-        extractError(formErrorRef.current?.issues ?? [], name as string),
+        extractError(formErrorRef.current?.issues ?? [], name as string)
       )
 
       const onChange = React.useCallback(
@@ -163,14 +165,16 @@ export function useForm<
 
             if (target.type === 'checkbox') newValue = target.checked
             else if (target.type === 'number')
-              newValue = isNaN(target.valueAsNumber) ? 0 : target.valueAsNumber
+              newValue = Number.isNaN(target.valueAsNumber)
+                ? 0
+                : target.valueAsNumber
             else newValue = target.value
           } else newValue = param as TValues[TName]
 
           setValue(newValue as TValues[TName])
           setFormValue(name, newValue as TValues[TName])
         },
-        [name],
+        [name]
       )
 
       const onBlur = React.useCallback(async () => {
@@ -196,7 +200,7 @@ export function useForm<
           errors,
           isPending,
         }),
-        [id, errors],
+        [id, errors]
       )
 
       return render({
@@ -217,7 +221,7 @@ export function useForm<
         meta,
       })
     },
-    [formId, setFormValue, validate, isPending],
+    [formId, setFormValue, validate, isPending]
   )
 
   const reset = React.useCallback(
@@ -227,7 +231,7 @@ export function useForm<
         formDataRef.current = null
         formErrorRef.current = null
       }),
-    [defaultValues],
+    [defaultValues]
   )
 
   return React.useMemo(
@@ -251,7 +255,7 @@ export function useForm<
       },
       reset,
     }),
-    [formId, Field, handleSubmit, isPending, reset],
+    [formId, Field, handleSubmit, isPending, reset]
   )
 }
 
@@ -261,6 +265,7 @@ interface StandardSchemaV1<Input = unknown, Output = Input> {
   readonly '~standard': StandardSchemaV1.Props<Input, Output>
 }
 
+// oxlint-disable-next-line typescript/no-namespace
 declare namespace StandardSchemaV1 {
   /** The Standard Schema properties interface. */
   export interface Props<Input = unknown, Output = Input> {
@@ -271,7 +276,7 @@ declare namespace StandardSchemaV1 {
     /** Validates unknown input values. */
     readonly validate: (
       value: unknown,
-      options?: StandardSchemaV1.Options | undefined,
+      options?: StandardSchemaV1.Options | undefined
     ) => Result<Output> | Promise<Result<Output>>
     /** Inferred types associated with the schema. */
     readonly types?: Types<Input, Output> | undefined
@@ -296,7 +301,7 @@ declare namespace StandardSchemaV1 {
   /** The result interface if validation fails. */
   export interface FailureResult {
     /** The issues of failed validation. */
-    readonly issues: ReadonlyArray<Issue>
+    readonly issues: readonly Issue[]
   }
 
   /** The issue interface of the failure output. */

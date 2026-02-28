@@ -7,19 +7,19 @@ export abstract class BaseProvider {
     public readonly providerName: string,
     protected readonly clientId: string,
     protected readonly clientSecret: string,
-    protected readonly redirectUri: string = '',
+    protected readonly redirectUri: string
   ) {
     if (!this.redirectUri) this.redirectUri = this.createCallbackUrl()
   }
 
   public abstract createAuthorizationUrl(
     state: string,
-    codeVerifier: string,
+    codeVerifier: string
   ): Promise<URL>
 
   public abstract fetchUserData(
     code: string,
-    codeVerifier: string,
+    codeVerifier: string
   ): Promise<OAuthAccount>
 
   protected createCallbackUrl() {
@@ -28,10 +28,10 @@ export abstract class BaseProvider {
     return `${baseUrl}/api/auth/${this.providerName}`
   }
 
-  protected async createAuthorizationUrlWithoutPkce(
+  protected createAuthorizationUrlWithoutPkce(
     endpoint: string,
     state: string,
-    scopes: string[],
+    scopes: string[]
   ): Promise<URL> {
     const url = new URL(endpoint)
     url.searchParams.set('response_type', 'code')
@@ -49,12 +49,12 @@ export abstract class BaseProvider {
     state: string,
     scopes: string[],
     codeVerifier: string,
-    codeChallengeMethod: 'S256' | 'plain' = 'S256',
+    codeChallengeMethod: 'S256' | 'plain' = 'S256'
   ): Promise<URL> {
     const url = await this.createAuthorizationUrlWithoutPkce(
       endpoint,
       state,
-      scopes,
+      scopes
     )
 
     if (codeChallengeMethod === 'S256') {
@@ -72,7 +72,7 @@ export abstract class BaseProvider {
   protected async validateAuthorizationCode(
     endpoint: string,
     code: string,
-    codeVerifier: string | null = null,
+    codeVerifier: string | null = null
   ): Promise<Response> {
     const body = new URLSearchParams()
     body.set('grant_type', 'authorization_code')
@@ -85,7 +85,7 @@ export abstract class BaseProvider {
     const request = this.createRequest(endpoint, body)
     request.headers.set(
       'Authorization',
-      `Basic ${this.encodeCredentials(this.clientId, this.clientSecret)}`,
+      `Basic ${this.encodeCredentials(this.clientId, this.clientSecret)}`
     )
 
     return await fetch(request)
@@ -106,9 +106,9 @@ export abstract class BaseProvider {
   private encodeCredentials(clientId: string, clientSecret: string): string {
     const credentials = `${clientId}:${clientSecret}`
     const bytes = new TextEncoder().encode(credentials)
-    return btoa(String.fromCharCode(...bytes))
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=/g, '')
+    return btoa(String.fromCodePoint(...bytes))
+      .replaceAll('+', '-')
+      .replaceAll('/', '_')
+      .replaceAll(/[=]/g, '')
   }
 }

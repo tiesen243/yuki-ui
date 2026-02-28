@@ -35,7 +35,7 @@ function useNvimStatusline() {
   const context = React.use(NvimStatuslineContext)
   if (context === null)
     throw new Error(
-      'useNvimStatusline must be used within a NvimStatuslineProvider',
+      'useNvimStatusline must be used within a NvimStatuslineProvider'
     )
   return context
 }
@@ -62,10 +62,10 @@ function NvimStatusline({
         className: cn(
           'group/statusline sticky bottom-0 left-0 z-50 flex h-6 w-full items-center justify-between gap-0 bg-border px-4 font-mono transition-colors md:bottom-4',
           "[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-          className,
+          className
         ),
       },
-      props,
+      props
     ),
     render,
     state: {
@@ -89,7 +89,7 @@ function NvimStatuslineSectionA({
       <div
         className={cn(
           'inline-flex h-6 items-center gap-2 pr-1 pl-2 font-medium text-background',
-          BG_COLORS,
+          BG_COLORS
         )}
       >
         {children}
@@ -116,7 +116,7 @@ function NvimStatuslineSectionB({
       <div
         className={cn(
           'inline-flex h-full items-center gap-2 bg-background pr-1 whitespace-nowrap',
-          TEXT_COLORS,
+          TEXT_COLORS
         )}
       >
         {children}
@@ -138,7 +138,7 @@ function NvimStatuslineSectionC({
       data-slot='nvim-statusline-section-c'
       className={cn(
         'inline-flex h-full max-w-full flex-1 items-center gap-2 truncate overflow-hidden text-ellipsis whitespace-nowrap',
-        className,
+        className
       )}
       {...props}
     />
@@ -154,7 +154,7 @@ function NvimStatuslineSectionX({
       data-slot='nvim-statusline-section-x'
       className={cn(
         'inline-flex h-full items-center gap-2 truncate overflow-hidden text-ellipsis whitespace-nowrap',
-        className,
+        className
       )}
       {...props}
     />
@@ -179,7 +179,7 @@ function NvimStatuslineSectionY({
       <div
         className={cn(
           'inline-flex h-full items-center gap-2 bg-background pl-1 whitespace-nowrap',
-          TEXT_COLORS,
+          TEXT_COLORS
         )}
       >
         {children}
@@ -206,7 +206,7 @@ function NvimStatuslineSectionZ({
       <div
         className={cn(
           'inline-flex h-full items-center gap-2 pr-2 pl-1 font-medium whitespace-nowrap text-background',
-          BG_COLORS,
+          BG_COLORS
         )}
       >
         {children}

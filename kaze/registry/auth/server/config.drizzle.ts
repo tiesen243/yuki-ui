@@ -12,7 +12,7 @@ export const authConfig = {
   providers: [
     new Discord(
       process.env.AUTH_DISCORD_ID ?? '',
-      process.env.AUTH_DISCORD_SECRET ?? '',
+      process.env.AUTH_DISCORD_SECRET ?? ''
     ),
   ],
 
@@ -45,8 +45,8 @@ export const authConfig = {
           .where(
             and(
               eq(accounts.provider, provider),
-              eq(accounts.accountId, accountId),
-            ),
+              eq(accounts.accountId, accountId)
+            )
           )
           .limit(1)
 

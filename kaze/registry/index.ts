@@ -20,6 +20,6 @@ export const registry = {
   ].map((item) =>
     Object.assign(item, {
       author: 'tiesen243 <ttien56906@gmail.com>',
-    }),
+    })
   ),
 } satisfies Registry

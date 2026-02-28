@@ -19,7 +19,7 @@ export default async function DocPage({
   const page = source.getPage(slugs)
   if (!page) return notFound()
 
-  const MDX = page.data.body
+  const Body = page.data.body
 
   return (
     <DocsPage
@@ -51,7 +51,7 @@ export default async function DocPage({
         </Button>
       )}
       <DocsBody>
-        <MDX components={getMDXComponents()} />
+        <Body components={getMDXComponents()} />
       </DocsBody>
     </DocsPage>
   )

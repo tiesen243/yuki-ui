@@ -8,7 +8,7 @@ import { Editor, RichTextViewer } from '@/registry/ui/tiptap'
 
 export default function TiptapDemo() {
   const [value, setValue] = useState(
-    '<h1>Hello, World!</h1><p>This is a rich text editor demo.</p>',
+    '<h1>Hello, World!</h1><p>This is a rich text editor demo.</p>'
   )
 
   return (

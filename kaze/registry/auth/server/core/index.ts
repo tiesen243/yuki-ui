@@ -1,3 +1,5 @@
+// oxlint-disable unicorn/no-unreadable-array-destructuring, max-statements
+
 import type { AuthConfig, Session, SessionWithUser } from '@/server/auth/types'
 
 import {
@@ -17,6 +19,50 @@ const PATH_REGEXS = {
   oauth: /^(?:\/([^/]+))?\/api\/auth\/([^/]+)$/,
 } as const
 
+function parseCookies(cookieHeader: string | null): Record<string, string> {
+  const cookies: Record<string, string> = {}
+  if (!cookieHeader) return cookies
+  const pairs = cookieHeader.split(';')
+  for (const pair of pairs) {
+    const [key, value] = pair.trim().split('=')
+    cookies[key] = decodeURIComponent(value)
+  }
+  return cookies
+}
+
+function serializeCookie(
+  name: string,
+  value: string,
+  options: Record<string, string | number | boolean>
+): string {
+  let cookieString = `${name}=${encodeURIComponent(value)}`
+  for (const [key, val] of Object.entries(options)) {
+    if (val === true) cookieString += `; ${key}`
+    else if (val === false) continue
+    else cookieString += `; ${key}=${val}`
+  }
+  return cookieString
+}
+
+const defaultConfig = {
+  session: {
+    expiresIn: 60 * 60 * 24 * 7, // 7 days
+    expiresThreshold: 60 * 60 * 24, // 1 day
+  },
+  cookie: {
+    Path: '/',
+    HttpOnly: true,
+    Secure: process.env.NODE_ENV === 'production',
+    SameSite: 'lax',
+  },
+  keys: {
+    token: 'auth.token',
+    state: 'auth.state',
+    codeVerifier: 'auth.code_verifier',
+    redirectUri: 'auth.redirect_uri',
+  },
+} satisfies Omit<AuthConfig, 'adapter' | 'providers'>
+
 export function Auth(config: AuthConfig) {
   const finalConfig = {
     ...config,
@@ -28,7 +74,7 @@ export function Auth(config: AuthConfig) {
 
   async function createSession(
     userId: string,
-    opts: Pick<Session, 'ipAddress' | 'userAgent'>,
+    opts: Pick<Session, 'ipAddress' | 'userAgent'>
   ): Promise<{ token: string; expiresAt: Date }> {
     const id = generateSecureString()
     const secret = generateSecureString()
@@ -102,7 +148,7 @@ export function Auth(config: AuthConfig) {
     opts: Pick<Session, 'ipAddress' | 'userAgent'> = {
       ipAddress: null,
       userAgent: null,
-    },
+    }
   ): Promise<{ token: string; expiresAt: Date }> {
     const user = await adapter.user.find(data.email)
     if (!user) throw new Error('Invalid credentials')
@@ -136,8 +182,8 @@ export function Auth(config: AuthConfig) {
        * - Retrieves the current authenticated user's session.
        */
       if (PATH_REGEXS.getSession.test(pathname)) {
-        const session = await auth({ headers: request.headers })
-        response = Response.json(session)
+        const _session = await auth({ headers: request.headers })
+        response = Response.json(_session)
       }
 
       /*
@@ -167,6 +213,7 @@ export function Auth(config: AuthConfig) {
         if (existingUser) {
           userId = existingUser.id
 
+          // oxlint-disable-next-line unicorn/no-array-method-this-argument
           const account = await adapter.account.find(provider, userData.id)
           if (!account)
             await adapter.account.create({
@@ -200,13 +247,13 @@ export function Auth(config: AuthConfig) {
           serializeCookie(keys.token, result.token, {
             ...cookie,
             expires: result.expiresAt.toUTCString(),
-          }),
+          })
         )
       }
-    } catch (e) {
+    } catch (error) {
       response = new Response(
-        e instanceof Error ? e.message : 'Internal Server Error',
-        { status: 400 },
+        error instanceof Error ? error.message : 'Internal Server Error',
+        { status: 400 }
       )
     }
 
@@ -247,7 +294,7 @@ export function Auth(config: AuthConfig) {
           serializeCookie(keys.token, result.token, {
             ...cookie,
             expires: result.expiresAt.toUTCString(),
-          }),
+          })
         )
       }
 
@@ -260,7 +307,7 @@ export function Auth(config: AuthConfig) {
         response = new Response(null, { status: 204 })
         response.headers.set(
           'Set-Cookie',
-          serializeCookie(keys.token, '', { ...cookie, 'Max-Age': 0 }),
+          serializeCookie(keys.token, '', { ...cookie, 'Max-Age': 0 })
         )
       }
 
@@ -282,21 +329,21 @@ export function Auth(config: AuthConfig) {
         response.headers.set('Location', authorizationUrl.toString())
         response.headers.append(
           'Set-Cookie',
-          serializeCookie(keys.state, state, { 'Max-Age': 300 }),
+          serializeCookie(keys.state, state, { 'Max-Age': 300 })
         )
         response.headers.append(
           'Set-Cookie',
-          serializeCookie(keys.codeVerifier, code, { 'Max-Age': 300 }),
+          serializeCookie(keys.codeVerifier, code, { 'Max-Age': 300 })
         )
         response.headers.append(
           'Set-Cookie',
-          serializeCookie(keys.redirectUri, redirectUri, { 'Max-Age': 300 }),
+          serializeCookie(keys.redirectUri, redirectUri, { 'Max-Age': 300 })
         )
       }
-    } catch (e) {
+    } catch (error) {
       response = new Response(
-        e instanceof Error ? e.message : 'Internal Server Error',
-        { status: 400 },
+        error instanceof Error ? error.message : 'Internal Server Error',
+        { status: 400 }
       )
     }
 
@@ -320,47 +367,3 @@ export function Auth(config: AuthConfig) {
 
   return { auth, signIn, signOut, handler }
 }
-
-function parseCookies(cookieHeader: string | null): Record<string, string> {
-  const cookies: Record<string, string> = {}
-  if (!cookieHeader) return cookies
-  const pairs = cookieHeader.split(';')
-  for (const pair of pairs) {
-    const [key, value] = pair.trim().split('=')
-    cookies[key] = decodeURIComponent(value)
-  }
-  return cookies
-}
-
-function serializeCookie(
-  name: string,
-  value: string,
-  options: Record<string, string | number | boolean>,
-): string {
-  let cookieString = `${name}=${encodeURIComponent(value)}`
-  for (const [key, val] of Object.entries(options)) {
-    if (val === true) cookieString += `; ${key}`
-    else if (val === false) continue
-    else cookieString += `; ${key}=${val}`
-  }
-  return cookieString
-}
-
-const defaultConfig = {
-  session: {
-    expiresIn: 60 * 60 * 24 * 7, // 7 days
-    expiresThreshold: 60 * 60 * 24, // 1 day
-  },
-  cookie: {
-    Path: '/',
-    HttpOnly: true,
-    Secure: process.env.NODE_ENV === 'production',
-    SameSite: 'lax',
-  },
-  keys: {
-    token: 'auth.token',
-    state: 'auth.state',
-    codeVerifier: 'auth.code_verifier',
-    redirectUri: 'auth.redirect_uri',
-  },
-} satisfies Omit<AuthConfig, 'adapter' | 'providers'>

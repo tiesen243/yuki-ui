@@ -28,13 +28,13 @@ export interface JWTHeader {
 
 export class JWT<TValue extends Record<string, unknown>> {
   constructor(
-    private readonly secret: string = '',
-    private readonly algorithm: JWTAlgorithm = 'HS256',
+    private readonly secret = '',
+    private readonly algorithm: JWTAlgorithm = 'HS256'
   ) {}
 
   public async sign(
     payloadClaims: TValue,
-    options: JWTOptions = {},
+    options: JWTOptions = {}
   ): Promise<string> {
     const header = {
       alg: this.algorithm,
@@ -43,8 +43,9 @@ export class JWT<TValue extends Record<string, unknown>> {
     }
 
     const payload = { ...payloadClaims } as Record<string, unknown>
-    payload.exp = Math.floor(Date.now() / 1000) + (options.expiresIn ?? 3600)
 
+    if (!payload.exp)
+      payload.exp = Math.floor(Date.now() / 1000) + (options.expiresIn ?? 3600)
     if (options.audiences) payload.aud = options.audiences
     if (options.subject) payload.sub = options.subject
     if (options.issuer) payload.iss = options.issuer
@@ -56,10 +57,10 @@ export class JWT<TValue extends Record<string, unknown>> {
 
     const textEncoder = new TextEncoder()
     const headerPart = encodeBase64Url(
-      textEncoder.encode(JSON.stringify(header)),
+      textEncoder.encode(JSON.stringify(header))
     )
     const payloadPart = encodeBase64Url(
-      textEncoder.encode(JSON.stringify(payload)),
+      textEncoder.encode(JSON.stringify(payload))
     )
 
     const data = textEncoder.encode(`${headerPart}.${payloadPart}`)
@@ -80,7 +81,7 @@ export class JWT<TValue extends Record<string, unknown>> {
     const expectedSignature = await this.signData(data)
 
     const expectedSignaturePart = encodeBase64Url(
-      new Uint8Array(expectedSignature),
+      new Uint8Array(expectedSignature)
     )
     if (expectedSignaturePart !== signaturePart)
       throw new Error('Invalid token signature')
@@ -112,7 +113,7 @@ export class JWT<TValue extends Record<string, unknown>> {
       new TextEncoder().encode(this.secret),
       { name: 'HMAC', hash: algMap[this.algorithm] },
       false,
-      ['sign'],
+      ['sign']
     )
 
     return crypto.subtle.sign('HMAC', key, data as Uint8Array<ArrayBuffer>)

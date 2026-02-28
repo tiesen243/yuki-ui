@@ -9,7 +9,7 @@ export const authConfig = {
   providers: [
     new Discord(
       process.env.AUTH_DISCORD_ID ?? '',
-      process.env.AUTH_DISCORD_SECRET ?? '',
+      process.env.AUTH_DISCORD_SECRET ?? ''
     ),
   ],
 

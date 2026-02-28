@@ -8,10 +8,11 @@ const useDebounce = <T>(callback: (...args: T[]) => void, delay: number) => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
 
       timeoutRef.current = setTimeout(() => {
+        // oxlint-disable-next-line promise/prefer-await-to-callbacks
         callback(...args)
       }, delay)
     },
-    [callback, delay],
+    [callback, delay]
   )
 
   return debouncedCallback

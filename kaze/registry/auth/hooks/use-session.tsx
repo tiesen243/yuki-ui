@@ -51,7 +51,7 @@ function SessionProvider(props: Readonly<SessionProviderProps>) {
   const { mutateAsync: signIn } = useMutation({
     mutationKey: ['auth', 'sign-in'],
     mutationFn: async (
-      credentials: Parameters<SessionContextValue['signIn']>[0],
+      credentials: Parameters<SessionContextValue['signIn']>[0]
     ) => {
       const res = await fetch(`${basePath}/sign-in`, {
         method: 'POST',
@@ -74,9 +74,11 @@ function SessionProvider(props: Readonly<SessionProviderProps>) {
   })
 
   const value = React.useMemo(() => {
+    // oxlint-disable-next-line no-nested-ternary
     const status = isLoading
       ? 'loading'
-      : data?.user
+      : // oxlint-disable-next-line unicorn/no-nested-ternary
+        data?.user
         ? 'authenticated'
         : 'unauthenticated'
 

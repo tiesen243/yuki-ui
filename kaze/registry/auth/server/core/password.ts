@@ -24,17 +24,19 @@ export class Password {
     return constantTimeEqual(targetKey, decodeHex(key ?? ''))
   }
 
-  private async generateKey(data: string, salt?: string): Promise<Uint8Array> {
+  private generateKey(data: string, salt?: string): Promise<Uint8Array> {
     const textEncoder = new TextEncoder()
+    // oxlint-disable-next-line promise/avoid-new
     return new Promise((resolve, reject) => {
       scrypt(
         textEncoder.encode(data),
         textEncoder.encode(salt),
         this.dkLen,
+        // oxlint-disable-next-line promise/prefer-await-to-callbacks
         (error, derivedKey) => {
           if (error) reject(error)
           else resolve(new Uint8Array(derivedKey))
-        },
+        }
       )
     })
   }

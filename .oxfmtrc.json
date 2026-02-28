@@ -1,14 +1,20 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
 
-  "jsxSingleQuote": true,
   "printWidth": 80,
+  "tabWidth": 2,
+  "arrowParens": "always",
+  "bracketSameLine": false,
+  "bracketSpacing": true,
+  "endOfLine": "lf",
+  "quoteProps": "as-needed",
   "semi": false,
   "singleQuote": true,
-  "tabWidth": 2,
-  "trailingComma": "all",
+  "jsxSingleQuote": true,
+  "trailingComma": "es5",
+  "useTabs": false,
 
-  "experimentalSortImports": {
+  "sortImports": {
     "groups": [
       "side_effect_style",
       "type-import",
@@ -17,14 +23,14 @@
       "value-internal",
       ["type-parent", "type-sibling", "type-index"],
       ["value-parent", "value-sibling", "value-index"]
-    ]
+    ],
+    "newlinesBetween": true,
+    "order": "asc"
   },
 
-  "experimentalSortPackageJson": {
-    "sortScripts": true
-  },
+  "sortPackageJson": true,
 
-  "experimentalTailwindcss": {
+  "sortTailwindcss": {
     "functions": ["clsx", "cva", "cn"],
     "stylesheet": "./kaze/app/globals.css"
   }

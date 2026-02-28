@@ -55,7 +55,7 @@ function ToastProvider({
             // Horizontal positions
             'data-[position*=left]:left-(--toast-inset)',
             'data-[position*=center]:left-1/2 data-[position*=center]:-translate-x-1/2',
-            'data-[position*=right]:right-(--toast-inset)',
+            'data-[position*=right]:right-(--toast-inset)'
           )}
         >
           <Toaster position={position} />
@@ -70,7 +70,7 @@ function Toaster({
 }: Pick<ToastProviderProps, 'position'>) {
   const { toasts } = ToastPrimitive.useToastManager()
 
-  let swipeDirection: ToastPrimitive.Root.Props['swipeDirection'] = []
+  const swipeDirection: ToastPrimitive.Root.Props['swipeDirection'] = []
   if (position.includes('top')) swipeDirection.push('up')
   if (position.includes('bottom')) swipeDirection.push('down')
   if (position.includes('left')) swipeDirection.push('left')
@@ -117,7 +117,7 @@ function Toaster({
           '[&[data-ending-style]:not([data-limited]):not([data-swipe-direction])]:[transform:translateY(150%)]',
           // Expanded styles
           'data-[expanded]:h-[var(--toast-height)] data-[expanded]:[transform:translateX(var(--toast-swipe-movement-x))_translateY(calc(var(--offset-y)))] data-[limited]:opacity-0 data-[position*=top]:data-[expanded]:[transform:translateX(var(--toast-swipe-movement-x))_translateY(calc(var(--offset-y)*-1))]',
-          'data-[expanded]:data-[ending-style]:data-[swipe-direction=down]:[transform:translateY(calc(var(--toast-swipe-movement-y)+150%))] data-[expanded]:data-[ending-style]:data-[swipe-direction=left]:[transform:translateX(calc(var(--toast-swipe-movement-x)-150%))_translateY(var(--offset-y))] data-[expanded]:data-[ending-style]:data-[swipe-direction=right]:[transform:translateX(calc(var(--toast-swipe-movement-x)+150%))_translateY(var(--offset-y))] data-[expanded]:data-[ending-style]:data-[swipe-direction=up]:[transform:translateY(calc(var(--toast-swipe-movement-y)-150%))]',
+          'data-[expanded]:data-[ending-style]:data-[swipe-direction=down]:[transform:translateY(calc(var(--toast-swipe-movement-y)+150%))] data-[expanded]:data-[ending-style]:data-[swipe-direction=left]:[transform:translateX(calc(var(--toast-swipe-movement-x)-150%))_translateY(var(--offset-y))] data-[expanded]:data-[ending-style]:data-[swipe-direction=right]:[transform:translateX(calc(var(--toast-swipe-movement-x)+150%))_translateY(var(--offset-y))] data-[expanded]:data-[ending-style]:data-[swipe-direction=up]:[transform:translateY(calc(var(--toast-swipe-movement-y)-150%))]'
         )}
         swipeDirection={swipeDirection}
       >
@@ -157,7 +157,7 @@ function Toaster({
               data-slot='toast-action'
               className={cn(
                 buttonVariants({ variant: 'ghost', size: 'xs' }),
-                'hover:bg-current/20 hover:text-current dark:hover:bg-current/20',
+                'hover:bg-current/20 hover:text-current dark:hover:bg-current/20'
               )}
               {..._toast.actionProps}
             />

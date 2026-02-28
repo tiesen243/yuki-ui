@@ -47,7 +47,7 @@ function Typography({
       {
         className: cn(typographyVariants({ variant }), className),
       },
-      props,
+      props
     ),
     render,
     state: {

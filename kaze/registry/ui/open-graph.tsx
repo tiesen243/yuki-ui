@@ -196,17 +196,17 @@ export function GET(request: NextRequest) {
         /* Register custom fonts if needed.
          * fonts: [geistRegular, geistMedium, geistBold],
          */
-      },
+      }
     )
-  } catch (e: unknown) {
-    console.error(e)
+  } catch (error: unknown) {
+    console.error(error)
     return new Response(`Failed to generate the image`, { status: 500 })
   }
 }
 
 async function _getFont(font: string, weight = 400) {
   const response = await fetch(
-    new URL(`../../../public/assets/fonts/${font}.ttf`, import.meta.url),
+    new URL(`../../../public/assets/fonts/${font}.ttf`, import.meta.url)
   )
   return {
     name: font,

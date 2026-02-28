@@ -1,0 +1,13 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../.oxlintrc.json"],
+  "rules": {
+    "no-use-before-define": "off",
+
+    "unicorn/no-unreadable-array-destructuring": "off",
+    "unicorn/no-object-as-default-parameter": "off",
+    "unicorn/no-array-method-this-argument": "off",
+
+    "node/no-process-env": "off"
+  }
+}

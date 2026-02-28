@@ -73,7 +73,7 @@ export function ComponentShowcaseSection() {
             render={
               <Link
                 href={'/docs' as '/docs/[[...slugs]]'}
-                araia-label={'Browse All Components'}
+                araia-label='Browse All Components'
               />
             }
           >

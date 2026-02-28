@@ -68,7 +68,7 @@ function Editor({
           return {
             Enter: () => {
               const { state } = this.editor
-              const nodeBefore = state.selection.$from.nodeBefore
+              const { nodeBefore } = state.selection.$from
 
               if (
                 nodeBefore?.type.name !== 'hardBreak' &&
@@ -185,7 +185,7 @@ function Editor({
         isDisabled: disabled,
       },
     ],
-    [editor, disabled],
+    [editor, disabled]
   )
 
   const rightToolbars = useMemo(
@@ -205,7 +205,7 @@ function Editor({
         isDisabled: !editor?.can().chain().redo().run() || disabled,
       },
     ],
-    [editor, disabled],
+    [editor, disabled]
   )
 
   if (!editor)
@@ -224,13 +224,13 @@ function Editor({
       className={cn(
         'group/editor rounded-lg border border-input transition-colors',
         'aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40',
-        'aria-disabled:cursor-not-allowed aria-disabled:opacity-50',
+        'aria-disabled:cursor-not-allowed aria-disabled:opacity-50'
       )}
       aria-disabled={disabled}
     >
       <div
         className={cn(
-          'flex w-full items-stretch rounded-t-lg border-b border-border bg-popover',
+          'flex w-full items-stretch rounded-t-lg border-b border-border bg-popover'
         )}
       >
         {leftToolbars.map(
@@ -245,7 +245,7 @@ function Editor({
               <Icon />
               <span className='sr-only'>Toggle {label}</span>
             </ToggleButton>
-          ),
+          )
         )}
 
         <div className='flex-1' />
@@ -262,7 +262,7 @@ function Editor({
               <Icon />
               <span className='sr-only'>Toggle {label}</span>
             </ToggleButton>
-          ),
+          )
         )}
       </div>
 
@@ -271,7 +271,7 @@ function Editor({
         className={cn(
           'bg-transparent aria-disabled:bg-input/80 dark:bg-input/30 [&_.ProseMirror]:field-sizing-content [&_.ProseMirror]:min-h-20 [&_.ProseMirror]:w-full [&_.ProseMirror]:px-2.5 [&_.ProseMirror]:py-2 [&_.ProseMirror]:text-base [&_.ProseMirror]:outline-none [&_.ProseMirror]:md:text-sm',
           '[&_p:is(.is-editor-empty):first-child]:before:pointer-events-none [&_p:is(.is-editor-empty):first-child]:before:float-left [&_p:is(.is-editor-empty):first-child]:before:h-0 [&_p:is(.is-editor-empty):first-child]:before:text-sm [&_p:is(.is-editor-empty):first-child]:before:text-muted-foreground [&_p:is(.is-editor-empty):first-child]:before:content-[attr(data-placeholder)]',
-          ...TYPOGRAPHY,
+          ...TYPOGRAPHY
         )}
         aria-disabled={disabled}
       />
@@ -291,6 +291,7 @@ function RichTextViewer({
       {...props}
       data-slot='rich-text-viewer'
       className={cn(...TYPOGRAPHY, className)}
+      // oxlint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{ __html: content }}
     />
   )
@@ -312,7 +313,7 @@ function ToggleButton({
         'inline-flex size-8 items-center justify-center border-input text-sm font-medium first:rounded-tl-lg last:rounded-tr-lg hover:bg-input data-[active=true]:bg-input data-[position=end]:border-l data-[position=start]:border-r dark:hover:bg-input/50 dark:data-[active=true]:bg-input/50 [&_svg:not([class*="size-"])]:size-4',
         'focus-visible:ring-[3px] focus-visible:ring-ring/50',
         'disabled:cursor-not-allowed disabled:opacity-50',
-        className,
+        className
       )}
       {...props}
     />

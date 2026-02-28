@@ -24,7 +24,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         className={cn(
           'flex min-h-dvh flex-col font-sans antialiased',
           geistSans.variable,
-          geistMono.variable,
+          geistMono.variable
         )}
       >
         <RootProvider>

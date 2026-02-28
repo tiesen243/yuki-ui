@@ -23,7 +23,7 @@ export function Auth(config: AuthConfig) {
 
   async function createSession(
     userId: string,
-    _opts: Pick<Session, 'ipAddress' | 'userAgent'>,
+    _opts: Pick<Session, 'ipAddress' | 'userAgent'>
   ): Promise<{ token: string; expiresAt: Date }> {
     const payload = { userId }
     const expiresAt = new Date(Date.now() + session?.expiresIn * 1000)
@@ -57,7 +57,7 @@ export function Auth(config: AuthConfig) {
     opts: Pick<Session, 'ipAddress' | 'userAgent'> = {
       ipAddress: null,
       userAgent: null,
-    },
+    }
   ): Promise<{ token: string; expiresAt: Date }> {
     const user = await adapter.user.find(data.email)
     if (!user) throw new Error('Invalid credentials')
@@ -71,12 +71,14 @@ export function Auth(config: AuthConfig) {
     return createSession(user.id, opts)
   }
 
+  // oxlint-disable-next-line require-await
   async function signOut(opts: { headers: Headers }): Promise<void> {
     const cookies = parseCookies(opts.headers.get('Cookie'))
     const token =
       cookies[keys.token] ??
       opts.headers.get('Authorization')?.replace('Bearer ', '') ??
       ''
+    // oxlint-disable-next-line no-useless-return
     if (!token) return
 
     // For JWT, sign-out is typically handled client-side by deleting the token.
@@ -93,8 +95,8 @@ export function Auth(config: AuthConfig) {
        * - Retrieves the current authenticated user's session.
        */
       if (PATH_REGEXS.getSession.test(pathname)) {
-        const session = await auth({ headers: request.headers })
-        response = Response.json(session)
+        const _session = await auth({ headers: request.headers })
+        response = Response.json(_session)
       }
 
       /*
@@ -157,13 +159,13 @@ export function Auth(config: AuthConfig) {
           serializeCookie(keys.token, result.token, {
             ...cookie,
             expires: result.expiresAt.toUTCString(),
-          }),
+          })
         )
       }
-    } catch (e) {
+    } catch (error) {
       response = new Response(
-        e instanceof Error ? e.message : 'Internal Server Error',
-        { status: 400 },
+        error instanceof Error ? error.message : 'Internal Server Error',
+        { status: 400 }
       )
     }
 
@@ -204,7 +206,7 @@ export function Auth(config: AuthConfig) {
           serializeCookie(keys.token, result.token, {
             ...cookie,
             expires: result.expiresAt.toUTCString(),
-          }),
+          })
         )
       }
 
@@ -220,7 +222,7 @@ export function Auth(config: AuthConfig) {
           serializeCookie(keys.token, '', {
             ...cookie,
             'Max-Age': 0,
-          }),
+          })
         )
       }
 
@@ -242,21 +244,21 @@ export function Auth(config: AuthConfig) {
         response.headers.set('Location', authorizationUrl.toString())
         response.headers.append(
           'Set-Cookie',
-          serializeCookie(keys.state, state, { 'Max-Age': 300 }),
+          serializeCookie(keys.state, state, { 'Max-Age': 300 })
         )
         response.headers.append(
           'Set-Cookie',
-          serializeCookie(keys.codeVerifier, code, { 'Max-Age': 300 }),
+          serializeCookie(keys.codeVerifier, code, { 'Max-Age': 300 })
         )
         response.headers.append(
           'Set-Cookie',
-          serializeCookie(keys.redirectUri, redirectUri, { 'Max-Age': 300 }),
+          serializeCookie(keys.redirectUri, redirectUri, { 'Max-Age': 300 })
         )
       }
-    } catch (e) {
+    } catch (error) {
       response = new Response(
-        e instanceof Error ? e.message : 'Internal Server Error',
-        { status: 400 },
+        error instanceof Error ? error.message : 'Internal Server Error',
+        { status: 400 }
       )
     }
 
@@ -295,7 +297,7 @@ function parseCookies(cookieHeader: string | null): Record<string, string> {
 function serializeCookie(
   name: string,
   value: string,
-  options: Record<string, string | number | boolean>,
+  options: Record<string, string | number | boolean>
 ): string {
   let cookieString = `${name}=${encodeURIComponent(value)}`
   for (const [key, val] of Object.entries(options)) {

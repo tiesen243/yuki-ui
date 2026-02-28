@@ -73,13 +73,13 @@ export interface AuthConfig {
     user: {
       find(identifier: string): Promise<User | null>
       create(
-        data: Pick<User, 'name' | 'email' | 'image'>,
+        data: Pick<User, 'name' | 'email' | 'image'>
       ): Promise<Pick<User, 'id'>>
     }
     account: {
       find(
         provider: string,
-        accountId: string,
+        accountId: string
       ): Promise<Pick<Account, 'id' | 'userId' | 'password'> | null>
       create(data: Omit<Account, 'id'>): Promise<Pick<Account, 'id'>>
     }
@@ -88,7 +88,7 @@ export interface AuthConfig {
       create(data: Session): Promise<void>
       update(
         token: string,
-        data: Partial<Omit<Session, 'id' | 'token' | 'userId'>>,
+        data: Partial<Omit<Session, 'id' | 'token' | 'userId'>>
       ): Promise<void>
       delete(id: string): Promise<void>
     }

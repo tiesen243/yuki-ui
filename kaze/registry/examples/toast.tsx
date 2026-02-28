@@ -34,14 +34,16 @@ export default function ToastDemo() {
       label: 'Show Promise Toast',
       action: () =>
         toast.promise(
+          // oxlint-disable-next-line promise/avoid-new
           new Promise((resolve) =>
-            setTimeout(() => resolve('Data loaded'), 3000),
+            // oxlint-disable-next-line no-promise-executor-return
+            setTimeout(() => resolve('Data loaded'), 3000)
           ),
           {
             loading: 'Loading data...',
             success: (data) => `Success: ${data}`,
             error: (err) => `Error: ${err}`,
-          },
+          }
         ),
     },
     {
@@ -52,6 +54,7 @@ export default function ToastDemo() {
           description: 'This toast has a custom action button.',
           actionProps: {
             children: 'Undo',
+            // oxlint-disable-next-line no-alert
             onClick: () => alert('Undo action clicked!'),
           },
         }),

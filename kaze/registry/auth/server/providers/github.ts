@@ -3,11 +3,7 @@ import type { OAuth2Token, OAuthAccount } from '@/server/auth/types'
 import { BaseProvider } from '@/server/auth/providers/base'
 
 export class Github extends BaseProvider {
-  constructor(
-    clientId: string,
-    clientSecret: string,
-    redirectUri: string = '',
-  ) {
+  constructor(clientId: string, clientSecret: string, redirectUri: string) {
     super('github', clientId, clientSecret, redirectUri)
   }
 
@@ -17,13 +13,13 @@ export class Github extends BaseProvider {
 
   public override async createAuthorizationUrl(
     state: string,
-    codeVerifier: string,
+    codeVerifier: string
   ): Promise<URL> {
     const url = await this.createAuthorizationUrlWithPKCE(
       this.authorizationEndpoint,
       state,
       ['read:user', 'user:email'],
-      codeVerifier,
+      codeVerifier
     )
 
     return url
@@ -31,12 +27,12 @@ export class Github extends BaseProvider {
 
   public override async fetchUserData(
     code: string,
-    codeVerifier: string,
+    codeVerifier: string
   ): Promise<OAuthAccount> {
     const tokenResponse = await this.validateAuthorizationCode(
       this.tokenEndpoint,
       code,
-      codeVerifier,
+      codeVerifier
     )
     if (!tokenResponse.ok) {
       const error = await tokenResponse.text().catch(() => 'Unknown error')

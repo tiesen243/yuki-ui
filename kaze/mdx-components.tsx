@@ -1,3 +1,5 @@
+// oxlint-disable no-use-before-define
+
 import type { MDXComponents } from 'mdx/types'
 
 import { Callout } from 'fumadocs-ui/components/callout'

@@ -19,8 +19,10 @@ export function createMetadata(override: Metadata = {}): Metadata {
     : baseUrl
 
   const images = [
+    // oxlint-disable-next-line no-nested-ternary
     ...(override.openGraph?.images
-      ? Array.isArray(override.openGraph.images)
+      ? // oxlint-disable-next-line unicorn/no-nested-ternary
+        Array.isArray(override.openGraph.images)
         ? override.openGraph.images
         : [override.openGraph.images]
       : []),

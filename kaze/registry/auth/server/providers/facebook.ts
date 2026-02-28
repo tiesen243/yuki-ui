@@ -3,11 +3,7 @@ import type { OAuth2Token, OAuthAccount } from '@/server/auth/types'
 import { BaseProvider } from '@/server/auth/providers/base'
 
 export class Facebook extends BaseProvider {
-  constructor(
-    clientId: string,
-    clientSecret: string,
-    redirectUri: string = '',
-  ) {
+  constructor(clientId: string, clientSecret: string, redirectUri: string) {
     super('facebook', clientId, clientSecret, redirectUri)
   }
 
@@ -17,12 +13,12 @@ export class Facebook extends BaseProvider {
 
   public override async createAuthorizationUrl(
     state: string,
-    _codeVerifier: string,
+    _codeVerifier: string
   ): Promise<URL> {
     const url = await this.createAuthorizationUrlWithoutPkce(
       this.authorizationEndpoint,
       state,
-      ['email', 'public_profile'],
+      ['email', 'public_profile']
     )
 
     return url
@@ -30,11 +26,11 @@ export class Facebook extends BaseProvider {
 
   public override async fetchUserData(
     code: string,
-    _codeVerifier: string,
+    _codeVerifier: string
   ): Promise<OAuthAccount> {
     const tokenResponse = await this.validateAuthorizationCode(
       this.tokenEndpoint,
-      code,
+      code
     )
     if (!tokenResponse.ok) {
       const error = await tokenResponse.text().catch(() => 'Unknown error')
@@ -46,7 +42,7 @@ export class Facebook extends BaseProvider {
     searchParams.set('access_token', tokenData.access_token)
     searchParams.set('fields', ['id', 'name', 'picture', 'email'].join(','))
     const userResponse = await fetch(
-      `${this.apiEndpoint}?${searchParams.toString()}`,
+      `${this.apiEndpoint}?${searchParams.toString()}`
     )
     if (!userResponse.ok) {
       const error = await userResponse.text().catch(() => 'Unknown error')

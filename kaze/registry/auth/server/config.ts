@@ -1,3 +1,5 @@
+// oxlint-disable require-await, no-unused-vars
+
 import type { AuthConfig } from '@/server/auth/types'
 
 import { Discord } from '@/server/auth/providers/discord'
@@ -8,7 +10,7 @@ export const authConfig = {
   providers: [
     new Discord(
       process.env.AUTH_DISCORD_ID ?? '',
-      process.env.AUTH_DISCORD_SECRET ?? '',
+      process.env.AUTH_DISCORD_SECRET ?? ''
     ),
   ],
 
