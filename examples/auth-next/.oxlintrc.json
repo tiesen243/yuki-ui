@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": [
+    "../../tools/oxc/core.json",
+    "../../tools/oxc/react.json",
+    "../../tools/oxc/next.json"
+  ],
+  "rules": {
+    "node/no-process-env": "off"
+  }
+}

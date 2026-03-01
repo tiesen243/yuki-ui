@@ -1,0 +1,16 @@
+{
+  "extends": "@yuki/tsconfig/next.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    ".source/*.ts"
+  ],
+  "exclude": ["node_modules"]
+}
