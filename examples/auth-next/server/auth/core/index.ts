@@ -16,8 +16,8 @@ import { JWT } from '@/server/auth/core/jwt'
 import { Password } from '@/server/auth/core/password'
 
 const PATH_REGEXS = {
-  getSession: /^(?:\/([^/]+))?\/api\/auth\/get-session$/,
-  getCurrentUser: /^(?:\/([^/]+))?\/api\/auth\/get-current-user$/,
+  getSession: /^(?:\/([^/]+))?\/api\/auth\/session$/,
+  getCurrentUser: /^(?:\/([^/]+))?\/api\/auth\/current-user$/,
   refreshToken: /^(?:\/([^/]+))?\/api\/auth\/refresh-token$/,
 
   signIn: /^(?:\/([^/]+))?\/api\/auth\/sign-in$/,
@@ -53,7 +53,7 @@ export function createAuth(config: AuthConfig) {
 
     const payload = { sub: userId }
     return jwt.sign(payload, {
-      expiresIn: config.session.accessTokenExpiresIn * 1000,
+      expiresIn: config.session.accessTokenExpiresIn,
     })
   }
 

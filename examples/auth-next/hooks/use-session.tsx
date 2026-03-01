@@ -42,7 +42,7 @@ function SessionProvider({
   const { data, status, refetch } = useQuery({
     queryKey: ['session'],
     queryFn: async () => {
-      const res = await fetch('/api/auth/get-current-user')
+      const res = await fetch('/api/auth/current-user')
       if (!res.ok) throw new Error('Failed to fetch session')
       return res.json() as Promise<SessionWithUser>
     },
