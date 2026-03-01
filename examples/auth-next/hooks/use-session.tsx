@@ -24,6 +24,7 @@ type SessionContextValue = (
 ) & {
   signIn: (opts: { email: string; password: string }) => Promise<void>
   signOut: () => Promise<void>
+  refreshToken: () => Promise<void>
 }
 
 const SessionContext = React.createContext<SessionContextValue | null>(null)
@@ -45,6 +46,7 @@ function SessionProvider({
       if (!res.ok) throw new Error('Failed to fetch session')
       return res.json() as Promise<SessionWithUser>
     },
+    retry: false,
   })
 
   const signIn = React.useCallback(
@@ -70,15 +72,23 @@ function SessionProvider({
     await refetch()
   }, [refetch])
 
+  const refreshToken = React.useCallback(async () => {
+    if (status === 'success') return
+
+    const res = await fetch('/api/auth/refresh-token', { method: 'POST' })
+    if (!res.ok) throw new Error('Failed to refresh token')
+    await refetch()
+  }, [refetch, status])
+
   const value = React.useMemo(() => {
-    const sessionBase = { signIn, signOut }
+    const sessionBase = { signIn, signOut, refreshToken }
 
     if (status === 'pending')
       return { ...sessionBase, status: 'loading', session: data }
-    if (status === 'error')
+    if (status === 'error' || !data?.user)
       return { ...sessionBase, status: 'unauthenticated', session: null }
     return { ...sessionBase, status: 'authenticated', session: data }
-  }, [data, signIn, signOut, status]) as SessionContextValue
+  }, [data, status, signIn, signOut, refreshToken]) as SessionContextValue
 
   return <SessionContext value={value}>{children}</SessionContext>
 }

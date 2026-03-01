@@ -134,7 +134,7 @@ export function createAuth(config: AuthConfig) {
     const token = parseCookie(opts.headers.get('Cookie'))[
       cookies.keys.accessToken
     ]
-    if (!token) return null
+    if (!token) throw new AuthError('No access token provided')
 
     const { userId } = await verifyAccessToken(token)
     const user = await adapter.getUser(userId)
