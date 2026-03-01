@@ -45,6 +45,8 @@ export function createAuth(config: AuthConfig) {
 
   const jwt = new JWT<{
     sub: string
+    // You can add more fields to the payload as needed
+    // For example, you might want to include user roles or permissions
   }>(config.secret)
 
   async function createAccessToken(userId: string): Promise<string> {
@@ -148,8 +150,7 @@ export function createAuth(config: AuthConfig) {
       provider: 'credentials',
       providerAccountId: opts.email,
     })
-    if (!user || user.password !== opts.password)
-      throw new AuthError('Invalid credentials')
+    if (!user?.password) throw new AuthError('Invalid credentials')
 
     if (!(await new Password().verify(user.password, opts.password)))
       throw new AuthError('Invalid credentials')
@@ -224,13 +225,18 @@ export function createAuth(config: AuthConfig) {
       userId = user.id
     } else {
       const userByEmail = await adapter.getUserByEmail(userData.email)
-      if (userByEmail) {
-        await adapter.getAccount(provider, id)
-        userId = userByEmail.id
-      } else {
+      if (userByEmail) userId = userByEmail.id
+      else {
         const newUser = await adapter.createUser(userData)
         userId = newUser.id
       }
+
+      await adapter.createAccount({
+        userId,
+        provider,
+        providerAccountId: id,
+        password: null,
+      })
     }
 
     const session = await createSession(userId)
@@ -279,6 +285,11 @@ export function createAuth(config: AuthConfig) {
 
     if (PATH_REGEXS.signIn.test(url.pathname)) {
       const { email, password } = await req.json()
+      if (typeof email !== 'string' || typeof password !== 'string')
+        return Response.json(
+          { error: 'Email and password are required' },
+          { status: 400 }
+        )
 
       const session = await signIn({ email, password })
       const response = Response.json(session, { status: 200 })
@@ -315,7 +326,7 @@ export function createAuth(config: AuthConfig) {
       return response
     } else if (PATH_REGEXS.refreshToken.test(url.pathname)) {
       const session = await auth({ headers: req.headers })
-      if (!session.user) throw new Error('Not authenticated')
+      if (!session.user) throw new AuthError('Not authenticated')
 
       const newToken = await createAccessToken(session.user.id)
       const response = Response.json({ accessToken: newToken }, { status: 200 })
@@ -385,7 +396,7 @@ function parseCookie(cookieHeader: string | null): Record<string, string> {
 function serializeCookie(
   name: string,
   value: string,
-  options: Record<string, string | number | boolean> = {}
+  options: Record<string, unknown> = {}
 ): string {
   let cookie = `${name}=${encodeURIComponent(value)}`
 

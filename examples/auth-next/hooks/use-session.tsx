@@ -46,7 +46,14 @@ function SessionProvider({
       if (!res.ok) throw new Error('Failed to fetch session')
       return res.json() as Promise<SessionWithUser>
     },
-    retry: false,
+    retry(failureCount, error) {
+      if (error.message === 'Failed to fetch session') {
+        fetch('/api/auth/refresh-token', { method: 'POST' })
+        return failureCount < 1 // Retry once for session fetch errors
+      }
+
+      return false
+    },
   })
 
   const signIn = React.useCallback(

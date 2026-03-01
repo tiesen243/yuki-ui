@@ -102,6 +102,10 @@ export interface AuthConfig {
       HttpOnly: boolean
       Secure: boolean
       SameSite: 'Lax' | 'Strict' | 'None'
+
+      Domain?: string
+      Expires?: Date | string
+      'Max-Age'?: number
     }
   }
 }
