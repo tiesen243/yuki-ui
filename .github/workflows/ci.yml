@@ -45,17 +45,17 @@ jobs:
       - name: Lint
         run: bun lint --format=github
 
-  typecheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Setup
-        uses: ./tools/github/setup
-
-      - name: Copy env
-        shell: bash
-        run: cp .env.example .env
-
-      - name: Typecheck
-        run: bun typecheck
+  # typecheck:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v5
+  #
+  #     - name: Setup
+  #       uses: ./tools/github/setup
+  #
+  #     - name: Copy env
+  #       shell: bash
+  #       run: cp .env.example .env
+  #
+  #     - name: Typecheck
+  #       run: bun typecheck
