@@ -1,7 +1,7 @@
 import type { AuthConfig } from '@/server/auth/core/types'
 
+import { Google } from '@/registry/auth/server/core/providers/google'
 import { adapter } from '@/server/auth/adapter'
-import { Vercel } from '@/server/auth/core/providers/vercel'
 
 export const authConfig = {
   secret: process.env.AUTH_SECRET ?? 'secret',
@@ -9,9 +9,9 @@ export const authConfig = {
   adapter,
 
   providers: [
-    new Vercel(
-      process.env.AUTH_VERCEL_ID ?? '',
-      process.env.AUTH_VERCEL_SECRET ?? ''
+    new Google(
+      process.env.AUTH_GOOGLE_ID ?? '',
+      process.env.AUTH_GOOGLE_SECRET ?? ''
     ),
   ],
 
