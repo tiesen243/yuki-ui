@@ -133,9 +133,9 @@ export function createAuth(config: AuthConfig) {
   async function getCurrentUser(opts: {
     headers: Headers
   }): Promise<User | null> {
-    const token = parseCookie(opts.headers.get('Cookie'))[
-      cookies.keys.accessToken
-    ]
+    const token =
+      parseCookie(opts.headers.get('Cookie'))[cookies.keys.accessToken] ??
+      opts.headers.get('Authorization')?.replace(/^Bearer\s+/, '')
     if (!token) throw new AuthError('No access token provided')
 
     const { userId } = await verifyAccessToken(token)
