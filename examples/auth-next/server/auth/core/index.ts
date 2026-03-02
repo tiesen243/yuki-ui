@@ -130,9 +130,7 @@ export function createAuth(config: AuthConfig) {
     }
   }
 
-  async function getCurrentUser(opts: {
-    headers: Headers
-  }): Promise<User | null> {
+  async function currentUser(opts: { headers: Headers }): Promise<User | null> {
     const token =
       parseCookie(opts.headers.get('Cookie'))[cookies.keys.accessToken] ??
       opts.headers.get('Authorization')?.replace(/^Bearer\s+/, '')
@@ -271,7 +269,7 @@ export function createAuth(config: AuthConfig) {
       const session = await auth({ headers: req.headers })
       return Response.json(session, { status: 200 })
     } else if (PATH_REGEXS.getCurrentUser.test(url.pathname)) {
-      const user = await getCurrentUser({ headers: req.headers })
+      const user = await currentUser({ headers: req.headers })
       return Response.json({ user }, { status: 200 })
     } else if (PATH_REGEXS.oauth.test(url.pathname)) return startOAuthFlow(url)
     else if (PATH_REGEXS.oauthCallback.test(url.pathname))
@@ -369,7 +367,7 @@ export function createAuth(config: AuthConfig) {
 
   return {
     auth,
-    getCurrentUser,
+    currentUser,
     verifyAccessToken,
 
     signIn,

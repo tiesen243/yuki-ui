@@ -12,13 +12,18 @@ Use the `auth` function to retrieve the current session. This can be done in API
 ```ts
 import { headers } from 'next/headers'
 
-import { auth } from '@/server/auth'
+import { auth, currentUser } from '@/server/auth'
 
 // In API Route
 const session = await auth({ headers: request.headers })
 // or in Next.js App Router
 const session = await auth({ headers: await headers() })
 //      ^ { user: User | null; expiresAt: Date }
+
+// Get the current user directly in API Route
+const user = await currentUser({ headers: request.headers })
+// or in Next.js App Router
+const user = await currentUser({ headers: await headers() })
 ```
 
 ## Sign in
@@ -70,7 +75,7 @@ Use the `useSession` hook to access authentication state and actions in client c
 import { useSession } from '@/hooks/use-session'
 
 export const UserProfile = () => {
-  const { status, session, signIn, signOut } = useSession()
+  const { status, session, signIn, signOut, refreshToken } = useSession()
 
   if (status === 'loading') return <div>Loading...</div>
   if (status === 'unauthenticated')
@@ -80,7 +85,27 @@ export const UserProfile = () => {
     <div>
       <p>Welcome, {session.user.name}!</p>
       <button onClick={() => signOut()}>Sign Out</button>
+      <button onClick={() => refreshToken()}>Refresh Token</button>
     </div>
   )
 }
+```
+
+## Using @tanstack/react-query for refreshing access tokens
+
+```tsx
+import { useQuery } from '@tanstack/react-query'
+
+useQuery({
+  // ...other query options
+
+  retry(failureCount, error) {
+    if (error.message === '...') {
+      fetch('/api/auth/refresh-token', { method: 'POST' })
+      return failureCount < 1
+    }
+
+    return false
+  },
+})
 ```

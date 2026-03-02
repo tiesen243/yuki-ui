@@ -164,7 +164,5 @@ export const adapter = {
 
     data.accounts.push(account)
     writeData(data)
-
-    return Promise.resolve(account)
   },
 } satisfies AuthAdapter

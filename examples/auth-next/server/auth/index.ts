@@ -5,13 +5,19 @@ import { createAuth } from '@/server/auth/core'
 
 const {
   auth: uncachedAuth,
-  getCurrentUser,
+  currentUser: uncachedCurrentUser,
   verifyAccessToken,
-  handlers,
+
   signIn,
   signOut,
+
+  handlers,
 } = createAuth(authConfig)
 
+/**
+ * This will de-duplicate all calls to auth's default `auth()` function and only call it once per request
+ */
 const auth = cache(uncachedAuth)
+const currentUser = cache(uncachedCurrentUser)
 
-export { auth, getCurrentUser, verifyAccessToken, handlers, signIn, signOut }
+export { auth, currentUser, verifyAccessToken, handlers, signIn, signOut }
