@@ -1,9 +1,9 @@
-import type { OAuth2Token, OAuthAccount } from '@/server/auth/types'
+import type { OAuth2Token, OAuthAccount } from '@/server/auth/core/types'
 
-import { BaseProvider } from '@/server/auth/providers/base'
+import { BaseProvider } from '@/server/auth/core/providers/base'
 
 export class Facebook extends BaseProvider {
-  constructor(clientId: string, clientSecret: string, redirectUri: string) {
+  constructor(clientId: string, clientSecret: string, redirectUri = '') {
     super('facebook', clientId, clientSecret, redirectUri)
   }
 

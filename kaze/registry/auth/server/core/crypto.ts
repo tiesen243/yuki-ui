@@ -1,5 +1,13 @@
 // oxlint-disable no-bitwise, no-plusplus
 
+export function constantTimeEqual(a: Uint8Array, b: Uint8Array): boolean {
+  if (a.byteLength !== b.byteLength) return false
+
+  let c = 0
+  for (let i = 0; i < a.byteLength; i++) c |= (a[i] ?? 0) ^ (b[i] ?? 0)
+  return c === 0
+}
+
 export function generateSecureString(): string {
   const alphabet = 'abcdefghijklmnpqrstuvwxyz23456789'
 
@@ -74,12 +82,4 @@ export function decodeBase64Url(base64url: string): Uint8Array {
   const bytes = new Uint8Array(binary.length)
   for (let i = 0; i < binary.length; i++) bytes[i] = binary.codePointAt(i) ?? 0
   return bytes
-}
-
-export function constantTimeEqual(a: Uint8Array, b: Uint8Array): boolean {
-  if (a.byteLength !== b.byteLength) return false
-
-  let c = 0
-  for (let i = 0; i < a.byteLength; i++) c |= a[i] ^ b[i]
-  return c === 0
 }

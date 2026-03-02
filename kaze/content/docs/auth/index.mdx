@@ -9,43 +9,20 @@ Build your own authentication system from scratch with complete control over imp
 
 ### CLI
 
-<Steps>
-  <Step>
-    ### Install core utilities
-
-    This will install the main authentication package along with required dependencies.
-
-    <Tabs items={['Session Based', "JWT Based"]}>
-      <Tab value='Session Based'>
-        <InstallComponent comp='auth-session' />
-      </Tab>
-      <Tab value='JWT Based'>
-        <InstallComponent comp='auth-jwt' />
-      </Tab>
-    </Tabs>
-
-  </Step>
-
-  <Step>
-    ### Install database adapter
-
-    Choose and install a database adapter that matches your database technology.
-
-    <Tabs items={['Dirzzle', 'Prisma', 'Mongoose']}>
-      <Tab value='Dirzzle'>
-        <InstallComponent comp='auth-adapter-drizzle' />
-      </Tab>
-      <Tab value='Prisma'>
-        <InstallComponent comp='auth-adapter-prisma' />
-      </Tab>
-      <Tab value='Mongoose'>
-        <InstallComponent comp='auth-adapter-mongoose' />
-      </Tab>
-    </Tabs>
-
-  </Step>
-
-</Steps>
+<Tabs items={['Memory', 'Drizzle', 'Prisma', 'Mongoose']}>
+  <Tab value='Memory'>
+    <InstallComponent comp='auth' />
+  </Tab>
+  <Tab value='Drizzle'>
+    <InstallComponent comp='auth-adapter-drizzle' />
+  </Tab>
+  <Tab value='Prisma'>
+    <InstallComponent comp='auth-adapter-prisma' />
+  </Tab>
+  <Tab value='Mongoose'>
+    <InstallComponent comp='auth-adapter-mongoose' />
+  </Tab>
+</Tabs>
 
 ### Manual
 
@@ -59,20 +36,17 @@ Download and customize the source code directly from the registry: [Source](http
 
     ```ts title="server/auth/config.ts"
     import type { AuthConfig } from '@/server/auth/types'
+    import { adapter } from '@/server/auth/adapter'
 
     export const authConfig = {
-      secret: process.env.AUTH_SECRET,
+      // ...other config options
 
       providers: [
         // Add OAuth providers here
       ],
 
       // This will be implemented after installing a database adapter
-      adapter: {
-        user: {},
-        account: {},
-        session: {}, // Only for session-based auth
-      },
+      adapter,
     } as const satisfies AuthConfig
     ```
 
@@ -106,9 +80,9 @@ Download and customize the source code directly from the registry: [Source](http
         <Tab value='Next.js'>
           ```ts title="app/api/auth/[...auth]/route.ts"
           export {
-            handler as GET,
-            handler as POST,
-            handler as OPTIONS,
+            handlers as GET,
+            handlers as POST,
+            handlers as OPTIONS,
           } from '@/server/auth'
           ```
         </Tab>
@@ -119,10 +93,10 @@ Download and customize the source code directly from the registry: [Source](http
 
             ```ts title="app/routes/api/auth.ts"
             import type { Route } from './+types/auth'
-            import { handler } from '@/server/auth'
+            import { handlers } from '@/server/auth'
 
-            export const loader = ({ request }: Route.LoaderArgs) => handler(request)
-            export const action = ({ request }: Route.ActionArgs) => handler(request)
+            export const loader = ({ request }: Route.LoaderArgs) => handlers(request)
+            export const action = ({ request }: Route.ActionArgs) => handlers(request)
             ```
 
           2. Register route
@@ -141,15 +115,14 @@ Download and customize the source code directly from the registry: [Source](http
         <Tab value='Tanstack Router'>
           ```ts title="src/routes/api/auth.$.ts"
           import { createFileRoute } from '@tanstack/react-router'
-
-          import { handler } from '@/server/auth'
+          import { handlers } from '@/server/auth'
 
           export const Route = createFileRoute('/api/auth/$')({
             server: {
               handlers: {
-                GET: async ({ request }) => handler(request),
-                POST: async ({ request }) => handler(request),
-                OPTIONS: async ({ request }) => handler(request),
+                GET: async ({ request }) => handlers(request),
+                POST: async ({ request }) => handlers(request),
+                OPTIONS: async ({ request }) => handlers(request),
               },
             },
           })
@@ -160,12 +133,12 @@ Download and customize the source code directly from the registry: [Source](http
           ```ts title="src/routes/api/auth.ts"
           import { Router } from 'express'
 
-          import { handler } from '@/server/auth'
+          import { handlers } from '@/server/auth'
 
           const authRouter = Router()
 
           router.use('/api/auth/*', async (req, res) => {
-            const response = handler(req)
+            const response = handlers(req)
 
             res.status(response.status)
             response.headers.forEach((value, key) => {
@@ -196,19 +169,19 @@ Download and customize the source code directly from the registry: [Source](http
           ```ts title="src/routes/auth.ts"
           import { Elysia } from 'elysia'
 
-          import { handler } from '@/server/auth'
+          import { handlers } from '@/server/auth'
 
           export const authRouter = new Elysia({ name: 'Auth Router' }).all(
             '/api/auth/*',
-            ({ request }) => handler(request),
+            ({ request }) => handlers(request),
           )
           ```
         </Tab>
         <Tab value='Nitro'>
           ```ts title="server/api/auth/[...auth].ts"
-          import { handler } from '@/server/auth'
+          import { handlers } from '@/server/auth'
 
-          export default defineEventHandler(event => handler(event.node.req))
+          export default defineEventHandler(event => handlers(event.node.req))
           ```
         </Tab>
 

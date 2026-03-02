@@ -1,28 +1,31 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+'use client'
+
+// @ts-expect-error - I dont install @tanstack/react-query
+import { useQuery } from '@tanstack/react-query'
 import * as React from 'react'
 
-import type { SessionWithUser } from '@/server/auth/types'
+import type { SessionWithUser } from '@/server/auth/core/types'
 
 type SessionContextValue = (
-  | { status: 'loading'; session: SessionWithUser }
-  | { status: 'unauthenticated'; session: null }
+  | {
+      status: 'loading'
+      session: SessionWithUser | undefined
+    }
+  | {
+      status: 'unauthenticated'
+      session: null
+    }
   | {
       status: 'authenticated'
-      session: SessionWithUser & { user: NonNullable<SessionWithUser['user']> }
+      session: SessionWithUser & {
+        token: string
+        user: NonNullable<SessionWithUser['user']>
+      }
     }
 ) & {
-  signIn: (credentials: {
-    email: string
-    password: string
-  }) => Promise<{ token: string }>
-
+  signIn: (opts: { email: string; password: string }) => Promise<void>
   signOut: () => Promise<void>
-}
-
-interface SessionProviderProps {
-  children: React.ReactNode
-  session?: SessionWithUser
-  basePath?: string
+  refreshToken: () => Promise<void>
 }
 
 const SessionContext = React.createContext<SessionContextValue | null>(null)
@@ -34,58 +37,68 @@ const useSession = () => {
   return context
 }
 
-function SessionProvider(props: Readonly<SessionProviderProps>) {
-  const { session, basePath = '/api/auth' } = props
-
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['auth', 'get-session'],
-    initialData: session,
-    enabled: !session,
+function SessionProvider({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  const { data, status, refetch } = useQuery({
+    queryKey: ['session'],
     queryFn: async () => {
-      const res = await fetch(`${basePath}/get-session`)
+      const res = await fetch('/api/auth/current-user')
       if (!res.ok) throw new Error('Failed to fetch session')
       return res.json() as Promise<SessionWithUser>
     },
+    retry(failureCount: number, error: Error) {
+      if (error.message === 'Failed to fetch session') {
+        fetch('/api/auth/refresh-token', { method: 'POST' })
+        return failureCount < 1 // Retry once for session fetch errors
+      }
+
+      return false
+    },
   })
 
-  const { mutateAsync: signIn } = useMutation({
-    mutationKey: ['auth', 'sign-in'],
-    mutationFn: async (
-      credentials: Parameters<SessionContextValue['signIn']>[0]
-    ) => {
-      const res = await fetch(`${basePath}/sign-in`, {
+  const signIn = React.useCallback(
+    async (opts: Parameters<SessionContextValue['signIn']>[0]) => {
+      const res = await fetch('/api/auth/sign-in', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
+        body: JSON.stringify(opts),
       })
-      if (!res.ok) throw new Error('Invalid credentials')
-      return res.json() as Promise<{ token: string }>
-    },
-    onSuccess: () => refetch(),
-  })
+      const json = await res.json()
 
-  const { mutateAsync: signOut } = useMutation({
-    mutationKey: ['auth', 'sign-out'],
-    mutationFn: async () => {
-      const res = await fetch(`${basePath}/sign-out`, { method: 'POST' })
-      if (!res.ok) throw new Error('Failed to sign out')
+      if (!res.ok) throw new Error(json.error ?? 'Failed to sign in')
+
+      await refetch()
+      return json
     },
-    onSuccess: () => refetch(),
-  })
+    [refetch]
+  )
+
+  const signOut = React.useCallback(async () => {
+    const res = await fetch('/api/auth/sign-out', { method: 'POST' })
+    if (!res.ok) throw new Error('Failed to sign out')
+    await refetch()
+  }, [refetch])
+
+  const refreshToken = React.useCallback(async () => {
+    if (status === 'success') return
+
+    const res = await fetch('/api/auth/refresh-token', { method: 'POST' })
+    if (!res.ok) throw new Error('Failed to refresh token')
+    await refetch()
+  }, [refetch, status])
 
   const value = React.useMemo(() => {
-    // oxlint-disable-next-line no-nested-ternary
-    const status = isLoading
-      ? 'loading'
-      : // oxlint-disable-next-line unicorn/no-nested-ternary
-        data?.user
-        ? 'authenticated'
-        : 'unauthenticated'
+    const sessionBase = { signIn, signOut, refreshToken }
 
-    return { status, session: data, signIn, signOut } as SessionContextValue
-  }, [data, isLoading, signIn, signOut])
+    if (status === 'pending')
+      return { ...sessionBase, status: 'loading', session: data }
+    if (status === 'error' || !data?.user)
+      return { ...sessionBase, status: 'unauthenticated', session: null }
+    return { ...sessionBase, status: 'authenticated', session: data }
+  }, [data, status, signIn, signOut, refreshToken]) as SessionContextValue
 
-  return <SessionContext value={value}>{props.children}</SessionContext>
+  return <SessionContext value={value}>{children}</SessionContext>
 }
 
 export { SessionProvider, useSession }

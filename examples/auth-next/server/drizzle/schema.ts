@@ -15,7 +15,7 @@ export const users = pgTable(
   (t) => [
     index('users_name_idx').on(t.name),
     uniqueIndex('users_email_uq_idx').on(t.email),
-  ],
+  ]
 )
 
 export const accounts = pgTable(
@@ -33,9 +33,9 @@ export const accounts = pgTable(
     index('accounts_user_id_idx').on(t.userId),
     uniqueIndex('accounts_provider_account_id_uq_idx').on(
       t.provider,
-      t.providerAccountId,
+      t.providerAccountId
     ),
-  ],
+  ]
 )
 
 export const sessions = pgTable(
@@ -52,5 +52,5 @@ export const sessions = pgTable(
   (t) => [
     index('sessions_user_id_idx').on(t.userId),
     uniqueIndex('sessions_id_token_uq_idx').on(t.id, t.token),
-  ],
+  ]
 )

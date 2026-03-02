@@ -1,15 +1,15 @@
-import type { OAuth2Token, OAuthAccount } from '@/server/auth/types'
+import type { OAuth2Token, OAuthAccount } from '@/server/auth/core/types'
 
-import { BaseProvider } from '@/server/auth/providers/base'
+import { BaseProvider } from '@/server/auth/core/providers/base'
 
-export class Figma extends BaseProvider {
-  constructor(clientId: string, clientSecret: string, redirectUri: string) {
-    super('figma', clientId, clientSecret, redirectUri)
+export class Discord extends BaseProvider {
+  constructor(clientId: string, clientSecret: string, redirectUri = '') {
+    super('discord', clientId, clientSecret, redirectUri)
   }
 
-  private authorizationEndpoint = 'https://www.figma.com/oauth'
-  private tokenEndpoint = 'https://api.figma.com/v1/oauth/token'
-  private apiEndpoint = 'https://api.figma.com/v1/me'
+  private authorizationEndpoint = 'https://discord.com/oauth2/authorize'
+  private tokenEndpoint = 'https://discord.com/api/oauth2/token'
+  private apiEndpoint = 'https://discord.com/api/users/@me'
 
   public override async createAuthorizationUrl(
     state: string,
@@ -18,7 +18,7 @@ export class Figma extends BaseProvider {
     const url = await this.createAuthorizationUrlWithPKCE(
       this.authorizationEndpoint,
       state,
-      ['current_user:read'],
+      ['identify', 'email'],
       codeVerifier
     )
 
@@ -34,9 +34,10 @@ export class Figma extends BaseProvider {
       code,
       codeVerifier
     )
+
     if (!tokenResponse.ok) {
       const error = await tokenResponse.text().catch(() => 'Unknown error')
-      throw new Error(`Figma API error: ${error}`)
+      throw new Error(`Discord API error: ${error}`)
     }
 
     const tokenData = (await tokenResponse.json()) as OAuth2Token
@@ -45,22 +46,24 @@ export class Figma extends BaseProvider {
     })
     if (!userResponse.ok) {
       const error = await userResponse.text().catch(() => 'Unknown error')
-      throw new Error(`Figma API error: ${error}`)
+      throw new Error(`Discord API error: ${error}`)
     }
 
-    const userData = (await userResponse.json()) as FigmaUserResponse
+    const userData = (await userResponse.json()) as DiscordUserResponse
     return {
       id: userData.id,
-      name: userData.handle,
+      name: userData.username,
       email: userData.email,
-      image: userData.img_url,
+      image: userData.avatar
+        ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
+        : '',
     }
   }
 }
 
-interface FigmaUserResponse {
+interface DiscordUserResponse {
   id: string
-  handle: string
+  username: string
   email: string
-  img_url: string
+  avatar: string | null
 }

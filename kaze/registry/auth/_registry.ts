@@ -2,7 +2,7 @@ import type { RegistryItem } from 'shadcn/schema'
 
 import { getBaseUrl } from '@/lib/utils'
 
-const core = ['crypto', 'jwt', 'password']
+const core = ['crypto', 'index', 'jwt', 'password', 'types']
 const supportedProviders = [
   'base',
   'discord',
@@ -12,6 +12,7 @@ const supportedProviders = [
   'google',
   'vercel',
 ]
+const configs = ['adapter', 'config', 'index']
 
 export const registryAuth = [
   {
@@ -20,6 +21,7 @@ export const registryAuth = [
     title: 'Authentication',
     description: 'Core authentication utilities and hooks',
     dependencies: ['@tanstack/react-query'],
+    registryDependencies: [`${getBaseUrl()}/r/create-id.json`],
     files: [
       ...core.map((item) => ({
         type: 'registry:item' as const,
@@ -28,66 +30,17 @@ export const registryAuth = [
       })),
       ...supportedProviders.map((provider) => ({
         type: 'registry:item' as const,
-        path: `registry/auth/server/providers/${provider}.ts`,
-        target: `server/auth/providers/${provider}.ts`,
+        path: `registry/auth/server/core/providers/${provider}.ts`,
+        target: `server/auth/core/providers/${provider}.ts`,
       })),
-      {
-        type: 'registry:item',
-        path: 'registry/auth/server/config.ts',
-        target: 'server/auth/config.ts',
-      },
-      {
-        type: 'registry:item',
-        path: 'registry/auth/server/types.ts',
-        target: 'server/auth/types.ts',
-      },
-      {
-        type: 'registry:lib',
-        path: 'registry/lib/create-id.ts',
-      },
+      ...configs.map((config) => ({
+        type: 'registry:item' as const,
+        path: `registry/auth/server/${config}.ts`,
+        target: `server/auth/${config}.ts`,
+      })),
       {
         type: 'registry:hook',
         path: 'registry/auth/hooks/use-session.tsx',
-      },
-    ],
-  },
-
-  {
-    name: 'auth-session',
-    type: 'registry:block',
-    title: 'Session Authentication',
-    description: 'Session based authentication',
-    registryDependencies: [`${getBaseUrl()}/r/auth.json`],
-    files: [
-      {
-        type: 'registry:item',
-        path: 'registry/auth/server/core/index.ts',
-        target: 'server/auth/core/index.ts',
-      },
-      {
-        type: 'registry:item',
-        path: 'registry/auth/server/index.ts',
-        target: 'server/auth/index.ts',
-      },
-    ],
-  },
-
-  {
-    name: 'auth-jwt',
-    type: 'registry:block',
-    title: 'JWT Authentication',
-    description: 'JWT based authentication',
-    registryDependencies: [`${getBaseUrl()}/r/auth.json`],
-    files: [
-      {
-        type: 'registry:item',
-        path: 'registry/auth/server/core/index.jwt.ts',
-        target: 'server/auth/core/index.ts',
-      },
-      {
-        type: 'registry:item',
-        path: 'registry/auth/server/index.jwt.ts',
-        target: 'server/auth/index.ts',
       },
     ],
   },
@@ -99,16 +52,17 @@ export const registryAuth = [
     description: 'Integrate authentication with Drizzle ORM',
     dependencies: ['drizzle-orm'],
     devDependencies: ['drizzle-kit'],
+    registryDependencies: [`${getBaseUrl()}/r/auth.json`],
     files: [
       {
         type: 'registry:item',
         path: 'registry/auth/schemas/drizzle.schema',
-        target: 'server/db/schema.auth.ts',
+        target: 'server/db/schemas/auth.ts',
       },
       {
         type: 'registry:item',
-        path: 'registry/auth/server/config.drizzle.ts',
-        target: 'server/auth/config.ts',
+        path: 'registry/auth/adapters/drizzle.adapter',
+        target: 'server/auth/adapter.ts',
       },
     ],
   },
@@ -120,16 +74,17 @@ export const registryAuth = [
     description: 'Integrate authentication with Prisma ORM',
     dependencies: ['@prisma/client'],
     devDependencies: ['prisma'],
+    registryDependencies: [`${getBaseUrl()}/r/auth.json`],
     files: [
       {
         type: 'registry:item',
         path: 'registry/auth/schemas/prisma.schema',
-        target: 'prisma/schema.auth.prisma',
+        target: 'prisma/schemas/auth.prisma',
       },
       {
         type: 'registry:item',
-        path: 'registry/auth/server/config.prisma.ts',
-        target: 'server/auth/config.ts',
+        path: 'registry/auth/adapters/prisma.adapter',
+        target: 'server/auth/adapter.ts',
       },
     ],
   },
@@ -140,16 +95,17 @@ export const registryAuth = [
     title: 'Mongoose ORM Integration',
     description: 'Integrate authentication with Mongoose ORM',
     dependencies: ['mongoose'],
+    registryDependencies: [`${getBaseUrl()}/r/auth.json`],
     files: [
       {
         type: 'registry:item',
         path: 'registry/auth/schemas/mongoose.schema',
-        target: 'server/db/schema.auth.ts',
+        target: 'server/db/models/auth.ts',
       },
       {
         type: 'registry:item',
-        path: 'registry/auth/server/config.mongoose.ts',
-        target: 'server/auth/config.ts',
+        path: 'registry/auth/adapters/mongoose.adapter',
+        target: 'server/auth/adapter.ts',
       },
     ],
   },

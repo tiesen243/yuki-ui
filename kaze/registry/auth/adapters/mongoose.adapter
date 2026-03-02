@@ -1,0 +1,96 @@
+import type { AuthAdapter } from '@/server/auth/core/types'
+
+import { user, account, session } from '@/server/db/models/auth'
+
+export const adapter = {
+  async createUser(data) {
+    const newUser = await user.create(data)
+    return newUser.toObject()
+  },
+  async getUser(id) {
+    const foundUser = await user.findById(id).lean()
+    if (!foundUser) return null
+    return foundUser
+  },
+  async getUserByEmail(email) {
+    const foundUser = await user.findOne({ email }).lean()
+    if (!foundUser) return null
+    return foundUser
+  },
+  async getUserByAccount({ provider, providerAccountId }) {
+    const foundAccount = await account
+      .findOne({ provider, providerAccountId })
+      .populate('userId', 'id')
+      .lean()
+
+    if (!foundAccount || !foundAccount.userId) return null
+
+    return {
+      id: foundAccount.userId._id?.toString() || foundAccount.userId.id,
+      password: foundAccount.password,
+    }
+  },
+  async updateUser({ id, ...data }) {
+    const updatedUser = await user
+      .findByIdAndUpdate(id, data, { new: true })
+      .lean()
+    if (!updatedUser) throw new Error('User not found')
+    return updatedUser
+  },
+  async deleteUser(id) {
+    await user.findByIdAndDelete(id)
+  },
+
+  async createSession(data) {
+    const newSession = await session.create(data)
+    return newSession.toObject()
+  },
+  async getSessionWithUser(id) {
+    const foundSession = await session
+      .findOne({ id })
+      .populate('userId', 'id name email image createdAt updatedAt')
+      .lean()
+
+    if (!foundSession || !foundSession.userId) return null
+
+    const foundUser = foundSession.userId
+
+    return {
+      session: {
+        id: foundSession.id,
+        token: foundSession.token,
+        expiresAt: foundSession.expiresAt,
+      },
+      user: {
+        id: foundUser._id?.toString() || foundUser.id,
+        name: foundUser.name,
+        email: foundUser.email,
+        image: foundUser.image,
+        createdAt: foundUser.createdAt,
+        updatedAt: foundUser.updatedAt,
+      },
+    }
+  },
+  async updateSession({ id, ...data }) {
+    const updatedSession = await session
+      .findOneAndUpdate({ id }, data, { new: true })
+      .lean()
+    if (!updatedSession) throw new Error('Session not found')
+    return updatedSession
+  },
+  async deleteSession(id) {
+    await session.findOneAndDelete({ id })
+  },
+
+  async getAccount(provider, providerAccountId) {
+    const foundAccount = await account
+      .findOne({ provider, providerAccountId })
+      .lean()
+    if (!foundAccount) return null
+    return foundAccount
+  },
+  async createAccount(data) {
+    const newAccount = await account.create(data)
+    return newAccount.toObject()
+  },
+} satisfies AuthAdapter

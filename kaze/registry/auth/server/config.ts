@@ -1,58 +1,40 @@
-// oxlint-disable require-await, no-unused-vars
+import type { AuthConfig } from '@/server/auth/core/types'
 
-import type { AuthConfig } from '@/server/auth/types'
-
-import { Discord } from '@/server/auth/providers/discord'
+import { adapter } from '@/server/auth/adapter'
+import { Vercel } from '@/server/auth/core/providers/vercel'
 
 export const authConfig = {
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.AUTH_SECRET ?? 'secret',
+
+  adapter,
 
   providers: [
-    new Discord(
-      process.env.AUTH_DISCORD_ID ?? '',
-      process.env.AUTH_DISCORD_SECRET ?? ''
+    new Vercel(
+      process.env.AUTH_VERCEL_ID ?? '',
+      process.env.AUTH_VERCEL_SECRET ?? ''
     ),
   ],
 
-  adapter: {
-    user: {
-      async find(identifier) {
-        throw new Error('Not implemented')
-      },
-      async create(data) {
-        throw new Error('Not implemented')
-      },
+  session: {
+    expiresIn: 60 * 60 * 24 * 7, // 7 days
+    expiresThreshold: 60 * 60 * 24, // 1 day
+    accessTokenExpiresIn: 60 * 15, // 15 minutes
+  },
+
+  cookies: {
+    keys: {
+      accessToken: 'auth.access_token',
+      refreshToken: 'auth.refresh_token',
+      state: 'auth.state',
+      codeVerifier: 'auth.code',
+      redirectUri: 'auth.redirect_uri',
     },
 
-    account: {
-      async find(provider, accountId) {
-        throw new Error('Not implemented')
-      },
-      async create(data) {
-        throw new Error('Not implemented')
-      },
-    },
-
-    /**
-     * If you use JWT authentication, session management may not be necessary.
-     * To disable sessions when using JWT, you can throw an error in the session methods:
-     * ```ts
-     * throw new Error("Sessions are not supported with JWT auth.");
-     * ```
-     */
-    session: {
-      async find(id) {
-        throw new Error('Not implemented')
-      },
-      async create(data) {
-        throw new Error('Not implemented')
-      },
-      async update(id, data) {
-        throw new Error('Not implemented')
-      },
-      async delete(id) {
-        throw new Error('Not implemented')
-      },
+    options: {
+      Path: '/',
+      HttpOnly: true,
+      Secure: process.env.NODE_ENV === 'production',
+      SameSite: 'Lax',
     },
   },
-} as const satisfies AuthConfig
+} satisfies AuthConfig

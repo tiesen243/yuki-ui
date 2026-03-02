@@ -1,4 +1,4 @@
-import type { OAuthAccount } from '@/server/auth/types'
+import type { OAuthAccount } from '@/server/auth/core/types'
 
 import { generateCodeChallenge } from '@/server/auth/core/crypto'
 
@@ -25,7 +25,10 @@ export abstract class BaseProvider {
   protected createCallbackUrl() {
     let baseUrl = `http://localhost:${process.env.PORT ?? 3000}`
     if (process.env.APP_URL) baseUrl = `https://${process.env.APP_URL}`
-    return `${baseUrl}/api/auth/${this.providerName}`
+    else if (process.env.VERCEL_PROJECT_PRODUCTION_URL)
+      baseUrl = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+
+    return `${baseUrl}/api/auth/${this.providerName}/callback`
   }
 
   protected createAuthorizationUrlWithoutPkce(

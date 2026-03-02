@@ -4,7 +4,8 @@
     "baseUrl": ".",
     "paths": {
       "fumadocs-mdx:collections/*": [".source/*"],
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/server/auth/*": ["./registry/auth/server/*"]
     }
   },
   "include": [
@@ -14,5 +15,5 @@
     ".next/types/**/*.ts",
     ".source/*.ts"
   ],
-  "exclude": ["node_modules", "registry/auth", "!registry/auth/_registry"]
+  "exclude": ["node_modules"]
 }
