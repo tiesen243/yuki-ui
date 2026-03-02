@@ -160,7 +160,7 @@ export function createAuth(config: AuthConfig) {
 
   async function signOut({ headers }: { headers: Headers }): Promise<void> {
     const token =
-      parseCookie(headers.get('Cookie'))['auth_token'] ??
+      parseCookie(headers.get('Cookie'))[cookies.keys.refreshToken] ??
       headers.get('Authorization')?.replace(/^Bearer\s+/, '')
     if (!token) return
 
