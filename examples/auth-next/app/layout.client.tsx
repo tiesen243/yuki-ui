@@ -1,18 +1,8 @@
 'use client'
 
-import {
-  QueryCache,
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { SessionProvider } from '@/hooks/use-session'
-
-const queryCache = new QueryCache({
-  onError: (error) => {
-    console.error('Query error:', error)
-  },
-})
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,7 +12,6 @@ const queryClient = new QueryClient({
       retryDelay: (failureCount) => Math.min(1000 * 2 ** failureCount, 30_000),
     },
   },
-  queryCache,
 })
 
 export const Providers: React.FC<{ children: React.ReactNode }> = ({

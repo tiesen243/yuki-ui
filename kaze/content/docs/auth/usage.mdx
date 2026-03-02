@@ -93,19 +93,96 @@ export const UserProfile = () => {
 
 ## Using @tanstack/react-query for refreshing access tokens
 
+1. Implement in server-side API route to throw an error when the access token is expired.
+
+```ts title="app/api/protected-data/route.ts"
+import { verifyAccessToken } from '@/server/auth'
+
+export async function GET(request: Request) {
+  const token =
+    request.cookies.get('auth.access_token')?.value ??
+    request.headers.get('Authorization')?.replace('Bearer ', '')
+
+  const user = await verifyAccessToken(token)
+  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
+
+  return Response.json({ data: 'Protected data' })
+}
+```
+
+2. Use the `retry` option in `useQuery` to attempt refreshing the token when an error occurs.
+
 ```tsx
 import { useQuery } from '@tanstack/react-query'
 
 useQuery({
-  // ...other query options
+  queryKey: ['protectedData'],
+  queryFn: async () => {
+    const response = await fetch('/api/protected-data')
+    const json = await response.json()
 
+    if (response.status === 401) throw new Error(json.error ?? 'Unauthorized')
+    return response.json()
+  },
   retry(failureCount, error) {
-    if (error.message === '...') {
+    if (error.message === 'Unauthorized') {
       fetch('/api/auth/refresh-token', { method: 'POST' })
       return failureCount < 1
     }
 
-    return false
+    return failureCount < 3
   },
+})
+```
+
+If you use `tRPC` for your API routes, you can use the `retryLink` to handle token refresh logic globally for all tRPC requests.
+
+```ts title="server/trpc.ts"
+import { initTRPC } from '@trpc/server'
+import { verifyAccessToken } from '@/server/auth'
+
+const createTRPCContext = async ({ headers }: { headers: Headers }) => {
+  const token =
+    headers.get('Authorization')?.replace('Bearer ', '') ??
+    headers
+      .get('Cookie')
+      ?.split(';')
+      .find((cookie) => cookie.trim().startsWith('auth.access_token='))
+      ?.split('=')[1]
+
+  const user = await verifyAccessToken(token)
+  return { user }
+}
+
+const t = initTRPC.context<typeof createTRPCContext>().create()
+
+const protectedProcedure = t.procedure.use(({ ctx, meta, next }) => {
+  if (!ctx.user?.id) throw new TRPCError({ code: 'UNAUTHORIZED' })
+  return next({ ctx: { user: ctx.user } })
+})
+```
+
+```ts title="trpc/client.ts"
+import { retryLink } from '@trpc/client'
+
+retryLink({
+  retry: ({ op, error, attempts }) => {
+    if (error.data?.code === 'UNAUTHORIZED') {
+      if (attempts > 1) return false // Do not retry more than once for unauthorized errors
+
+      fetch(`${getBaseUrl()}/api/auth/refresh-token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getSessionToken()}`,
+        },
+      })
+
+      return attempts < 1 // Retry once for unauthorized errors after attempting token refresh
+    }
+
+    return attempts < 3
+  },
+  retryDelayMs: (attempts) => Math.min(1000 * 2 ** attempts, 30000),
 })
 ```
