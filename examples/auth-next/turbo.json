@@ -1,0 +1,22 @@
+{
+  "$schema": "../node_modules/turbo/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^@yuki/kaze#build:shadcn"],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "!.next/dev/**",
+        "next-env.d.ts"
+      ]
+    },
+    "build:registry": {
+      "outputs": ["__registry__"]
+    },
+    "build:shadcn": {
+      "dependsOn": ["^@yuki/kaze#build:registry"],
+      "outputs": ["public/r"]
+    }
+  }
+}
