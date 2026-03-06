@@ -160,7 +160,7 @@ export function createAuth(config: AuthConfig) {
     const token =
       parseCookie(headers.get('Cookie'))[cookies.keys.refreshToken] ??
       headers.get('Authorization')?.replace(/^Bearer\s+/, '')
-    if (!token) return
+    if (!token) throw new AuthError('No refresh token provided')
 
     const [id] = token.split('.')
     if (id) await adapter.deleteSession(id)
@@ -275,7 +275,7 @@ export function createAuth(config: AuthConfig) {
     else if (PATH_REGEXS.oauthCallback.test(url.pathname))
       return handleOAuthCallback(url, req.headers)
 
-    return new Response('Not Found', { status: 404 })
+    return Response.json({ error: 'Not Found' }, { status: 404 })
   }
 
   async function handlePost(req: Request): Promise<Response> {
@@ -335,7 +335,8 @@ export function createAuth(config: AuthConfig) {
 
       return response
     }
-    return new Response('Not Found', { status: 404 })
+
+    return Response.json({ error: 'Not Found' }, { status: 404 })
   }
 
   async function handlers(req: Request): Promise<Response> {
@@ -346,7 +347,11 @@ export function createAuth(config: AuthConfig) {
       else if (req.method === 'POST') response = await handlePost(req)
       else if (req.method === 'OPTIONS')
         response = new Response(null, { status: 204 })
-      else response = new Response('Method Not Allowed', { status: 405 })
+      else
+        response = Response.json(
+          { error: 'Method Not Allowed' },
+          { status: 405 }
+        )
     } catch (error) {
       if (process.env.NODE_ENV === 'development') console.log(error)
 
