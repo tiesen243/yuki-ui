@@ -272,18 +272,17 @@ export function createAuth(config: AuthConfig) {
     if (PATH_REGEXS.getSession.test(url.pathname)) {
       const session = await auth({ headers: req.headers })
       if (!session.user)
-        return Response.json({ error: 'Not authenticated' }, { status: 401 })
+        return new Response('Not authenticated', { status: 401 })
       return Response.json(session, { status: 200 })
     } else if (PATH_REGEXS.getCurrentUser.test(url.pathname)) {
       const user = await currentUser({ headers: req.headers })
-      if (!user)
-        return Response.json({ error: 'Not authenticated' }, { status: 401 })
+      if (!user) return new Response('Not authenticated', { status: 401 })
       return Response.json({ user }, { status: 200 })
     } else if (PATH_REGEXS.oauth.test(url.pathname)) return startOAuthFlow(url)
     else if (PATH_REGEXS.oauthCallback.test(url.pathname))
       return handleOAuthCallback(url, req.headers)
 
-    return Response.json({ error: 'Not Found' }, { status: 404 })
+    return new Response('Not Found', { status: 404 })
   }
 
   async function handlePost(req: Request): Promise<Response> {
@@ -292,10 +291,7 @@ export function createAuth(config: AuthConfig) {
     if (PATH_REGEXS.signIn.test(url.pathname)) {
       const { email, password } = await req.json()
       if (typeof email !== 'string' || typeof password !== 'string')
-        return Response.json(
-          { error: 'Email and password are required' },
-          { status: 400 }
-        )
+        return new Response('Validation error', { status: 400 })
 
       const session = await signIn({ email, password })
       const response = Response.json(session, { status: 200 })
@@ -344,7 +340,7 @@ export function createAuth(config: AuthConfig) {
       return response
     }
 
-    return Response.json({ error: 'Not Found' }, { status: 404 })
+    return new Response('Not Found', { status: 404 })
   }
 
   async function handlers(req: Request): Promise<Response> {
@@ -355,17 +351,13 @@ export function createAuth(config: AuthConfig) {
       else if (req.method === 'POST') response = await handlePost(req)
       else if (req.method === 'OPTIONS')
         response = new Response(null, { status: 204 })
-      else
-        response = Response.json(
-          { error: 'Method Not Allowed' },
-          { status: 405 }
-        )
+      else response = new Response('Method Not Allowed', { status: 405 })
     } catch (error) {
       if (process.env.NODE_ENV === 'development') console.log(error)
 
       const _error = error instanceof Error ? error.message : 'Unknown error'
       const status = error instanceof AuthError ? 401 : 500
-      response = Response.json({ error: _error }, { status })
+      response = new Response(_error, { status })
     }
 
     response.headers.set('Access-Control-Allow-Origin', '*')

@@ -1,10 +1,12 @@
 'use client'
 
-// @ts-expect-error - I dont install @tanstack/react-query
-import { useQuery } from '@tanstack/react-query'
+// @ts-expect-error - i don't install @tanstack/react-query in the registry
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import * as React from 'react'
 
 import type { SessionWithUser } from '@/server/auth/core/types'
+
+const QUERY_KEY = [['auth', 'current-user'], { type: 'query' }]
 
 type SessionContextValue = (
   | {
@@ -23,7 +25,10 @@ type SessionContextValue = (
       }
     }
 ) & {
-  signIn: (opts: { email: string; password: string }) => Promise<void>
+  signIn: (opts: {
+    email: string
+    password: string
+  }) => Promise<{ accessToken: string; refreshToken: string }>
   signOut: () => Promise<void>
   refreshToken: () => Promise<void>
 }
@@ -40,8 +45,10 @@ const useSession = () => {
 function SessionProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const { data, status, refetch } = useQuery({
-    queryKey: ['session'],
+  const queryClient = useQueryClient()
+
+  const { data, status } = useQuery({
+    queryKey: QUERY_KEY,
     queryFn: async () => {
       const res = await fetch('/api/auth/current-user')
       if (!res.ok) throw new Error('Failed to fetch session')
@@ -49,44 +56,47 @@ function SessionProvider({
     },
     retry(failureCount: number, error: Error) {
       if (error.message === 'Failed to fetch session') {
+        if (failureCount > 1) return false // Don't retry more than once for session fetch errors
         fetch('/api/auth/refresh-token', { method: 'POST' })
-        return failureCount < 1 // Retry once for session fetch errors
+        return true
       }
 
       return false
     },
   })
 
-  const signIn = React.useCallback(
-    async (opts: Parameters<SessionContextValue['signIn']>[0]) => {
+  const { mutateAsync: signIn } = useMutation({
+    mutationKey: [['auth', 'sign-in'], { type: 'mutation' }],
+    mutationFn: async (opts: Parameters<SessionContextValue['signIn']>[0]) => {
       const res = await fetch('/api/auth/sign-in', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(opts),
       })
-      const json = await res.json()
 
-      if (!res.ok) throw new Error(json.error ?? 'Failed to sign in')
-
-      await refetch()
-      return json
+      if (!res.ok) throw new Error(await res.text())
+      return res.json() as ReturnType<SessionContextValue['signIn']>
     },
-    [refetch]
-  )
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: QUERY_KEY }),
+  })
 
-  const signOut = React.useCallback(async () => {
-    const res = await fetch('/api/auth/sign-out', { method: 'POST' })
-    if (!res.ok) throw new Error('Failed to sign out')
-    await refetch()
-  }, [refetch])
+  const { mutateAsync: signOut } = useMutation({
+    mutationKey: [['auth', 'sign-out'], { type: 'mutation' }],
+    mutationFn: async () => {
+      const res = await fetch('/api/auth/sign-out', { method: 'POST' })
+      if (!res.ok) throw new Error(await res.text())
+    },
+    onSuccess: () => queryClient.setQueriesData({ queryKey: QUERY_KEY }, null),
+  })
 
-  const refreshToken = React.useCallback(async () => {
-    if (status === 'success') return
-
-    const res = await fetch('/api/auth/refresh-token', { method: 'POST' })
-    if (!res.ok) throw new Error('Failed to refresh token')
-    await refetch()
-  }, [refetch, status])
+  const { mutateAsync: refreshToken } = useMutation({
+    mutationKey: [['auth', 'refresh-token'], { type: 'mutation' }],
+    mutationFn: async () => {
+      const res = await fetch('/api/auth/refresh-token', { method: 'POST' })
+      if (!res.ok) throw new Error(await res.text())
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: QUERY_KEY }),
+  })
 
   const value = React.useMemo(() => {
     const sessionBase = { signIn, signOut, refreshToken }
