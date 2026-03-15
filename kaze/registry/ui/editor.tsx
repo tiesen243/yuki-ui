@@ -45,7 +45,7 @@ function Editor({
       <div
         data-slot='editor'
         className={cn(
-          'group/editor grid min-w-0 grid-cols-2 divide-x divide-input rounded-md border border-input bg-transparent has-only:grid-cols-1 dark:bg-input/30',
+          'group/editor grid min-w-0 grid-cols-2 divide-x divide-input rounded-md border border-input bg-transparent dark:bg-input/30',
           'focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50',
           'data-invalid:divide-destructive data-invalid:border-destructive data-invalid:ring-3 data-invalid:ring-destructive/20 dark:data-invalid:divide-destructive/50 dark:data-invalid:border-destructive/50 dark:data-invalid:ring-destructive/40',
           className
@@ -62,7 +62,7 @@ function EditorInput({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot='editor-input'
-      className={cn('flex flex-col', className)}
+      className={cn('flex flex-col only:col-span-2', className)}
       {...props}
     >
       <p className='border-b px-2.5 py-2 font-medium group-data-invalid/editor:border-destructive dark:group-data-invalid/editor:border-destructive/50'>
@@ -87,7 +87,7 @@ function EditorPreview({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot='editor-preview'
-      className={cn('flex flex-col', className)}
+      className={cn('flex flex-col only:col-span-2', className)}
       {...props}
     >
       <p className='border-b px-2.5 py-2 font-medium group-data-invalid/editor:border-destructive dark:group-data-invalid/editor:border-destructive/50'>
