@@ -18,11 +18,9 @@ This is a **markdown** editor built with [Marked](https://marked.js.org/).
 Start typing in the left pane, and see the rendered markdown in the right pane. Happy writing!`)
 
   return (
-    <main className='container pt-4'>
-      <Editor value={value} onValueChange={setValue}>
-        <EditorInput />
-        <EditorPreview />
-      </Editor>
-    </main>
+    <Editor value={value} onValueChange={setValue}>
+      <EditorInput />
+      <EditorPreview />
+    </Editor>
   )
 }
