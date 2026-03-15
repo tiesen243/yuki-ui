@@ -4,6 +4,15 @@ import { getBaseUrl } from '@/lib/utils'
 
 export const registryExamples = [
   {
+    name: 'editor-demo',
+    type: 'registry:example',
+    title: 'Markdown Editor',
+    description: 'A markdown editor example using Marked.js and Yuki UI.',
+    registryDependencies: [`${getBaseUrl()}/r/editor.json`],
+    files: [{ type: 'registry:example', path: 'registry/examples/editor.tsx' }],
+  },
+
+  {
     name: 'nvim-statusline-demo',
     type: 'registry:example',
     title: 'Nvim Statusline',
@@ -16,15 +25,6 @@ export const registryExamples = [
         path: 'registry/examples/nvim-statusline.tsx',
       },
     ],
-  },
-
-  {
-    name: 'tiptap-demo',
-    type: 'registry:example',
-    title: 'Tiptap Editor',
-    description: 'A rich text editor example using Tiptap and Yuki UI.',
-    registryDependencies: [`${getBaseUrl()}/r/tiptap.json`],
-    files: [{ type: 'registry:example', path: 'registry/examples/tiptap.tsx' }],
   },
 
   {

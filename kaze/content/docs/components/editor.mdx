@@ -1,0 +1,70 @@
+---
+title: Editor
+description: A React component that renders a Markdown editor with a live preview pane, allowing users to write and preview Markdown content in real-time.
+source: ui/editor.tsx
+---
+
+<Tabs items={['Preview', 'Code']}>
+
+<Tab value='Preview'>
+  <PreviewComponent comp='editor-demo' />
+</Tab>
+
+<Tab value='Code'>
+  <ComponentSource comp='editor-demo' />
+</Tab>
+
+</Tabs>
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='editor' />
+
+### Manual
+
+<Steps>
+
+<Step>
+Install the following dependencies:
+
+```package-install
+marked
+```
+
+</Step>
+
+<Step>
+Copy and paste the following code into your project:
+
+<ComponentSource comp='editor' />
+
+</Step>
+
+</Steps>
+
+## Usage
+
+1. Create state to hold the Markdown content:
+
+```tsx
+const [markdown, setMarkdown] = useState('')
+```
+
+2. Render the `Editor` component and pass the Markdown content and change handler:
+
+```tsx
+<Editor value={markdown} onChange={setMarkdown}>
+  <EditorInput />
+  <EditorPreview />
+</Editor>
+```
+
+3. Parse the existing Markdown content to HTML:
+
+```tsx
+const html = parseMarkdown(markdown)
+
+<div dangerouslySetInnerHTML={{ __html: html }} />
+```

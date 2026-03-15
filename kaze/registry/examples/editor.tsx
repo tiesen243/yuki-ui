@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import { Editor, EditorInput, EditorPreview } from '@/registry/ui/editor'
 
-export default function PlaygroundPage() {
+export default function EditorDemo() {
   const [value, setValue] = useState(`# Hello, World!
 
 This is a **markdown** editor built with [Marked](https://marked.js.org/).

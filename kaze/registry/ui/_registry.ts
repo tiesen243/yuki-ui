@@ -2,6 +2,15 @@ import type { RegistryItem } from 'shadcn/schema'
 
 export const registryUI = [
   {
+    name: 'editor',
+    type: 'registry:ui',
+    title: 'Markdown Editor',
+    description: 'A markdown editor built with Marked.js',
+    dependencies: ['marked'],
+    files: [{ type: 'registry:ui', path: 'registry/ui/editor.tsx' }],
+  },
+
+  {
     name: 'nvim-statusline',
     type: 'registry:ui',
     title: 'Nvim Statusline',
@@ -41,31 +50,6 @@ export const registryUI = [
         target: 'app/api/og/route.tsx',
       },
     ],
-  },
-
-  {
-    name: 'tiptap',
-    type: 'registry:ui',
-    title: 'Tiptap Editor',
-    description: 'A rich text editor component using Tiptap',
-    dependencies: [
-      '@tiptap/extension-blockquote',
-      '@tiptap/extension-bold',
-      '@tiptap/extension-document',
-      '@tiptap/extension-hard-break',
-      '@tiptap/extension-heading',
-      '@tiptap/extension-italic',
-      '@tiptap/extension-list',
-      '@tiptap/extension-paragraph',
-      '@tiptap/extension-strike',
-      '@tiptap/extension-text',
-      '@tiptap/extension-underline',
-      '@tiptap/extensions',
-      '@tiptap/react',
-      'lucide-react',
-    ],
-
-    files: [{ type: 'registry:ui', path: 'registry/ui/tiptap.tsx' }],
   },
 
   {

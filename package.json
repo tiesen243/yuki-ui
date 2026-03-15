@@ -63,5 +63,8 @@
       "@orpc/client": "^1.13.1",
       "@orpc/react-query": "^1.13.1"
     }
+  },
+  "dependencies": {
+    "marked": "^17.0.4"
   }
 }
