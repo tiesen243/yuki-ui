@@ -1,6 +1,11 @@
 {
-  "extends": "@yuki/tsconfig/next.json",
+  "extends": "@yuki/tsconfig/react-package.json",
   "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
       "@/*": ["./*"]
     }
@@ -11,6 +16,5 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     ".source/*.ts"
-  ],
-  "exclude": ["node_modules"]
+  ]
 }

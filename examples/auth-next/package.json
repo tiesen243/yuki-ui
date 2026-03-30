@@ -9,11 +9,11 @@
     "start": "next start"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.5.0",
-    "@prisma/client": "^7.5.0",
-    "@tanstack/react-query": "^5.95.0",
-    "drizzle-orm": "^0.45.1",
-    "mongoose": "^9.3.1",
+    "@prisma/adapter-pg": "^7.6.0",
+    "@prisma/client": "^7.6.0",
+    "@tanstack/react-query": "^5.95.2",
+    "drizzle-orm": "^0.45.2",
+    "mongoose": "^9.3.3",
     "next": "^16.2.1",
     "pg": "^8.20.0",
     "react": "^19.2.4",
@@ -26,7 +26,7 @@
     "@types/react-dom": "^19.2.3",
     "@yuki/tsconfig": "workspace:*",
     "drizzle-kit": "^0.31.10",
-    "prisma": "^7.5.0",
-    "typescript": "^5.9.3"
+    "prisma": "^7.6.0",
+    "typescript": "^6.0.2"
   }
 }

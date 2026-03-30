@@ -1,9 +1,9 @@
 {
-  "extends": "@yuki/tsconfig/next.json",
+  "extends": "@yuki/tsconfig/react-package.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "plugins": [{ "name": "next" }],
     "paths": {
-      "fumadocs-mdx:collections/*": [".source/*"],
+      "fumadocs-mdx:collections/*": ["./.source/*"],
       "@/*": ["./*"],
       "@/server/auth/*": ["./registry/auth/server/*"]
     }
@@ -14,6 +14,5 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     ".source/*.ts"
-  ],
-  "exclude": ["node_modules"]
+  ]
 }
