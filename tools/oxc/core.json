@@ -65,7 +65,6 @@
     "import/no-nodejs-modules": "off",
     "import/no-relative-parent-imports": "off",
     "import/no-unassigned-import": "off",
-    "import/no-unresolved": "off",
     "import/prefer-default-export": "off",
     "import/unambiguous": "off",
 
