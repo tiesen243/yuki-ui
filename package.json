@@ -25,9 +25,9 @@
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
-    "oxfmt": "^0.43.0",
-    "oxlint": "^1.58.0",
-    "turbo": "^2.9.3"
+    "oxfmt": "^0.44.0",
+    "oxlint": "^1.59.0",
+    "turbo": "^2.9.6"
   },
   "packageManager": "bun@1.3.0",
   "catalogs": {
@@ -36,7 +36,7 @@
       "zod": "4.3.6"
     },
     "dev": {
-      "@types/node": "^25.5.0",
+      "@types/node": "^25.6.0",
       "dotenv-cli": "^11.0.0",
       "tsdown": "^0.19.0-beta.5",
       "typescript": "^6.0.2"
@@ -44,8 +44,8 @@
     "react": {
       "@types/react": "^19.2.14",
       "@types/react-dom": "^19.2.3",
-      "react": "^19.2.4",
-      "react-dom": "^19.2.4"
+      "react": "^19.2.5",
+      "react-dom": "^19.2.5"
     },
     "tailwind": {
       "@tailwindcss/postcss": "^4.2.2",
