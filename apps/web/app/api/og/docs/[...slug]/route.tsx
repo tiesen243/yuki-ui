@@ -1,4 +1,4 @@
-import { generateOGImage } from 'fumadocs-ui/og'
+import { generateOGImage } from '@fumadocs/base-ui/og'
 import { notFound } from 'next/navigation'
 
 import { appName } from '@/lib/shared'
