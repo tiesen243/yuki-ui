@@ -3,6 +3,7 @@
 import { RootProvider } from 'fumadocs-ui/provider/next'
 
 import SearchDialog from '@/components/search'
+import { ToastProvider } from '@/registry/ui/toast'
 
 export function Provider({ children }: { children: React.ReactNode }) {
   return (
@@ -10,7 +11,7 @@ export function Provider({ children }: { children: React.ReactNode }) {
       search={{ SearchDialog }}
       theme={{ disableTransitionOnChange: true }}
     >
-      {children}
+      <ToastProvider>{children}</ToastProvider>
     </RootProvider>
   )
 }
