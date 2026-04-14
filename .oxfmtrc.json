@@ -14,6 +14,8 @@
   "trailingComma": "es5",
   "useTabs": false,
 
+  "jsdoc": true,
+
   "sortImports": {
     "groups": [
       "side_effect_style",
@@ -28,10 +30,12 @@
     "order": "asc"
   },
 
-  "sortPackageJson": true,
+  "sortPackageJson": {
+    "sortScripts": true
+  },
 
   "sortTailwindcss": {
     "functions": ["clsx", "cva", "cn"],
-    "stylesheet": "./kaze/app/globals.css"
+    "stylesheet": "./apps/web/app/globals.css"
   }
 }
