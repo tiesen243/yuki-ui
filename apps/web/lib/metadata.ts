@@ -43,6 +43,7 @@ export function createMetadata(override: Metadata = {}): Metadata {
       shortcut: '/favicon.ico',
     },
     manifest: `${baseUrl}/manifest.json`,
+    verification: { google: 'dfsGgsTDdq4IwdTzb4p69XHyrPXvzFNmUMRxpuV4M8Q' },
     alternates: { canonical: url, ...override.alternates },
   }
 }
