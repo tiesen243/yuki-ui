@@ -69,7 +69,7 @@ export const adapter = {
     const { users, ...session } = result
 
     return {
-      session: session,
+      session,
       user: users,
     }
   },

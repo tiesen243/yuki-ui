@@ -84,7 +84,7 @@ export function createAuth(config: AuthConfig) {
 
     await adapter.createSession({
       id,
-      userId: userId,
+      userId,
       token: encodeHex(hashedSecret),
       expiresAt,
     })

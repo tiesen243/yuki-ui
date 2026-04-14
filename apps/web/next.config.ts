@@ -11,6 +11,7 @@ const config = {
   reactStrictMode: true,
   typescript: { ignoreBuildErrors: true },
 
+  // oxlint-disable-next-line require-await
   async redirects() {
     return [
       {

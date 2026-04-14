@@ -15,7 +15,8 @@ const {
 } = createAuth(authConfig)
 
 /**
- * This will de-duplicate all calls to auth's default `auth()` function and only call it once per request
+ * This will de-duplicate all calls to auth's default `auth()` function and only
+ * call it once per request
  */
 const auth = cache(uncachedAuth)
 const currentUser = cache(uncachedCurrentUser)

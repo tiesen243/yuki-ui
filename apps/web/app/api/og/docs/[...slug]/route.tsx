@@ -15,11 +15,11 @@ async function loadGoogleFont(fontName: string): Promise<ArrayBuffer> {
   const fontFaceMatch = cssText.match(/@font-face\s*{[^}]*}/)
   if (!fontFaceMatch) throw new Error(`Font face not found for ${fontName}`)
 
-  const fontFace = fontFaceMatch[0]
+  const [fontFace] = fontFaceMatch
   const urlMatch = fontFace.match(/url\(([^)]+)\)/)
   if (!urlMatch) throw new Error(`Font URL not found for ${fontName}`)
 
-  const fontFileUrl = urlMatch[1]?.replace(/['"]/g, '')
+  const fontFileUrl = urlMatch[1]?.replaceAll(/['"]/g, '')
   const fontResponse = await fetch(fontFileUrl ?? '')
   return await fontResponse.arrayBuffer()
 }
@@ -39,6 +39,7 @@ export async function GET(
     site: appName,
     title: page.data.title,
     description: page.data.description,
+    // oxlint-disable-next-line nextjs/no-img-element
     icon: <img src={logoUrl} alt='Author Avatar' width={64} height={64} />,
     primaryColor: '#14185a',
     primaryTextColor: '#3f5ec2',
