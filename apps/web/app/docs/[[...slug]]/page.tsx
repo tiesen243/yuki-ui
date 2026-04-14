@@ -22,7 +22,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const page = source.getPage(params.slug)
   if (!page) notFound()
 
-  const Mdx = page.data.body
+  const { body: MdxContent, toc } = await page.data.load()
   const markdownUrl = getPageMarkdownUrl(page).url
 
   const jsonLd = {
@@ -57,11 +57,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
         }}
       />
 
-      <DocsPage
-        toc={page.data.toc}
-        full={page.data.full}
-        tableOfContent={{ style: 'clerk' }}
-      >
+      <DocsPage toc={toc} full={page.data.full}>
         <DocsTitle>{page.data.title}</DocsTitle>
         <DocsDescription className='mb-0'>
           {page.data.description}
@@ -74,7 +70,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           />
         </div>
         <DocsBody>
-          <Mdx
+          <MdxContent
             components={getMDXComponents({
               a: createRelativeLink(source, page),
             })}
