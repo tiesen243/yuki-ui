@@ -7,6 +7,9 @@ const startTime = performance.now()
 const app = await alchemy('yuki-ui')
 
 export const web = await Nextjs('web', {
+  bindings: {
+    APP_URL: 'yuki-ui-web-tiesen.tiesen.workers.dev',
+  },
   bundle: {
     loader: {
       '.bin': 'file',

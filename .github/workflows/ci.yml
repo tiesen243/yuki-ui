@@ -15,47 +15,31 @@ concurrency:
 # @link https://turborepo.org/docs/core-concepts/remote-caching#remote-caching-on-vercel-builds
 env:
   FORCE_COLOR: 3
-  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
 
 jobs:
   format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-
-      - name: Setup
-        uses: ./tools/github/setup
+      - uses: actions/checkout@v6
+      - uses: ./tools/github/actions/setup
 
       - name: Format
-        run: npm run format
+        run: bun format
 
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-
-      - name: Setup
-        uses: ./tools/github/setup
-
-      - name: Copy env
-        shell: bash
-        run: cp .env.example .env
+      - uses: actions/checkout@v6
+      - uses: ./tools/github/actions/setup
 
       - name: Lint
         run: bun lint --format=github
 
-  # typecheck:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v5
-  #
-  #     - name: Setup
-  #       uses: ./tools/github/setup
-  #
-  #     - name: Copy env
-  #       shell: bash
-  #       run: cp .env.example .env
-  #
-  #     - name: Typecheck
-  #       run: bun typecheck
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./tools/github/actions/setup
+
+      - name: Typecheck
+        run: bun typecheck

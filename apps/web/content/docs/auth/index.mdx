@@ -1,0 +1,248 @@
+---
+title: Authentication
+description: Build your own authentication system from scratch with complete control over implementation
+---
+
+Build your own authentication system from scratch with complete control over implementation. This collection provides authentication components and utilities that you can customize to fit your exact requirements, supporting multiple database adapters and OAuth providers.
+
+## Installation
+
+### CLI
+
+<Tabs items={['Memory', 'Drizzle', 'Prisma', 'Mongoose']}>
+  <Tab value='Memory'>
+    <InstallComponent comp='auth' />
+  </Tab>
+  <Tab value='Drizzle'>
+    <InstallComponent comp='auth-adapter-drizzle' />
+  </Tab>
+  <Tab value='Prisma'>
+    <InstallComponent comp='auth-adapter-prisma' />
+  </Tab>
+  <Tab value='Mongoose'>
+    <InstallComponent comp='auth-adapter-mongoose' />
+  </Tab>
+</Tabs>
+
+### Manual
+
+Download and customize the source code directly from the registry: [Source](https://github.com/tiesen243/yuki-ui/tree/main/kaze/registry/auth)
+
+## Quick Start
+
+1.  Configure Authentication
+
+    Edit a configuration file to define your authentication settings, including secret keys, OAuth providers, and database adapters.
+
+    ```ts title="server/auth/config.ts"
+    import type { AuthConfig } from '@/server/auth/types'
+    import { adapter } from '@/server/auth/adapter'
+
+    export const authConfig = {
+      // ...other config options
+
+      providers: [
+        // Add OAuth providers here
+      ],
+
+      // This will be implemented after installing a database adapter
+      adapter,
+    } as const satisfies AuthConfig
+    ```
+
+    Set environment variables for your secret key and OAuth provider credentials.
+
+    ```bash title=".env"
+    # You can generate a secure random key using `openssl rand -base64 32`
+    AUTH_SECRET=your-secret-key
+
+    # OAuth provider credentials
+    AUTH_{PROVIDER}_ID=your-client-id
+    AUTH_{PROVIDER}_SECRET=your-client-secret
+    ```
+
+    Supported OAuth Providers:
+    - Discord
+    - Facebook
+    - Figma
+    - Github
+    - Google
+    - Vercel
+
+    You can add custom providers by implementing the `BaseProvider` abstract class.
+
+2.  Create API Route
+
+    To handle authentication requests, create an API route in your server framework of choice and export the `handler` function from the authentication package.
+
+      <Tabs items={['Next.js', 'React Router', 'Tanstack Router', 'Express', 'Elysia', 'Nitro']}>
+
+        <Tab value='Next.js'>
+          ```ts title="app/api/auth/[...auth]/route.ts"
+          export {
+            handlers as GET,
+            handlers as POST,
+            handlers as OPTIONS,
+          } from '@/server/auth'
+          ```
+        </Tab>
+
+        <Tab value='React Router'>
+
+          1.  Export api route handlers
+
+            ```ts title="app/routes/api/auth.ts"
+            import type { Route } from './+types/auth'
+            import { handlers } from '@/server/auth'
+
+            export const loader = ({ request }: Route.LoaderArgs) => handlers(request)
+            export const action = ({ request }: Route.ActionArgs) => handlers(request)
+            ```
+
+          2. Register route
+
+            ```ts title="app/routes.ts"
+            import type { RouteConfig } from '@react-router/dev/routes'
+            import { route } from '@react-router/dev/routes'
+
+            export default [
+              route('/api/auth/*', './routes/api/auth'),
+              // ...other routes
+            ] satisfies RouteConfig
+            ```
+
+        </Tab>
+        <Tab value='Tanstack Router'>
+          ```ts title="src/routes/api/auth.$.ts"
+          import { createFileRoute } from '@tanstack/react-router'
+          import { handlers } from '@/server/auth'
+
+          export const Route = createFileRoute('/api/auth/$')({
+            server: {
+              handlers: {
+                GET: async ({ request }) => handlers(request),
+                POST: async ({ request }) => handlers(request),
+                OPTIONS: async ({ request }) => handlers(request),
+              },
+            },
+          })
+          ```
+        </Tab>
+
+        <Tab value='Express'>
+          ```ts title="src/routes/api/auth.ts"
+          import { Router } from 'express'
+
+          import { handlers } from '@/server/auth'
+
+          const authRouter = Router()
+
+          router.use('/api/auth/*', async (req, res) => {
+            const response = handlers(req)
+
+            res.status(response.status)
+            response.headers.forEach((value, key) => {
+              res.setHeader(key, value)
+            })
+
+            if (response.status === 204) return res.send()
+
+            if (response.status === 302 && response.headers.get('Location'))
+              return res.redirect(response.headers.get('Location'))
+
+            const contentType = response.headers.get('content-type') ?? ''
+            if (contentType.includes('application/json')) {
+              const body = await response.json()
+              return res.json(body)
+            } else {
+              const body = await response.text()
+              return res.send(body)
+            }
+
+            res.send(body)
+          })
+
+          export { authRouter }
+          ```
+        </Tab>
+        <Tab value='Elysia'>
+          ```ts title="src/routes/auth.ts"
+          import { Elysia } from 'elysia'
+
+          import { handlers } from '@/server/auth'
+
+          export const authRouter = new Elysia({ name: 'Auth Router' }).all(
+            '/api/auth/*',
+            ({ request }) => handlers(request),
+          )
+          ```
+        </Tab>
+        <Tab value='Nitro'>
+          ```ts title="server/api/auth/[...auth].ts"
+          import { handlers } from '@/server/auth'
+
+          export default defineEventHandler(event => handlers(event.node.req))
+          ```
+        </Tab>
+
+    </Tabs>
+
+3.  Set Up Query Client and Providers
+
+    Configure React Query and session providers for your application. This ensures efficient data fetching, caching, and session management across your app.
+
+    ```ts title="lib/query-client.ts"
+    import {
+      defaultShouldDehydrateQuery,
+      QueryClient,
+    } from '@tanstack/react-query'
+
+    export const createQueryClient = () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            // With SSR, we usually want to set some default staleTime
+            // above 0 to avoid refetching immediately on the client
+            staleTime: 60 * 1000,
+          },
+          dehydrate: {
+            shouldDehydrateQuery: (query) =>
+              defaultShouldDehydrateQuery(query) ||
+              query.state.status === 'pending',
+          },
+          hydrate: {},
+        },
+      })
+    ```
+
+    ```tsx title="components/providers.tsx"
+    'use client'
+
+    import type { QueryClient } from '@tanstack/react-query'
+    import { QueryClientProvider } from '@tanstack/react-query'
+
+    import { SessionProvider } from '@/hooks/use-session'
+    import { createQueryClient } from '@/lib/query-client'
+
+    let clientQueryClientSingleton: QueryClient | undefined = undefined
+    const getQueryClient = () => {
+      if (typeof window === 'undefined') return createQueryClient()
+      else return (clientQueryClientSingleton ??= createQueryClient())
+    }
+
+    export function Providers({
+      children,
+    }: Readonly<{ children: React.ReactNode }>) {
+      const queryClient = getQueryClient()
+
+      return (
+        <QueryClientProvider client={queryClient}>
+          <SessionProvider>{children}</SessionProvider>
+        </QueryClientProvider>
+      )
+    }
+    ```
+
+## Conclusion
+
+With these steps, you have set up a customizable authentication system in your application. You can now extend and modify the components and utilities to fit your specific needs, ensuring a secure and efficient authentication process for your users.

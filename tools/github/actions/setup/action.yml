@@ -5,15 +5,9 @@ runs:
   using: composite
   steps:
     - uses: oven-sh/setup-bun@v2
-    - uses: actions/setup-node@v6
-      with:
-        node-version-file: '.nvmrc'
-
-    - shell: bash
-      run: bun add -g turbo
 
     - shell: bash
       run: bun ci
 
     - shell: bash
-      run: turbo run build:registry
+      run: bun --filter @yuki/web build:registry

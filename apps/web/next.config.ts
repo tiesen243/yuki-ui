@@ -11,7 +11,15 @@ const config = {
   reactStrictMode: true,
   typescript: { ignoreBuildErrors: true },
 
-  transpilePackages: ['@vercel/og'],
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/docs',
+        permanent: true,
+      },
+    ]
+  },
 } satisfies NextConfig
 
 export default withMDX(config)

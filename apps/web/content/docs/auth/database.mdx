@@ -1,0 +1,64 @@
+---
+title: Database Concepts
+description: Understanding the database structure and table relationships for the authentication system
+---
+
+The authentication system uses a simplified three-table structure to manage users, authentication accounts, and sessions.
+
+## Tables Overview
+
+### User Table
+
+Stores core user information and profile data.
+
+| Field      | Type         | Key      | Description                                              |
+| ---------- | ------------ | -------- | -------------------------------------------------------- |
+| id         | varchar(24)  | `PK`     | Unique identifier for each user                          |
+| name       | varchar(100) | `INDEX`  | User's display name (required)                           |
+| email      | varchar(255) | `UNIQUE` | User's email address (required for authentication)       |
+| image      | varchar(500) |          | URL to user's profile image                              |
+| created_at | timestamp    |          | Timestamp when user account was created (auto-set)       |
+| updated_at | timestamp    |          | Timestamp when user data was last updated (auto-updated) |
+
+**Primary Key:** id  
+**Unique Index:** email  
+**Index:** name
+
+### Account Table
+
+Links users to their authentication providers (OAuth or credentials).
+
+| Field      | Type         | Key           | Description                                                         |
+| ---------- | ------------ | ------------- | ------------------------------------------------------------------- |
+| user_id    | varchar(24)  | `FK`, `INDEX` | References users.id - the user this account belongs to              |
+| provider   | varchar(50)  |               | Authentication provider name (google, github, discord, credentials) |
+| account_id | varchar(100) |               | Unique account ID from the provider or email for credentials        |
+| password   | text         |               | Hashed password (only for credentials provider, null for OAuth)     |
+
+**Primary Key:** id  
+**Foreign Key:** user_id references users.id with cascade delete  
+**Unique Index:** (provider, account_id)  
+**Index:** user_id
+
+### Session Table
+
+Manages user sessions for authentication state.
+
+| Field      | Type        | Key           | Description                                            |
+| ---------- | ----------- | ------------- | ------------------------------------------------------ |
+| id         | varchar(24) | `PK`          | Unique session row identifier                          |
+| user_id    | varchar(24) | `FK`, `INDEX` | References users.id - the user this session belongs to |
+| token      | varchar(64) |               | Unique session token identifying the session           |
+| expires_at | timestamp   |               | Timestamp when session expires                         |
+
+**Primary Key:** id  
+**Foreign Key:** user_id references users.id with cascade delete  
+**Unique Index:** (id, token)  
+**Index:** user_id
+
+## Relationships
+
+- **User → Account**: One-to-Many (a user can have multiple auth methods: OAuth + credentials)
+- **User → Session**: One-to-Many (a user can have multiple active sessions across devices)
+- **Account → User**: Many-to-One (each account belongs to one user)
+- **Session → User**: Many-to-One (each session belongs to one user)
