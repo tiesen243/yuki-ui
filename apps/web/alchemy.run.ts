@@ -1,14 +1,17 @@
 import alchemy from 'alchemy'
 import { Nextjs } from 'alchemy/cloudflare'
 import { GitHubComment } from 'alchemy/github'
+import { CloudflareStateStore } from 'alchemy/state'
 
 const startTime = performance.now()
 
-const app = await alchemy('yuki-ui')
+const app = await alchemy('yuki-ui', {
+  stateStore: (scope) => new CloudflareStateStore(scope),
+})
 
 export const web = await Nextjs('web', {
   bindings: {
-    APP_URL: 'yuki-ui-web-tiesen.tiesen.workers.dev',
+    APP_URL: alchemy.secret(process.env.APP_URL),
   },
   bundle: {
     loader: {
