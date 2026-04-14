@@ -1,10 +1,10 @@
 import type { MDXComponents } from 'mdx/types'
 
-import { Callout } from 'fumadocs-ui/components/callout'
-import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock'
-import { Step, Steps } from 'fumadocs-ui/components/steps'
-import { Tab, Tabs } from 'fumadocs-ui/components/tabs'
-import defaultMdxComponents from 'fumadocs-ui/mdx'
+import { Callout } from '@fumadocs/base-ui/components/callout'
+import { DynamicCodeBlock } from '@fumadocs/base-ui/components/dynamic-codeblock'
+import { Step, Steps } from '@fumadocs/base-ui/components/steps'
+import { Tab, Tabs } from '@fumadocs/base-ui/components/tabs'
+import defaultMdxComponents from '@fumadocs/base-ui/mdx'
 import { Suspense, useMemo } from 'react'
 
 import { Index } from '@/__registry__'

@@ -1,6 +1,6 @@
 'use client'
 
-import { RootProvider } from 'fumadocs-ui/provider/next'
+import { RootProvider } from '@fumadocs/base-ui/provider/next'
 
 import SearchDialog from '@/components/search'
 import { ToastProvider } from '@/registry/ui/toast'

@@ -17,13 +17,12 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
-    "@opennextjs/cloudflare": "^1.19.1",
+    "@fumadocs/base-ui": "^16.7.14",
     "@orama/orama": "^3.1.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "fumadocs-core": "16.7.14",
     "fumadocs-mdx": "14.2.13",
-    "fumadocs-ui": "16.7.14",
     "lucide-react": "^1.8.0",
     "marked": "^18.0.0",
     "next": "16.2.3",
@@ -33,6 +32,7 @@
     "zod": "catalog:prod"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.19.1",
     "@tailwindcss/postcss": "catalog:tailwind",
     "@types/mdx": "^2.0.13",
     "@types/node": "catalog:dev",

@@ -1,28 +1,16 @@
 import type { NextConfig } from 'next'
 
-import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
 import { createMDX } from 'fumadocs-mdx/next'
 
 const withMDX = createMDX()
 
 const config = {
-  // output: 'export',
   typedRoutes: true,
   reactStrictMode: true,
   typescript: { ignoreBuildErrors: true },
-
-  // oxlint-disable-next-line require-await
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/docs',
-        permanent: true,
-      },
-    ]
-  },
 } satisfies NextConfig
 
 export default withMDX(config)
 
-if (process.env.NODE_ENV === 'development') initOpenNextCloudflareForDev()
+// oxlint-disable-next-line promise/prefer-await-to-then
+import('@opennextjs/cloudflare').then((m) => m.initOpenNextCloudflareForDev())
