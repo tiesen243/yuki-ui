@@ -13,7 +13,7 @@ import { notFound } from 'next/navigation'
 
 import { getMDXComponents } from '@/components/mdx'
 import { createMetadata } from '@/lib/metadata'
-import { gitConfig } from '@/lib/shared'
+import { appName, gitConfig } from '@/lib/shared'
 import { getPageImage, getPageMarkdownUrl, source } from '@/lib/source'
 import { getBaseUrl } from '@/lib/utils'
 
@@ -38,10 +38,10 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Yuki UI',
+      name: appName,
       logo: {
         '@type': 'ImageObject',
-        url: `${getBaseUrl()}/favicon.svg`,
+        url: `${getBaseUrl()}/icon-512.png`,
       },
     },
     image: getPageImage(page).url,
