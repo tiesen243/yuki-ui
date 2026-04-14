@@ -6,6 +6,7 @@ import { createMDX } from 'fumadocs-mdx/next'
 const withMdx = createMDX()
 
 const nextConfig = {
+  output: 'export',
   typedRoutes: true,
   reactStrictMode: true,
   images: { unoptimized: true },
