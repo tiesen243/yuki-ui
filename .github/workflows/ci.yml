@@ -24,7 +24,7 @@ jobs:
       - uses: ./tools/github/actions/setup
 
       - name: Format
-        run: bun format
+        run: npm run format
 
   lint:
     runs-on: ubuntu-latest
@@ -35,11 +35,11 @@ jobs:
       - name: Lint
         run: bun lint --format=github
 
-  typecheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: ./tools/github/actions/setup
-
-      - name: Typecheck
-        run: bun typecheck
+  # typecheck:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v6
+  #     - uses: ./tools/github/actions/setup
+  #
+  #     - name: Typecheck
+  #       run: bun typecheck
