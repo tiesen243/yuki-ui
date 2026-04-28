@@ -42,6 +42,7 @@
     "no-implicit-coercion": "off",
     "no-inline-comments": "off",
     "no-magic-numbers": "off",
+    "no-underscore-dangle": "off",
     "no-use-before-define": "off",
     "no-ternary": "off",
     "no-undefined": "off",

@@ -27,7 +27,7 @@ export interface JWTHeader {
 }
 
 export class JWT<TValue extends Record<string, unknown>> {
-  constructor(
+  public constructor(
     private readonly secret = '',
     private readonly algorithm: JWTAlgorithm = 'HS256'
   ) {}

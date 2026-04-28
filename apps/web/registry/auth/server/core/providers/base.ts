@@ -3,7 +3,7 @@ import type { OAuthAccount } from '@/server/auth/core/types'
 import { generateCodeChallenge } from '@/server/auth/core/crypto'
 
 export abstract class BaseProvider {
-  constructor(
+  protected constructor(
     public readonly providerName: string,
     protected readonly clientId: string,
     protected readonly clientSecret: string,

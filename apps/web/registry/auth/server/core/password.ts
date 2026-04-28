@@ -8,15 +8,15 @@ import {
 } from '@/server/auth/core/crypto'
 
 export class Password {
-  constructor(private readonly dkLen = 64) {}
+  public constructor(private readonly dkLen = 64) {}
 
-  async hash(password: string): Promise<string> {
+  public async hash(password: string): Promise<string> {
     const salt = encodeHex(crypto.getRandomValues(new Uint8Array(16)))
     const key = await this.generateKey(password.normalize('NFKC'), salt)
     return `${salt}:${encodeHex(key)}`
   }
 
-  async verify(hash: string, password: string): Promise<boolean> {
+  public async verify(hash: string, password: string): Promise<boolean> {
     const parts = hash.split(':')
     if (parts.length !== 2) return false
 

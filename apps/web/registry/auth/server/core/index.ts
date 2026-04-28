@@ -34,7 +34,7 @@ const DEFAULT_SESSION_USER = {
 } satisfies SessionWithUser
 
 class AuthError extends Error {
-  constructor(message: string) {
+  public constructor(message: string) {
     super(message)
     this.name = 'AuthError'
   }
