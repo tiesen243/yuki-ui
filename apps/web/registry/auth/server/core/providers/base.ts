@@ -1,3 +1,5 @@
+// oxlint-disable class-methods-use-this
+
 import type { OAuthAccount } from '@/server/auth/core/types'
 
 import { generateCodeChallenge } from '@/server/auth/core/crypto'

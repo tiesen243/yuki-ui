@@ -22,7 +22,7 @@ interface AuthData {
 const readData = (): AuthData => {
   try {
     if (fs.existsSync(AUTH_FILE)) {
-      const data = fs.readFileSync(AUTH_FILE, 'utf8')
+      const data = fs.readFileSync(AUTH_FILE, 'utf-8')
       const parsed = JSON.parse(data)
       return {
         users: parsed.users || [],

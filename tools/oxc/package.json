@@ -2,7 +2,11 @@
   "name": "@yuki/oxc",
   "version": "1.0.0",
   "private": true,
-  "files": [
-    "*.json"
-  ]
+  "type": "module",
+  "exports": {
+    "./*": {
+      "types": "./types.d.ts",
+      "default": "./*.js"
+    }
+  }
 }

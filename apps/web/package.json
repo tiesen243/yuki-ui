@@ -23,7 +23,7 @@
     "clsx": "^2.1.1",
     "fumadocs-core": "16.8.5",
     "fumadocs-mdx": "14.3.2",
-    "lucide-react": "^1.11.0",
+    "lucide-react": "^1.12.0",
     "marked": "^18.0.2",
     "next": "16.2.4",
     "react": "catalog:react",
@@ -38,10 +38,11 @@
     "@types/node": "catalog:dev",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
+    "@yuki/oxc": "workspace:*",
     "@yuki/tsconfig": "workspace:*",
     "alchemy": "^0.93.4",
     "postcss": "^8.5.12",
-    "shadcn": "^4.5.0",
+    "shadcn": "^4.6.0",
     "tailwindcss": "catalog:tailwind",
     "typescript": "catalog:dev"
   }
