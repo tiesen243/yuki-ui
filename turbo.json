@@ -18,39 +18,7 @@
       "outputLogs": "new-only"
     }
   },
-  "globalEnv": [
-    "NEXT_PUBLIC_APP_NAME",
-    "NEXT_PUBLIC_WEB_URL",
-    "NEXT_PUBLIC_DASHBOARD_URL",
-    "NEXT_PUBLIC_TRPC_USE_STREAMING",
-
-    "VITE_APP_NAME",
-    "VITE_WEB_URL",
-    "VITE_DASHBOARD_URL",
-    "VITE_TRPC_USE_STREAMING",
-
-    "POSTGRES_HOST",
-    "POSTGRES_PORT",
-    "POSTGRES_USER",
-    "POSTGRES_PASSWORD",
-    "POSTGRES_DATABASE",
-    "POSTGRES_SSL_MODE",
-
-    "AUTH_SECRET",
-    "AUTH_GITHUB_ID",
-    "AUTH_GITHUB_SECRET",
-    "AUTH_GOOGLE_ID",
-    "AUTH_GOOGLE_SECRET",
-
-    "TURNSTILE_SECRET_KEY",
-    "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
-    "VITE_TURNSTILE_SITE_KEY",
-
-    "RESEND_TOKEN",
-    "UPLOADTHING_TOKEN",
-
-    "PORT"
-  ],
+  "globalEnv": ["APP_URL", "PORT"],
   "globalPassThroughEnv": [
     "CI",
     "MODE",
@@ -61,21 +29,6 @@
     "VERCEL_ENV",
     "VERCEL_URL",
     "VERCEL_PROJECT_PRODUCTION_URL",
-
-    "NEON_PROJECT_ID",
-    "DATABASE_URL",
-    "DATABASE_URL_UNPOOLED",
-
-    "POSTGRES_URL",
-    "POSTGRES_URL_NO_SSL",
-    "POSTGRES_PRISMA_URL",
-    "POSTGRES_URL_NON_POOLING",
-
-    "PGHOST",
-    "PGHOST_UNPOOLED",
-    "PGUSER",
-    "PGPASSWORD",
-    "PGDATABASE",
 
     "npm_lifecycle_event"
   ]
