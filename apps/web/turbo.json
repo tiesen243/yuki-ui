@@ -3,7 +3,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build:shadcn"],
+      "dependsOn": ["build:shadcn"],
       "outputs": [
         ".next/**",
         "!.next/cache/**",
@@ -12,11 +12,10 @@
       ]
     },
     "build:shadcn": {
-      "dependsOn": ["^build:registry"],
+      "dependsOn": ["build:registry"],
       "outputs": ["public/r/**"]
     },
     "build:registry": {
-      "dependsOn": ["^build"],
       "outputs": ["__registry__/**"]
     },
     "dev": {
