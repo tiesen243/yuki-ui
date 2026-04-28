@@ -1,0 +1,17 @@
+{
+  "$schema": "../../node_modules/turbo/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "!.next/dev/**",
+        "next-env.d.ts"
+      ]
+    },
+    "dev": {
+      "dependsOn": ["^build"]
+    }
+  }
+}
