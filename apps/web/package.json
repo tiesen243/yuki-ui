@@ -17,14 +17,14 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
-    "@fumadocs/base-ui": "^16.8.5",
+    "@fumadocs/base-ui": "^16.8.7",
     "@orama/orama": "^3.1.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "fumadocs-core": "16.8.5",
+    "fumadocs-core": "16.8.7",
     "fumadocs-mdx": "14.3.2",
-    "lucide-react": "^1.12.0",
-    "marked": "^18.0.2",
+    "lucide-react": "^1.14.0",
+    "marked": "^18.0.3",
     "next": "16.2.4",
     "react": "catalog:react",
     "react-dom": "catalog:react",
@@ -32,7 +32,7 @@
     "zod": "catalog:prod"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "^1.19.4",
+    "@opennextjs/cloudflare": "^1.19.6",
     "@tailwindcss/postcss": "catalog:tailwind",
     "@types/mdx": "^2.0.13",
     "@types/node": "catalog:dev",
@@ -40,8 +40,8 @@
     "@types/react-dom": "catalog:react",
     "@yuki/oxc": "workspace:*",
     "@yuki/tsconfig": "workspace:*",
-    "alchemy": "^0.93.4",
-    "postcss": "^8.5.12",
+    "alchemy": "^0.93.7",
+    "postcss": "^8.5.14",
     "shadcn": "^4.6.0",
     "tailwindcss": "catalog:tailwind",
     "typescript": "catalog:dev"
