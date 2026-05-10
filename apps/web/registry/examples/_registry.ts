@@ -80,4 +80,16 @@ export const registryExamples = [
       { type: 'registry:example', path: 'registry/examples/use-form.tsx' },
     ],
   },
+
+  {
+    name: 'use-immer-demo',
+    type: 'registry:example',
+    title: 'useImmer',
+    description:
+      'A simple counter example demonstrating the useImmer hook for immutable state management.',
+    registryDependencies: [`${getBaseUrl()}/r/use-immer.json`],
+    files: [
+      { type: 'registry:example', path: 'registry/examples/use-immer.tsx' },
+    ],
+  },
 ] satisfies RegistryItem[]

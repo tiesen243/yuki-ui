@@ -22,7 +22,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
         className={cn(
           geist.variable,
           geistMono.variable,
-          'flex min-h-screen flex-col font-sans antialiased'
+          'flex min-h-screen flex-col antialiased'
         )}
       >
         <Provider>{children}</Provider>

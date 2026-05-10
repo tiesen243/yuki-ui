@@ -22,7 +22,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const page = source.getPage(params.slug)
   if (!page) notFound()
 
-  const { body: MdxContent, toc } = await page.data.load()
+  const MdxContent = page.data.body
   const markdownUrl = getPageMarkdownUrl(page).url
 
   const jsonLd = {
@@ -57,7 +57,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
         }}
       />
 
-      <DocsPage toc={toc} full={page.data.full}>
+      <DocsPage toc={page.data.toc} full={page.data.full}>
         <DocsTitle>{page.data.title}</DocsTitle>
         <DocsDescription className='mb-0'>
           {page.data.description}

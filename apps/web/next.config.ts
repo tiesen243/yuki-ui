@@ -7,6 +7,7 @@ const withMDX = createMDX()
 const config = {
   typedRoutes: true,
   reactStrictMode: true,
+  images: { unoptimized: true },
   typescript: { ignoreBuildErrors: true },
 } satisfies NextConfig
 
