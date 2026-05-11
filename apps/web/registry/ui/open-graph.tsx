@@ -22,14 +22,17 @@ function OpenGraph({
   const mutedColor = '#a4a4a4'
   const isImageOnly = !props.title && !props.description
 
+  const MAX_TITLE_LENGTH = props.image ? 35 : 60
+  const MAX_DESCRIPTION_LENGTH = props.image ? 160 : 300
+
   const truncatedTitle = props.title
-    ? props.title.length > 35
-      ? props.title.slice(0, 32) + '...'
+    ? props.title.length > MAX_TITLE_LENGTH
+      ? props.title.slice(0, MAX_TITLE_LENGTH - 3) + '...'
       : props.title
     : ''
   const truncatedDescription = props.description
-    ? props.description.length > 160
-      ? props.description.slice(0, 157) + '...'
+    ? props.description.length > MAX_DESCRIPTION_LENGTH
+      ? props.description.slice(0, MAX_DESCRIPTION_LENGTH - 3) + '...'
       : props.description
     : ''
 

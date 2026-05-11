@@ -6,13 +6,14 @@ import { OpenGraph } from '@/registry/ui/open-graph'
 
 export const revalidate = false
 
-export async function GET(req: Request) {
+export async function GET(req: Request, _: RouteContext<'/api/og'>) {
   const url = new URL(req.url)
 
-  const { searchParams } = url
-  const title = searchParams.get('title') ?? 'Default Title'
-  const description = searchParams.get('description') ?? 'Default Description'
-  const image = searchParams.get('image') ?? undefined
+  const title = url.searchParams.get('title') ?? ''
+  const description = url.searchParams.get('description') ?? ''
+  let image = url.searchParams.get('image') ?? ''
+  if (image && !image.startsWith('http'))
+    image = new URL(image, req.url).toString()
 
   const fontData = await loadGoogleFont('Geist')
   const logoUrl = new URL('/icon-512.png', req.url).toString()
@@ -23,7 +24,6 @@ export async function GET(req: Request) {
       title={title}
       description={description}
       image={image}
-      // oxlint-disable-next-line jsx-a11y/alt-text, next/no-img-element
       logo={<img src={logoUrl} width={56} height={56} />}
       caption={url.hostname}
     />,
