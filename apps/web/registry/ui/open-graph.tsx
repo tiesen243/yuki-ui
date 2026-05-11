@@ -6,7 +6,6 @@ interface OpenGraphProps {
   caption?: string
   image?: string
   primaryColor?: string
-  secondaryColor?: string
   corner?: { margin?: number; length?: number; strokeWidth?: number }
   style?: React.CSSProperties
 }
