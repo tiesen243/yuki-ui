@@ -61,6 +61,7 @@ function OpenGraph({
 
         display: 'flex',
         justifyContent: 'space-between',
+        alignItems: 'center',
         gap: '2.5rem',
         ...props.style,
       }}
