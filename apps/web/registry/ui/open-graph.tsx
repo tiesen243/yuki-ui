@@ -22,6 +22,17 @@ function OpenGraph({
   const mutedColor = '#a4a4a4'
   const isImageOnly = !props.title && !props.description
 
+  const truncatedTitle = props.title
+    ? props.title.length > 35
+      ? props.title.slice(0, 32) + '...'
+      : props.title
+    : ''
+  const truncatedDescription = props.description
+    ? props.description.length > 160
+      ? props.description.slice(0, 157) + '...'
+      : props.description
+    : ''
+
   const Corner = ({
     position,
     path,
@@ -125,7 +136,6 @@ function OpenGraph({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: `${primaryColor}15`,
                 border: `1px solid ${primaryColor}80`,
                 borderRadius: '16px',
                 overflow: 'hidden',
@@ -162,37 +172,28 @@ function OpenGraph({
         >
           <h1
             style={{
-              fontSize: '4rem',
+              textAlign: props.image ? 'left' : 'center',
+              fontSize: '3.75rem',
               fontWeight: 700,
               lineHeight: '1.15',
               color: '#ffffff',
-              textAlign: props.image ? 'left' : 'center',
-              overflow: 'hidden',
-              display: '-webkit-box',
-              WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: 2,
               margin: 0,
             }}
           >
-            {props.title}
+            {truncatedTitle}
           </h1>
 
           <p
             style={{
-              fontSize: '1.375rem',
-              fontWeight: 400,
-              lineHeight: '1.6',
-              maxWidth: '85%',
               textAlign: props.image ? 'left' : 'center',
+              fontSize: '1.875rem',
+              fontWeight: 400,
+              lineHeight: '1.5',
               color: mutedColor,
-              overflow: 'hidden',
-              display: '-webkit-box',
-              WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: 4,
               margin: 0,
             }}
           >
-            {props.description}
+            {truncatedDescription}
           </p>
         </div>
       </div>
@@ -202,10 +203,10 @@ function OpenGraph({
           style={{
             flexShrink: 0,
             display: 'flex',
-            width: isImageOnly ? 'auto' : '400px',
-            height: isImageOnly ? '315px' : 'auto',
-            aspectRatio: isImageOnly ? '16 / 9' : '1 / 1',
-            borderRadius: '12px',
+            width: isImageOnly ? '560px' : '400px',
+            height: isImageOnly ? '315px' : '400px',
+            border: `1px solid ${primaryColor}80`,
+            borderRadius: '1rem',
             overflow: 'hidden',
           }}
         >
@@ -214,10 +215,10 @@ function OpenGraph({
             src={props.image}
             alt={props.title}
             style={{
-              objectFit: 'contain',
-              objectPosition: 'center',
+              objectFit: 'cover',
               width: '100%',
               height: '100%',
+              borderRadius: '1rem',
             }}
           />
         </div>
