@@ -33,34 +33,6 @@ function OpenGraph({
       : props.description
     : ''
 
-  const Corner = ({
-    position,
-    path,
-  }: {
-    position: React.CSSProperties
-    path: string
-  }) => (
-    <svg
-      style={{
-        position: 'absolute',
-        width: corner.length,
-        height: corner.length,
-        pointerEvents: 'none',
-        ...position,
-      }}
-      viewBox={`0 0 ${corner.length} ${corner.length}`}
-    >
-      <path
-        d={path}
-        fill='none'
-        stroke={`${mutedColor}40`}
-        strokeWidth={corner.strokeWidth}
-        strokeLinecap='round'
-        strokeLinejoin='round'
-      />
-    </svg>
-  )
-
   return (
     <div
       style={{
@@ -71,7 +43,7 @@ function OpenGraph({
         backgroundColor: '#000000',
 
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: isImageOnly ? 'center' : 'space-between',
         alignItems: 'center',
         gap: '2.5rem',
         ...props.style,
@@ -99,21 +71,29 @@ function OpenGraph({
       />
 
       <Corner
+        corner={corner}
+        color={mutedColor}
         position={{ top: corner.margin, left: corner.margin }}
         path={`M ${corner.length} ${s} L ${s} ${s} L ${s} ${corner.length}`}
       />
 
       <Corner
+        corner={corner}
+        color={mutedColor}
         position={{ top: corner.margin, right: corner.margin }}
         path={`M 0 ${s} L ${max} ${s} L ${max} ${corner.length}`}
       />
 
       <Corner
+        corner={corner}
+        color={mutedColor}
         position={{ bottom: corner.margin, left: corner.margin }}
         path={`M ${s} 0 L ${s} ${max} L ${corner.length} ${max}`}
       />
 
       <Corner
+        corner={corner}
+        color={mutedColor}
         position={{ bottom: corner.margin, right: corner.margin }}
         path={`M ${max} 0 L ${max} ${max} L 0 ${max}`}
       />
@@ -203,9 +183,8 @@ function OpenGraph({
           style={{
             flexShrink: 0,
             display: 'flex',
-            width: isImageOnly ? '560px' : '400px',
-            height: isImageOnly ? '315px' : '400px',
-            border: `1px solid ${primaryColor}80`,
+            width: isImageOnly ? '920px' : '400px',
+            height: isImageOnly ? '518px' : '400px',
             borderRadius: '1rem',
             overflow: 'hidden',
           }}
@@ -215,7 +194,7 @@ function OpenGraph({
             src={props.image}
             alt={props.title}
             style={{
-              objectFit: 'cover',
+              objectFit: isImageOnly ? 'contain' : 'cover',
               width: '100%',
               height: '100%',
               borderRadius: '1rem',
@@ -248,3 +227,35 @@ function OpenGraph({
 }
 
 export { OpenGraph }
+
+const Corner = ({
+  corner,
+  color,
+  position,
+  path,
+}: {
+  corner: Required<OpenGraphProps['corner']>
+  color: string
+  position: React.CSSProperties
+  path: string
+}) => (
+  <svg
+    style={{
+      position: 'absolute',
+      width: corner?.length,
+      height: corner?.length,
+      pointerEvents: 'none',
+      ...position,
+    }}
+    viewBox={`0 0 ${corner?.length} ${corner?.length}`}
+  >
+    <path
+      d={path}
+      fill='none'
+      stroke={`${color}40`}
+      strokeWidth={corner?.strokeWidth}
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    />
+  </svg>
+)
