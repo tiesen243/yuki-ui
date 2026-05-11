@@ -1,0 +1,65 @@
+---
+title: Open Graph
+description: A component for setting Open Graph meta tags in your application to improve link previews on social media platforms.
+source: components/open-graph.tsx
+---
+
+<PreviewComponent comp='open-graph-demo' />
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='open-graph' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='open-graph' />
+
+## Features
+
+- **Responsive Layout**: Automatically adjusts the layout if an image is missing, centering the text for a balanced look.
+- **Image-Only Mode**: If no title or description is provided, the component focuses entirely on the provided image.
+- **Grid Background**: Includes a subtle, masked grid pattern for a modern, technical aesthetic.
+- **Dynamic Corners**: Features SVG corner accents that frame the content beautifully.
+- **Text Optimization**: Built-in line-clamping (via -webkit-line-clamp) ensures your titles and descriptions don't overflow the 630px height.
+
+## Usage
+
+```tsx title="app/api/og/route.tsx"
+import { ImageResponse } from 'next/og'
+
+import { appName } from '@/lib/shared'
+import { OpenGraph } from '@/registry/ui/open-graph'
+
+export const revalidate = false
+
+export async function GET(req: Request) {
+  const url = new URL(req.url)
+
+  const { searchParams } = url
+  const title = searchParams.get('title') ?? 'Default Title'
+  const description = searchParams.get('description') ?? 'Default Description'
+  const image = searchParams.get('image') ?? undefined
+
+  const logoUrl = new URL('/icon-512.png', req.url).toString()
+
+  return new ImageResponse(
+    <OpenGraph
+      appName={appName}
+      title={title}
+      description={description}
+      image={image}
+      // oxlint-disable-next-line jsx-a11y/alt-text, next/no-img-element
+      logo={<img src={logoUrl} width={56} height={56} />}
+      caption={url.hostname}
+    />,
+    {
+      width: 1200,
+      height: 630,
+    }
+  )
+}
+```

@@ -39,6 +39,14 @@ export const registryUI = [
   },
 
   {
+    name: 'open-graph',
+    type: 'registry:ui',
+    title: 'Open Graph Image',
+    description: 'A component for generating Open Graph images',
+    files: [{ type: 'registry:ui', path: 'registry/ui/open-graph.tsx' }],
+  },
+
+  {
     name: 'toast',
     type: 'registry:ui',
     title: 'Toast Notifications',

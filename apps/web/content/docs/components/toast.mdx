@@ -25,3 +25,52 @@ source: components/toast.tsx
 Copy and paste the following code into your project.
 
 <ComponentSource comp='toast' />
+
+## Features
+
+- **ToastProvider**: A context provider that manages the state and logic for displaying toast notifications. It should wrap your application to provide toast functionality throughout.
+- **Variant Support**: The Toast component supports multiple variants (default, success, error, warning) to visually differentiate between types of notifications.
+
+## Usage
+
+1. Wrap your application with the `ToastProvider` to enable toast notifications:
+
+```tsx title="app/layout.tsx"
+import { ToastProvider } from '@/components/ui/toast'
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang='en'>
+      <body>
+        <ToastProvider>{children}</ToastProvider>
+      </body>
+    </html>
+  )
+}
+```
+
+2. Use the `toast` function to trigger notifications from anywhere in your application:
+
+```tsx title="app/page.tsx"
+import { toast } from '@/components/ui/toast'
+
+export default function Home() {
+  const handleClick = () => {
+    toast.add({
+      type: 'success', // Optional: 'success', 'error', 'info', 'warning'
+      title: 'Notification Title',
+      description: 'This is a toast notification.',
+    })
+  }
+
+  return (
+    <div>
+      <button onClick={handleClick}>Show Toast</button>
+    </div>
+  )
+}
+```

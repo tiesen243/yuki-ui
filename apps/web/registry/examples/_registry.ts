@@ -28,6 +28,17 @@ export const registryExamples = [
   },
 
   {
+    name: 'open-graph-demo',
+    type: 'registry:example',
+    title: 'Open Graph Image',
+    description: 'A simple example demonstrating the Open Graph component.',
+    registryDependencies: [`${getBaseUrl()}/r/open-graph.json`],
+    files: [
+      { type: 'registry:example', path: 'registry/examples/open-graph.tsx' },
+    ],
+  },
+
+  {
     name: 'toast-demo',
     type: 'registry:example',
     title: 'Toast Notifications',
