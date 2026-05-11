@@ -26,14 +26,10 @@ function OpenGraph({
   const MAX_DESCRIPTION_LENGTH = props.image ? 160 : 300
 
   const truncatedTitle = props.title
-    ? props.title.length > MAX_TITLE_LENGTH
-      ? props.title.slice(0, MAX_TITLE_LENGTH - 3) + '...'
-      : props.title
+    ? truncateText(props.title, MAX_TITLE_LENGTH)
     : ''
   const truncatedDescription = props.description
-    ? props.description.length > MAX_DESCRIPTION_LENGTH
-      ? props.description.slice(0, MAX_DESCRIPTION_LENGTH - 3) + '...'
-      : props.description
+    ? truncateText(props.description, MAX_DESCRIPTION_LENGTH)
     : ''
 
   return (
@@ -262,3 +258,8 @@ const Corner = ({
     />
   </svg>
 )
+
+function truncateText(text: string, maxLength: number) {
+  if (text.length <= maxLength) return text
+  return `${text.slice(0, maxLength - 3)}...`
+}
