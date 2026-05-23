@@ -18,4 +18,15 @@ export const registryLib = [
     dependencies: [],
     files: [{ type: 'registry:lib', path: 'registry/lib/create-id.ts' }],
   },
+
+  {
+    name: 'create-safe-context',
+    type: 'registry:lib',
+    title: 'Safe React Context',
+    description: 'A utility to create a safe React context with error handling',
+    dependencies: ['react'],
+    files: [
+      { type: 'registry:lib', path: 'registry/lib/create-safe-context.ts' },
+    ],
+  },
 ] satisfies RegistryItem[]

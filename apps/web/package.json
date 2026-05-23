@@ -14,15 +14,15 @@
     "typescheck": "fumadocs-mdx && next typegen && tsc --noEmit"
   },
   "dependencies": {
-    "@base-ui/react": "^1.4.1",
-    "@fumadocs/base-ui": "^16.8.11",
+    "@base-ui/react": "^1.5.0",
+    "@fumadocs/base-ui": "^16.9.0",
     "@orama/orama": "^3.1.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "fumadocs-core": "16.8.11",
-    "fumadocs-mdx": "15.0.5",
+    "fumadocs-core": "16.9.0",
+    "fumadocs-mdx": "15.0.7",
     "lucide-react": "^1.16.0",
-    "marked": "^18.0.3",
+    "marked": "^18.0.4",
     "next": "16.2.6",
     "react": "catalog:react",
     "react-dom": "catalog:react",
@@ -37,7 +37,7 @@
     "@types/react-dom": "catalog:react",
     "@yuki/oxc": "workspace:*",
     "@yuki/tsconfig": "workspace:*",
-    "shadcn": "^4.7.0",
+    "shadcn": "^4.8.0",
     "tailwindcss": "catalog:tailwind",
     "typescript": "catalog:dev"
   }
