@@ -39,6 +39,17 @@ export const registryExamples = [
   },
 
   {
+    name: 'skeleton-demo',
+    type: 'registry:example',
+    title: 'Skeleton',
+    description: 'A simple skeleton loading example using Yuki UI.',
+    registryDependencies: [`${getBaseUrl()}/r/skeleton.json`],
+    files: [
+      { type: 'registry:example', path: 'registry/examples/skeleton.tsx' },
+    ],
+  },
+
+  {
     name: 'toast-demo',
     type: 'registry:example',
     title: 'Toast Notifications',

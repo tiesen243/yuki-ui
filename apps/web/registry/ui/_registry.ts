@@ -47,6 +47,24 @@ export const registryUI = [
   },
 
   {
+    name: 'skeleton',
+    type: 'registry:ui',
+    title: 'Skeleton',
+    description: 'A skeleton loading component',
+    files: [{ type: 'registry:ui', path: 'registry/ui/skeleton.tsx' }],
+    css: {
+      '@keyframes shimmer': {
+        '0%': {
+          backgroundPosition: '-200% 0',
+        },
+        '100%': {
+          backgroundPosition: '200% 0',
+        },
+      },
+    },
+  },
+
+  {
     name: 'toast',
     type: 'registry:ui',
     title: 'Toast Notifications',
