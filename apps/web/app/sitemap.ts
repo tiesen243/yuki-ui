@@ -5,9 +5,9 @@ import { getBaseUrl } from '@/lib/utils'
 
 export const revalidate = false
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const url = (path: string): string => new URL(path, getBaseUrl()).toString()
+const url = (path: string): string => new URL(path, getBaseUrl()).toString()
 
+export default function sitemap(): MetadataRoute.Sitemap {
   const pages = source.getPages()
 
   return [

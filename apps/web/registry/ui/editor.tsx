@@ -74,6 +74,7 @@ function EditorInput({ className, ...props }: React.ComponentProps<'div'>) {
         value={value}
         onChange={(e) => onValueChange(e.target.value)}
         className='flex field-sizing-content h-full min-h-20 w-full px-2.5 py-2 outline-none'
+        aria-label='Editor input'
       />
     </div>
   )
