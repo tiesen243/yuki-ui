@@ -1,7 +1,7 @@
 {
   "name": "yuki-ui",
   "private": true,
-  "homepage": "https://yuki-ui.vercel.app",
+  "homepage": "https://ui.tiesen.id.vn",
   "bugs": {
     "url": "https://github.com/tiesen243/yuki-ui/issues"
   },
@@ -35,7 +35,7 @@
       "zod": "4.4.3"
     },
     "dev": {
-      "@types/node": "^25.9.4",
+      "@types/node": "^26.0.1",
       "dotenv-cli": "^11.0.0",
       "tsdown": "^0.19.0-beta.5",
       "typescript": "^6.0.3"
@@ -50,17 +50,6 @@
       "@tailwindcss/postcss": "^4.3.1",
       "@tailwindcss/vite": "^4.1.18",
       "tailwindcss": "^4.3.1"
-    },
-    "trpc": {
-      "@trpc/server": "^11.8.1",
-      "@trpc/client": "^11.8.1",
-      "@trpc/tanstack-react-query": "^11.8.1",
-      "superjson": "^2.2.6"
-    },
-    "orpc": {
-      "@orpc/server": "^1.13.1",
-      "@orpc/client": "^1.13.1",
-      "@orpc/react-query": "^1.13.1"
     }
   }
 }

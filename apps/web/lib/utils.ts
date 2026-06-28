@@ -1,11 +1,4 @@
-import type { ClassValue } from 'clsx'
-
-import { clsx } from 'clsx'
-import { twMerge } from 'tailwind-merge'
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
+export { cn } from 'cnfast'
 
 export function getBaseUrl() {
   if (typeof window !== 'undefined') return window.location.origin
