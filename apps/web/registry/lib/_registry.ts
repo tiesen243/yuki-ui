@@ -1,5 +1,7 @@
 import type { RegistryItem } from 'shadcn/schema'
 
+import { getBaseUrl } from '@/lib/utils'
+
 export const registryLib = [
   {
     name: 'create-env',
@@ -28,5 +30,26 @@ export const registryLib = [
     files: [
       { type: 'registry:lib', path: 'registry/lib/create-safe-context.ts' },
     ],
+  },
+
+  {
+    name: 'crypto',
+    type: 'registry:lib',
+    title: 'Cryptography Utilities',
+    description:
+      'A collection of cryptography utilities for encoding and decoding data',
+    dependencies: [],
+    files: [{ type: 'registry:lib', path: 'registry/lib/crypto.ts' }],
+  },
+
+  {
+    name: 'password',
+    type: 'registry:lib',
+    title: 'Password Hashing and Verification',
+    description:
+      'A utility for hashing and verifying passwords using the scrypt algorithm',
+    dependencies: [],
+    registryDependencies: [`${getBaseUrl()}/r/crypto.json`],
+    files: [{ type: 'registry:lib', path: 'registry/lib/password.ts' }],
   },
 ] satisfies RegistryItem[]
