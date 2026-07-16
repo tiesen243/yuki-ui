@@ -14,7 +14,7 @@
     "tools/*"
   ],
   "scripts": {
-    "build": "bun --filter @yuki/web build",
+    "build": "bun turbo --filter @yuki/web build",
     "clean": "bun --filter '*' clean && git clean -xdf node_modules",
     "dev": "bun --filter @yuki/web dev",
     "format": "oxfmt --check",
@@ -38,7 +38,7 @@
       "@types/node": "^26.1.1",
       "dotenv-cli": "^11.0.0",
       "tsdown": "^0.19.0-beta.5",
-      "typescript": "^7.0.2"
+      "typescript": "^6.0.3"
     },
     "react": {
       "@types/react": "^19.2.17",
