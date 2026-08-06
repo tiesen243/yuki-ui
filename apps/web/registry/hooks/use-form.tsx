@@ -94,9 +94,9 @@ export function useForm<
       if (!schema) return values
 
       const result =
-        typeof schema === 'function'
-          ? await schema(values)
-          : await schema['~standard'].validate(values)
+        '~standard' in schema
+          ? await schema['~standard'].validate(values)
+          : await schema(values)
 
       if ('issues' in result) throw result.issues
       return (result.value ?? result) as TValues
