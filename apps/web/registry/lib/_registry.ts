@@ -43,6 +43,17 @@ export const registryLib = [
   },
 
   {
+    name: 'form-builder',
+    type: 'registry:lib',
+    title: 'Form Builder',
+    description:
+      'A fully-typed, reactive form builder powered by Effect Schema and Atom React.',
+    registryDependencies: ['field'],
+    dependencies: ['@base-ui/react', 'effect@rc', '@effect/atom-react@rc'],
+    files: [{ type: 'registry:lib', path: 'registry/lib/form-builder.tsx' }],
+  },
+
+  {
     name: 'password',
     type: 'registry:lib',
     title: 'Password Hashing and Verification',

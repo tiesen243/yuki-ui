@@ -1,0 +1,203 @@
+---
+title: Form Builder
+description: A fully-typed, reactive form builder powered by Effect Schema and Atom React.
+source: lib/form-builder.tsx
+---
+
+## Reactive Form Builder
+
+This utility leverages **Effect Schema** for robust, type-safe validation and **@effect/atom-react** for granular, high-performance state management. It prevents unnecessary re-renders and provides a simple builder API to construct schemas, refine validation logic, and compose UI components seamlessly.
+
+<Tabs items={['Preview', 'Code']}>
+
+<Tab value='Preview'>
+  <PreviewComponent comp='form-builder-demo' />
+</Tab>
+
+<Tab value='Code'>
+  <ComponentSource comp='form-builder-demo' />
+</Tab>
+
+</Tabs>
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='form-builder' />
+
+### Manual
+
+<Steps>
+
+<Step>
+Install the required dependencies:
+
+```package-install
+effect@rc @effect/atom-react@rc @base-ui/react
+```
+
+</Step>
+
+<Step>
+
+Copy and paste the following code into your project:
+
+<ComponentSource comp='form-builder' />
+
+</Step>
+
+</Steps>
+
+## Usage
+
+1. Create a Schema
+
+Use `FormBuilder.empty.add()` to strictly define the fields of your form and their validation rules using `effect/Schema`. You can chain multiple `.add()` calls.
+
+```tsx
+const form = FormBuilder.empty
+  .add('username', Schema.String.check(Schema.isMinLength(3)))
+  .add('age', Schema.Number.check(Schema.greaterThan(18)))
+```
+
+2. Add Schema Refinements (Optional)
+
+Use `.refine()` to handle complex validations that depend on multiple fields, such as checking if a "Confirm Password" field matches the "Password" field.
+
+```tsx
+.refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'], // Which field error should be attached to
+    message: 'Passwords do not match',
+  })
+```
+
+3. Initialize the Form Instance
+
+Call `.make()` with a submission handler (wrapped in `Effect`) and configuration options. The defaultValues object enforces type safety against the schema you've built.
+
+```tsx
+const myForm = form.make(
+  Effect.fn(function* (values) {
+    // Perform API calls or heavy operations here
+    yield* Effect.sleep(1000)
+    return values
+  }),
+  {
+    defaultValues: { username: '', age: 0 },
+    onSuccess: (data) => console.log('Success:', data),
+    onError: (error) => console.error('Failed:', error),
+  }
+)
+```
+
+4. Build the UI
+
+The `.make()` method returns fully-typed React components (`Root`, `Field`, `Submit`) connected to the internal Atom state.
+
+4.1. The `<Root>` Component
+
+Wrap your form elements using myForm.Root. It establishes the internal FormContext for all child fields.
+
+**For React Web:**
+
+You can render a standard `<form>` tag and use the provided `handleSubmit` method to prevent the default browser behavior and trigger your validation/submission logic.
+
+```tsx
+<myForm.Root
+  render={({ handleSubmit }) => (
+    <form
+      className='space-y-4'
+      onSubmit={(e) => {
+        e.preventDefault()
+        handleSubmit()
+      }}
+    />
+  )}
+>
+  {/* Fields go here */}
+</myForm.Root>
+```
+
+**For React Native:**
+
+Since there is no standard HTML `<form>`, you can simply render a `<View>`. You will rely on the submit function exposed by the `<myForm.Submit>` component to trigger the form.
+
+```tsx
+<myForm.Root render={() => <View />}>{/* Fields go here */}</myForm.Root>
+```
+
+4.2. The `<Field>` Component
+
+Render specific fields securely by passing the exact field `name`. It provides stable `field` (onChange, onBlur, values) and `meta` (errors, ids, array mutations) properties. Error validations run automatically when `onBlur` is triggered.
+
+```tsx
+<myForm.Field
+  name='username'
+  render={({ field, meta }) => (
+    <Field>
+      <FieldLabel htmlFor={field.id}>Username</FieldLabel>
+      <Input {...field} onChange={(e) => field.onChange(e.target.value)} />
+      <FieldError id={meta.errorId} errors={meta.errors} />
+    </Field>
+  )}
+/>
+```
+
+4.3. Working with Array Fields
+
+When a field is defined as an Array in the schema, the `meta` object automatically provides strongly-typed array mutation functions: `add`, `update`, and `remove`. These functions modify the array directly without triggering unnecessary parent form re-renders.
+
+```tsx
+<myForm.Field
+  name='images'
+  render={({ field, meta }) => (
+    <Field>
+      <FieldLabel htmlFor={field.id}>Images</FieldLabel>
+
+      {field.value.map((image, index) => (
+        <Field key={index} orientation='horizontal'>
+          <Input
+            onChange={(e) => meta.update(index, e.target.value)}
+            value={image}
+            {...field}
+            placeholder='Enter image URL'
+          />
+          <Button
+            onClick={() => meta.remove(index)}
+            type='button'
+            variant='outline'
+          >
+            Remove
+          </Button>
+        </Field>
+      ))}
+
+      <FieldError id={meta.errorId} errors={meta.errors} />
+
+      <Button onClick={() => meta.add('')} type='button' variant='secondary'>
+        Add Image
+      </Button>
+    </Field>
+  )}
+/>
+```
+
+4.4. The `<Submit>` Component
+
+Access submission state (`isPending`) without triggering re-renders across the entire form. This is especially crucial in React Native where you use this to trigger the form submit.
+
+```tsx
+<myForm.Submit
+  render={({ meta, submit }) => (
+    <Button disabled={meta.isPending} form={meta.formId}>
+      {meta.isPending ? 'Submitting...' : 'Submit'}
+    </Button>
+
+    // or
+    // <Button disabled={meta.isPending} onPress={submit}>
+    //   {meta.isPending ? 'Submitting...' : 'Submit'}
+    // </Button>
+  )}
+/>
+```

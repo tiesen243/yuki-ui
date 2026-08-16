@@ -149,6 +149,7 @@ function Toaster({
             <ToastPrimitive.Description
               data-slot='toast-description'
               className='text-sm not-in-data-type:text-muted-foreground in-data-[type=loading]:text-muted-foreground'
+              render={<div />}
             />
           </div>
 

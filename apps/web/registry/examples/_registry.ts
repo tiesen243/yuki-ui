@@ -13,6 +13,18 @@ export const registryExamples = [
   },
 
   {
+    name: 'form-builder-demo',
+    type: 'registry:example',
+    title: 'Form Builder',
+    description:
+      'A simple form example demonstrating the Form Builder library.',
+    registryDependencies: [`${getBaseUrl()}/r/form-builder.json`],
+    files: [
+      { type: 'registry:example', path: 'registry/examples/form-builder.tsx' },
+    ],
+  },
+
+  {
     name: 'nvim-statusline-demo',
     type: 'registry:example',
     title: 'Nvim Statusline',

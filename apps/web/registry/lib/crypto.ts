@@ -13,7 +13,7 @@ export function encodeHex(data: Uint8Array): string {
 
   for (const d of data) {
     result += hexAlphabet[d >> 4]
-    result += hexAlphabet[d & 0x0f]
+    result += hexAlphabet[d & 0x0F]
   }
 
   return result
@@ -49,10 +49,10 @@ export function encodeBase64Url(bytes: Uint8Array): string {
 
     for (let j = 0; j < 4; j += 1) {
       if (bufferBitSize >= 6) {
-        result += base64urlAlphabet[(buffer >> (bufferBitSize - 6)) & 0x3f]
+        result += base64urlAlphabet[(buffer >> (bufferBitSize - 6)) & 0x3F]
         bufferBitSize -= 6
       } else if (bufferBitSize > 0) {
-        result += base64urlAlphabet[(buffer << (6 - bufferBitSize)) & 0x3f]
+        result += base64urlAlphabet[(buffer << (6 - bufferBitSize)) & 0x3F]
         bufferBitSize = 0
       } else result += '='
     }
@@ -85,8 +85,8 @@ export function decodeBase64Url(encoded: string): Uint8Array {
 
     if (bitsRead < 24) {
       let unused: number
-      if (bitsRead === 12) unused = chunk & 0xff_ff
-      else if (bitsRead === 18) unused = chunk & 0xff
+      if (bitsRead === 12) unused = chunk & 0xFF_FF
+      else if (bitsRead === 18) unused = chunk & 0xFF
       else throw new Error('Invalid padding')
 
       if (unused !== 0) throw new Error('Invalid padding')
@@ -94,7 +94,7 @@ export function decodeBase64Url(encoded: string): Uint8Array {
 
     const byteLength = Math.floor(bitsRead / 8)
     for (let k = 0; k < byteLength; k += 1) {
-      result[totalBytes] = (chunk >> (16 - k * 8)) & 0xff
+      result[totalBytes] = (chunk >> (16 - k * 8)) & 0xFF
       totalBytes += 1
     }
   }
