@@ -30,7 +30,7 @@ export default function TypographyDemo() {
           alt='demonstration of typography styles'
           className='mx-auto w-1/2 rounded-md object-cover'
         />
-        <Typography variant='caption' render={<figcaption />}>
+        <Typography variant='caption' as='figcaption'>
           Figure 1. A sample image demonstrating typography styles.
         </Typography>
       </figure>

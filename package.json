@@ -14,14 +14,14 @@
     "tools/*"
   ],
   "scripts": {
-    "build": "bun turbo --filter @yuki/web build",
-    "clean": "bun --filter '*' clean && git clean -xdf node_modules",
-    "dev": "bun --filter @yuki/web dev",
+    "build": "turbo --filter @yuki/web build",
+    "clean": "turbo --filter '*' clean && git clean -xdf node_modules",
+    "dev": "turbo --filter @yuki/web dev",
     "format": "oxfmt --check",
     "format:fix": "oxfmt --write",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "typecheck": "bun --filter '*' typescheck"
+    "typecheck": "turbo typecheck"
   },
   "devDependencies": {
     "oxfmt": "^0.63.0",

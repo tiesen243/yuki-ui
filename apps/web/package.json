@@ -11,13 +11,12 @@
     "dev": "next dev",
     "postinstall": "fumadocs-mdx",
     "start": "next start",
-    "typescheck": "fumadocs-mdx && next typegen && tsc --noEmit"
+    "typecheck": "fumadocs-mdx && next typegen && tsc --noEmit"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
     "@effect/atom-react": "^4.0.0-rc.109",
     "@fumadocs/base-ui": "^16.14.4",
-    "@orama/orama": "^3.1.18",
     "class-variance-authority": "^0.7.1",
     "cnfast": "^0.1.0",
     "effect": "^4.0.0-rc.109",
