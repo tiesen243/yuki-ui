@@ -4,8 +4,6 @@ description: A fully-typed, reactive form builder powered by Effect Schema and A
 source: lib/form-builder.tsx
 ---
 
-## Reactive Form Builder
-
 This utility leverages **Effect Schema** for robust, type-safe validation and **@effect/atom-react** for granular, high-performance state management. It prevents unnecessary re-renders and provides a simple builder API to construct schemas, refine validation logic, and compose UI components seamlessly.
 
 <Tabs items={['Preview', 'Code']}>
@@ -189,13 +187,13 @@ Access submission state (`isPending`) without triggering re-renders across the e
 
 ```tsx
 <myForm.Submit
-  render={({ meta, submit }) => (
+  render={({ handleSubmit, meta }) => (
     <Button disabled={meta.isPending} form={meta.formId}>
       {meta.isPending ? 'Submitting...' : 'Submit'}
     </Button>
 
     // or
-    // <Button disabled={meta.isPending} onPress={submit}>
+    // <Button disabled={meta.isPending} onPress={() => handleSubmit()}>
     //   {meta.isPending ? 'Submitting...' : 'Submit'}
     // </Button>
   )}

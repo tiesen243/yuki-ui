@@ -13,6 +13,8 @@ import * as SchemaIssue from 'effect/SchemaIssue'
 import * as Atom from 'effect/unstable/reactivity/Atom'
 import * as React from 'react'
 
+import { cn } from '@/lib/utils'
+
 type Issues = {
   path?: readonly unknown[]
   message: string
@@ -24,19 +26,23 @@ interface FormState<TValues> {
   isPending: boolean
 }
 
+interface SubmitOptions<A, E> {
+  onSuccess?: (data: NoInfer<A>) => void
+  onError?: (error: NoInfer<E>) => void
+}
+
 export class FormBuilder<TFields extends Schema.Struct.Fields> {
   private formatter = SchemaIssue.makeFormatterStandardSchemaV1()
 
-  private constructor(
-    private fields: TFields,
-    private refinements: {
-      refinement: (data: Schema.Struct<TFields>['Type']) => boolean
-      options: { path: (keyof TFields)[]; message: string }
-    }[]
-  ) {}
+  private fields: TFields = {} as TFields
+
+  private refinements: {
+    refinement: (data: Schema.Struct<TFields>['Type']) => boolean
+    options: { path: (keyof TFields)[]; message: string }
+  }[] = []
 
   public static get empty() {
-    return new FormBuilder({}, [])
+    return new FormBuilder()
   }
 
   public add<TFieldName extends string, TFieldSchema extends Schema.Constraint>(
@@ -59,11 +65,7 @@ export class FormBuilder<TFields extends Schema.Struct.Fields> {
 
   public make<TValues extends Schema.Struct<TFields>['Type'], A, E>(
     onSubmit: (values: NoInfer<TValues>) => Effect.Effect<A, E>,
-    options: {
-      defaultValues: TValues
-      onSuccess?: (data: NoInfer<A>) => void
-      onError?: (error: NoInfer<E>) => void
-    }
+    options: SubmitOptions<A, E> & { defaultValues: TValues }
   ) {
     const keys = Object.keys(options.defaultValues) as (keyof TValues)[]
 
@@ -134,60 +136,87 @@ export class FormBuilder<TFields extends Schema.Struct.Fields> {
         { immediate: true }
       )
 
-      return React.useCallback(async () => {
-        if (isPending) return
-        setState((prev) => ({ ...prev, isPending: true }))
+      return React.useCallback(
+        async (opts?: SubmitOptions<A, E>) => {
+          if (isPending) return
+          setState((prev) => ({ ...prev, isPending: true }))
 
-        const result = Schema.decodeUnknownResult(formSchema as never)(
-          valuesRef.current,
-          { errors: 'all' }
-        )
+          const result = Schema.decodeUnknownResult(formSchema as never)(
+            valuesRef.current,
+            { errors: 'all' }
+          )
 
-        if (result._tag === 'Failure') {
-          const { issues } = this.formatter(result.failure.issue)
-          const errors = {} as Record<keyof TValues, Issues>
-          for (const issue of issues) {
-            const path = issue.path?.[0] as keyof TValues
-            if (!errors[path]) errors[path] = []
-            errors[path].push(issue)
+          if (result._tag === 'Failure') {
+            const { issues } = this.formatter(result.failure.issue)
+            const errors = {} as Record<keyof TValues, Issues>
+            for (const issue of issues) {
+              const path = issue.path?.[0] as keyof TValues
+              if (!errors[path]) errors[path] = []
+              errors[path].push(issue)
+            }
+
+            return setState((prev) => ({ ...prev, errors, isPending: false }))
           }
 
-          return setState((prev) => ({ ...prev, errors, isPending: false }))
-        }
+          setState((prev) => ({
+            ...prev,
+            errors: {} as Record<keyof TValues, Issues>,
+          }))
 
-        setState((prev) => ({
-          ...prev,
-          errors: {} as Record<keyof TValues, Issues>,
-        }))
+          await onSubmit(result.success).pipe(
+            Effect.tap((a) =>
+              Effect.sync(() => {
+                options.onSuccess?.(a)
+                opts?.onSuccess?.(a)
+              })
+            ),
+            Effect.catch((error) =>
+              Effect.sync(() => {
+                options.onError?.(error)
+                opts?.onError?.(error)
+              })
+            ),
+            Effect.runPromise
+          )
 
-        await onSubmit(result.success).pipe(
-          Effect.tap((a) => Effect.sync(() => options.onSuccess?.(a))),
-          Effect.catch((error) => Effect.sync(() => options.onError?.(error))),
-          Effect.runPromise
-        )
-
-        setState((prev) => ({ ...prev, isPending: false }))
-      }, [setState, isPending])
+          setState((prev) => ({ ...prev, isPending: false }))
+        },
+        [setState, isPending]
+      )
     }
 
     const Form: React.FC<
-      Omit<useRender.ComponentProps<'form'>, 'render'> & {
+      Omit<useRender.ComponentProps<'div'>, 'render'> & {
         render: (args: {
-          handleSubmit: () => void
-        }) => useRender.ComponentProps<'form'>['render']
+          handleSubmit: (options?: SubmitOptions<A, E>) => void
+          meta: { formId: string; isPending: boolean }
+        }) => useRender.ComponentProps<'div'>['render']
       }
-    > = ({ render, ...props }) => {
+    > = ({ render, className, ...props }) => {
       const id = React.useId()
       const formId = `form-${id}`
-      const submit = useSubmit()
+
+      const handleSubmit = useSubmit()
+      const isPending = useAtomValue(formAtom.use(), (s) => s.isPending)
+
+      const memoizedValue = React.useMemo(() => ({ formId }), [formId])
 
       return (
-        <FormContext value={{ formId }}>
+        <FormContext value={memoizedValue}>
           {useRender({
-            defaultTagName: 'form',
-            props: mergeProps<'form'>({ id: formId }, props),
-            render: render({ handleSubmit: submit }),
-            state: { slot: 'form' },
+            defaultTagName: 'div',
+            props: mergeProps<'div'>(
+              {
+                id: formId,
+                className: cn('group/form', className),
+              },
+              props
+            ),
+            render: render({ handleSubmit, meta: { formId, isPending } }),
+            state: {
+              slot: 'form',
+              pending: isPending,
+            },
           })}
         </FormContext>
       )
@@ -207,6 +236,8 @@ export class FormBuilder<TFields extends Schema.Struct.Fields> {
           descriptionId: string
           errorId: string
           errors: Issues
+          isPending: boolean
+
           add: TValues[TFieldName] extends (infer U)[]
             ? (value: U) => void
             : never
@@ -228,6 +259,7 @@ export class FormBuilder<TFields extends Schema.Struct.Fields> {
 
       const [value, setValue] = useAtom(valuesAtoms(props.name))
       const [errors, setErrors] = useAtom(errorsAtoms(props.name))
+      const isPending = useAtomValue(formAtom.use(), (s) => s.isPending)
 
       const handleChange = React.useCallback(
         (newValue: TValues[TFieldName]) => setValue(newValue),
@@ -290,37 +322,60 @@ export class FormBuilder<TFields extends Schema.Struct.Fields> {
       const descriptionId = `${fieldId}-description`
       const errorId = `${fieldId}-error`
 
-      const a11yProps = {
-        'data-slot': 'form-field',
-        form: ctx.formId,
-        id: fieldId,
-        'aria-describedby':
-          errors.length > 0 ? `${errorId} ${descriptionId}` : descriptionId,
-        'aria-invalid': errors.length > 0,
-      }
+      const a11yProps = React.useMemo(
+        () => ({
+          'data-slot': 'form-field',
+          form: ctx.formId,
+          id: fieldId,
+          'aria-describedby':
+            errors.length > 0 ? `${errorId} ${descriptionId}` : descriptionId,
+          'aria-invalid': errors.length > 0,
+        }),
+        [descriptionId, errorId, errors.length, fieldId, ctx.formId]
+      )
 
-      return props.render({
-        field: {
-          name: props.name,
-          value: value as TValues[TFieldName],
-          onChange: handleChange,
-          onBlur: handleBlur,
-          ...a11yProps,
-        },
-        meta: {
-          descriptionId,
+      const memoizedValue = React.useMemo(
+        () => ({
+          field: {
+            name: props.name,
+            value: value as TValues[TFieldName],
+            onChange: handleChange,
+            onBlur: handleBlur,
+            ...a11yProps,
+          },
+          meta: {
+            descriptionId,
+            errorId,
+            errors,
+            isPending,
+
+            add: add as never,
+            update: update as never,
+            remove: remove as never,
+          },
+        }),
+        [
+          add,
+          a11yProps,
+          update,
           errorId,
+          value,
+          props.name,
+          descriptionId,
+          handleChange,
+          handleBlur,
+          remove,
           errors,
-          add: add as never,
-          update: update as never,
-          remove: remove as never,
-        },
-      })
+          isPending,
+        ]
+      )
+
+      return props.render(memoizedValue)
     }
 
     const Submit = (props: {
       render: (args: {
-        submit: () => void
+        handleSubmit: (options?: SubmitOptions<A, E>) => void
         meta: { formId: string; isPending: boolean }
       }) => React.ReactNode
     }) => {
@@ -328,12 +383,17 @@ export class FormBuilder<TFields extends Schema.Struct.Fields> {
       if (!ctx) throw new Error('Submit must be used within a Form')
 
       const isPending = useAtomValue(formAtom.use(), (s) => s.isPending)
-      const submit = useSubmit()
+      const handleSubmit = useSubmit()
 
-      return props.render({
-        submit,
-        meta: { formId: ctx.formId, isPending },
-      })
+      const memoizedValue = React.useMemo(
+        () => ({
+          handleSubmit,
+          meta: { formId: ctx.formId, isPending },
+        }),
+        [ctx.formId, handleSubmit, isPending]
+      )
+
+      return props.render(memoizedValue)
     }
 
     return {

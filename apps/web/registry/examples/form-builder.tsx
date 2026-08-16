@@ -107,12 +107,12 @@ export default function RegisterForm() {
           />
 
           <registerForm.Submit
-            render={({ meta, submit }) => (
+            render={({ handleSubmit, meta }) => (
               <Field>
                 <Button
-                  onClick={submit}
                   form={meta.formId}
                   disabled={meta.isPending}
+                  onClick={() => handleSubmit()}
                 >
                   {meta.isPending ? 'Registering...' : 'Register'}
                 </Button>
