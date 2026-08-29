@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { FormBuilder } from '@/registry/lib/form-builder'
-import { toast } from '@/registry/ui/toast'
 
 const registerForm = FormBuilder.empty
   .add(
@@ -26,27 +25,14 @@ const registerForm = FormBuilder.empty
   .add('confirmPassword', Schema.String.check(Schema.isMinLength(8)))
   .refine((data) => data.password === data.confirmPassword, {
     path: ['confirmPassword'],
-    message: 'Passwords do not match',
+    issue: 'Passwords do not match',
   })
-  .make(
-    Effect.fn(function* handleSubmit(values) {
-      yield* Effect.sleep(1000)
-      return values
-    }),
-    {
-      defaultValues: { email: '', password: '', confirmPassword: '' },
-      onSuccess: (data) =>
-        toast.add({
-          type: 'success',
-          title: 'Registration Successful',
-          description: <pre>{JSON.stringify(data, null, 2)}</pre>,
-        }),
-    }
-  )
+  .make()
 
 export default function RegisterForm() {
   return (
     <registerForm.Root
+      defaultValues={{ email: '', password: '', confirmPassword: '' }}
       render={() => (
         <div className='min-w-md rounded-md border bg-card p-4 text-card-foreground shadow-sm' />
       )}
@@ -112,7 +98,14 @@ export default function RegisterForm() {
                 <Button
                   form={meta.formId}
                   disabled={meta.isPending}
-                  onClick={() => handleSubmit()}
+                  onClick={() =>
+                    handleSubmit(
+                      Effect.fn(function* (values) {
+                        yield* Effect.sleep(1000) // Simulate a network request
+                        yield* Effect.log('Form submitted with values:', values)
+                      })
+                    )
+                  }
                 >
                   {meta.isPending ? 'Registering...' : 'Register'}
                 </Button>
