@@ -14,6 +14,8 @@ export default defineConfig({
         'vitest/consistent-vitest-vi': 'error',
         'vitest/expect-expect': 'error',
         'vitest/hoisted-apis-on-top': 'error',
+        'vitest/max-expects': 'error',
+        'vitest/max-nested-describe': 'error',
         'vitest/no-alias-methods': 'error',
         'vitest/no-commented-out-tests': 'error',
         'vitest/no-conditional-expect': 'error',
@@ -31,6 +33,9 @@ export default defineConfig({
         'vitest/no-standalone-expect': 'error',
         'vitest/no-test-prefixes': 'error',
         'vitest/no-test-return-statement': 'error',
+        'vitest/no-unneeded-async-expect-function': 'error',
+        'vitest/padding-around-after-all-blocks': 'error',
+        'vitest/padding-around-test-blocks': 'error',
         'vitest/prefer-called-exactly-once-with': 'error',
         'vitest/prefer-called-once': 'error',
         'vitest/prefer-called-with': 'error',
@@ -45,6 +50,8 @@ export default defineConfig({
         'vitest/prefer-import-in-mock': 'error',
         'vitest/prefer-importing-vitest-globals': 'error',
         'vitest/prefer-mock-promise-shorthand': 'error',
+        'vitest/prefer-mock-return-shorthand': 'error',
+        'vitest/prefer-snapshot-hint': 'error',
         'vitest/prefer-spy-on': 'error',
         'vitest/prefer-strict-equal': 'error',
         'vitest/prefer-to-be': 'error',
@@ -52,6 +59,7 @@ export default defineConfig({
         'vitest/prefer-to-be-object': 'error',
         'vitest/prefer-to-be-truthy': 'error',
         'vitest/prefer-to-contain': 'error',
+        'vitest/prefer-to-have-been-called-times': 'error',
         'vitest/prefer-to-have-length': 'error',
         'vitest/prefer-todo': 'error',
         'vitest/require-awaited-expect-poll': 'error',
@@ -86,6 +94,18 @@ export default defineConfig({
 
         // Disabled: too strict for general use — not all async tests need explicit timeouts
         'vitest/require-test-timeout': 'off',
+
+        // Disabled: mock factories use conditionals for path-based routing
+        'vitest/no-conditional-in-test': 'off',
+
+        // Disabled: bun:test uses beforeEach hooks for mock.restore()
+        'vitest/no-hooks': 'off',
+
+        // Disabled: too strict for general use — not all tests need explicit assertion counts
+        'vitest/prefer-expect-assertions': 'off',
+
+        // Disabled: bun:test mock.module() must be called at top level
+        'vitest/require-hook': 'off',
       },
     },
   ],

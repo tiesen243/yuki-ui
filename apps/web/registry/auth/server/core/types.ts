@@ -49,6 +49,7 @@ export interface OAuthAccount {
 }
 
 export interface AuthAdapter {
+  // oxlint-disable-next-line typescript/method-signature-style
   createUser(
     user: Pick<User, 'name' | 'email' | 'image'>
   ): Awaitable<Pick<User, 'id'>>

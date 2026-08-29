@@ -6,7 +6,7 @@ import { OpenGraph } from '@/registry/ui/open-graph'
 
 export const revalidate = false
 
-export async function GET(req: Request, _: RouteContext<'/api/og'>) {
+export async function GET(req: Request) {
   const url = new URL(req.url)
 
   const title = url.searchParams.get('title') ?? ''

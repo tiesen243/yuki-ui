@@ -43,6 +43,16 @@ export const registryLib = [
   },
 
   {
+    name: 'effect-env',
+    type: 'registry:lib',
+    title: 'Effect Environment Variables Validation',
+    description:
+      'A utility to validate environment variables using Effect Schema',
+    dependencies: ['effect@rc'],
+    files: [{ type: 'registry:lib', path: 'registry/lib/effect-env.ts' }],
+  },
+
+  {
     name: 'form-builder',
     type: 'registry:lib',
     title: 'Form Builder',

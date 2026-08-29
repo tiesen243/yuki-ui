@@ -1,3 +1,5 @@
+// oxlint-disable no-await-in-loop
+
 import type { Registry } from 'shadcn/schema'
 
 import fs from 'node:fs/promises'

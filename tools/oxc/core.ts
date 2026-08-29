@@ -1,35 +1,28 @@
 import { defineConfig } from 'oxlint'
 
-export default defineConfig({
-  env: {
-    browser: true,
-  },
-  ignorePatterns: [
-    // Build
-    '**/dist',
-    '**/build',
-    '**/out',
-    '**/.next',
-    '**/.react-router',
-    // Test
-    '**/coverage',
-  ],
+const message =
+  'Use `import { env } from "@/lib/env"` instead to ensure validated types.'
+export const restrictedEnvVars = defineConfig({
   overrides: [
     {
-      // Shared test file overrides — framework-specific test rules
-      // are in separate jest/ and vitest/ configs to avoid conflicts.
-      files: [
-        '**/*.{test,spec}.{ts,tsx,js,jsx}',
-        '**/__tests__/**/*.{ts,tsx,js,jsx}',
-      ],
+      files: ['**/*.{ts,tsx,js,jsx}'],
+      excludeFiles: ['**/env.ts'],
       rules: {
-        // Disabled: mock callbacks often need empty functions
-        'no-empty-function': 'off',
-        // Disabled: mock factories use Promise.resolve/reject (conflicts with require-await)
-        'promise/prefer-await-to-then': 'off',
+        'no-restricted-properties': [
+          'error',
+          { object: 'process', property: 'env', message },
+          { object: 'import.meta', property: 'env', message },
+        ],
+        'no-restricted-imports': [
+          'error',
+          { name: 'process', importNames: ['env'], message },
+        ],
       },
     },
   ],
+})
+
+export default defineConfig({
   plugins: [
     'eslint',
     'typescript',
@@ -40,8 +33,11 @@ export default defineConfig({
     'node',
     'promise',
   ],
+  env: {
+    browser: true,
+  },
   rules: {
-    // Eslint
+    // --- eslint ---
     'accessor-pairs': 'error',
     'array-callback-return': 'error',
     'arrow-body-style': ['error', 'as-needed'],
@@ -56,12 +52,23 @@ export default defineConfig({
     'default-param-last': 'error',
     eqeqeq: 'error',
     'for-direction': 'error',
+    'func-name-matching': 'error',
     'func-names': 'error',
-    'func-style': 'off',
+    'func-style': [
+      'off',
+      'expression',
+      {
+        allowArrowFunctions: true,
+      },
+    ],
+    'getter-return': 'error',
     'grouped-accessor-pairs': 'error',
     'guard-for-in': 'error',
+    'id-denylist': 'error',
     'id-length': 'off',
+    'id-match': 'error',
     'init-declarations': 'off',
+    'logical-assignment-operators': 'error',
     'max-classes-per-file': 'error',
     'max-depth': 'off',
     'max-lines': 'off',
@@ -73,7 +80,7 @@ export default defineConfig({
     'no-alert': 'error',
     'no-array-constructor': 'error',
     'no-async-promise-executor': 'error',
-    'no-await-in-loop': 'off',
+    'no-await-in-loop': 'error',
     'no-bitwise': 'error',
     'no-caller': 'error',
     'no-case-declarations': 'error',
@@ -112,6 +119,8 @@ export default defineConfig({
     'no-func-assign': 'error',
     'no-global-assign': 'error',
     'no-implicit-coercion': 'off',
+    'no-implicit-globals': 'error',
+    'no-implied-eval': 'error',
     'no-import-assign': 'error',
     'no-inline-comments': 'off',
     'no-inner-declarations': 'error',
@@ -142,10 +151,11 @@ export default defineConfig({
     'no-promise-executor-return': 'error',
     'no-proto': 'error',
     'no-prototype-builtins': 'error',
-    'no-redeclare': 'error',
+    'no-redeclare': 'off',
     'no-regex-spaces': 'error',
     'no-restricted-globals': 'error',
     'no-restricted-imports': 'error',
+    'no-restricted-properties': 'off',
     'no-return-assign': 'error',
     'no-script-url': 'error',
     'no-self-assign': 'error',
@@ -161,9 +171,12 @@ export default defineConfig({
     'no-throw-literal': 'error',
     'no-unassigned-vars': 'error',
     'no-undefined': 'off',
+    'no-underscore-dangle': 'off',
     'no-unexpected-multiline': 'error',
     'no-unmodified-loop-condition': 'error',
     'no-unneeded-ternary': 'error',
+    'no-unreachable': 'error',
+    'no-unreachable-loop': 'error',
     'no-unsafe-finally': 'error',
     'no-unsafe-negation': 'error',
     'no-unsafe-optional-chaining': 'error',
@@ -188,19 +201,23 @@ export default defineConfig({
     'no-with': 'error',
     'object-shorthand': 'error',
     'operator-assignment': 'error',
+    'prefer-arrow-callback': 'off',
     'prefer-const': 'error',
     'prefer-destructuring': 'error',
     'prefer-exponentiation-operator': 'error',
+    'prefer-named-capture-group': 'off',
     'prefer-numeric-literals': 'error',
     'prefer-object-has-own': 'error',
     'prefer-object-spread': 'error',
     'prefer-promise-reject-errors': 'error',
+    'prefer-regex-literals': 'error',
     'prefer-rest-params': 'error',
     'prefer-spread': 'error',
     'prefer-template': 'error',
     'preserve-caught-error': 'error',
     radix: 'error',
     'require-await': 'error',
+    'require-unicode-regexp': 'off',
     'require-yield': 'error',
     // Rely on oxfmt `experimentalSortImports` instead
     'sort-imports': 'off',
@@ -213,7 +230,7 @@ export default defineConfig({
     'vars-on-top': 'error',
     yoda: 'error',
 
-    // Import
+    // --- import ---
     'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
     'import/default': 'error',
     'import/exports-last': 'off',
@@ -222,6 +239,7 @@ export default defineConfig({
     'import/group-exports': 'off',
     'import/max-dependencies': 'off',
     'import/namespace': 'error',
+    'import/newline-after-import': 'error',
     'import/no-absolute-path': 'error',
     'import/no-amd': 'error',
     'import/no-anonymous-default-export': 'off',
@@ -245,7 +263,7 @@ export default defineConfig({
     'import/prefer-default-export': 'off',
     'import/unambiguous': 'off',
 
-    // JSDoc
+    // --- jsdoc ---
     'jsdoc/check-access': 'error',
     'jsdoc/check-property-names': 'error',
     'jsdoc/check-tag-names': 'error',
@@ -263,25 +281,38 @@ export default defineConfig({
     'jsdoc/require-returns': 'off',
     'jsdoc/require-returns-description': 'error',
     'jsdoc/require-returns-type': 'off',
+    'jsdoc/require-throws-description': 'error',
+    'jsdoc/require-throws-type': 'error',
     'jsdoc/require-yields': 'error',
+    'jsdoc/require-yields-description': 'error',
+    'jsdoc/require-yields-type': 'error',
 
-    // Node
+    // --- node ---
+    'node/callback-return': 'error',
+    'node/exports-style': 'error',
     'node/global-require': 'error',
     'node/handle-callback-err': 'error',
     'node/no-exports-assign': 'error',
+    'node/no-mixed-requires': 'error',
     'node/no-new-require': 'error',
     'node/no-path-concat': 'error',
     'node/no-process-env': 'off',
+    'node/no-sync': 'off',
+    // Top-level await is idiomatic in ESM — Astro frontmatter, build
+    // scripts, and CLI entry points all rely on it.
+    'node/no-top-level-await': 'off',
 
-    // Oxc
+    // --- oxc ---
     'oxc/approx-constant': 'error',
     'oxc/bad-array-method-on-arguments': 'error',
     'oxc/bad-bitwise-operator': 'error',
     'oxc/bad-char-at-comparison': 'error',
     'oxc/bad-comparison-sequence': 'error',
+    'oxc/bad-match-all-arg': 'error',
     'oxc/bad-min-max-func': 'error',
     'oxc/bad-object-literal-comparison': 'error',
     'oxc/bad-replace-all-arg': 'error',
+    'oxc/branches-sharing-code': 'error',
     'oxc/const-comparisons': 'error',
     'oxc/double-comparisons': 'error',
     'oxc/erasing-op': 'error',
@@ -300,7 +331,7 @@ export default defineConfig({
     'oxc/only-used-in-recursion': 'error',
     'oxc/uninvoked-array-callback': 'error',
 
-    // Promise
+    // --- promise ---
     'promise/always-return': 'off',
     'promise/avoid-new': 'error',
     'promise/catch-or-return': 'off',
@@ -317,7 +348,7 @@ export default defineConfig({
     'promise/spec-only': 'error',
     'promise/valid-params': 'error',
 
-    // Typescript
+    // --- typescript ---
     'typescript/adjacent-overload-signatures': 'error',
     'typescript/array-type': 'error',
     'typescript/await-thenable': 'error',
@@ -334,7 +365,9 @@ export default defineConfig({
     'typescript/consistent-type-imports': 'error',
     'typescript/dot-notation': 'error',
     'typescript/explicit-function-return-type': 'off',
+    'typescript/explicit-member-accessibility': 'off',
     'typescript/explicit-module-boundary-types': 'off',
+    'typescript/method-signature-style': 'error',
     'typescript/no-array-delete': 'error',
     'typescript/no-base-to-string': 'error',
     'typescript/no-confusing-non-null-assertion': 'error',
@@ -416,7 +449,7 @@ export default defineConfig({
     'typescript/require-await': 'off',
     'typescript/restrict-plus-operands': 'error',
     'typescript/restrict-template-expressions': 'error',
-    'typescript/return-await': 'error',
+    'typescript/return-await': ['error', 'always'],
     'typescript/strict-boolean-expressions': 'error',
     'typescript/strict-void-return': 'error',
     'typescript/switch-exhaustiveness-check': 'error',
@@ -425,7 +458,7 @@ export default defineConfig({
     'typescript/unified-signatures': 'error',
     'typescript/use-unknown-in-catch-callback-variable': 'error',
 
-    // Unicorn
+    // --- unicorn ---
     'unicorn/consistent-template-literal-escape': 'error',
     'unicorn/catch-error-name': 'error',
     'unicorn/consistent-assert': 'error',
@@ -438,12 +471,16 @@ export default defineConfig({
     'unicorn/error-message': 'error',
     'unicorn/escape-case': 'error',
     'unicorn/explicit-length-check': 'off',
+    'unicorn/explicit-timer-delay': 'error',
     'unicorn/filename-case': 'error',
+    'unicorn/import-style': 'error',
+    'unicorn/max-nested-calls': 'off',
     'unicorn/new-for-builtins': 'error',
     'unicorn/no-abusive-eslint-disable': 'error',
     'unicorn/no-accessor-recursion': 'error',
     'unicorn/no-anonymous-default-export': 'error',
     'unicorn/no-array-callback-reference': 'off',
+    'unicorn/no-array-fill-with-reference-type': 'error',
     'unicorn/no-array-for-each': 'error',
     'unicorn/no-array-method-this-argument': 'error',
     'unicorn/no-array-reduce': 'error',
@@ -451,6 +488,7 @@ export default defineConfig({
     'unicorn/no-array-sort': 'error',
     'unicorn/no-await-expression-member': 'error',
     'unicorn/no-await-in-promise-methods': 'error',
+    'unicorn/no-confusing-array-with': 'error',
     'unicorn/no-console-spaces': 'error',
     'unicorn/no-document-cookie': 'error',
     'unicorn/no-empty-file': 'error',
@@ -463,6 +501,7 @@ export default defineConfig({
     'unicorn/no-length-as-slice-end': 'error',
     'unicorn/no-lonely-if': 'error',
     'unicorn/no-magic-array-flat-depth': 'error',
+    'unicorn/no-negated-condition': 'error',
     'unicorn/no-negation-in-equality-check': 'error',
     'unicorn/no-nested-ternary': 'error',
     'unicorn/no-new-array': 'error',
@@ -490,7 +529,8 @@ export default defineConfig({
     'unicorn/no-useless-switch-case': 'error',
     'unicorn/no-useless-undefined': 'error',
     'unicorn/no-zero-fractions': 'error',
-    'unicorn/number-literal-case': 'error',
+    // Disabled due to https://github.com/oxc-project/oxc/issues/21949
+    'unicorn/number-literal-case': 'off',
     'unicorn/numeric-separators-style': 'error',
     'unicorn/prefer-add-event-listener': 'error',
     'unicorn/prefer-array-find': 'error',
@@ -511,6 +551,7 @@ export default defineConfig({
     'unicorn/prefer-dom-node-remove': 'error',
     'unicorn/prefer-dom-node-text-content': 'error',
     'unicorn/prefer-event-target': 'error',
+    'unicorn/prefer-export-from': 'error',
     'unicorn/prefer-global-this': 'off',
     'unicorn/prefer-import-meta-properties': 'error',
     'unicorn/prefer-includes': 'error',
@@ -524,6 +565,7 @@ export default defineConfig({
     'unicorn/prefer-native-coercion-functions': 'error',
     'unicorn/prefer-negative-index': 'error',
     'unicorn/prefer-node-protocol': 'error',
+    'unicorn/prefer-number-coercion': 'error',
     'unicorn/prefer-number-properties': 'error',
     'unicorn/prefer-object-from-entries': 'error',
     'unicorn/prefer-optional-catch-binding': 'error',
@@ -534,6 +576,7 @@ export default defineConfig({
     'unicorn/prefer-response-static-json': 'error',
     'unicorn/prefer-set-has': 'error',
     'unicorn/prefer-set-size': 'error',
+    'unicorn/prefer-single-call': 'error',
     'unicorn/prefer-spread': 'error',
     'unicorn/prefer-string-raw': 'off',
     'unicorn/prefer-string-replace-all': 'error',
@@ -555,4 +598,18 @@ export default defineConfig({
     'unicorn/text-encoding-identifier-case': ['error', { withDash: true }],
     'unicorn/throw-new-error': 'error',
   },
+  overrides: [
+    {
+      // Shared test file overrides — framework-specific test rules
+      // are in separate jest/ and vitest/ configs to avoid conflicts.
+      files: [
+        '**/*.{test,spec}.{ts,tsx,js,jsx}',
+        '**/__tests__/**/*.{ts,tsx,js,jsx}',
+      ],
+      rules: {
+        'no-empty-function': 'off',
+        'promise/prefer-await-to-then': 'off',
+      },
+    },
+  ],
 })
