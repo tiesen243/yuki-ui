@@ -100,7 +100,7 @@ export default function RegisterForm() {
                   disabled={meta.isPending}
                   onClick={() =>
                     handleSubmit(
-                      Effect.fn(function* (values) {
+                      Effect.fn(function* submit(values) {
                         yield* Effect.sleep(1000) // Simulate a network request
                         yield* Effect.log('Form submitted with values:', values)
                       })
