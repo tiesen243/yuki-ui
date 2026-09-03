@@ -1,4 +1,4 @@
-export { cn } from 'cnfast'
+export { cn } from 'cn'
 
 export function getBaseUrl() {
   if (typeof window !== 'undefined') return window.location.origin
