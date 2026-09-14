@@ -3,7 +3,6 @@
 import type { ToastManagerAddOptions } from '@base-ui/react/toast'
 
 import { Toast as ToastPrimitive } from '@base-ui/react/toast'
-import { cn } from 'cn'
 import {
   AlertCircleIcon,
   AlertTriangleIcon,
@@ -12,6 +11,8 @@ import {
   Loader2Icon,
 } from 'lucide-react'
 import * as React from 'react'
+
+import { cn } from '@/lib/utils'
 
 const toastManager = ToastPrimitive.createToastManager()
 
