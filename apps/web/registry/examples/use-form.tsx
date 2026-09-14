@@ -29,8 +29,7 @@ export default function UseFormDemo() {
     defaultValues: { name: '', age: 0 },
     schema: formSchema,
     onSubmit: (data) => {
-      toast.add({
-        title: 'Form submitted successfully!',
+      toast.success('Form submitted successfully!', {
         description: (
           <pre className='w-full rounded-md bg-input p-2 text-foreground'>
             {JSON.stringify(data, null, 2)}

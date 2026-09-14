@@ -1,8 +1,14 @@
 ---
 title: Toast
-description: A collection of toast notification components
+description: Toast notifications built on Base UI with a simple imperative API.
 source: components/toast.tsx
 ---
+
+A lightweight toast notification system built on top of `@base-ui/react/toast`.
+
+The component exposes a global `toast` manager with convenience methods for
+default, success, error, info, warning, and promise-based notifications.
+Rendering is enabled by `ToastProvider`.
 
 <Tabs items={['Preview', 'Code']}>
 <Tab value='Preview'>
@@ -26,51 +32,206 @@ Copy and paste the following code into your project.
 
 <ComponentSource comp='toast' />
 
-## Features
+## Basic setup
 
-- **ToastProvider**: A context provider that manages the state and logic for displaying toast notifications. It should wrap your application to provide toast functionality throughout.
-- **Variant Support**: The Toast component supports multiple variants (default, success, error, warning) to visually differentiate between types of notifications.
+Wrap the application with `ToastProvider`:
+
+```tsx
+import { ToastProvider } from '@/registry/ui/toast'
+
+export function App() {
+  return (
+    <ToastProvider>
+      <YourApp />
+    </ToastProvider>
+  )
+}
+```
+
+`ToastProvider` creates the Base UI toast viewport and renders active toasts.
+The defaults are `bottom-right`, `5000ms`, and a visible limit of `3`.
 
 ## Usage
 
-1. Wrap your application with the `ToastProvider` to enable toast notifications:
+```tsx
+import { toast } from '@/registry/ui/toast'
 
-```tsx title="app/layout.tsx"
-import { ToastProvider } from '@/components/ui/toast'
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <html lang='en'>
-      <body>
-        <ToastProvider>{children}</ToastProvider>
-      </body>
-    </html>
-  )
-}
+toast.show('This is a simple toast.')
+toast.success('Saved successfully!')
+toast.error('Something went wrong.')
+toast.info('Your account has been updated.')
+toast.warning('This action may have side effects.')
 ```
 
-2. Use the `toast` function to trigger notifications from anywhere in your application:
+Each convenience method accepts a React node as the title and optional Base UI
+toast options.
 
-```tsx title="app/page.tsx"
-import { toast } from '@/components/ui/toast'
+### Toast types
 
-export default function Home() {
-  const handleClick = () => {
-    toast.add({
-      type: 'success', // Optional: 'success', 'error', 'info', 'warning'
-      title: 'Notification Title',
-      description: 'This is a toast notification.',
-    })
+The renderer supports:
+
+- `default`
+- `loading`
+- `success`
+- `error`
+- `info`
+- `warning`
+
+The `loading`, `success`, `error`, `info`, and `warning` types have Lucide
+icons; the loading icon is animated.
+
+### Custom actions
+
+Use the underlying manager API when you need an action button:
+
+```tsx
+toast.add({
+  title: 'Custom Action',
+  description: 'This toast has a custom action button.',
+  actionProps: {
+    children: 'Undo',
+    onClick: () => toast.close(),
+  },
+})
+```
+
+### Promise toasts
+
+`toast.promise()` displays loading, success, and error states around a promise:
+
+```tsx
+toast.promise(fetchData(), {
+  loading: 'Loading data...',
+  success: (data) => `Loaded: ${data}`,
+  error: (error) => String(error),
+})
+```
+
+Example:
+
+```tsx
+toast.promise(
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (Math.random() > 0.5) resolve('Data loaded successfully!')
+      else reject('Failed to load data.')
+    }, 2000)
+  ),
+  {
+    loading: 'Loading data...',
+    success: (data) => data as string,
+    error: (error) => error as string,
   }
+)
+```
 
-  return (
-    <div>
-      <button onClick={handleClick}>Show Toast</button>
-    </div>
-  )
+## Position
+
+`ToastProvider` supports:
+
+```ts
+type ToastPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'
+```
+
+Example:
+
+```tsx
+<ToastProvider position='top-right'>
+  <App />
+</ToastProvider>
+```
+
+The position controls viewport placement and the swipe directions used by the
+toast list.
+
+## Timeout and limit
+
+```tsx
+<ToastProvider timeout={8000} limit={5}>
+  <App />
+</ToastProvider>
+```
+
+These values are passed directly to Base UI's toast provider.
+
+## Using the toast manager
+
+```tsx
+import { useToast } from '@/registry/ui/toast'
+
+function MyComponent() {
+  const toastManager = useToast()
+
+  // Use the Base UI toast manager API here.
 }
 ```
+
+`useToast` is an alias for `ToastPrimitive.useToastManager`. The exported
+`toast` object also spreads the same global manager, exposing Base UI methods
+such as `add`, `close`, and `promise`.
+
+## Accessibility
+
+Toast content uses Base UI's toast primitives:
+
+- `ToastPrimitive.Root`
+- `ToastPrimitive.Content`
+- `ToastPrimitive.Title`
+- `ToastPrimitive.Description`
+- `ToastPrimitive.Action`
+
+The decorative icon is marked `aria-hidden`.
+
+## Styling
+
+The toast root exposes:
+
+```html
+data-slot="toast" data-position="..." data-type="..."
+```
+
+Tailwind classes use these attributes for positioning, animation, lifecycle
+states, swipe behavior, and visual variants.
+
+The built-in variants use green, red, blue, and yellow accents for success,
+error, info, and warning, with dark-mode variants included.
+
+## API reference
+
+### `ToastProvider`
+
+```tsx
+<ToastProvider position='bottom-right' timeout={5000} limit={3}>
+  {children}
+</ToastProvider>
+```
+
+| Prop       | Default          | Description                        |
+| ---------- | ---------------- | ---------------------------------- |
+| `position` | `"bottom-right"` | Toast viewport position.           |
+| `timeout`  | `5000`           | Default timeout passed to Base UI. |
+| `limit`    | `3`              | Maximum number of visible toasts.  |
+
+### `toast`
+
+```ts
+toast.show(title, options?)
+toast.success(title, options?)
+toast.error(title, options?)
+toast.info(title, options?)
+toast.warning(title, options?)
+```
+
+`title` is a `React.ReactNode`. `options` is derived from
+`ToastManagerAddOptions<object>` with `title` omitted.
+
+Because `toast` spreads the underlying manager, its Base UI manager methods are
+also available.
+
+### `useToast`
+
+```ts
+const toastManager = useToast()
+```
+
+This is an alias of `ToastPrimitive.useToastManager`.

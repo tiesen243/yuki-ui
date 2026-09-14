@@ -2,7 +2,7 @@ import '@/styles/globals.css'
 
 import { Noto_Serif_Georgian, Geist, Geist_Mono } from 'next/font/google'
 
-import { Provider } from '@/components/provider'
+import { Providers } from '@/components/providers'
 import { cn } from '@/lib/utils'
 
 const georgianSerif = Noto_Serif_Georgian({ variable: '--font-serif' })
@@ -20,7 +20,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
           geistMono.variable
         )}
       >
-        <Provider>{children}</Provider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

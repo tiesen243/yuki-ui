@@ -111,15 +111,14 @@ const Form = ({ children }: { children: React.ReactNode }) => {
     }),
     {
       onSuccess: (values) => {
-        toast.add({
-          type: 'success',
-          title: 'Form submitted successfully',
+        toast.success('Form submitted successfully', {
           description: <pre>{JSON.stringify(values, null, 2)}</pre>,
         })
       },
       onError: (error) =>
         error.match({
-          FormError: (e) => toast.add({ type: 'error', title: e.message }),
+          FormError: (e) =>
+            toast.error('Form submission failed', { description: e.message }),
         }),
     }
   )

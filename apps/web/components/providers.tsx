@@ -4,7 +4,7 @@ import { RootProvider } from '@fumadocs/base-ui/provider/next'
 
 import { ToastProvider } from '@/registry/ui/toast'
 
-export function Provider({
+export function Providers({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
