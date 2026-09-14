@@ -32,7 +32,7 @@
   "catalogs": {
     "prod": {
       "@tanstack/react-query": "^5.90.12",
-      "zod": "4.6.4"
+      "zod": "4.6.5"
     },
     "dev": {
       "@types/node": "^26.5.1",

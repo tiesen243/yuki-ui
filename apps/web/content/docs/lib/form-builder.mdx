@@ -1,10 +1,20 @@
 ---
 title: Form Builder
-description: A fully-typed, reactive form builder powered by Effect Schema and Atom React.
+description: Type-safe reactive forms powered by Effect Schema and @effect/atom-react.
 source: lib/form-builder.tsx
 ---
 
-This utility leverages **Effect Schema** for robust, type-safe validation and **@effect/atom-react** for granular, high-performance state management. It prevents unnecessary re-renders and provides a simple builder API to construct schemas, refine validation logic, and compose UI components seamlessly.
+`FormBuilder` is a type-safe reactive form utility built on top of **Effect Schema** and **@effect/atom-react**.
+
+**It provides:**
+
+- Schema-driven form value inference.
+- Field-level validation.
+- Reactive form state.
+- Typed field helpers for arrays.
+- Submission handling for values, Promises, and Effects.
+- Typed success and error callbacks.
+- Tagged-error matching through `error.match(...)`.
 
 <Tabs items={['Preview', 'Code']}>
 
@@ -32,7 +42,7 @@ This utility leverages **Effect Schema** for robust, type-safe validation and **
 Install the required dependencies:
 
 ```package-install
-effect@rc @effect/atom-react@rc @base-ui/react
+effect@rc @effect/atom-react@rc
 ```
 
 </Step>
@@ -47,155 +57,511 @@ Copy and paste the following code into your project:
 
 </Steps>
 
-## Usage
+## Create a form
 
-1. Create a Schema
-
-Use `FormBuilder.empty.add()` to strictly define the fields of your form and their validation rules using `effect/Schema`. You can chain multiple `.add()` calls.
+Start with `FormBuilder.empty` and add fields with `.add()`.
 
 ```tsx
-const form = FormBuilder.empty
-  .add('username', Schema.String.check(Schema.isMinLength(3)))
-  .add('age', Schema.Number.check(Schema.greaterThan(18)))
+import * as Schema from 'effect/Schema'
+
+const loginForm = FormBuilder.empty
+  .add(
+    'email',
+    Schema.String.check(Schema.isPattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/u))
+  )
+  .add('password', Schema.String.check(Schema.isMinLength(8)))
+  .make()
 ```
 
-2. Add Schema Refinements (Optional)
+The form value type is inferred from the schemas:
 
-Use `.refine()` to handle complex validations that depend on multiple fields, such as checking if a "Confirm Password" field matches the "Password" field.
-
-```tsx
-.refine((data) => data.password === data.confirmPassword, {
-    path: ['confirmPassword'], // Which field error should be attached to
-    message: 'Passwords do not match',
-  })
+```ts
+{
+  email: string
+  password: string
+}
 ```
 
-3. Initialize the Form Instance
+No separate TypeScript interface is required.
 
-Call `.make()` with a submission handler (wrapped in `Effect`) and configuration options. The defaultValues object enforces type safety against the schema you've built.
+## Provider
+
+Every form instance exposes a `Provider`.
+
+Wrap the form fields with the provider and supply `defaultValues`:
 
 ```tsx
-const myForm = form.make(
+<loginForm.Provider
+  defaultValues={{
+    email: '',
+    password: '',
+  }}
+>
+  {/* form */}
+</loginForm.Provider>
+```
+
+`defaultValues` is type-safe and must match the inferred form value type.
+
+## Fields
+
+Use `form.Field` to render an individual field.
+
+```tsx
+<loginForm.Field
+  name='email'
+  render={({ field, meta, helpers: { handleChange } }) => (
+    <Field data-invalid={meta.errors.length > 0}>
+      <FieldLabel htmlFor={field.id}>Email</FieldLabel>
+
+      <Input
+        {...field}
+        type='email'
+        onChange={(event) => handleChange(event.target.value)}
+      />
+
+      <FieldDescription id={meta.descriptionId}>
+        Please enter your email address.
+      </FieldDescription>
+
+      <FieldError id={meta.errorId} errors={meta.errors} />
+    </Field>
+  )}
+/>
+```
+
+### `field`
+
+The `field` object contains the current value and accessibility attributes:
+
+```ts
+{
+  value: TField
+  onBlur: () => void
+  id: string
+  form: string
+  'aria-describedby': string
+  'aria-invalid': boolean
+}
+```
+
+### `meta`
+
+The `meta` object contains validation information and submission state:
+
+```ts
+{
+  descriptionId: string
+  errorId: string
+  errors: StandardSchemaV1.Issue[]
+  isPending: boolean
+}
+```
+
+`errors` contains the formatted validation issues for the field.
+
+`isPending` is `true` while a submission is running.
+
+### `helpers`
+
+For a normal field, `helpers` contains:
+
+```ts
+{
+  handleChange: (value: TField) => void
+}
+```
+
+For an array field, `helpers` contains:
+
+```ts
+{
+  add: (item: Item) => void
+  update: (index: number, item: Item) => void
+  remove: (index: number) => void
+}
+```
+
+The item type is inferred from the array schema.
+
+## Array fields
+
+Define an array field with `Schema.Array`:
+
+```tsx
+const form = FormBuilder.empty.add('tags', Schema.Array(Schema.String)).make()
+```
+
+Then use the array helpers:
+
+```tsx
+<form.Field
+  name='tags'
+  render={({ field, helpers: { add, update, remove } }) => (
+    <>
+      {field.value.map((tag, index) => (
+        <div key={index}>
+          <Input
+            value={tag}
+            onChange={(event) => update(index, event.target.value)}
+          />
+
+          <Button type='button' onClick={() => remove(index)}>
+            Remove
+          </Button>
+        </div>
+      ))}
+
+      <Button type='button' onClick={() => add('')}>
+        Add tag
+      </Button>
+    </>
+  )}
+/>
+```
+
+The helper argument is inferred from the array item type.
+
+## Access form state
+
+The form returned by `.make()` exposes `use()`.
+
+```tsx
+const form = loginForm.use()
+```
+
+The state has the following shape:
+
+```ts
+{
+  formId: string
+  values: TValues
+  errors: Record<keyof TValues, StandardSchemaV1.Issue[]>
+  isPending: boolean
+}
+```
+
+Because the form uses Atom internally, consumers can subscribe to individual pieces of state:
+
+```tsx
+const isPending = useAtomValue(form, (state) => state.isPending)
+```
+
+This allows components to subscribe to only the state they need.
+
+## Submit
+
+Use `useSubmit()` to create a submit handler.
+
+The callback receives the fully inferred form values:
+
+```tsx
+const handleSubmit = loginForm.useSubmit((values) => {
+  console.log(values.email)
+  console.log(values.password)
+
+  return values
+})
+```
+
+The submit function can return:
+
+- A plain value.
+- A `Promise`.
+- An `Effect`.
+
+### Plain value
+
+```tsx
+const handleSubmit = loginForm.useSubmit((values) => values)
+```
+
+### Promise
+
+```tsx
+const handleSubmit = loginForm.useSubmit(async (values) => {
+  return await saveUser(values)
+})
+```
+
+### Effect
+
+```tsx
+const handleSubmit = loginForm.useSubmit(
   Effect.fn(function* (values) {
-    // Perform API calls or heavy operations here
     yield* Effect.sleep(1000)
-    return values
+
+    return yield* saveUser(values)
+  })
+)
+```
+
+For a native form:
+
+```tsx
+<form onSubmit={handleSubmit}>{/* fields */}</form>
+```
+
+The submit handler prevents the browser's default submission and validates the complete form before running `onSubmit`.
+
+## Submission validation
+
+The complete form is validated before `onSubmit` runs.
+
+If validation fails:
+
+1. The submission callback is not executed.
+2. Validation issues are formatted as `StandardSchemaV1.Issue`.
+3. Issues are stored against their corresponding field.
+4. `isPending` is reset to `false`.
+
+Field validation also runs when a changed field loses focus.
+
+## Success handling
+
+Use `onSuccess` to handle the successful result:
+
+```tsx
+const handleSubmit = loginForm.useSubmit(
+  Effect.fn(function* (values) {
+    return yield* Effect.succeed(values)
   }),
   {
-    defaultValues: { username: '', age: 0 },
-    onSuccess: (data) => console.log('Success:', data),
-    onError: (error) => console.error('Failed:', error),
+    onSuccess: (values) => {
+      console.log('Form submitted successfully:', values)
+    },
   }
 )
 ```
 
-4. Build the UI
+The `values` type is inferred from the submit result.
 
-The `.make()` method returns fully-typed React components (`Root`, `Field`, `Submit`) connected to the internal Atom state.
+## Tagged errors
 
-4.1. The `<Root>` Component
+Effect errors with an `_tag` can be handled with `error.match(...)`.
 
-Wrap your form elements using myForm.Root. It establishes the internal FormContext for all child fields.
-
-**For React Web:**
-
-You can render a standard `<form>` tag and use the provided `handleSubmit` method to prevent the default browser behavior and trigger your validation/submission logic.
+Define a tagged error:
 
 ```tsx
-<myForm.Root
-  render={({ handleSubmit }) => (
-    <form
-      className='space-y-4'
-      onSubmit={(e) => {
-        e.preventDefault()
-        handleSubmit()
-      }}
-    />
-  )}
->
-  {/* Fields go here */}
-</myForm.Root>
+class FormError extends Schema.TaggedError<FormError>()('FormError', {
+  message: Schema.String,
+}) {}
 ```
 
-**For React Native:**
-
-Since there is no standard HTML `<form>`, you can simply render a `<View>`. You will rely on the submit function exposed by the `<myForm.Submit>` component to trigger the form.
+Use it in an Effect:
 
 ```tsx
-<myForm.Root render={() => <View />}>{/* Fields go here */}</myForm.Root>
+const handleSubmit = loginForm.useSubmit(
+  Effect.fn(function* (values) {
+    if (/* failed */) {
+      return yield* Effect.fail(
+        new FormError({
+          message: 'Form validation failed',
+        })
+      )
+    }
+
+    return yield* Effect.succeed(values)
+  }),
+  {
+    onError: (error) => {
+      error.match({
+        FormError: (error) => {
+          console.error(error.message)
+        },
+      })
+    },
+  }
+)
 ```
 
-4.2. The `<Field>` Component
+`match` is only exposed when the error type is a tagged error.
 
-Render specific fields securely by passing the exact field `name`. It provides stable `field` (onChange, onBlur, values) and `meta` (errors, ids, array mutations) properties. Error validations run automatically when `onBlur` is triggered.
+For a normal `Error`, the callback remains a normal error:
 
 ```tsx
-<myForm.Field
-  name='username'
-  render={({ field, meta }) => (
-    <Field>
-      <FieldLabel htmlFor={field.id}>Username</FieldLabel>
-      <Input {...field} onChange={(e) => field.onChange(e.target.value)} />
-      <FieldError id={meta.errorId} errors={meta.errors} />
-    </Field>
-  )}
+loginForm.useSubmit(
+  () => {
+    throw new Error('Something went wrong')
+  },
+  {
+    onError: (error) => {
+      console.error(error.message)
+
+      // error.match does not exist here.
+    },
+  }
+)
+```
+
+This keeps the error API conditional instead of adding `.match()` to every error type.
+
+## Match multiple error types
+
+When the error type is a union of tagged errors, `match` provides a handler for each tag:
+
+```tsx
+class FormError extends Schema.TaggedError<FormError>()('FormError', {
+  message: Schema.String,
+}) {}
+
+class FormSubmissionError extends Schema.TaggedError<FormSubmissionError>()(
+  'FormSubmissionError',
+  {
+    message: Schema.String,
+  }
+) {}
+```
+
+Then:
+
+```tsx
+const handleSubmit = loginForm.useSubmit<FormError | FormSubmissionError>(
+  Effect.fn(function* (values) {
+    // ...
+    return yield* Effect.succeed(values)
+  }),
+  {
+    onError: (error) => {
+      error.match({
+        FormError: (error) => {
+          console.error(error.message)
+        },
+
+        FormSubmissionError: (error) => {
+          console.error(error.message)
+        },
+      })
+    },
+  }
+)
+```
+
+The handler parameter is narrowed to the corresponding tagged error.
+
+## Pending state
+
+`isPending` becomes `true` when submission starts and returns to `false` when submission finishes.
+
+```tsx
+const form = loginForm.use()
+
+const isPending = useAtomValue(form, (state) => state.isPending)
+```
+
+It can be used to disable the form:
+
+```tsx
+<form onSubmit={handleSubmit}>
+  <FieldSet disabled={isPending}>{/* fields */}</FieldSet>
+</form>
+```
+
+The same state is available from `Field` metadata:
+
+```tsx
+<form.Field
+  name='email'
+  render={({ meta }) => <Input disabled={meta.isPending} />}
 />
 ```
 
-4.3. Working with Array Fields
+## API reference
 
-When a field is defined as an Array in the schema, the `meta` object automatically provides strongly-typed array mutation functions: `add`, `update`, and `remove`. These functions modify the array directly without triggering unnecessary parent form re-renders.
+### `FormBuilder.empty`
+
+Creates an empty `FormBuilder`.
+
+```ts
+const form = FormBuilder.empty
+```
+
+### `.add(field, schema)`
+
+Adds a field and extends the inferred form value type.
+
+```ts
+const form = FormBuilder.empty
+  .add('name', Schema.String)
+  .add('age', Schema.Number)
+```
+
+### `.refine(refinement, options)`
+
+Registers a form-level refinement.
+
+```ts
+form.refine((fields) => fields.password === fields.confirmPassword, {
+  path: ['confirmPassword'],
+  issue: 'Passwords do not match',
+})
+```
+
+The refinement receives the complete typed form value.
+
+### `.make()`
+
+Creates the runtime form API:
+
+```ts
+const form = FormBuilder.empty.add('email', Schema.String).make()
+```
+
+The returned object exposes:
+
+```ts
+{
+  Provider
+  Field
+  use
+  useSubmit
+}
+```
+
+### `<Provider>`
+
+Creates the form state scope.
 
 ```tsx
-<myForm.Field
-  name='images'
-  render={({ field, meta }) => (
-    <Field>
-      <FieldLabel htmlFor={field.id}>Images</FieldLabel>
+<form.Provider defaultValues={...}>
+  ...
+</form.Provider>
+```
 
-      {field.value.map((image, index) => (
-        <Field key={index} orientation='horizontal'>
-          <Input
-            onChange={(e) => meta.update(index, e.target.value)}
-            value={image}
-            {...field}
-            placeholder='Enter image URL'
-          />
-          <Button
-            onClick={() => meta.remove(index)}
-            type='button'
-            variant='outline'
-          >
-            Remove
-          </Button>
-        </Field>
-      ))}
+### `<Field>`
 
-      <FieldError id={meta.errorId} errors={meta.errors} />
+Renders and subscribes to a field.
 
-      <Button onClick={() => meta.add('')} type='button' variant='secondary'>
-        Add Image
-      </Button>
-    </Field>
-  )}
+```tsx
+<form.Field
+  name="email"
+  render={({ field, meta, helpers }) => ...}
 />
 ```
 
-4.4. The `<Submit>` Component
+### `use()`
 
-Access submission state (`isPending`) without triggering re-renders across the entire form. This is especially crucial in React Native where you use this to trigger the form submit.
+Returns the form Atom.
 
 ```tsx
-<myForm.Submit
-  render={({ handleSubmit, meta }) => (
-    <Button disabled={meta.isPending} form={meta.formId}>
-      {meta.isPending ? 'Submitting...' : 'Submit'}
-    </Button>
-
-    // or
-    // <Button disabled={meta.isPending} onPress={() => handleSubmit()}>
-    //   {meta.isPending ? 'Submitting...' : 'Submit'}
-    // </Button>
-  )}
-/>
+const form = loginForm.use()
 ```
+
+### `useSubmit(onSubmit, options?)`
+
+Creates a typed submit handler.
+
+```ts
+const handleSubmit = loginForm.useSubmit(onSubmit, {
+  onSuccess,
+  onError,
+})
+```
+
+## Design notes
+
+The builder derives its form value type from the Effect schemas passed to `.add()`.
+
+The runtime state is backed by Atom families for individual field values and errors, while `isPending` is maintained as form-level state.
+
+Field components subscribe to their own value and errors, allowing the form to remain reactive without requiring every field to consume the complete form state.

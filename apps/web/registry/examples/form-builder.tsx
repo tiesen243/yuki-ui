@@ -1,6 +1,8 @@
+// oxlint-disable unicorn/throw-new-error
 'use client'
 
-import * as Effect from 'effect/Effect'
+import { useAtomValue } from '@effect/atom-react'
+import { Effect, Random } from 'effect'
 import * as Schema from 'effect/Schema'
 
 import { Button } from '@/components/ui/button'
@@ -8,112 +10,123 @@ import {
   Field,
   FieldDescription,
   FieldError,
-  FieldGroup,
   FieldLabel,
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { FormBuilder } from '@/registry/lib/form-builder'
+import { toast } from '@/registry/ui/toast'
 
-const registerForm = FormBuilder.empty
+const loginForm = FormBuilder.empty
   .add(
     'email',
-    Schema.String.check(Schema.isPattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
+    Schema.String.check(Schema.isPattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/u))
   )
   .add('password', Schema.String.check(Schema.isMinLength(8)))
-  .add('confirmPassword', Schema.String.check(Schema.isMinLength(8)))
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ['confirmPassword'],
-    issue: 'Passwords do not match',
-  })
   .make()
 
-export default function RegisterForm() {
+export default function FormBuilderDemo() {
   return (
-    <registerForm.Root
-      defaultValues={{ email: '', password: '', confirmPassword: '' }}
-      render={() => (
-        <div className='min-w-md rounded-md border bg-card p-4 text-card-foreground shadow-sm' />
-      )}
-    >
-      <FieldSet>
-        <FieldLegend>Register</FieldLegend>
+    <loginForm.Provider defaultValues={{ email: '', password: '' }}>
+      <Form>
+        <FieldLegend>Login</FieldLegend>
         <FieldDescription>
-          Please fill out the form below to create an account.
+          Fill in the form below to log in. The form will validate your input
+          and display any errors.
         </FieldDescription>
 
-        <FieldGroup>
-          <registerForm.Field
-            name='email'
-            render={({ field, meta }) => (
-              <Field data-invalid={meta.errors.length > 0}>
-                <FieldLabel htmlFor={field.id}>Email</FieldLabel>
-                <Input
-                  {...field}
-                  type='email'
-                  placeholder='Enter your email'
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-                <FieldError id={meta.errorId} errors={meta.errors} />
-              </Field>
-            )}
-          />
+        <loginForm.Field
+          name='email'
+          render={({ field, meta, helpers: { handleChange } }) => (
+            <Field data-invalid={meta.errors.length > 0}>
+              <FieldLabel htmlFor={field.id}>Email</FieldLabel>
 
-          <registerForm.Field
-            name='password'
-            render={({ field, meta }) => (
-              <Field data-invalid={meta.errors.length > 0}>
-                <FieldLabel htmlFor={field.id}>Password</FieldLabel>
-                <Input
-                  {...field}
-                  type='password'
-                  placeholder='Enter your password'
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-                <FieldError id={meta.errorId} errors={meta.errors} />
-              </Field>
-            )}
-          />
+              <Input
+                {...field}
+                type='email'
+                onChange={(e) => handleChange(e.target.value)}
+              />
 
-          <registerForm.Field
-            name='confirmPassword'
-            render={({ field, meta }) => (
-              <Field data-invalid={meta.errors.length > 0}>
-                <FieldLabel htmlFor={field.id}>Confirm Password</FieldLabel>
-                <Input
-                  {...field}
-                  type='password'
-                  placeholder='Confirm your password'
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-                <FieldError id={meta.errorId} errors={meta.errors} />
-              </Field>
-            )}
-          />
+              <FieldDescription id={meta.descriptionId}>
+                Please enter your email address.
+              </FieldDescription>
 
-          <registerForm.Submit
-            render={({ handleSubmit, meta }) => (
-              <Field>
-                <Button
-                  form={meta.formId}
-                  disabled={meta.isPending}
-                  onClick={() =>
-                    handleSubmit(
-                      Effect.fn(function* submit(values) {
-                        yield* Effect.sleep(1000) // Simulate a network request
-                        yield* Effect.log('Form submitted with values:', values)
-                      })
-                    )
-                  }
-                >
-                  {meta.isPending ? 'Registering...' : 'Register'}
-                </Button>
-              </Field>
-            )}
-          />
-        </FieldGroup>
-      </FieldSet>
-    </registerForm.Root>
+              <FieldError id={meta.errorId} errors={meta.errors} />
+            </Field>
+          )}
+        />
+
+        <loginForm.Field
+          name='password'
+          render={({ field, meta, helpers: { handleChange } }) => (
+            <Field data-invalid={meta.errors.length > 0}>
+              <FieldLabel htmlFor={field.id}>Password</FieldLabel>
+
+              <Input
+                {...field}
+                type='password'
+                onChange={(e) => handleChange(e.target.value)}
+              />
+
+              <FieldDescription id={meta.descriptionId}>
+                Please enter your password.
+              </FieldDescription>
+
+              <FieldError id={meta.errorId} errors={meta.errors} />
+            </Field>
+          )}
+        />
+
+        <Field>
+          <Button type='submit'>Login</Button>
+        </Field>
+      </Form>
+    </loginForm.Provider>
+  )
+}
+
+class FormError extends Schema.TaggedError<FormError>()('FormError', {
+  message: Schema.String,
+}) {}
+
+const Form = ({ children }: { children: React.ReactNode }) => {
+  const form = loginForm.use()
+
+  const formId = useAtomValue(form, (s) => s.formId)
+  const isPending = useAtomValue(form, (s) => s.isPending)
+
+  const handleSubmit = loginForm.useSubmit(
+    Effect.fn(function* login(values) {
+      const random = yield* Random.next
+
+      if (random < 0.5)
+        return yield* Effect.fail(
+          new FormError({
+            message: 'Form submission failed. Please try again.',
+          })
+        )
+
+      return yield* Effect.succeed(values)
+    }),
+    {
+      onSuccess: (values) => {
+        toast.add({
+          type: 'success',
+          title: 'Form submitted successfully',
+          description: <pre>{JSON.stringify(values, null, 2)}</pre>,
+        })
+      },
+      onError: (error) =>
+        error.match({
+          FormError: (e) => toast.add({ type: 'error', title: e.message }),
+        }),
+    }
+  )
+
+  return (
+    <form id={formId} onSubmit={handleSubmit}>
+      <FieldSet disabled={isPending}>{children}</FieldSet>
+    </form>
   )
 }

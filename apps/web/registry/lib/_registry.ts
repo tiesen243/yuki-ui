@@ -57,12 +57,8 @@ export const registryLib = [
     type: 'registry:lib',
     title: 'Form Builder',
     description:
-      'A fully-typed, reactive form builder powered by Effect Schema and Atom React.',
-    registryDependencies: [
-      `${getBaseUrl()}/r/use-isomorphic-layout-effect.json`,
-      'field',
-    ],
-    dependencies: ['@base-ui/react', 'effect@rc', '@effect/atom-react@rc'],
+      'Type-safe reactive forms powered by Effect Schema and @effect/atom-react.',
+    dependencies: ['effect@rc', '@effect/atom-react@rc'],
     files: [{ type: 'registry:lib', path: 'registry/lib/form-builder.tsx' }],
   },
 
