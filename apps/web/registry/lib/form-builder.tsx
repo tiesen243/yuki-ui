@@ -104,6 +104,7 @@ export class FormBuilder<
             add: (item: U) => void
             update: (index: number, item: U) => void
             remove: (index: number) => void
+            handleChange: (newValue: TValues[TField]) => void
           }
         : { handleChange: (newValue: TValues[TField]) => void }),
     >(props: {
@@ -116,6 +117,7 @@ export class FormBuilder<
           // A11y attributes
           id: string
           form: string
+          name: string
           'aria-describedby': string
           'aria-invalid': boolean
         }
@@ -173,12 +175,22 @@ export class FormBuilder<
 
           id,
           form: formId,
+          name: String(name),
           'aria-describedby': errors.length
             ? `${descriptionId} ${errorId}`
             : descriptionId,
           'aria-invalid': errors.length > 0,
         }),
-        [value, handleBlur, id, formId, descriptionId, errorId, errors.length]
+        [
+          descriptionId,
+          errorId,
+          errors.length,
+          formId,
+          handleBlur,
+          id,
+          name,
+          value,
+        ]
       )
 
       const meta = React.useMemo(
@@ -240,7 +252,9 @@ export class FormBuilder<
 
       const helpers = React.useMemo(
         () =>
-          Array.isArray(value) ? { add, update, remove } : { handleChange },
+          Array.isArray(value)
+            ? { add, update, remove, handleChange }
+            : { handleChange },
         [value, add, update, remove, handleChange]
       ) as THelper
 
