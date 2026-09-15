@@ -252,12 +252,12 @@ export class FormBuilder<
         values: TValues
       ) => Effect.Effect<TData, TError> | Promise<TData> | TData,
       options: {
-        onSuccess?: (data: NoInfer<TData>) => Promise<void> | void
+        onSuccess?: (data: NoInfer<TData>) => Promise<unknown> | unknown
         onError?: (
           error: NoInfer<TError> & {
             match: (handlers: FormBuilder.ExtractTaggedUnion<TError>) => void
           }
-        ) => Promise<void> | void
+        ) => Promise<unknown> | unknown
       } = {}
     ) => {
       const form = formAtom.use()
