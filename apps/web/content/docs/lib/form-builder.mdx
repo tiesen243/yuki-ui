@@ -224,7 +224,7 @@ The helper argument is inferred from the array item type.
 
 ## Access form state
 
-The form returned by `.make()` exposes `use()`.
+The form returned by `.make()` exposes `use()` and `useValue`.
 
 ```tsx
 const form = loginForm.use()
@@ -245,6 +245,8 @@ Because the form uses Atom internally, consumers can subscribe to individual pie
 
 ```tsx
 const isPending = useAtomValue(form, (state) => state.isPending)
+// or
+const isPending = loginForm.useValue((state) => state.isPending)
 ```
 
 This allows components to subscribe to only the state they need.
@@ -444,9 +446,7 @@ The handler parameter is narrowed to the corresponding tagged error.
 `isPending` becomes `true` when submission starts and returns to `false` when submission finishes.
 
 ```tsx
-const form = loginForm.use()
-
-const isPending = useAtomValue(form, (state) => state.isPending)
+const isPending = loginForm.useValue((state) => state.isPending)
 ```
 
 It can be used to disable the form:
@@ -545,6 +545,14 @@ Returns the form Atom.
 
 ```tsx
 const form = loginForm.use()
+```
+
+### `useValue(selector)`
+
+Returns a selected piece of form state.
+
+```tsx
+const isPending = loginForm.useValue((state) => state)
 ```
 
 ### `useSubmit(onSubmit, options?)`

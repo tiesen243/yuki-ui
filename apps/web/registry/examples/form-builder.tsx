@@ -1,8 +1,8 @@
 // oxlint-disable unicorn/throw-new-error
 'use client'
 
-import { useAtomValue } from '@effect/atom-react'
-import { Effect, Random } from 'effect'
+import * as Effect from 'effect/Effect'
+import * as Random from 'effect/Random'
 import * as Schema from 'effect/Schema'
 
 import { Button } from '@/components/ui/button'
@@ -91,10 +91,8 @@ class FormError extends Schema.TaggedError<FormError>()('FormError', {
 }) {}
 
 const Form = ({ children }: { children: React.ReactNode }) => {
-  const form = loginForm.use()
-
-  const formId = useAtomValue(form, (s) => s.formId)
-  const isPending = useAtomValue(form, (s) => s.isPending)
+  const formId = loginForm.useValue((s) => s.formId)
+  const isPending = loginForm.useValue((s) => s.isPending)
 
   const handleSubmit = loginForm.useSubmit(
     Effect.fn(function* login(values) {

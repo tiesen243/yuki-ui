@@ -308,7 +308,7 @@ export class FormBuilder<
 
             const result = await onSubmit(parsedValue.success as never)
 
-            if (Effect.isEffect(result)) {
+            if (Effect.isEffect(result))
               await Effect.runPromise(
                 result.pipe(
                   Effect.tap((data) =>
@@ -322,9 +322,7 @@ export class FormBuilder<
                   )
                 )
               )
-            } else {
-              options.onSuccess?.(result as TData)
-            }
+            else options.onSuccess?.(result as TData)
           } catch (error) {
             options.onError?.(self.createMatchableError(error as TError))
           } finally {
@@ -335,8 +333,16 @@ export class FormBuilder<
       )
     }
 
+    function useValue<TSelected>(
+      selector: (state: FormBuilder.State<TValues>) => TSelected
+    ): TSelected {
+      const form = formAtom.use()
+      return useAtomValue(form, (state) => selector(state))
+    }
+
     return {
       use: formAtom.use,
+      useValue,
       useSubmit,
 
       Provider,
@@ -397,6 +403,7 @@ export namespace FormBuilder {
   }
 
   export interface State<TValues> {
+    formId: string
     values: TValues
     errors: Record<keyof TValues, StandardSchemaV1.Issue[]>
     isPending: boolean
