@@ -38,11 +38,14 @@ function NvimStatuslineContent() {
       <NvimStatuslineSectionX>+15</NvimStatuslineSectionX>
       <NvimStatuslineSectionY>Top 1:1</NvimStatuslineSectionY>
       <NvimStatuslineSectionZ>
-        {new Date().toLocaleTimeString('en-US', {
-          hour12: false,
-          hour: '2-digit',
-          minute: '2-digit',
-        })}
+        {
+          // oxlint-disable-next-line react/purity
+          new Date().toLocaleTimeString('en-US', {
+            hour12: false,
+            hour: '2-digit',
+            minute: '2-digit',
+          })
+        }
       </NvimStatuslineSectionZ>
     </NvimStatusline>
   )

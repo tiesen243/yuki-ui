@@ -8,9 +8,9 @@ import {
 } from '@effect/atom-react'
 import * as Effect from 'effect/Effect'
 import * as Match from 'effect/Match'
+import * as Atom from 'effect/reactivity/Atom'
 import * as Schema from 'effect/Schema'
 import * as SchemaIssue from 'effect/SchemaIssue'
-import * as Atom from 'effect/unstable/reactivity/Atom'
 import * as React from 'react'
 
 const EMPTY_ERRORS: readonly StandardSchemaV1.Issue[] = []
