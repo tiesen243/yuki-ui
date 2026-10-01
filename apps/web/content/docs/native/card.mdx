@@ -8,7 +8,6 @@ Card provides a set of composable primitives for grouping related content in a c
 
 > See the [shadcn/ui Card documentation](https://ui.shadcn.com/docs/components/base/card) for the web component API, concepts, and additional examples.
 
-
 ## Installation
 
 ### CLI
@@ -33,7 +32,7 @@ import {
   CardTitle,
 } from '@/components/native/card'
 
-<Card>
+;<Card>
   <CardHeader>
     <CardTitle>Account</CardTitle>
     <CardDescription>Manage your account settings.</CardDescription>
@@ -68,7 +67,9 @@ The card is composed from the following primitives:
   <CardHeader>
     <CardTitle>Notifications</CardTitle>
     <CardAction>
-      <Button variant='ghost' size='sm'>Settings</Button>
+      <Button variant='ghost' size='sm'>
+        Settings
+      </Button>
     </CardAction>
   </CardHeader>
   <CardContent>

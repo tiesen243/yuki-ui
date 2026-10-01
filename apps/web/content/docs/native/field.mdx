@@ -8,7 +8,6 @@ Field provides composable primitives for building accessible and consistently sp
 
 > See the [shadcn/ui Field documentation](https://ui.shadcn.com/docs/components/base/field) for the web component API, concepts, and additional examples.
 
-
 ## Installation
 
 ### CLI
@@ -26,14 +25,10 @@ Copy and paste the following code into your project.
 A basic field combines `Field`, `FieldLabel`, and the input control you want to render.
 
 ```tsx
-import {
-  Field,
-  FieldDescription,
-  FieldLabel,
-} from '@/components/native/field'
+import { Field, FieldDescription, FieldLabel } from '@/components/native/field'
 import { Input } from '@/components/native/input'
 
-<Field>
+;<Field>
   <FieldLabel>Email</FieldLabel>
   <Input placeholder='you@example.com' keyboardType='email-address' />
   <FieldDescription>

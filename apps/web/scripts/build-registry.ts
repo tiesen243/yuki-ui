@@ -68,5 +68,6 @@ function parseContent(content: string): string {
     .replaceAll('"', '\\"')
     .replaceAll('\n', '\\n')
     .replaceAll(/@\/registry\/ui\/([^'"\s]+)/g, '@/components/ui/$1')
+    .replaceAll(/@\/registry\/native\/([^'"\s]+)/g, '@/components/native/$1')
     .trim()
 }

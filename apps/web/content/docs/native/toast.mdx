@@ -53,11 +53,9 @@ toast.warning('This action may have side effects.')
 Each method accepts a title, an optional description, and optional toast options.
 
 ```tsx
-toast.success(
-  'Saved successfully!',
-  'Your changes have been saved.',
-  { duration: 5000 }
-)
+toast.success('Saved successfully!', 'Your changes have been saved.', {
+  duration: 5000,
+})
 ```
 
 ## Toast types
@@ -114,13 +112,7 @@ import { useToast } from '@/components/native/toast'
 function SaveButton() {
   const { toast, dismiss } = useToast()
 
-  return (
-    <Button
-      onPress={() => toast.success('Saved')}
-    >
-      Save
-    </Button>
-  )
+  return <Button onPress={() => toast.success('Saved')}>Save</Button>
 }
 ```
 
@@ -129,13 +121,11 @@ function SaveButton() {
 ### `ToasterProvider`
 
 ```tsx
-<ToasterProvider position='top'>
-  {children}
-</ToasterProvider>
+<ToasterProvider position='top'>{children}</ToasterProvider>
 ```
 
-| Prop | Default | Description |
-| --- | --- | --- |
+| Prop       | Default | Description                                                        |
+| ---------- | ------- | ------------------------------------------------------------------ |
 | `position` | `"top"` | Controls whether the toast stack is rendered at the top or bottom. |
 
 ### `toast`

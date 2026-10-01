@@ -8,7 +8,6 @@ Item provides composable primitives for common list and settings layouts. It sup
 
 > See the [shadcn/ui Item documentation](https://ui.shadcn.com/docs/components/base/item) for the web component API, concepts, and additional examples.
 
-
 ## Installation
 
 ### CLI
@@ -31,7 +30,7 @@ import {
   ItemTitle,
 } from '@/components/native/item'
 
-<Item>
+;<Item>
   <ItemContent>
     <ItemTitle>Notifications</ItemTitle>
     <ItemDescription>Manage notification preferences.</ItemDescription>
@@ -70,7 +69,9 @@ The component exports:
   </ItemContent>
 
   <ItemActions>
-    <Button size='sm' variant='outline'>Edit</Button>
+    <Button size='sm' variant='outline'>
+      Edit
+    </Button>
   </ItemActions>
 </Item>
 ```

@@ -8,7 +8,6 @@ Dialog provides a native modal surface with a trigger, content container, header
 
 > See the [shadcn/ui Dialog documentation](https://ui.shadcn.com/docs/components/base/dialog) for the web component API, concepts, and additional examples.
 
-
 ## Installation
 
 ### CLI
@@ -36,15 +35,13 @@ import {
 } from '@/components/native/dialog'
 import { Button } from '@/components/native/button'
 
-<Dialog>
+;<Dialog>
   <DialogTrigger>Open dialog</DialogTrigger>
 
   <DialogContent>
     <DialogHeader>
       <DialogTitle>Delete account?</DialogTitle>
-      <DialogDescription>
-        This action cannot be undone.
-      </DialogDescription>
+      <DialogDescription>This action cannot be undone.</DialogDescription>
     </DialogHeader>
 
     <DialogFooter>
