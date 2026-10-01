@@ -1,0 +1,58 @@
+---
+title: Avatar
+description: A native avatar component with image and fallback support.
+source: registry/native/avatar.tsx
+---
+
+Avatar displays a circular image with an automatic fallback when the image is missing or fails to load.
+
+> See the [shadcn/ui Avatar documentation](https://ui.shadcn.com/docs/components/base/avatar) for the web component API, concepts, and additional examples.
+
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-avatar' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-avatar' />
+
+## Usage
+
+Use `Avatar` as the container and place `AvatarImage` and `AvatarFallback` inside it.
+
+```tsx
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/native/avatar'
+
+<Avatar>
+  <AvatarImage source={{ uri: 'https://example.com/avatar.png' }} />
+  <AvatarFallback>TS</AvatarFallback>
+</Avatar>
+```
+
+`AvatarFallback` is rendered until the image finishes loading. If the image fails to load, the fallback remains visible.
+
+### Custom size
+
+```tsx
+<Avatar className='size-12'>
+  <AvatarImage source={{ uri: user.avatarUrl }} />
+  <AvatarFallback>{user.initials}</AvatarFallback>
+</Avatar>
+```
+
+### Fallback content
+
+The fallback accepts either a string or a React node. Strings are rendered using the native `Typography` component.
+
+```tsx
+<Avatar>
+  <AvatarFallback>
+    <Typography className='text-lg font-semibold'>TS</Typography>
+  </AvatarFallback>
+</Avatar>
+```

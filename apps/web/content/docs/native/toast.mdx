@@ -1,0 +1,159 @@
+---
+title: Toast
+description: A lightweight native toast notification system with animated presentation and swipe-to-dismiss gestures.
+source: registry/native/toast.tsx
+---
+
+The native toast component provides a lightweight global notification API with animated entry, automatic dismissal, and horizontal swipe-to-dismiss gestures.
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-toast' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-toast' />
+
+## Basic setup
+
+Wrap your application with `ToasterProvider`.
+
+```tsx
+import { ToasterProvider } from '@/components/native/toast'
+
+export function App() {
+  return (
+    <ToasterProvider>
+      <YourApp />
+    </ToasterProvider>
+  )
+}
+```
+
+`ToasterProvider` renders active toasts and exposes the toast manager through `useToast`.
+
+## Usage
+
+The exported `toast` manager can be used directly from event handlers and other application code.
+
+```tsx
+import { toast } from '@/components/native/toast'
+
+toast.show('This is a simple toast.')
+toast.success('Saved successfully!')
+toast.error('Something went wrong.')
+toast.info('Your account has been updated.')
+toast.warning('This action may have side effects.')
+```
+
+Each method accepts a title, an optional description, and optional toast options.
+
+```tsx
+toast.success(
+  'Saved successfully!',
+  'Your changes have been saved.',
+  { duration: 5000 }
+)
+```
+
+## Toast types
+
+The renderer supports:
+
+- `default`
+- `success`
+- `info`
+- `error`
+- `warning`
+
+Success, info, error, and warning toasts include a matching Lucide icon by default.
+
+### Custom icon
+
+```tsx
+import { CheckCircleIcon } from 'lucide-uniwind'
+
+toast.show('Completed', undefined, {
+  icon: (props) => <CheckCircleIcon {...props} />,
+})
+```
+
+## Position
+
+`ToasterProvider` supports `top` and `bottom` positions.
+
+```tsx
+<ToasterProvider position='bottom'>
+  <App />
+</ToasterProvider>
+```
+
+## Duration
+
+Set a default duration per toast with the `duration` option. The default is `3000` milliseconds.
+
+```tsx
+toast.info('Syncing data...', undefined, { duration: 8000 })
+```
+
+## Gestures
+
+Toasts can be swiped horizontally. A sufficiently large swipe dismisses the toast; smaller swipes spring back to the original position.
+
+## Using the toast manager
+
+Use `useToast` inside a `ToasterProvider` when you need access to the manager and dismiss function from a component.
+
+```tsx
+import { useToast } from '@/components/native/toast'
+
+function SaveButton() {
+  const { toast, dismiss } = useToast()
+
+  return (
+    <Button
+      onPress={() => toast.success('Saved')}
+    >
+      Save
+    </Button>
+  )
+}
+```
+
+## API reference
+
+### `ToasterProvider`
+
+```tsx
+<ToasterProvider position='top'>
+  {children}
+</ToasterProvider>
+```
+
+| Prop | Default | Description |
+| --- | --- | --- |
+| `position` | `"top"` | Controls whether the toast stack is rendered at the top or bottom. |
+
+### `toast`
+
+```ts
+toast.show(title, description?, options?)
+toast.success(title, description?, options?)
+toast.error(title, description?, options?)
+toast.info(title, description?, options?)
+toast.warning(title, description?, options?)
+```
+
+`options.duration` controls the lifetime of the toast. `options.icon` can replace the default icon.
+
+### `useToast`
+
+```ts
+const { toast, dismiss } = useToast()
+```
+
+The hook must be used inside `ToasterProvider`.

@@ -1,0 +1,106 @@
+---
+title: Item
+description: Composable list item primitives for building settings rows, navigation items, and grouped content.
+source: registry/native/item.tsx
+---
+
+Item provides composable primitives for common list and settings layouts. It supports variants, sizes, media, content, actions, headers, footers, and separators.
+
+> See the [shadcn/ui Item documentation](https://ui.shadcn.com/docs/components/base/item) for the web component API, concepts, and additional examples.
+
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-item' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-item' />
+
+## Usage
+
+```tsx
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/native/item'
+
+<Item>
+  <ItemContent>
+    <ItemTitle>Notifications</ItemTitle>
+    <ItemDescription>Manage notification preferences.</ItemDescription>
+  </ItemContent>
+</Item>
+```
+
+## Structure
+
+The component exports:
+
+- `ItemGroup` — groups related items.
+- `ItemSeparator` — separates items within a group.
+- `Item` — the main row container.
+- `ItemMedia` — leading media or icon area.
+- `ItemContent` — primary content area.
+- `ItemTitle` — primary label.
+- `ItemDescription` — secondary description.
+- `ItemActions` — trailing actions.
+- `ItemHeader` — header content.
+- `ItemFooter` — footer content.
+
+### Media and actions
+
+```tsx
+<Item>
+  <ItemMedia>
+    <Avatar>
+      <AvatarFallback>TS</AvatarFallback>
+    </Avatar>
+  </ItemMedia>
+
+  <ItemContent>
+    <ItemTitle>Tiến</ItemTitle>
+    <ItemDescription>Account administrator</ItemDescription>
+  </ItemContent>
+
+  <ItemActions>
+    <Button size='sm' variant='outline'>Edit</Button>
+  </ItemActions>
+</Item>
+```
+
+### Group and separator
+
+```tsx
+<ItemGroup>
+  <Item>
+    <ItemContent>
+      <ItemTitle>General</ItemTitle>
+    </ItemContent>
+  </Item>
+  <ItemSeparator />
+  <Item>
+    <ItemContent>
+      <ItemTitle>Privacy</ItemTitle>
+    </ItemContent>
+  </Item>
+</ItemGroup>
+```
+
+### Variants and sizes
+
+```tsx
+<Item variant='default'>Default item</Item>
+<Item variant='outline'>Outlined item</Item>
+<Item variant='muted'>Muted item</Item>
+
+<Item size='sm'>Compact item</Item>
+<Item size='default'>Default item</Item>
+<Item size='lg'>Large item</Item>
+```

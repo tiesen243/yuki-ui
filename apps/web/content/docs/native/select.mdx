@@ -1,0 +1,101 @@
+---
+title: Select
+description: A native select component built on the dialog primitive with single and multiple selection support.
+source: registry/native/select.tsx
+---
+
+Select provides a native-friendly selection control. The options are presented in a dialog sheet and the component supports both single and multiple selection modes.
+
+> See the [shadcn/ui Select documentation](https://ui.shadcn.com/docs/components/base/select) for the web component API, concepts, and additional examples.
+
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-select' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-select' />
+
+## Usage
+
+```tsx
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/native/select'
+
+<Select defaultValue='apple'>
+  <SelectTrigger>
+    <SelectValue placeholder='Select a fruit' />
+  </SelectTrigger>
+
+  <SelectContent>
+    <SelectItem value='apple'>Apple</SelectItem>
+    <SelectItem value='banana'>Banana</SelectItem>
+    <SelectItem value='orange'>Orange</SelectItem>
+  </SelectContent>
+</Select>
+```
+
+### Controlled value
+
+```tsx
+const [value, setValue] = useState('apple')
+
+<Select value={value} onValueChange={setValue}>
+  <SelectTrigger>
+    <SelectValue placeholder='Select a fruit' />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value='apple'>Apple</SelectItem>
+    <SelectItem value='banana'>Banana</SelectItem>
+  </SelectContent>
+</Select>
+```
+
+### Multiple selection
+
+Set `multiple` to select more than one option. The value and change handler then use string arrays.
+
+```tsx
+const [values, setValues] = useState<string[]>([])
+
+<Select multiple value={values} onValueChange={setValues}>
+  <SelectTrigger>
+    <SelectValue placeholder='Select permissions' />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value='read'>Read</SelectItem>
+    <SelectItem value='write'>Write</SelectItem>
+    <SelectItem value='delete'>Delete</SelectItem>
+  </SelectContent>
+</Select>
+```
+
+### Groups and separators
+
+```tsx
+<SelectContent>
+  <SelectGroup>
+    <SelectLabel>Fruits</SelectLabel>
+    <SelectItem value='apple'>Apple</SelectItem>
+    <SelectItem value='banana'>Banana</SelectItem>
+  </SelectGroup>
+
+  <SelectSeparator />
+
+  <SelectGroup>
+    <SelectLabel>Vegetables</SelectLabel>
+    <SelectItem value='carrot'>Carrot</SelectItem>
+    <SelectItem value='potato'>Potato</SelectItem>
+  </SelectGroup>
+</SelectContent>
+```

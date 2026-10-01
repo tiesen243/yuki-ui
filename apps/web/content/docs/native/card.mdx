@@ -1,0 +1,78 @@
+---
+title: Card
+description: A composable native card with header, content, footer, title, description, and action primitives.
+source: registry/native/card.tsx
+---
+
+Card provides a set of composable primitives for grouping related content in a consistent container.
+
+> See the [shadcn/ui Card documentation](https://ui.shadcn.com/docs/components/base/card) for the web component API, concepts, and additional examples.
+
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-card' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-card' />
+
+## Usage
+
+```tsx
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/native/card'
+
+<Card>
+  <CardHeader>
+    <CardTitle>Account</CardTitle>
+    <CardDescription>Manage your account settings.</CardDescription>
+  </CardHeader>
+
+  <CardContent>
+    <Typography>Account details go here.</Typography>
+  </CardContent>
+
+  <CardFooter>
+    <Button>Save changes</Button>
+  </CardFooter>
+</Card>
+```
+
+## Structure
+
+The card is composed from the following primitives:
+
+- `Card` — the outer container.
+- `CardHeader` — header content with spacing and alignment.
+- `CardTitle` — title text.
+- `CardDescription` — supporting description text.
+- `CardAction` — an action area that can be placed in the header.
+- `CardContent` — the main content area.
+- `CardFooter` — the footer area.
+
+### Header action
+
+```tsx
+<Card>
+  <CardHeader>
+    <CardTitle>Notifications</CardTitle>
+    <CardAction>
+      <Button variant='ghost' size='sm'>Settings</Button>
+    </CardAction>
+  </CardHeader>
+  <CardContent>
+    <Typography>Notification preferences.</Typography>
+  </CardContent>
+</Card>
+```

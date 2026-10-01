@@ -1,0 +1,54 @@
+---
+title: Separator
+description: A native horizontal or vertical separator for visually dividing content.
+source: registry/native/separator.tsx
+---
+
+Separator creates a simple visual divider between sections of content.
+
+> See the [shadcn/ui Separator documentation](https://ui.shadcn.com/docs/components/base/separator) for the web component API, concepts, and additional examples.
+
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-separator' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-separator' />
+
+## Usage
+
+The default orientation is horizontal.
+
+```tsx
+import { Separator } from '@/components/native/separator'
+
+<View className='gap-4'>
+  <Typography>Account</Typography>
+  <Separator />
+  <Typography>Preferences</Typography>
+</View>
+```
+
+### Vertical separator
+
+Set `orientation='vertical'` when separating content horizontally. The parent should provide a height for the separator to stretch within.
+
+```tsx
+<View className='h-8 flex-row items-center gap-4'>
+  <Typography>Profile</Typography>
+  <Separator orientation='vertical' />
+  <Typography>Settings</Typography>
+</View>
+```
+
+### Custom styling
+
+```tsx
+<Separator className='bg-primary' />
+```

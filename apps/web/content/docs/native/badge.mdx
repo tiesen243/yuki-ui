@@ -1,0 +1,50 @@
+---
+title: Badge
+description: A native badge component for displaying compact status labels.
+source: registry/native/badge.tsx
+---
+
+Badge is a compact label that supports the same visual variants as the base badge component while rendering with React Native primitives.
+
+> See the [shadcn/ui Badge documentation](https://ui.shadcn.com/docs/components/base/badge) for the web component API, concepts, and additional examples.
+
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-badge' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-badge' />
+
+## Usage
+
+```tsx
+import { Badge } from '@/components/native/badge'
+
+<Badge>New</Badge>
+```
+
+### Variants
+
+The `variant` prop supports `default`, `secondary`, `success`, `destructive`, `info`, `warning`, `outline`, `ghost`, and `link`.
+
+```tsx
+<Badge variant='secondary'>Draft</Badge>
+<Badge variant='success'>Active</Badge>
+<Badge variant='destructive'>Failed</Badge>
+<Badge variant='warning'>Pending</Badge>
+<Badge variant='outline'>Optional</Badge>
+```
+
+### Custom styling
+
+```tsx
+<Badge variant='info' className='self-start'>
+  Information
+</Badge>
+```

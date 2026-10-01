@@ -1,0 +1,62 @@
+---
+title: Button
+description: A native pressable button with the same variants and sizes as the web button.
+source: registry/native/button.tsx
+---
+
+The native Button uses React Native `Pressable` while reusing the design system button variants and sizes.
+
+> See the [shadcn/ui Button documentation](https://ui.shadcn.com/docs/components/base/button) for the web component API, concepts, and additional examples.
+
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-button' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-button' />
+
+## Usage
+
+```tsx
+import { Button } from '@/components/native/button'
+
+<Button onPress={() => console.log('Pressed')}>Continue</Button>
+```
+
+### Variants
+
+The button supports `default`, `outline`, `secondary`, `ghost`, `success`, `destructive`, `info`, `warning`, and `link` variants.
+
+```tsx
+<Button variant='default'>Default</Button>
+<Button variant='secondary'>Secondary</Button>
+<Button variant='outline'>Outline</Button>
+<Button variant='ghost'>Ghost</Button>
+<Button variant='destructive'>Delete</Button>
+```
+
+### Sizes
+
+The `size` prop is inherited from the base button variants, so the native component stays aligned with the web design system.
+
+```tsx
+<Button size='sm'>Small</Button>
+<Button size='default'>Default</Button>
+<Button size='lg'>Large</Button>
+```
+
+### Disabled state
+
+Use the native `disabled` prop from `Pressable`.
+
+```tsx
+<Button disabled>Continue</Button>
+```
+
+The component also applies a pressed opacity state while the user is interacting with it.

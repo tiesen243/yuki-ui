@@ -1,0 +1,59 @@
+---
+title: Radio Group
+description: A native radio group for selecting one option from a set of choices.
+source: registry/native/radio-group.tsx
+---
+
+Radio Group manages a single selected value across a collection of `RadioGroupItem` components.
+
+> See the [shadcn/ui Radio Group documentation](https://ui.shadcn.com/docs/components/base/radio-group) for the web component API, concepts, and additional examples.
+
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-radio-group' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-radio-group' />
+
+## Usage
+
+```tsx
+import { RadioGroup, RadioGroupItem } from '@/components/native/radio-group'
+
+<RadioGroup
+  defaultValue='comfortable'
+  onValueChange={(value) => console.log(value)}
+>
+  <RadioGroupItem value='comfortable' />
+  <RadioGroupItem value='compact' />
+  <RadioGroupItem value='spacious' />
+</RadioGroup>
+```
+
+`RadioGroup` accepts a `defaultValue` and an `onValueChange` callback. Each `RadioGroupItem` supplies the value associated with that option.
+
+### Disabled group
+
+```tsx
+<RadioGroup defaultValue='comfortable' disabled>
+  <RadioGroupItem value='comfortable' />
+  <RadioGroupItem value='compact' />
+</RadioGroup>
+```
+
+### Disabled item
+
+Individual items can also use the native `disabled` prop.
+
+```tsx
+<RadioGroup defaultValue='comfortable'>
+  <RadioGroupItem value='comfortable' />
+  <RadioGroupItem value='compact' disabled />
+</RadioGroup>
+```

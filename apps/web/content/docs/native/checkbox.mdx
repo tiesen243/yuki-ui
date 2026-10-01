@@ -1,0 +1,61 @@
+---
+title: Checkbox
+description: A native checkbox with controlled and uncontrolled state support.
+source: registry/native/checkbox.tsx
+---
+
+Checkbox is a pressable native control that supports both controlled and uncontrolled state.
+
+> See the [shadcn/ui Checkbox documentation](https://ui.shadcn.com/docs/components/base/checkbox) for the web component API, concepts, and additional examples.
+
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-checkbox' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-checkbox' />
+
+## Usage
+
+```tsx
+import { Checkbox } from '@/components/native/checkbox'
+
+<Checkbox
+  label='Accept the terms and conditions'
+  onCheckedChange={(checked) => console.log(checked)}
+/>
+```
+
+### Default value
+
+Use `defaultChecked` when the component should manage its own initial state.
+
+```tsx
+<Checkbox label='Remember me' defaultChecked />
+```
+
+### Controlled
+
+Pass `checked` and update it from `onCheckedChange` for controlled state.
+
+```tsx
+const [checked, setChecked] = useState(false)
+
+<Checkbox
+  label='Enable notifications'
+  checked={checked}
+  onCheckedChange={setChecked}
+/>
+```
+
+### Disabled
+
+```tsx
+<Checkbox label='Unavailable option' disabled />
+```

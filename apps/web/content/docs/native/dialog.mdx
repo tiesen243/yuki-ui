@@ -1,0 +1,79 @@
+---
+title: Dialog
+description: A native dialog and bottom-sheet style modal with animated presentation and swipe-to-close support.
+source: registry/native/dialog.tsx
+---
+
+Dialog provides a native modal surface with a trigger, content container, header, footer, title, description, and close control. The content is presented as a bottom sheet and can be dismissed by tapping outside or swiping it down.
+
+> See the [shadcn/ui Dialog documentation](https://ui.shadcn.com/docs/components/base/dialog) for the web component API, concepts, and additional examples.
+
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-dialog' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-dialog' />
+
+## Usage
+
+```tsx
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/native/dialog'
+import { Button } from '@/components/native/button'
+
+<Dialog>
+  <DialogTrigger>Open dialog</DialogTrigger>
+
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Delete account?</DialogTitle>
+      <DialogDescription>
+        This action cannot be undone.
+      </DialogDescription>
+    </DialogHeader>
+
+    <DialogFooter>
+      <DialogClose>
+        <Button variant='outline'>Cancel</Button>
+      </DialogClose>
+      <Button variant='destructive' onPress={deleteAccount}>
+        Delete
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+### Controlled state
+
+Use `open` and `onOpenChange` when the dialog state needs to be controlled by the parent.
+
+```tsx
+const [open, setOpen] = useState(false)
+
+<Dialog open={open} onOpenChange={setOpen}>
+  <DialogTrigger>Open</DialogTrigger>
+  <DialogContent>
+    <DialogTitle>Settings</DialogTitle>
+  </DialogContent>
+</Dialog>
+```
+
+### Dismiss behavior
+
+The native dialog closes when the user taps the backdrop, uses `DialogClose`, or swipes the sheet downward.

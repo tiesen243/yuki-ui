@@ -1,0 +1,53 @@
+---
+title: Typography
+description: Native typography primitives for consistent text styles and accessibility roles.
+source: registry/native/typography.tsx
+---
+
+Typography provides a native `Text` primitive that reuses the design system typography variants while adding appropriate accessibility roles for headings.
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-typography' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-typography' />
+
+## Usage
+
+```tsx
+import { Typography } from '@/components/native/typography'
+
+<Typography>Body text</Typography>
+```
+
+## Variants
+
+The `variant` prop is inherited from the base typography component, so the native component uses the same typography scale as the web component.
+
+```tsx
+<Typography variant='h1'>Page title</Typography>
+<Typography variant='h2'>Section title</Typography>
+<Typography variant='h3'>Subsection title</Typography>
+<Typography variant='h4'>Heading</Typography>
+<Typography variant='p'>Paragraph</Typography>
+```
+
+Heading variants also receive the corresponding native accessibility role and heading level.
+
+### Custom styling
+
+```tsx
+<Typography variant='h2' className='text-primary'>
+  Account settings
+</Typography>
+```
+
+### Shared typography context
+
+Native components such as `Button`, `Badge`, and `Card` use `TypographyContext` internally so text children inherit the appropriate text styles automatically.

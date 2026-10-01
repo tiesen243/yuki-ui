@@ -1,0 +1,61 @@
+---
+title: Input
+description: A styled native text input that follows the design system input styles.
+source: registry/native/input.tsx
+---
+
+Input is a styled wrapper around React Native's `TextInput` and accepts the standard native text input props.
+
+> See the [shadcn/ui Input documentation](https://ui.shadcn.com/docs/components/base/input) for the web component API, concepts, and additional examples.
+
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-input' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-input' />
+
+## Usage
+
+```tsx
+import { Input } from '@/components/native/input'
+
+<Input placeholder='Enter your name' />
+```
+
+### Controlled input
+
+```tsx
+const [value, setValue] = useState('')
+
+<Input
+  value={value}
+  onChangeText={setValue}
+  placeholder='Email address'
+/>
+```
+
+### Native props
+
+Because `Input` is based on React Native `TextInput`, native props can be passed directly.
+
+```tsx
+<Input
+  placeholder='Password'
+  secureTextEntry
+  autoCapitalize='none'
+  autoCorrect={false}
+/>
+```
+
+### Custom styling
+
+```tsx
+<Input className='h-12 rounded-lg' placeholder='Custom input' />
+```

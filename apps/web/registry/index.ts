@@ -6,6 +6,7 @@ import { registryAuth } from '@/registry/auth/_registry'
 import { registryExamples } from '@/registry/examples/_registry'
 import { registryHooks } from '@/registry/hooks/_registry'
 import { registryLib } from '@/registry/lib/_registry'
+import { registryNative } from '@/registry/native/_registry'
 import { registryUI } from '@/registry/ui/_registry'
 
 export const registry = {
@@ -16,6 +17,7 @@ export const registry = {
     ...registryExamples,
     ...registryHooks,
     ...registryLib,
+    ...registryNative,
     ...registryUI,
   ].map((item) =>
     Object.assign(item, {

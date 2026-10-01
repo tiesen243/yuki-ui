@@ -1,0 +1,86 @@
+---
+title: Field
+description: Composable form field primitives for labels, descriptions, errors, groups, and separators.
+source: registry/native/field.tsx
+---
+
+Field provides composable primitives for building accessible and consistently spaced native forms.
+
+> See the [shadcn/ui Field documentation](https://ui.shadcn.com/docs/components/base/field) for the web component API, concepts, and additional examples.
+
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-field' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-field' />
+
+## Usage
+
+A basic field combines `Field`, `FieldLabel`, and the input control you want to render.
+
+```tsx
+import {
+  Field,
+  FieldDescription,
+  FieldLabel,
+} from '@/components/native/field'
+import { Input } from '@/components/native/input'
+
+<Field>
+  <FieldLabel>Email</FieldLabel>
+  <Input placeholder='you@example.com' keyboardType='email-address' />
+  <FieldDescription>
+    We will only use this address for account notifications.
+  </FieldDescription>
+</Field>
+```
+
+## Structure
+
+The component exports these primitives:
+
+- `FieldSet` — groups a set of related fields.
+- `FieldLegend` — labels a field set.
+- `FieldGroup` — lays out multiple fields.
+- `Field` — the main field container.
+- `FieldContent` — groups a field's content.
+- `FieldLabel` — field label.
+- `FieldTitle` — title text for a field.
+- `FieldDescription` — supporting help text.
+- `FieldSeparator` — visual separator between field groups.
+- `FieldError` — error content.
+
+### Field error
+
+```tsx
+<Field>
+  <FieldLabel>Password</FieldLabel>
+  <Input secureTextEntry />
+  <FieldError>Password must be at least 8 characters.</FieldError>
+</Field>
+```
+
+### Grouped fields
+
+```tsx
+<FieldSet>
+  <FieldLegend>Profile</FieldLegend>
+  <FieldGroup>
+    <Field>
+      <FieldLabel>Name</FieldLabel>
+      <Input />
+    </Field>
+    <Field>
+      <FieldLabel>Bio</FieldLabel>
+      <Input multiline />
+    </Field>
+  </FieldGroup>
+</FieldSet>
+```
