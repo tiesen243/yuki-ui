@@ -42,12 +42,30 @@ The server stores only a hash of the refresh-token secret. Refresh tokens are sp
 
 ## Installation
 
-### CLI
+The authentication system consists of the core `auth` package and an optional database adapter. Install `auth` first, then choose the adapter that matches your application's database layer.
 
 <InstallComponent comp='auth' />
 
-## Next steps
+### Database adapters
 
-- Start with [Usage](./usage) to wire the handlers into your router.
-- Choose a database integration from [Database](./database).
-- Configure providers and session lifetimes in the generated `server/auth/config.ts`.
+Database adapters connect the authentication layer to your persistence layer. Choose **one** adapter based on the database technology already used in your application.
+
+#### Drizzle
+
+Use the Drizzle adapter when your application uses Drizzle ORM. It provides the authentication schema and persistence operations for relational databases supported by your Drizzle setup.
+
+<InstallComponent comp='auth-adapter-drizzle' />
+
+#### Prisma
+
+Use the Prisma adapter when your application uses Prisma ORM. The adapter integrates with your generated Prisma client and provides the models required by the authentication system.
+
+<InstallComponent comp='auth-adapter-prisma' />
+
+#### Mongoose
+
+Use the Mongoose adapter when your application uses MongoDB with Mongoose. It provides the authentication models and persistence layer for users, accounts, and sessions.
+
+<InstallComponent comp='auth-adapter-mongoose' />
+
+> You only need **one** database adapter. The authentication API remains the same regardless of which adapter you choose.
