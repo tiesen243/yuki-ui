@@ -1,6 +1,8 @@
 import { defineConfig } from 'oxfmt'
 
 export default defineConfig({
+  ignorePatterns: ['uniwind-types.d.ts'],
+
   printWidth: 80,
   tabWidth: 2,
   arrowParens: 'always',
