@@ -138,11 +138,48 @@ function BottomSheetTrigger({
   )
 }
 
+function BottomSheetClose({
+  onPress,
+  variant = 'outline',
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { setIsOpen } = useBottomSheet()
+
+  const handlePress = React.useCallback(
+    (event: Parameters<NonNullable<typeof onPress>>[0]) => {
+      setIsOpen(false)
+      onPress?.(event)
+    },
+    [setIsOpen, onPress]
+  )
+
+  return (
+    <Button
+      data-slot='bottom-sheet-close'
+      variant={variant}
+      onPress={handlePress}
+      {...props}
+    />
+  )
+}
+
 function BottomSheetContent({
   className,
   ...props
 }: React.ComponentProps<typeof Animated.View>) {
   const { isOpen, setIsOpen, sheetHeight } = useBottomSheet()
+
+  const borderRadius = sheetHeight.interpolate({
+    inputRange: [SCREEN_HEIGHT * 0.9, SCREEN_HEIGHT],
+    outputRange: [16, 0],
+    extrapolate: 'clamp',
+  })
+
+  const border = sheetHeight.interpolate({
+    inputRange: [SCREEN_HEIGHT * 0.9, SCREEN_HEIGHT],
+    outputRange: [1, 0],
+    extrapolate: 'clamp',
+  })
 
   return (
     <Modal
@@ -158,9 +195,14 @@ function BottomSheetContent({
       <TypographyContext value='text-sm text-popover-foreground'>
         <Animated.View
           data-slot='bottom-sheet-content'
-          style={{ height: sheetHeight }}
+          style={{
+            height: sheetHeight,
+            borderWidth: border,
+            borderTopLeftRadius: borderRadius,
+            borderTopRightRadius: borderRadius,
+          }}
           className={cn(
-            'absolute bottom-0 flex min-h-0 w-full flex-col rounded-t-xl bg-popover',
+            'absolute bottom-0 flex min-h-0 w-full flex-col rounded-t-xl border-b-0 border-border bg-popover',
             className
           )}
           {...props}
@@ -317,6 +359,7 @@ function BottomSheetDescription({
 export {
   BottomSheet,
   BottomSheetTrigger,
+  BottomSheetClose,
   BottomSheetContent,
   BottomSheetHeader,
   BottomSheetFooter,

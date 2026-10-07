@@ -17,6 +17,10 @@ declare module 'react-native' {
     className?: string
   }
 
+  interface TouchableWithoutFeedbackProps {
+    className?: string
+  }
+
   interface ScrollViewProps {
     className?: string
     contentContainerClassName?: string

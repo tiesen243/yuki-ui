@@ -1,7 +1,7 @@
 import type { VariantProps } from 'class-variance-authority'
 
 import { cva } from 'class-variance-authority'
-import { View } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 
 import { badgeVariants } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
@@ -29,14 +29,26 @@ const badgeTextVariants = cva('text-xs font-medium whitespace-nowrap', {
 function Badge({
   className,
   variant = 'default',
+  activeOpacity = 0.8,
+  disabled,
   ...props
-}: React.ComponentProps<typeof View> & VariantProps<typeof badgeVariants>) {
+}: React.ComponentProps<typeof TouchableOpacity> &
+  VariantProps<typeof badgeVariants>) {
   return (
     <TypographyContext value={cn(badgeTextVariants({ variant }))}>
-      <View
+      <TouchableOpacity
         data-slot='badge'
+        accessibilityRole={props.onPress ? 'button' : 'text'}
         data-variant={variant}
-        className={cn(badgeVariants({ variant }), 'h-6 flex-row', className)}
+        aria-disabled={disabled}
+        disabled={disabled}
+        activeOpacity={props.onPress ? activeOpacity : 1}
+        className={cn(
+          badgeVariants({ variant }),
+          'h-6 flex-row rounded-md',
+          disabled && 'opacity-50',
+          className
+        )}
         {...props}
       />
     </TypographyContext>

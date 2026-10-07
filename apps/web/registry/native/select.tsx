@@ -164,6 +164,7 @@ function SelectItem<TValue>({
   value,
   onPress,
   className,
+  disabled = false,
   children,
   ...props
 }: React.ComponentProps<typeof Button> & { value: TValue }) {
@@ -176,20 +177,22 @@ function SelectItem<TValue>({
 
   const handlePress = React.useCallback(
     (event: Parameters<NonNullable<typeof onPress>>[0]) => {
-      onPress?.(event)
+      if (disabled) return
 
-      if (isMultiple) {
-        const newValue = (selected as TValue[])?.includes(value)
-          ? (selected as TValue[])?.filter((v) => v !== value)
-          : [...((selected as TValue[]) ?? []), value]
+      if (isMultiple && Array.isArray(selected)) {
+        const newValue = selected?.includes(value)
+          ? selected?.filter((v) => v !== value)
+          : [...(selected ?? []), value]
 
-        onValueChange?.(newValue as TValue)
+        onValueChange(newValue as never)
       } else {
-        onValueChange?.(value)
-        setIsOpen?.(false)
+        onValueChange(value)
+        setIsOpen(false)
       }
+
+      onPress?.(event)
     },
-    [onValueChange, isMultiple, selected, value, onPress, setIsOpen]
+    [disabled, isMultiple, onValueChange, selected, setIsOpen, value, onPress]
   )
 
   const isSelected = React.useMemo(() => {
@@ -200,6 +203,10 @@ function SelectItem<TValue>({
   return (
     <Button
       data-slot='select-item'
+      accessibilityRole='button'
+      accessibilityState={{ selected: isSelected, disabled }}
+      aria-disabled={disabled}
+      disabled={disabled}
       variant='ghost'
       onPress={handlePress}
       className={cn('justify-between', isSelected && 'bg-accent', className)}

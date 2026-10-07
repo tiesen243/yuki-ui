@@ -1,6 +1,6 @@
 import '@/globals.css'
 
-import { DefaultTheme, Stack, ThemeProvider } from 'expo-router'
+import { DefaultTheme, ThemeProvider, Tabs } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { MoonIcon, SunIcon } from 'lucide-uniwind'
 import { useEffect } from 'react'
@@ -8,6 +8,8 @@ import { Uniwind, useCSSVariable, useUniwind } from 'uniwind'
 
 import { useGeistFonts } from '@/hooks/use-geist-font'
 import { Button } from '@/registry/native/button'
+
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
   const [fontLoaded, fontError] = useGeistFonts()
@@ -52,12 +54,13 @@ export default function RootLayout() {
         dark: colorscheme === 'dark',
       }}
     >
-      <Stack
+      <Tabs
         screenOptions={{
           headerRight: () => (
             <Button
               size='icon'
               variant='outline'
+              className='mr-4'
               onPress={() =>
                 Uniwind.setTheme(colorscheme === 'dark' ? 'light' : 'dark')
               }
@@ -71,8 +74,9 @@ export default function RootLayout() {
           ),
         }}
       >
-        <Stack.Screen name='index' options={{ title: 'Home' }} />
-      </Stack>
+        <Tabs.Screen name='index' options={{ title: 'Home' }} />
+        <Tabs.Screen name='expo-ui' options={{ title: 'Expo UI' }} />
+      </Tabs>
     </ThemeProvider>
   )
 }

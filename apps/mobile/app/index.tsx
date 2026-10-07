@@ -1,8 +1,11 @@
+import { ShoppingCartIcon } from 'lucide-uniwind'
 import { useState } from 'react'
 import { View } from 'react-native'
 
+import { Badge } from '@/registry/native/badge'
 import {
   BottomSheet,
+  BottomSheetClose,
   BottomSheetContent,
   BottomSheetDescription,
   BottomSheetFooter,
@@ -11,8 +14,10 @@ import {
   BottomSheetTrigger,
 } from '@/registry/native/bottom-sheet'
 import { Button } from '@/registry/native/button'
+import { Checkbox } from '@/registry/native/checkbox'
 import { Field, FieldLabel, FieldSet } from '@/registry/native/field'
 import { Input } from '@/registry/native/input'
+import { RadioGroup, RadioGroupItem } from '@/registry/native/radio-group'
 import {
   Select,
   SelectContent,
@@ -22,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/registry/native/select'
+import { Switch } from '@/registry/native/switch'
 import { Typography } from '@/registry/native/typography'
 
 const OPTIONS = Array.from({ length: 5 }, (_, i) => ({
@@ -54,33 +60,53 @@ export default function IndexScreen() {
               This is a description of the bottom sheet. You can put any content
               you want here, such as text, images, or other components.
             </BottomSheetDescription>
+
+            <Badge className='absolute top-4 right-4'>
+              <ShoppingCartIcon className='size-3.5 shrink-0 text-primary-foreground' />
+              <Typography>Add to Cart</Typography>
+            </Badge>
           </BottomSheetHeader>
 
           <FieldSet className='p-4'>
             <Field>
-              <FieldLabel>First Name</FieldLabel>
-              <Input placeholder='Enter your first name' />
+              <FieldLabel>Name</FieldLabel>
+              <Input placeholder='Enter your name' />
             </Field>
 
             <Field>
-              <FieldLabel>Last Name</FieldLabel>
-              <Input placeholder='Enter your last name' />
+              <FieldLabel>Gender</FieldLabel>
+              <RadioGroup>
+                <RadioGroupItem value='male'>
+                  <Typography>Male</Typography>
+                </RadioGroupItem>
+                <RadioGroupItem value='female'>
+                  <Typography>Female</Typography>
+                </RadioGroupItem>
+                <RadioGroupItem value='other'>
+                  <Typography>Other</Typography>
+                </RadioGroupItem>
+              </RadioGroup>
             </Field>
 
             <Field>
-              <FieldLabel>Email</FieldLabel>
-              <Input
-                placeholder='Enter your email'
-                keyboardType='email-address'
-              />
+              <FieldLabel>Gay</FieldLabel>
+              <Switch />
+            </Field>
+
+            <Field>
+              <FieldLabel>Hobbies</FieldLabel>
+
+              {['Reading', 'Traveling', 'Cooking'].map((hobby) => (
+                <Checkbox key={hobby}>
+                  <Typography>{hobby}</Typography>
+                </Checkbox>
+              ))}
             </Field>
           </FieldSet>
 
           <BottomSheetFooter>
             <Button onPress={() => setIsOpen(false)}>Confirm</Button>
-            <Button variant='outline' onPress={() => setIsOpen(false)}>
-              Cancel
-            </Button>
+            <BottomSheetClose>Cancel</BottomSheetClose>
           </BottomSheetFooter>
         </BottomSheetContent>
       </BottomSheet>

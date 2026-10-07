@@ -1,55 +1,49 @@
-import type { GestureResponderEvent } from 'react-native'
-
 import { CheckIcon } from 'lucide-uniwind'
 import * as React from 'react'
-import { Pressable, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 
 import { cn } from '@/lib/utils'
-import { Typography } from '@/registry/native/typography'
-
-interface CheckboxProps extends Omit<
-  React.ComponentProps<typeof Pressable>,
-  'children'
-> {
-  label?: React.ReactNode
-
-  checked?: boolean
-  defaultChecked?: boolean
-  onCheckedChange?: (checked: boolean) => void
-}
 
 function Checkbox({
   className,
-  label,
-  checked: checkedProp,
-  defaultChecked = false,
+  checked: _checked = false,
   onCheckedChange,
   disabled = false,
+  activeOpacity = 0.8,
+  onPress,
+  children,
   ...props
-}: CheckboxProps) {
-  const [internalChecked, setInternalChecked] = React.useState(defaultChecked)
+}: React.ComponentProps<typeof TouchableOpacity> & {
+  checked?: boolean
+  onCheckedChange?: (checked: boolean) => void
+}) {
+  const [localChecked, setLocalChecked] = React.useState(_checked)
 
-  const isControlled = checkedProp !== undefined
-  const checked = isControlled ? checkedProp : internalChecked
+  const isControlled = _checked !== undefined && onCheckedChange !== undefined
+  const checked = isControlled ? _checked : localChecked
 
-  const handlePress = (e: GestureResponderEvent) => {
-    if (disabled) return
+  const handlePress = React.useCallback(
+    (event: Parameters<NonNullable<typeof onPress>>[0]) => {
+      if (disabled) return
 
-    const nextChecked = !checked
-    if (!isControlled) setInternalChecked(nextChecked)
-    onCheckedChange?.(nextChecked)
-    props.onPress?.(e)
-  }
+      if (!isControlled) setLocalChecked(!checked)
+      onCheckedChange?.(!checked)
+
+      onPress?.(event)
+    },
+    [checked, disabled, isControlled, onCheckedChange, onPress]
+  )
 
   return (
-    <Pressable
+    <TouchableOpacity
       data-slot='checkbox'
       accessibilityRole='checkbox'
-      accessibilityState={{ checked, disabled: disabled ?? false }}
+      accessibilityState={{ checked, disabled }}
       aria-checked={checked}
-      aria-disabled={disabled ?? false}
+      aria-disabled={disabled}
       disabled={disabled}
       onPress={handlePress}
+      activeOpacity={activeOpacity}
       className={cn(
         'flex-row items-center gap-2',
         disabled && 'opacity-50',
@@ -60,29 +54,17 @@ function Checkbox({
       <View
         data-slot='checkbox-box'
         className={cn(
-          'flex size-5 shrink-0 items-center justify-center rounded-md border border-input bg-background transition-colors',
+          'flex size-5 shrink-0 items-center justify-center rounded-sm border border-border bg-transparent transition-colors',
           checked && 'border-primary bg-primary text-primary-foreground'
         )}
       >
         {checked && (
-          <View
-            data-slot='checkbox-indicator'
-            className='items-center justify-center'
-          >
-            <CheckIcon className='size-4 text-primary-foreground' />
-          </View>
+          <CheckIcon className='size-4 shrink-0 text-primary-foreground' />
         )}
       </View>
 
-      {label &&
-        (typeof label === 'string' ? (
-          <Typography className='text-sm font-medium text-foreground select-none'>
-            {label}
-          </Typography>
-        ) : (
-          label
-        ))}
-    </Pressable>
+      {children}
+    </TouchableOpacity>
   )
 }
 

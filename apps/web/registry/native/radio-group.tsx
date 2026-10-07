@@ -1,39 +1,37 @@
-import type { GestureResponderEvent } from 'react-native'
-
 import * as React from 'react'
-import { Pressable, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 
 import { cn } from '@/lib/utils'
 
 interface RadioGroupContextValue {
   value: string
   onValueChange: (value: string) => void
-  disabled: boolean
 }
 
 const RadioGroupContext = React.createContext<RadioGroupContextValue | null>(
   null
 )
 
-interface RadioGroupProps extends React.ComponentProps<typeof View> {
-  value: string
-  onValueChange: (value: string) => void
-  defaultValue?: string
-  disabled?: boolean
+const useRadioGroupContext = () => {
+  const context = React.use(RadioGroupContext)
+  if (!context)
+    throw new Error('RadioGroup components must be wrapped in <RadioGroup />')
+  return context
 }
 
 function RadioGroup({
   className,
   value: valueProp,
-  defaultValue,
   onValueChange,
-  disabled = false,
   children,
   ...props
-}: RadioGroupProps) {
-  const [internalValue, setInternalValue] = React.useState(defaultValue ?? '')
+}: React.ComponentProps<typeof View> & {
+  value?: string
+  onValueChange?: (value: string) => void
+}) {
+  const [internalValue, setInternalValue] = React.useState(valueProp ?? '')
 
-  const isControlled = valueProp !== undefined
+  const isControlled = valueProp !== undefined && onValueChange !== undefined
   const value = isControlled ? valueProp : internalValue
 
   const handleValueChange = React.useCallback(
@@ -45,12 +43,12 @@ function RadioGroup({
   )
 
   const memoizedValue = React.useMemo(
-    () => ({ value, onValueChange: handleValueChange, disabled }),
-    [value, handleValueChange, disabled]
+    () => ({ value, onValueChange: handleValueChange }),
+    [value, handleValueChange]
   )
 
   return (
-    <RadioGroupContext.Provider value={memoizedValue}>
+    <RadioGroupContext value={memoizedValue}>
       <View
         data-slot='radio-group'
         accessibilityRole='radiogroup'
@@ -59,37 +57,36 @@ function RadioGroup({
       >
         {children}
       </View>
-    </RadioGroupContext.Provider>
+    </RadioGroupContext>
   )
-}
-
-interface RadioGroupItemProps extends React.ComponentProps<typeof Pressable> {
-  value: string
-  disabled?: boolean
 }
 
 function RadioGroupItem({
   className,
   value: itemValue,
-  disabled: itemDisabled,
+  disabled = false,
+  activeOpacity = 0.8,
   onPress,
   children,
   ...props
-}: RadioGroupItemProps) {
-  const ctx = React.use(RadioGroupContext)
-  if (!ctx) throw new Error('RadioGroupItem must be used within a RadioGroup')
+}: React.ComponentProps<typeof TouchableOpacity> & {
+  value: string
+}) {
+  const { value, onValueChange } = useRadioGroupContext()
+  const checked = value === itemValue
 
-  const checked = ctx.value === itemValue
-  const disabled = itemDisabled ?? ctx.disabled
+  const handlePress = React.useCallback(
+    (event: Parameters<NonNullable<typeof onPress>>[0]) => {
+      if (disabled) return
 
-  const handlePress = (e: GestureResponderEvent) => {
-    if (disabled) return
-    ctx.onValueChange?.(itemValue)
-    onPress?.(e)
-  }
+      onValueChange(itemValue)
+      onPress?.(event)
+    },
+    [disabled, itemValue, onValueChange, onPress]
+  )
 
   return (
-    <Pressable
+    <TouchableOpacity
       data-slot='radio-group-item'
       accessibilityRole='radio'
       accessibilityState={{ checked, disabled }}
@@ -97,6 +94,7 @@ function RadioGroupItem({
       aria-disabled={disabled}
       disabled={disabled}
       onPress={handlePress}
+      activeOpacity={activeOpacity}
       className={cn(
         'flex flex-row items-center gap-2 py-1',
         disabled && 'opacity-50',
@@ -106,20 +104,20 @@ function RadioGroupItem({
     >
       <View
         className={cn(
-          'relative flex size-5 shrink-0 items-center justify-center rounded-full border border-input bg-background transition-colors',
-          checked && 'border-primary bg-primary'
+          'relative flex size-5 shrink-0 items-center justify-center rounded-full border border-border bg-transparent transition-colors',
+          checked && 'border-primary'
         )}
       >
         {checked && (
           <View
             data-slot='radio-group-indicator'
-            className='size-2 rounded-full bg-primary-foreground'
+            className='size-2 rounded-full bg-primary'
           />
         )}
       </View>
 
-      {children as React.ReactNode}
-    </Pressable>
+      {children}
+    </TouchableOpacity>
   )
 }
 
