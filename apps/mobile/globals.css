@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+@import 'uniwind';
+
+@import '../web/styles/theme.css';
+
+@source '../web/registry/native/*.tsx';
+@source '../web/components/ui/*.tsx';
+@source '../web/registry/ui/*.tsx';
+
+@theme {
+  --font-light: 'Geist-Light';
+  --font-normal: 'Geist-Regular';
+  --font-medium: 'Geist-Medium';
+  --font-semibold: 'Geist-SemiBold';
+  --font-bold: 'Geist-Bold';
+  --font-black: 'Geist-Black';
+}

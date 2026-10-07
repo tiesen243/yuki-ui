@@ -1,0 +1,71 @@
+---
+title: Bottom Sheet
+description: A native bottom-sheet style modal with animated presentation and swipe-to-close support.
+source: registry/native/bottom-sheet.tsx
+---
+
+Bottom Sheet provides a native modal surface with a trigger, content container, header, footer, title, and description. The content is presented as a bottom sheet and can be dismissed by tapping outside or swiping it down.
+
+> See the [shadcn/ui Drawer documentation](https://ui.shadcn.com/docs/components/base/drawer) for the web component API, concepts, and additional examples.
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-bottom-sheet' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-bottom-sheet' />
+
+## Usage
+
+```tsx
+import {
+  BottomSheet,
+  BottomSheetClose,
+  BottomSheetContent,
+  BottomSheetDescription,
+  BottomSheetFooter,
+  BottomSheetHeader,
+  BottomSheetTitle,
+  BottomSheetTrigger,
+} from '@/components/native/bottom-sheet'
+import { Button } from '@/components/native/button'
+
+;<BottomSheet>
+  <BottomSheetTrigger>Open bottom-sheet</BottomSheetTrigger>
+
+  <BottomSheetContent>
+    <BottomSheetHeader>
+      <BottomSheetTitle>Delete account?</BottomSheetTitle>
+      <BottomSheetDescription>
+        This action cannot be undone.
+      </BottomSheetDescription>
+    </BottomSheetHeader>
+
+    <BottomSheetFooter>
+      <Button variant='destructive' onPress={deleteAccount}>
+        Delete
+      </Button>
+    </BottomSheetFooter>
+  </BottomSheetContent>
+</BottomSheet>
+```
+
+### Controlled state
+
+Use `open` and `onOpenChange` when the bottom-sheet state needs to be controlled by the parent.
+
+```tsx
+const [open, setOpen] = useState(false)
+
+<BottomSheet open={open} onOpenChange={setOpen}>
+  <BottomSheetTrigger>Open</BottomSheetTrigger>
+  <BottomSheetContent>
+    <BottomSheetTitle>Settings</BottomSheetTitle>
+  </BottomSheetContent>
+</BottomSheet>
+```

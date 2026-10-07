@@ -1,0 +1,41 @@
+import { defineConfig } from 'oxfmt'
+
+export default defineConfig({
+  printWidth: 80,
+  tabWidth: 2,
+  arrowParens: 'always',
+  bracketSameLine: false,
+  bracketSpacing: true,
+  endOfLine: 'lf',
+  quoteProps: 'as-needed',
+  semi: false,
+  singleQuote: true,
+  jsxSingleQuote: true,
+  trailingComma: 'es5',
+  useTabs: false,
+
+  jsdoc: true,
+
+  sortImports: {
+    groups: [
+      'side_effect_style',
+      'type-import',
+      ['value-builtin', 'value-external'],
+      'type-internal',
+      'value-internal',
+      ['type-parent', 'type-sibling', 'type-index'],
+      ['value-parent', 'value-sibling', 'value-index'],
+    ],
+    newlinesBetween: true,
+    order: 'asc',
+  },
+
+  sortPackageJson: {
+    sortScripts: true,
+  },
+
+  sortTailwindcss: {
+    functions: ['clsx', 'cva', 'cn'],
+    stylesheet: './apps/web/styles/globals.css',
+  },
+})

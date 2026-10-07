@@ -21,6 +21,11 @@ next-env.d.ts
 routeTree.gen.ts
 app.config.timestamp_*.js
 
+# expo
+.expo/
+android/
+ios/
+
 # production
 __registry__/
 build/

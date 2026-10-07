@@ -1,96 +1,75 @@
-import type { Pressable } from 'react-native'
-
 import { CheckIcon, ChevronDownIcon } from 'lucide-uniwind'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 
 import { cn } from '@/lib/utils'
-import { Button } from '@/registry/native/button'
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/registry/native/dialog'
-import { Typography, TypographyContext } from '@/registry/native/typography'
+  BottomSheetContent,
+  BottomSheet,
+  BottomSheetTrigger,
+  BottomSheetHeader,
+  BottomSheetTitle,
+} from '@/registry/native/bottom-sheet'
+import { Button } from '@/registry/native/button'
+import { Typography } from '@/registry/native/typography'
 
-interface SelectContextValue<TMultiple extends boolean = false> {
-  open: boolean
-  setOpen: (open: boolean) => void
-  value?: TMultiple extends true ? string[] : string
-  onValueChange?: (value: TMultiple extends true ? string[] : string) => void
-  multiple?: TMultiple
+interface SelectContextValue<TValue, TMultiple extends boolean = false> {
+  value: TMultiple extends true ? TValue[] : TValue | null
+  onValueChange: (
+    value: TMultiple extends true ? TValue[] : TValue | null
+  ) => void
+  items: readonly { label: string; value: TValue }[]
+
+  isMultiple: TMultiple
+
+  isOpen: boolean
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const SelectContext = React.createContext<SelectContextValue | null>(null)
+const SelectContext = React.createContext<SelectContextValue<unknown> | null>(
+  null
+)
 
-const useSelectContext = () => {
-  const context = React.use(SelectContext)
+const useSelectContext = <TValue, TMultiple extends boolean = false>() => {
+  const context = React.useContext(
+    SelectContext as React.Context<SelectContextValue<TValue, TMultiple> | null>
+  )
   if (!context)
-    throw new Error('useSelectContext must be used within a SelectProvider')
+    throw new Error('Select components must be wrapped in <Select />')
   return context
 }
 
-type SelectProps<TMultiple extends boolean = false> = React.PropsWithChildren<{
-  value?: TMultiple extends true ? string[] : string
-  defaultValue?: TMultiple extends true ? string[] : string
-  onValueChange?: (value: TMultiple extends true ? string[] : string) => void
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  multiple?: TMultiple
-}>
+function Select<TValue, TMultiple extends boolean = false>(
+  props: Omit<
+    Partial<SelectContextValue<TValue, TMultiple>>,
+    'isMultiple' | 'isOpen' | 'setIsOpen'
+  > & {
+    multiple?: TMultiple
+    children: React.ReactNode
+  }
+) {
+  const { items, multiple: isMultiple = false } = props
 
-function Select<TMultiple extends boolean = false>({
-  children,
-  value: valueProp,
-  defaultValue,
-  onValueChange,
-  open: openProp,
-  onOpenChange,
-  multiple,
-}: SelectProps<TMultiple>) {
-  const [open, setOpen] = React.useState(openProp ?? false)
-  const [uncontrolledValue, setUncontrolledValue] = React.useState<
-    (TMultiple extends true ? string[] : string) | undefined
-  >(defaultValue)
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [localValue, setLocalValue] = React.useState<
+    TMultiple extends true ? TValue[] : TValue | null
+  >(props.value ?? ((isMultiple ? [] : null) as never))
 
-  const isControlled = valueProp !== undefined
-  const currentValue = isControlled ? valueProp : uncontrolledValue
+  const isControlled =
+    props.value !== undefined && props.onValueChange !== undefined
+  const value = isControlled ? props.value : localValue
+  const onValueChange = isControlled ? props.onValueChange : setLocalValue
 
-  const handleOpenChange = React.useCallback(
-    (newOpen: boolean) => {
-      setOpen(newOpen)
-      onOpenChange?.(newOpen)
-    },
-    [onOpenChange]
-  )
-
-  const handleValueChange = React.useCallback(
-    (newValue: TMultiple extends true ? string[] : string) => {
-      if (!isControlled) setUncontrolledValue(newValue)
-      onValueChange?.(newValue)
-    },
-    [isControlled, onValueChange]
-  )
-
-  const memoizedValue = React.useMemo(
-    () => ({
-      open,
-      setOpen: handleOpenChange,
-      value: currentValue,
-      onValueChange: handleValueChange,
-      multiple,
-    }),
-    [open, handleOpenChange, currentValue, handleValueChange, multiple]
+  const memoizedContextValue = React.useMemo(
+    () => ({ value, onValueChange, items, isMultiple, isOpen, setIsOpen }),
+    [value, onValueChange, items, isMultiple, isOpen, setIsOpen]
   ) as never
 
   return (
-    <SelectContext value={memoizedValue}>
-      <Dialog open={open} onOpenChange={handleOpenChange}>
-        {children}
-      </Dialog>
+    <SelectContext value={memoizedContextValue}>
+      <BottomSheet open={isOpen} onOpenChange={setIsOpen}>
+        {props.children}
+      </BottomSheet>
     </SelectContext>
   )
 }
@@ -98,182 +77,141 @@ function Select<TMultiple extends boolean = false>({
 function SelectTrigger({
   className,
   children,
-  invalid,
   ...props
-}: React.ComponentProps<typeof Pressable> & {
-  invalid?: boolean
-}) {
+}: React.ComponentProps<typeof BottomSheetTrigger>) {
   return (
-    <DialogTrigger
+    <BottomSheetTrigger
       data-slot='select-trigger'
-      className={cn(
-        'flex h-10 w-fit flex-row items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent py-2 pr-2 pl-2.5 outline-none select-none focus:border-ring focus:ring-3 focus:ring-ring/50 dark:bg-input/30 dark:active:bg-input/50',
-        invalid &&
-          'border-destructive ring-3 ring-destructive/20 dark:border-destructive/50 dark:ring-destructive/40',
-        className
-      )}
+      variant='outline'
+      className={cn('w-full justify-between', className)}
       {...props}
     >
-      <View className='flex-1 flex-row items-center'>
-        {children as React.ReactNode}
-      </View>
-      <ChevronDownIcon className='size-4 text-muted-foreground/60' />
-    </DialogTrigger>
+      {children as React.ReactNode}
+
+      <ChevronDownIcon className='size-4 shrink-0 text-muted-foreground' />
+    </BottomSheetTrigger>
   )
 }
 
-function SelectValue({
+function SelectValue<TValue, TMultiple extends boolean = false>({
   placeholder,
   className,
-  items,
   ...props
-}: React.ComponentProps<typeof Typography> & {
-  placeholder?: string
-  items?: Record<string, string> | { label: string; value: string }[]
-}) {
-  const { value, multiple } = useSelectContext()
+}: React.ComponentProps<typeof Typography> & { placeholder?: string }) {
+  const { value, items } = useSelectContext<TValue, TMultiple>()
 
-  const hasValue = multiple
-    ? Array.isArray(value) && value.length > 0
-    : Boolean(value)
+  const hasValue =
+    value === null ||
+    value === undefined ||
+    (Array.isArray(value) && value.length === 0)
 
-  const getLabel = (valKey: string) => {
-    if (!items) return valKey
+  const displayValue = React.useMemo(() => {
+    if (hasValue) return placeholder ?? 'Select an option'
 
-    if (Array.isArray(items)) {
-      const found = items.find((item) => item.value === valKey)
-      return found ? found.label : valKey
-    }
+    if (Array.isArray(value))
+      return value
+        .map((val) => items?.find((item) => item.value === val)?.label ?? val)
+        .join(', ')
 
-    return items[valKey] ?? valKey
-  }
-
-  const getDisplayValue = () => {
-    if (!hasValue) return placeholder
-
-    if (multiple && Array.isArray(value))
-      return value.map((v) => getLabel(v)).join(', ')
-
-    return getLabel(value as string)
-  }
+    return items?.find((item) => item.value === value)?.label ?? value
+  }, [hasValue, value, items, placeholder])
 
   return (
     <Typography
       data-slot='select-value'
+      className={cn('flex-1', hasValue && 'text-muted-foreground', className)}
       numberOfLines={1}
-      className={cn(
-        'text-sm',
-        hasValue ? 'font-normal text-foreground' : 'text-muted-foreground',
-        className
-      )}
       {...props}
     >
-      {getDisplayValue()}
+      {displayValue.toString()}
     </Typography>
   )
 }
 
 function SelectContent({
-  children,
-  className,
   title = 'Select an option',
-}: {
-  children: React.ReactNode
-  className?: string
+  children,
+  ...props
+}: React.ComponentProps<typeof BottomSheetContent> & {
   title?: string
 }) {
-  const { multiple, onValueChange } = useSelectContext()
+  const { isMultiple, onValueChange, setIsOpen } = useSelectContext()
 
   return (
-    <DialogContent className={cn('px-0', className)}>
-      <DialogHeader className='flex-row items-center justify-between border-b border-foreground/20 px-4 pb-3'>
-        <DialogTitle className='text-base font-semibold text-popover-foreground'>
-          {title}
-        </DialogTitle>
+    <BottomSheetContent data-slot='select-content' {...props}>
+      <BottomSheetHeader className='flex-row items-center'>
+        <BottomSheetTitle className='flex-1'>{title}</BottomSheetTitle>
 
-        <View className='flex-row items-center gap-1'>
-          {multiple && (
-            <Button
-              size='sm'
-              variant='ghost'
-              onPress={() => onValueChange?.([] as never)}
-            >
-              Clear
-            </Button>
-          )}
+        {isMultiple && (
+          <Button variant='ghost' size='xs' onPress={() => onValueChange([])}>
+            Clear
+          </Button>
+        )}
 
-          <DialogClose size='sm' variant='ghost'>
-            Done
-          </DialogClose>
-        </View>
-      </DialogHeader>
+        <Button variant='ghost' size='xs' onPress={() => setIsOpen(false)}>
+          Done
+        </Button>
+      </BottomSheetHeader>
 
-      <ScrollView
-        className='gap-y-1.5 px-4'
-        showsVerticalScrollIndicator={false}
-      >
-        {children}
+      <ScrollView contentContainerClassName='grow px-4 gap-y-1 py-2'>
+        {children as React.ReactNode}
       </ScrollView>
-    </DialogContent>
+    </BottomSheetContent>
   )
 }
 
-function SelectItem({
-  value: itemValue,
-  children,
+function SelectItem<TValue>({
+  value,
+  onPress,
   className,
-  disabled,
+  children,
   ...props
-}: React.ComponentProps<typeof Button> & {
-  value: string
-}) {
-  const { value, onValueChange, multiple, setOpen } = useSelectContext()
+}: React.ComponentProps<typeof Button> & { value: TValue }) {
+  const {
+    value: selected,
+    onValueChange,
+    isMultiple,
+    setIsOpen,
+  } = useSelectContext<TValue>()
 
-  const isSelected = multiple
-    ? Array.isArray(value) && value.includes(itemValue)
-    : value === itemValue
+  const handlePress = React.useCallback(
+    (event: Parameters<NonNullable<typeof onPress>>[0]) => {
+      onPress?.(event)
 
-  const handleSelect = React.useCallback(() => {
-    if (disabled) return
+      if (isMultiple) {
+        const newValue = (selected as TValue[])?.includes(value)
+          ? (selected as TValue[])?.filter((v) => v !== value)
+          : [...((selected as TValue[]) ?? []), value]
 
-    if (multiple) {
-      const currentValues = Array.isArray(value) ? [...value] : []
-      const nextValues = isSelected
-        ? currentValues.filter((v) => v !== itemValue)
-        : [...currentValues, itemValue]
-
-      onValueChange?.(nextValues as never)
-      return
-    }
-
-    onValueChange?.(itemValue as never)
-    setOpen(false)
-  }, [disabled, itemValue, isSelected, multiple, onValueChange, setOpen, value])
-
-  const selectTextClassName = cn(
-    'flex-1 text-sm font-normal text-popover-foreground',
-    isSelected && 'font-medium'
+        onValueChange?.(newValue as TValue)
+      } else {
+        onValueChange?.(value)
+        setIsOpen?.(false)
+      }
+    },
+    [onValueChange, isMultiple, selected, value, onPress, setIsOpen]
   )
+
+  const isSelected = React.useMemo(() => {
+    if (isMultiple) return (selected as TValue[])?.includes(value)
+    return selected === value
+  }, [isMultiple, selected, value])
 
   return (
     <Button
-      size='lg'
+      data-slot='select-item'
       variant='ghost'
-      disabled={disabled}
-      onPress={handleSelect}
-      className={cn('justify-between', isSelected && 'bg-accent/50', className)}
+      onPress={handlePress}
+      className={cn('justify-between', isSelected && 'bg-accent', className)}
       {...props}
     >
-      {typeof children === 'string' || typeof children === 'number' ? (
-        <Typography className={selectTextClassName} numberOfLines={1}>
-          {children}
-        </Typography>
-      ) : (
-        <TypographyContext value={selectTextClassName}>
-          {children as React.ReactNode}
-        </TypographyContext>
+      <Typography className={isSelected ? 'text-accent-foreground' : ''}>
+        {children as React.ReactNode}
+      </Typography>
+
+      {isSelected && (
+        <CheckIcon className='size-4 shrink-0 text-accent-foreground' />
       )}
-      {isSelected && <CheckIcon className='size-4 text-accent-foreground' />}
     </Button>
   )
 }
@@ -298,10 +236,7 @@ function SelectLabel({
   return (
     <Typography
       data-slot='select-label'
-      className={cn(
-        'px-3 py-1 text-xs font-semibold text-foreground',
-        className
-      )}
+      className={cn('py-1 text-xs font-semibold text-foreground', className)}
       {...props}
     />
   )

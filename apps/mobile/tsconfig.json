@@ -1,0 +1,20 @@
+{
+  "extends": "@yuki/tsconfig/base.json",
+  "compilerOptions": {
+    "jsx": "react-native",
+    "paths": {
+      "@/*": ["./*"],
+      "@/registry/native/*": ["../web/registry/native/*"],
+      "@/components/ui/*": ["../web/components/ui/*"],
+      "@/registry/ui/*": ["../web/registry/ui/*"],
+      "@/lib/utils": ["../web/lib/utils.ts"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "uniwind-types.d.ts"
+  ]
+}

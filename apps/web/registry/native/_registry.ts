@@ -34,6 +34,24 @@ export const registryNative = [
     ],
   },
   {
+    name: 'native-bottom-sheet',
+    type: 'registry:ui',
+    title: 'Bottom Sheet',
+    description:
+      'A bottom-sheet with drag, keyboard, and modal support for React Native.',
+    registryDependencies: [
+      `${getBaseUrl()}/r/native-button.json`,
+      `${getBaseUrl()}/r/native-typography.json`,
+    ],
+    files: [
+      {
+        type: 'registry:ui',
+        path: 'registry/native/bottom-sheet.tsx',
+        target: 'components/native/bottom-sheet.tsx',
+      },
+    ],
+  },
+  {
     name: 'native-button',
     type: 'registry:ui',
     title: 'Button',
@@ -77,24 +95,6 @@ export const registryNative = [
         type: 'registry:ui',
         path: 'registry/native/checkbox.tsx',
         target: 'components/native/checkbox.tsx',
-      },
-    ],
-  },
-  {
-    name: 'native-dialog',
-    type: 'registry:ui',
-    title: 'Dialog',
-    description:
-      'A bottom-sheet dialog with drag, keyboard, and modal support for React Native.',
-    registryDependencies: [
-      `${getBaseUrl()}/r/native-button.json`,
-      `${getBaseUrl()}/r/native-typography.json`,
-    ],
-    files: [
-      {
-        type: 'registry:ui',
-        path: 'registry/native/dialog.tsx',
-        target: 'components/native/dialog.tsx',
       },
     ],
   },
