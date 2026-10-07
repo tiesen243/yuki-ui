@@ -1,21 +1,12 @@
 ---
-title: Create ID
-description: A utility to generate CUID identifiers
+title: Custom ID Generator
+description: A utility to generate unique IDs similar to CUIDs
 source: lib/create-id.ts
 ---
 
-## CUID Generation
+`createId` generates compact, URL-safe identifiers with entropy from the current time, a counter, a runtime fingerprint, and random salt.
 
-This utility provides a simple way to generate CUID (Collision-resistant Unique Identifier) strings, which are useful for creating unique IDs in your applications.
-
-### Example Usage
-
-```ts
-import { createId } from '@/lib/create-id'
-
-const id1 = createId() // e.g., 'ckz5j0h3a0000l3rmn6i4v8xg'
-const id2 = createId() // e.g., 'ckz5j0h3b0001l3rmn7j9y1h'
-```
+It is intended for application identifiers where you want a short generated string without depending on a separate ID package.
 
 ## Installation
 
@@ -25,6 +16,46 @@ const id2 = createId() // e.g., 'ckz5j0h3b0001l3rmn7j9y1h'
 
 ### Manual
 
-Copy the following file into your project:
+Copy and paste the following code into your project.
 
 <ComponentSource comp='create-id' />
+
+## Usage
+
+```tsx
+import { createId } from '@/lib/create-id'
+
+const id = createId()
+
+console.log(id)
+// Example: c8f0g3...
+```
+
+The generated identifier always starts with `c` and is derived from multiple changing inputs rather than a single random call.
+
+## Randomness
+
+The generator uses `crypto.getRandomValues` when the runtime exposes it and falls back to `Math.random` when it does not.
+
+You can pass a custom random function for deterministic tests:
+
+```tsx
+const id = createId(() => 0.5)
+```
+
+A deterministic random function is useful only for tests; do not use one for production IDs.
+
+
+## API Reference
+
+### `createId`
+
+```ts
+function createId(rand?: () => number): string
+```
+
+| Parameter | Description |
+| --- | --- |
+| `rand` | Optional random source used by the generator. Defaults to the best available runtime random source. |
+
+The current implementation combines a base-36 timestamp, counter entropy, runtime fingerprint, and additional random salt before hashing with SHA3-512.

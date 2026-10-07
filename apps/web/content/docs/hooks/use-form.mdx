@@ -4,17 +4,9 @@ description: A custom React hook for form state management and validation
 source: hooks/use-form.tsx
 ---
 
-<Tabs items={['Preview', 'Code']}>
+`useForm` is a lightweight typed form state manager built around Standard Schema validation. It keeps field values in a ref, exposes a render-prop `Field`, and coordinates validation, submission, reset, and pending state.
 
-<Tab value='Preview'>
-  <PreviewComponent comp='use-form-demo' />
-</Tab>
-
-<Tab value='Code'>
-  <ComponentSource comp='use-form-demo' />
-</Tab>
-
-</Tabs>
+Unlike the Form Builder library, this hook is intentionally small and React-oriented. It is a good fit for regular DOM forms where you want schema validation without introducing a larger form abstraction.
 
 ## Installation
 
@@ -28,164 +20,126 @@ Copy and paste the following code into your project.
 
 <ComponentSource comp='use-form' />
 
-<Callout>
-**Note:**
-
-You also need to install the [Field
-components](https://ui.shadcn.com/docs/components/field) after installing the
-Form component.
-
-</Callout>
-
 ## Usage
 
-<Steps>
-
-<Step>
-Create a form schema
-
-Define your form validation schema using one of the supported validation libraries. This schema will validate your form data and provide type safety.
-
-<Tabs items={['Zod','Arktype','Valibot', 'Function']}>
-
-<Tab value="Zod">
-
-```ts
-import * as z from 'zod/v4'
-
-const formSchema = z.object({
-  name: z.string().min(1),
-})
-```
-
-</Tab>
-
-<Tab value="Arktype">
-
-```ts
-import { type } from 'arktype'
-
-const formSchema = type({
-  name: 'string>1',
-})
-```
-
-</Tab>
-
-<Tab value="Valibot">
-
-```ts
-import * as v from 'valibot'
-
-const formSchema = v.object({
-  name: v.pipe(v.string(), v.minLength(1)),
-})
-```
-
-</Tab>
-
-<Tab value="Function">
-
-```ts
-function formSchema(value: { name: string }) {
-  if (value.name.length < 1)
-    return { issues: [{ path: ['name'], message: 'Name is required' }] }
-  return { value }
-}
-```
-
-</Tab>
-
-</Tabs>
-
-</Step>
-
-<Step>
-Define a form
-
-Set up your form component using the `useForm` hook. Configure default values, attach your validation schema, and define the submit handler.
-
 ```tsx
-import { useForm } from '@/components/ui/form'
+import { useForm } from '@/hooks/use-form'
+import * as z from 'zod'
 
-export function MyForm() {
+const schema = z.object({
+  email: z.string().email(),
+})
+
+export function LoginForm() {
   const form = useForm({
-    defaultValues: { name: '' },
-    validator: formSchema,
-    onSubmit: (data) => {
-      console.log('Form submitted:', data)
+    defaultValues: { email: '' },
+    schema,
+    onSubmit: async (values) => {
+      console.log(values)
     },
-  })
-
-  return <form></form>
-}
-```
-
-</Step>
-
-<Step>
-Build your form UI
-
-Create the form structure with fields, labels, inputs, and validation messages. Use the form's Field component to handle state management and validation automatically.
-
-```tsx
-import { Button } from '@/components/ui/button'
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSet,
-} from '@/components/ui/field'
-import { useForm } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-
-export function MyForm() {
-  const form = useForm({
-    ...
   })
 
   return (
     <form onSubmit={form.handleSubmit}>
-      <FieldSet>
-        <FieldLegend>...</FieldLegend>
-        <FieldDescription>...</FieldDescription>
+      <form.Field
+        name='email'
+        render={({ field, meta }) => (
+          <>
+            <label htmlFor={field.id}>Email</label>
+            <input {...field} />
+            {meta.errors.map((error, index) => (
+              <p key={index}>{error.message}</p>
+            ))}
+          </>
+        )}
+      />
 
-        <FieldGroup>
-          <form.Field
-            name='name'
-            render={({ meta, field, state }) => (
-              <Field data-invalid={state.hasError}>
-                <FieldLabel htmlFor={meta.fieldId}>Name</FieldLabel>
-                <Input {...field} />
-                <FieldError id={meta.errorId} errors={state.errors} />
-              </Field>
-            )}
-          />
-
-          <Button type='submit' disabled={form.formState.isSubmitting}>
-            Submit
-          </Button>
-          <Button
-            type='reset'
-            variant='outline'
-            onClick={(e) => {
-              e.preventDefault()
-              form.reset()
-            }}
-            disabled={form.formState.isSubmitting}
-          >
-            Reset
-          </Button>
-        </FieldGroup>
-      </FieldSet>
+      <button type='submit' disabled={form.state.isPending}>
+        Submit
+      </button>
     </form>
   )
 }
 ```
 
-</Step>
+## Validation
 
-</Steps>
+The `schema` option accepts either a Standard Schema implementation or a function returning a Standard Schema result.
+
+Validation runs:
+
+- before `onSubmit`,
+- when a field loses focus after its value changed.
+
+Field errors are filtered by the field name from the issue path.
+
+## Field rendering
+
+The render callback receives `field` and `meta`:
+
+```ts
+{
+  field: {
+    id: string
+    name: TName
+    value: TValues[TName]
+    onChange: (valueOrEvent) => void
+    onBlur: () => void
+    form: string
+    'aria-describedby': string
+    'aria-invalid': boolean
+  },
+  meta: {
+    descriptionId: string
+    errorId: string
+    errors: StandardSchemaV1.Issue[]
+    isPending: boolean
+  }
+}
+```
+
+When passed a DOM change event, `onChange` maps checkboxes to booleans, number inputs to numbers, and other inputs to their string value.
+
+## Submission lifecycle
+
+`handleSubmit` prevents the browser default, validates the current values, invokes `onSubmit`, and then calls either `onSuccess` or `onError`.
+
+The returned `state` exposes the latest form values, result data, error, and transition state.
+
+## Reset
+
+```tsx
+form.reset()
+```
+
+Reset restores the original `defaultValues` and clears stored result/error state.
+
+
+## API Reference
+
+### `useForm`
+
+```ts
+useForm<TValues, TData, TError, TSchema, TResults>(options)
+```
+
+| Option | Description |
+| --- | --- |
+| `defaultValues` | Initial typed form values. |
+| `schema` | Standard Schema or validation function. |
+| `onSubmit` | Callback receiving validated values. May return a value or Promise. |
+| `onSuccess` | Optional callback for successful submission. |
+| `onError` | Optional callback for validation/submission failures. |
+
+Returns:
+
+| Property | Description |
+| --- | --- |
+| `formId` | Stable form identifier used by generated accessibility IDs. |
+| `Field` | Generic field render-prop component. |
+| `handleSubmit` | Submit handler for the native form element. |
+| `state.values` | Current form values. |
+| `state.data` | Last successful submission result. |
+| `state.error` | Last form error. |
+| `state.isPending` | React transition pending state. |
+| `reset` | Restores `defaultValues` and clears result/error state. |

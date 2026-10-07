@@ -1,8 +1,10 @@
 ---
 title: Toast
-description: Toast notifications built on Base UI with a simple imperative API.
-source: components/toast.tsx
+description: A toast notification system
+source: ui/toast.tsx
 ---
+
+`ToastProvider` is the web toast system built on Base UI's toast primitives. It owns toast rendering, positioning, timing, queue limits, swipe behavior, and the imperative `toast` helper.
 
 A lightweight toast notification system built on top of `@base-ui/react/toast`.
 
@@ -235,3 +237,30 @@ const toastManager = useToast()
 ```
 
 This is an alias of `ToastPrimitive.useToastManager`.
+
+## API Reference
+
+### `ToastProvider`
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `position` | `'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left'` | `'bottom-right'` |
+| `timeout` | `number` | `5000` |
+| `limit` | `number` | `3` |
+| `children` | `React.ReactNode` | — |
+
+### `toast`
+
+The exported helper exposes the Base UI toast manager plus semantic shortcuts:
+
+```ts
+toast.show(title, options?)
+toast.success(title, options?)
+toast.error(title, options?)
+toast.info(title, options?)
+toast.warning(title, options?)
+```
+
+### `useToast`
+
+Returns Base UI's toast manager hook for consumers that need direct access to the manager.

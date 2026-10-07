@@ -1,8 +1,10 @@
 ---
 title: Typography
-description: A semantic native typography component with shared variants and accessibility-aware heading metadata.
-source: registry/native/typography.tsx
+description: A typography component with semantic variants and consistent text styling.
+source: native/typography.tsx
 ---
+
+`Typography` is the React Native implementation shipped by the `native-typography` registry item. The component adapts the registry's web-facing composition to native primitives and touch-based interaction.
 
 The native `Typography` component provides a single text primitive for the native registry. It combines the project's shared typography variants with React Native's `Text` component and automatically applies accessibility semantics for headings.
 
@@ -28,6 +30,8 @@ Copy and paste the following code into your project.
 - Supports React Native `Text` props.
 - Supports inherited typography classes through `TypographyContext`.
 - Works with NativeWind/Uniwind `className` styling.
+
+> **Registry dependencies:** This component uses the shared web `typography` registry styles.
 
 ## Usage
 

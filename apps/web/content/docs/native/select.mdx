@@ -1,8 +1,10 @@
 ---
 title: Select
 description: A select component implemented as a native bottom-sheet picker, with single and multiple selection support.
-source: registry/native/select.tsx
+source: native/select.tsx
 ---
+
+`Select` is the React Native implementation shipped by the `native-select` registry item. The component adapts the registry's web-facing composition to native primitives and touch-based interaction.
 
 The native `Select` adapts the familiar shadcn select composition to React Native. Instead of a browser popover, the options are presented inside the native `BottomSheet` component.
 
@@ -31,6 +33,8 @@ Copy and paste the following code into your project.
 - Optional groups, labels, and separators.
 - Automatic selected-label rendering.
 - Clear and Done controls in multiple-selection mode.
+
+> **Registry dependencies:** This component composes `native-bottom-sheet`, `native-button`, and `native-typography`.
 
 ## Usage
 

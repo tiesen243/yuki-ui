@@ -1,64 +1,498 @@
 ---
 title: Database Concepts
-description: Understanding the database structure and table relationships for the authentication system
+description: Understand the data model, relationships, indexes, and adapter-specific schema used by the authentication system
 ---
 
-The authentication system uses a simplified three-table structure to manage users, authentication accounts, and sessions.
+The authentication system uses three core entities to persist authentication state:
 
-## Tables Overview
+- `User` stores the application's user profile.
+- `Account` links a user to an authentication provider.
+- `Session` stores server-side session state and its expiration.
 
-### User Table
+The authentication core talks to these entities through the `AuthAdapter` interface. This means the authentication logic does not depend on a particular database. The registry currently provides adapters for Drizzle ORM, Prisma, and Mongoose, while the base authentication package can also be used with a custom adapter.
 
-Stores core user information and profile data.
+## Data Model
 
-| Field      | Type         | Key      | Description                                              |
-| ---------- | ------------ | -------- | -------------------------------------------------------- |
-| id         | varchar(24)  | `PK`     | Unique identifier for each user                          |
-| name       | varchar(100) | `INDEX`  | User's display name (required)                           |
-| email      | varchar(255) | `UNIQUE` | User's email address (required for authentication)       |
-| image      | varchar(500) |          | URL to user's profile image                              |
-| created_at | timestamp    |          | Timestamp when user account was created (auto-set)       |
-| updated_at | timestamp    |          | Timestamp when user data was last updated (auto-updated) |
+At a high level, the relationship looks like this:
 
-**Primary Key:** id  
-**Unique Index:** email  
-**Index:** name
+```text
+                 ┌───────────────────┐
+                 │       User        │
+                 │───────────────────│
+                 │ id                │
+                 │ name              │
+                 │ email             │
+                 │ image             │
+                 │ createdAt         │
+                 │ updatedAt         │
+                 └─────────┬─────────┘
+                           │
+                 ┌─────────┴──────────┐
+                 │                    │
+              1  │                 1  │
+                 │                    │
+                 ▼                    ▼
+        ┌────────────────┐   ┌────────────────┐
+        │    Account     │   │    Session     │
+        │────────────────│   │────────────────│
+        │ userId         │   │ id             │
+        │ provider       │   │ userId         │
+        │ providerAcctId │   │ token          │
+        │ password       │   │ expiresAt      │
+        └────────────────┘   └────────────────┘
+```
 
-### Account Table
+A user can have multiple accounts and multiple sessions:
 
-Links users to their authentication providers (OAuth or credentials).
+```text
+User 1 ────── * Account
+User 1 ────── * Session
+```
 
-| Field      | Type         | Key           | Description                                                         |
-| ---------- | ------------ | ------------- | ------------------------------------------------------------------- |
-| user_id    | varchar(24)  | `FK`, `INDEX` | References users.id - the user this account belongs to              |
-| provider   | varchar(50)  |               | Authentication provider name (google, github, discord, credentials) |
-| account_id | varchar(100) |               | Unique account ID from the provider or email for credentials        |
-| password   | text         |               | Hashed password (only for credentials provider, null for OAuth)     |
+This separation is important. An `Account` represents how a user authenticates, while a `Session` represents an active authenticated session.
 
-**Primary Key:** id  
-**Foreign Key:** user_id references users.id with cascade delete  
-**Unique Index:** (provider, account_id)  
-**Index:** user_id
+## User
 
-### Session Table
+The `User` record contains the application's canonical identity and profile information.
 
-Manages user sessions for authentication state.
+| Field | Drizzle / SQL | Prisma | Description |
+| --- | --- | --- | --- |
+| `id` | `varchar(24)` | `String @db.VarChar(24)` | Primary key and internal user identifier. |
+| `name` | `varchar(100)` | `String @db.VarChar(100)` | Required display name. |
+| `email` | `varchar(255)` | `String @db.VarChar(255)` | Required email address. Unique in the relational schemas. |
+| `image` | `varchar(500)` nullable | `String? @db.VarChar(500)` | Optional profile image URL. |
+| `createdAt` | `timestamp` | `DateTime` | Time the user was created. |
+| `updatedAt` | `timestamp` | `DateTime` | Time the user was last updated. |
 
-| Field      | Type        | Key           | Description                                            |
-| ---------- | ----------- | ------------- | ------------------------------------------------------ |
-| id         | varchar(24) | `PK`          | Unique session row identifier                          |
-| user_id    | varchar(24) | `FK`, `INDEX` | References users.id - the user this session belongs to |
-| token      | varchar(64) |               | Unique session token identifying the session           |
-| expires_at | timestamp   |               | Timestamp when session expires                         |
+### Primary key
 
-**Primary Key:** id  
-**Foreign Key:** user_id references users.id with cascade delete  
-**Unique Index:** (id, token)  
-**Index:** user_id
+The user ID is the primary key and is referenced by both `Account` and `Session`.
+
+The Drizzle schema generates the ID through the shared `createId` utility:
+
+```ts
+id: t
+  .varchar({ length: 24 })
+  .$default(createId)
+  .primaryKey()
+```
+
+The Prisma schema uses a 24-character `cuid()` default:
+
+```prisma
+id String @id @db.VarChar(24) @default(cuid())
+```
+
+The Mongoose schema uses MongoDB's model identifier for the user document.
+
+### Email uniqueness
+
+Relational adapters treat email as unique:
+
+```text
+users_email_uq
+```
+
+For Drizzle, this is an explicit unique index. Prisma declares the same constraint with `@@unique([email])`. The Mongoose schema uses `unique: true` on the `email` field.
+
+This is an important application invariant: a single email should resolve to one user identity.
+
+### Timestamps
+
+`createdAt` is assigned when the user is created. `updatedAt` is updated by the adapter when the user changes.
+
+For Prisma, `updatedAt` is managed with `@updatedAt`. Drizzle initializes both values with `defaultNow()` and the adapter supplies the updated user data when a user is changed.
+
+## Account
+
+An `Account` connects a user with an authentication provider.
+
+This is the table that allows one user to have multiple authentication methods, for example:
+
+```text
+user@example.com
+├── google
+├── github
+└── credentials
+```
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `userId` | `varchar(24)` / relation | The user that owns the account. |
+| `provider` | `varchar(50)` | Provider identifier such as `google`, `github`, or `credentials`. |
+| `providerAccountId` | `varchar(100)` | The provider-specific account identifier. |
+| `password` | `text` / nullable | Password value used by credential-based accounts. Null for accounts that do not use a password. |
+
+### Provider identity
+
+The pair below uniquely identifies an external account:
+
+```text
+(provider, providerAccountId)
+```
+
+Drizzle enforces this with:
+
+```ts
+uniqueIndex('accounts_provider_account_id_uq_idx').on(
+  t.provider,
+  t.providerAccountId,
+)
+```
+
+Prisma models it as a composite primary key:
+
+```prisma
+@@id([provider, providerAccountId])
+```
+
+Mongoose creates a unique compound index:
+
+```ts
+AccountSchema.index(
+  { provider: 1, providerAccountId: 1 },
+  { unique: true },
+)
+```
+
+Do not replace this with a global unique constraint on `providerAccountId`. Provider account IDs are only unique within their provider.
+
+### User relationship
+
+Every account belongs to exactly one user.
+
+Relational adapters define a foreign key from `accounts.user_id` to `users.id` with cascading deletes.
+
+```text
+User
+  │
+  ├── Account (google)
+  ├── Account (github)
+  └── Account (credentials)
+```
+
+Deleting a user therefore removes the user's accounts in the relational adapters.
+
+### Password storage
+
+The `password` field is nullable because not every provider uses credentials.
+
+For OAuth accounts:
+
+```text
+password = null
+```
+
+For credential accounts:
+
+```text
+password = <stored credential value>
+```
+
+The authentication core is responsible for the credential semantics. The database layer only persists the value supplied through the adapter.
+
+## Session
+
+A `Session` represents an active authenticated session.
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `varchar(24)` | Primary session identifier. |
+| `userId` | `varchar(24)` / relation | User that owns the session. |
+| `token` | `varchar(64)` | Session token associated with the session. |
+| `expiresAt` | `timestamp` / `DateTime` | Time after which the session is no longer valid. |
+
+### Session ownership
+
+Every session belongs to exactly one user:
+
+```text
+User
+├── Session #1
+├── Session #2
+└── Session #3
+```
+
+This allows the same user to stay signed in across multiple devices or browser sessions.
+
+### Expiration
+
+`expiresAt` is the authoritative session expiration value stored with the session.
+
+The default authentication configuration in the registry uses a seven-day session lifetime:
+
+```ts
+session: {
+  expiresIn: 60 * 60 * 24 * 7,
+  expiresThreshold: 60 * 60 * 24,
+  accessTokenExpiresIn: 60 * 15,
+}
+```
+
+The database schema does not calculate the expiration time. The authentication layer decides when a session expires and persists that value through the adapter.
 
 ## Relationships
 
-- **User → Account**: One-to-Many (a user can have multiple auth methods: OAuth + credentials)
-- **User → Session**: One-to-Many (a user can have multiple active sessions across devices)
-- **Account → User**: Many-to-One (each account belongs to one user)
-- **Session → User**: Many-to-One (each session belongs to one user)
+### User → Account
+
+**One-to-many**
+
+A user can have zero or more accounts.
+
+```text
+User 1 ────── * Account
+```
+
+This makes account linking possible without creating duplicate user records.
+
+For example, the same user may be connected to:
+
+- Google
+- GitHub
+- Password credentials
+
+### User → Session
+
+**One-to-many**
+
+A user can have multiple active sessions.
+
+```text
+User 1 ────── * Session
+```
+
+This is useful for users who are signed in on multiple browsers or devices.
+
+### Account → User
+
+**Many-to-one**
+
+Each account belongs to one user through `userId`.
+
+### Session → User
+
+**Many-to-one**
+
+Each session belongs to one user through `userId`.
+
+## Indexes and Constraints
+
+The schemas intentionally add indexes for the lookup patterns used by the authentication adapter.
+
+### Users
+
+```text
+users.id
+    PRIMARY KEY
+
+users.email
+    UNIQUE
+
+users.name
+    INDEX
+```
+
+The email constraint protects the one-email-to-one-user invariant. The name index supports name-based lookups.
+
+### Accounts
+
+```text
+accounts.user_id
+    INDEX
+
+(accounts.provider, accounts.provider_account_id)
+    UNIQUE
+```
+
+The first index speeds up loading all accounts for a user. The compound unique constraint prevents the same provider account from being linked multiple times.
+
+### Sessions
+
+```text
+sessions.id
+    PRIMARY KEY
+
+sessions.user_id
+    INDEX
+
+(sessions.id, sessions.token)
+    UNIQUE
+```
+
+The user index supports user/session queries, while the composite constraint protects the relationship between a session ID and its stored token.
+
+## Adapter Implementations
+
+The same logical model is implemented differently depending on the database layer.
+
+### Drizzle
+
+The Drizzle adapter uses PostgreSQL tables and explicit foreign keys:
+
+```ts
+export const users = pgTable(/* ... */)
+export const accounts = pgTable(/* ... */)
+export const sessions = pgTable(/* ... */)
+```
+
+The corresponding adapter performs SQL operations such as:
+
+```ts
+db.insert(users)
+db.update(users)
+db.delete(users)
+
+db.insert(accounts)
+db.select().from(accounts)
+
+db.insert(sessions)
+db.update(sessions)
+db.delete(sessions)
+```
+
+Install the Drizzle authentication integration with:
+
+```bash
+npx shadcn@latest add auth-adapter-drizzle
+```
+
+This adds the authentication schema and adapter implementation to your project.
+
+### Prisma
+
+The Prisma integration models the same three entities as Prisma models:
+
+```prisma
+model User {
+  // ...
+  accounts Account[]
+  sessions Session[]
+}
+
+model Account {
+  // ...
+}
+
+model Session {
+  // ...
+}
+```
+
+The adapter delegates reads and writes directly to the generated Prisma client:
+
+```ts
+db.user.create(...)
+db.user.findUnique(...)
+db.account.findFirst(...)
+db.session.findUnique(...)
+```
+
+Install it with:
+
+```bash
+npx shadcn@latest add auth-adapter-prisma
+```
+
+After installing the schema, generate your Prisma client and run the migration workflow appropriate for your application.
+
+### Mongoose
+
+The Mongoose integration uses three MongoDB models:
+
+```ts
+User
+Account
+Session
+```
+
+Relationships use references:
+
+```ts
+userId: {
+  type: Schema.Types.ObjectId,
+  ref: 'User',
+}
+```
+
+The adapter uses Mongoose queries and population to resolve the related user when reading an account or session.
+
+Install it with:
+
+```bash
+npx shadcn@latest add auth-adapter-mongoose
+```
+
+## Custom Adapters
+
+The authentication core is adapter-driven, so you are not required to use one of the bundled database integrations.
+
+The adapter needs to implement operations for:
+
+```text
+User
+├── createUser
+├── getUser
+├── getUserByEmail
+├── getUserByAccount
+├── updateUser
+└── deleteUser
+
+Session
+├── createSession
+├── getSessionWithUser
+├── updateSession
+└── deleteSession
+
+Account
+├── getAccount
+└── createAccount
+```
+
+This lets you use another database or persistence layer without changing the higher-level authentication API.
+
+The important requirement is that your implementation preserves the same invariants:
+
+- user IDs must be stable and unique;
+- emails should be unique;
+- provider + provider account ID must identify one account;
+- every account and session must reference a valid user;
+- session expiration must be persisted accurately.
+
+## Deleting Users
+
+Relational schemas use cascade deletion for user-owned accounts and sessions.
+
+```text
+DELETE User
+   │
+   ├── DELETE Account records
+   └── DELETE Session records
+```
+
+Drizzle and Prisma explicitly configure the foreign keys with `onDelete: 'cascade'` / `onDelete: Cascade`.
+
+MongoDB does not receive the same SQL-level foreign-key constraint, so applications using the Mongoose adapter should account for orphaned account/session documents when implementing user deletion workflows.
+
+## Choosing an Adapter
+
+Use the database adapter that matches the database layer already used by your application:
+
+| Adapter | Database | Best fit |
+| --- | --- | --- |
+| Drizzle | PostgreSQL | Applications already using Drizzle ORM and SQL migrations. |
+| Prisma | PostgreSQL | Applications using Prisma's generated client and schema tooling. |
+| Mongoose | MongoDB | Applications using MongoDB and Mongoose models. |
+| Custom | Any | Applications using another database or persistence strategy. |
+
+The authentication API remains the same regardless of the adapter. Only the persistence implementation changes.
+
+## Next Steps
+
+After choosing an adapter, continue with the authentication setup:
+
+1. Install `auth` and the database adapter.
+2. Apply the generated schema to your database.
+3. Configure `adapter` in `server/auth/config.ts`.
+4. Configure `AUTH_SECRET` and your OAuth provider credentials.
+5. Register the authentication `handlers`.
+6. Use `auth`, `currentUser`, `signIn`, and `signOut` from the server API.

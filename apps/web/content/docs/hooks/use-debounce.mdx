@@ -4,17 +4,9 @@ description: A custom React hook for debouncing function calls
 source: hooks/use-debounce.ts
 ---
 
-<Tabs items={['Preview', 'Code']}>
+`useDebounce` returns a stable callback that postpones execution until no new call has occurred during the configured delay.
 
-<Tab value='Preview'>
-  <PreviewComponent comp='use-debounce-demo' />
-</Tab>
-
-<Tab value='Code'>
-  <ComponentSource comp='use-debounce-demo' />
-</Tab>
-
-</Tabs>
+Each invocation clears the previous timer before scheduling a new one. The callback and delay are captured with React's dependency model, so changing either produces a new debounced function.
 
 ## Installation
 
@@ -24,4 +16,66 @@ source: hooks/use-debounce.ts
 
 ### Manual
 
+Copy and paste the following code into your project.
+
 <ComponentSource comp='use-debounce' />
+
+## Usage
+
+```tsx
+import { useState } from 'react'
+
+import { useDebounce } from '@/hooks/use-debounce'
+
+export function SearchInput() {
+  const [query, setQuery] = useState('')
+
+  const search = useDebounce((value: string) => {
+    console.log('Searching for:', value)
+  }, 300)
+
+  return (
+    <input
+      value={query}
+      onChange={(event) => {
+        const value = event.target.value
+        setQuery(value)
+        search(value)
+      }}
+    />
+  )
+}
+```
+
+## Behavior
+
+`useDebounce` delays every call independently:
+
+```ts
+search('a')
+search('ab')
+search('abc')
+```
+
+Only the final call executes when the 300 ms delay completes, provided no newer call replaces it.
+
+The hook does not return a `cancel` method. If you need cancellation outside the next invocation, keep the behavior in your own effect or use a different abstraction.
+
+
+## API Reference
+
+### `useDebounce`
+
+```ts
+function useDebounce<T>(
+  callback: (...args: T[]) => void,
+  delay: number
+): (...args: T[]) => void
+```
+
+| Parameter | Description |
+| --- | --- |
+| `callback` | Function executed after the debounce window expires. |
+| `delay` | Delay in milliseconds. |
+
+The returned function accepts the same argument tuple as `callback`.

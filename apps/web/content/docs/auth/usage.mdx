@@ -1,188 +1,266 @@
 ---
-title: Usage
-description: How to use the authentication system in your Next.js application
+title: Authentication Usage
+description: Configure the authentication runtime, route handlers, providers, and client session state.
+source: auth/server/index.ts
 ---
 
-This guide explains how to use the authentication system in your Next.js application, including session retrieval, sign-in, sign-out, and usage in React components.
-
-## Get session data
-
-Use the `auth` function to retrieve the current session. This can be done in API routes or server components.
+The generated auth server exposes a small set of functions from `server/auth`:
 
 ```ts
-import { headers } from 'next/headers'
-
-import { auth, currentUser } from '@/server/auth'
-
-// In API Route
-const session = await auth({ headers: request.headers })
-// or in Next.js App Router
-const session = await auth({ headers: await headers() })
-//      ^ { user: User | null; expiresAt: Date }
-
-// Get the current user directly in API Route
-const user = await currentUser({ headers: request.headers })
-// or in Next.js App Router
-const user = await currentUser({ headers: await headers() })
+import {
+  auth,
+  currentUser,
+  handlers,
+  signIn,
+  signOut,
+  verifyAccessToken,
+} from '@/server/auth'
 ```
 
-## Sign in
+The `handlers` function is the HTTP entry point. The other functions are server helpers that can be used directly inside server-side application code.
 
-Call `signIn` with user credentials to authenticate and receive a token. Store the token in a secure, HTTP-only cookie.
+## Install
+
+### CLI
+
+<InstallComponent comp='auth' />
+
+### Manual
+
+<Steps>
+
+<Step>
+Install the React Query dependency:
+
+```package-install
+@tanstack/react-query
+```
+
+</Step>
+
+<Step>
+Copy the generated authentication registry block into your project:
+
+<ComponentSource comp='auth' />
+
+</Step>
+
+</Steps>
+
+## Route handling
+
+The auth handler expects requests under `/api/auth/*`.
+
+### GET routes
+
+| Route | Behavior |
+| --- | --- |
+| `/api/auth/session` | Returns the authenticated session or `401`. |
+| `/api/auth/current-user` | Returns the current user or `401`. |
+| `/api/auth/:provider` | Starts an OAuth flow. |
+| `/api/auth/:provider/callback` | Completes an OAuth flow. |
+
+### POST routes
+
+| Route | Behavior |
+| --- | --- |
+| `/api/auth/sign-in` | Verifies email/password credentials and creates a session. |
+| `/api/auth/sign-out` | Deletes the current refresh-token session. |
+| `/api/auth/refresh-token` | Creates a new access token for the current session. |
+
+The handler also responds to `OPTIONS` with `204` and returns `405` for unsupported methods.
+
+## Router integration
+
+The handler accepts a standard `Request` and returns a standard `Response`, so it can be mounted from frameworks that expose Web Fetch-compatible handlers.
 
 ```ts
-import { cookies } from 'next/headers'
-
-import { signIn } from '@/server/auth'
-
-const result = await signIn({ email, password })
-//     ^ { token: string; expiresAt: Date }
-
-// Store the token in a cookie for subsequent requests
-;(await cookies()).set('auth.token', result.token, {
-  path: '/',
-  httpOnly: true,
-  sameSite: 'lax',
-  secure: process.env.NODE_ENV === 'production',
-  expires: result.expiresAt,
-})
-```
-
-## Sign out
-
-Call `signOut` to invalidate the session and remove the authentication token.
-
-```ts
-import { cookies, headers } from 'next/headers'
-
-import { signOut } from '@/server/auth'
-
-await signOut({ headers: request.headers })
-// or in Next.js App Router
-await signOut({ headers: await headers() })
-
-// Clear the auth token cookie
-;(await cookies()).delete('auth.token')
-```
-
-## Use in React components
-
-Use the `useSession` hook to access authentication state and actions in client components.
-
-```tsx
-'use client'
-
-import { useSession } from '@/hooks/use-session'
-
-export const UserProfile = () => {
-  const { status, session, signIn, signOut, refreshToken } = useSession()
-
-  if (status === 'loading') return <div>Loading...</div>
-  if (status === 'unauthenticated')
-    return <button onClick={() => signIn({ email, password })}>Sign In</button>
-
-  return (
-    <div>
-      <p>Welcome, {session.user.name}!</p>
-      <button onClick={() => signOut()}>Sign Out</button>
-      <button onClick={() => refreshToken()}>Refresh Token</button>
-    </div>
-  )
-}
-```
-
-## Using @tanstack/react-query for refreshing access tokens
-
-### With Next.js API Routes
-
-When using Next.js API routes, you can implement token refresh logic in your React Query hooks. For example, if you have a protected API route that requires authentication, you can handle token refresh in the `retry` option of `useQuery`.
-
-```ts title="app/api/protected-data/route.ts"
-import { verifyAccessToken } from '@/server/auth'
+import { handlers } from '@/server/auth'
 
 export async function GET(request: Request) {
-  const token =
-    request.cookies.get('auth.access_token')?.value ??
-    request.headers.get('Authorization')?.replace('Bearer ', '')
+  return handlers(request)
+}
 
-  const user = await verifyAccessToken(token)
-  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
-
-  return Response.json({ data: 'Protected data' })
+export async function POST(request: Request) {
+  return handlers(request)
 }
 ```
+
+Use framework-specific request adapters when the framework does not expose a native `Request`.
+
+## Authentication helpers
+
+### `auth`
+
+`auth({ headers })` resolves the refresh token from the configured cookie or a `Bearer` authorization header. It validates the hashed refresh secret and refreshes the session expiry when it is inside `expiresThreshold`.
+
+```ts
+const session = await auth({
+  headers: request.headers,
+})
+```
+
+The returned value has `token`, `user`, and `expiresAt`.
+
+### `currentUser`
+
+`currentUser({ headers })` reads the access token, verifies the JWT, and loads the user through the adapter.
+
+```ts
+const user = await currentUser({
+  headers: request.headers,
+})
+```
+
+### `verifyAccessToken`
+
+```ts
+const payload = await verifyAccessToken(accessToken)
+
+if (!payload) {
+  // invalid or expired token
+}
+```
+
+The result is `{ userId }` or `null`.
+
+## Credentials sign-in
+
+The password flow looks up a `credentials` account by email and verifies its stored password hash.
+
+```ts
+const session = await signIn({
+  email,
+  password,
+})
+```
+
+The returned object contains an access token, refresh token, and session expiry.
+
+## OAuth flow
+
+A provider request starts at:
+
+```text
+GET /api/auth/google
+```
+
+The server:
+
+1. Generates a random state and PKCE verifier.
+2. Stores them in short-lived cookies.
+3. Redirects to the provider.
+4. Verifies the returned state.
+5. Exchanges the code for provider data.
+6. Looks up the provider account or email.
+7. Creates the user/account when necessary.
+8. Creates a local session and redirects back.
+
+The providers that support PKCE use S256 code challenges. Facebook uses the non-PKCE flow implemented by its provider.
+
+## Session configuration
+
+The default configuration in the registry is:
+
+```ts
+session: {
+  expiresIn: 60 * 60 * 24 * 7,
+  expiresThreshold: 60 * 60 * 24,
+  accessTokenExpiresIn: 60 * 15,
+}
+```
+
+These values are examples, not mandatory production defaults. Set a strong `AUTH_SECRET` and choose lifetimes appropriate for your application.
+
+## Client session
+
+`SessionProvider` uses React Query to fetch `/api/auth/current-user`.
 
 ```tsx
-import { useQuery } from '@tanstack/react-query'
+import { SessionProvider, useSession } from '@/hooks/use-session'
 
-useQuery({
-  queryKey: ['protectedData'],
-  queryFn: async () => {
-    const response = await fetch('/api/protected-data')
-    const json = await response.json()
-
-    if (response.status === 401) throw new Error(json.error ?? 'Unauthorized')
-    return response.json()
-  },
-  retry(failureCount, error) {
-    if (error.message === 'Unauthorized') {
-      fetch('/api/auth/refresh-token', { method: 'POST' })
-      return failureCount < 1
-    }
-
-    return failureCount < 3
-  },
-})
-```
-
-### With tRPC
-
-When using tRPC, you can implement token refresh logic in a custom link. This allows you to automatically attempt to refresh the token when an unauthorized error is encountered.
-
-```ts title="server/trpc.ts"
-import { initTRPC } from '@trpc/server'
-import { verifyAccessToken } from '@/server/auth'
-
-const createTRPCContext = async ({ headers }: { headers: Headers }) => {
-  const token =
-    headers.get('Authorization')?.replace('Bearer ', '') ??
-    headers
-      .get('Cookie')
-      ?.split(';')
-      .find((cookie) => cookie.trim().startsWith('auth.access_token='))
-      ?.split('=')[1]
-
-  const user = await verifyAccessToken(token)
-  return { user }
+function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <SessionProvider>
+      {children}
+    </SessionProvider>
+  )
 }
 
-const t = initTRPC.context<typeof createTRPCContext>().create()
+function AccountButton() {
+  const session = useSession()
 
-const protectedProcedure = t.procedure.use(({ ctx, meta, next }) => {
-  if (!ctx.user?.id) throw new TRPCError({ code: 'UNAUTHORIZED' })
-  return next({ ctx: { user: ctx.user } })
-})
+  if (session.status === 'loading') return <span>Loading...</span>
+  if (session.status === 'unauthenticated') return <button>Sign in</button>
+
+  return <span>{session.session.user.email}</span>
+}
 ```
 
-```ts title="trpc/client.ts"
-import { retryLink } from '@trpc/client'
+The provider also exposes `signIn`, `signOut`, and `refreshToken`. Successful mutations invalidate or update the current-user query.
 
-retryLink({
-  retry: ({ error, attempts }) => {
-    if (error.data?.code === 'UNAUTHORIZED') {
-      fetch(`${getBaseUrl()}/api/auth/refresh-token`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getSessionToken()}`,
-        },
-      })
+## API Reference
 
-      return attempts < 1 // Retry once for unauthorized errors after attempting token refresh
+### `createAuth(config)`
+
+Returns:
+
+```ts
+{
+  auth,
+  currentUser,
+  verifyAccessToken,
+  signIn,
+  signOut,
+  handlers,
+}
+```
+
+### `AuthConfig`
+
+```ts
+interface AuthConfig {
+  secret: string
+  adapter: AuthAdapter
+  providers: BaseProvider[]
+  session: {
+    expiresIn: number
+    expiresThreshold: number
+    accessTokenExpiresIn: number
+  }
+  cookies: {
+    keys: {
+      accessToken: string
+      refreshToken: string
+      state: string
+      codeVerifier: string
+      redirectUri: string
     }
+    options: {
+      Path: string
+      HttpOnly: boolean
+      Secure: boolean
+      SameSite: 'Lax' | 'Strict' | 'None'
+      Domain?: string
+      Expires?: Date | string
+      'Max-Age'?: number
+    }
+  }
+}
+```
 
-    return attempts < 3
-  },
-  retryDelayMs: (attempts) => Math.min(1000 * 2 ** attempts, 30000),
-})
+### `SessionProvider`
+
+```ts
+{ children: React.ReactNode }
+```
+
+### `useSession`
+
+Returns the current session state together with:
+
+```ts
+signIn(opts: { email: string; password: string })
+signOut()
+refreshToken()
 ```

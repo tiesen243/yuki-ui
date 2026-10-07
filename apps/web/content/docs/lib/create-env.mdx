@@ -1,50 +1,12 @@
 ---
-title: Create Env
+title: Environment Variables Validation
 description: A utility to validate environment variables using Zod
 source: lib/create-env.ts
 ---
 
-## Environment Variables Validation
+`createEnv` validates runtime environment variables against Standard Schema definitions and returns a typed environment object.
 
-This utility leverages Standard Schema to ensure your environment variables are correctly typed and present. It provides a simple API to define server and client variables, set defaults, and skip validation in specific scenarios (like CI or linting).
-
-### Example Usage
-
-```ts title="env.ts"
-import * as validator from 'zod'
-// or import { type as validator } from 'arktype'
-// or import { valibot as validator } from 'valibot'
-
-import { createEnv } from '@/lib/create-env'
-
-export const env = createEnv({
-  shared: {
-    NODE_ENV: validator.enum(['development', 'production', 'test']),
-    // NODE_ENV: validator("'development'|'production'|'test'") // arktype
-  },
-
-  server: {
-    SERVER_VAR: validator.string(),
-    // SERVER_VAR: validator('string') // arktype
-  },
-
-  clientPrefix: 'NEXT_PUBLIC_',
-  client: {
-    NEXT_PUBLIC_CLIENT_VAR: z.string(),
-    // NEXT_PUBLIC_CLIENT_VAR: validator('string') // arktype
-  },
-
-  runtimeEnv: {
-    ...process.env,
-    NEXT_PUBLIC_CLIENT_VAR: process.env.NEXT_PUBLIC_CLIENT_VAR,
-  },
-
-  emptyStringAsUndefined: true,
-
-  skipValidation:
-    !!process.env.CI || process.env.npm_lifecycle_event === 'lint',
-})
-```
+The utility separates shared, server-only, and client-only variables. On the client, attempts to read a declared server-only variable throw instead of silently exposing the value.
 
 ## Installation
 
@@ -57,17 +19,106 @@ export const env = createEnv({
 <Steps>
 
 <Step>
-Install the following dependencies:
+Install the required dependencies:
 
 ```package-install
-zod #or arktype, valibot or any other Standard Schema compatible library
+zod
 ```
 
 </Step>
 
 <Step>
-  Copy and paste the following code into your project.
-  <ComponentSource comp='create-env' />
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='create-env' />
+
 </Step>
 
 </Steps>
+
+## Usage
+
+```tsx
+import { z } from 'zod'
+
+import { createEnv } from '@/lib/create-env'
+
+export const env = createEnv({
+  server: {
+    DATABASE_URL: z.string().url(),
+    AUTH_SECRET: z.string().min(32),
+  },
+  clientPrefix: 'PUBLIC_',
+  client: {
+    PUBLIC_API_URL: z.string().url(),
+  },
+  shared: {
+    NODE_ENV: z.enum(['development', 'production', 'test']),
+  },
+  runtimeEnv: {
+    DATABASE_URL: process.env.DATABASE_URL,
+    AUTH_SECRET: process.env.AUTH_SECRET,
+    PUBLIC_API_URL: process.env.PUBLIC_API_URL,
+    NODE_ENV: process.env.NODE_ENV,
+  },
+})
+```
+
+## Server and client variables
+
+Server keys must not start with `clientPrefix`. Client keys must start with the configured prefix. This is enforced by the TypeScript types before runtime validation.
+
+## Runtime environment mapping
+
+Pass client variables explicitly in `runtimeEnv` rather than spreading the entire `process.env` object into browser code. This keeps server-only variables out of the client bundle.
+
+## Derived values
+
+Use `deriveEnv` to create values that depend on already validated variables:
+
+```tsx
+const env = createEnv({
+  shared: {
+    NODE_ENV: z.string(),
+  },
+  server: {},
+  clientPrefix: 'PUBLIC_',
+  client: {},
+  runtimeEnv: {
+    NODE_ENV: process.env.NODE_ENV,
+  },
+  deriveEnv: (env) => ({
+    IS_PRODUCTION: env.NODE_ENV === 'production',
+  }),
+})
+```
+
+## Empty strings and skipped validation
+
+`emptyStringAsUndefined` converts empty runtime values into `undefined` before validation. `skipValidation` bypasses validation but keeps the typed proxy.
+
+Use `skipValidation` sparingly; it removes the runtime guarantee that this utility is designed to provide.
+
+
+## API Reference
+
+### `createEnv`
+
+```ts
+createEnv(options): TResult & TDeriveEnv
+```
+
+| Option | Description |
+| --- | --- |
+| `isServer` | Override automatic server/client detection. Defaults to `typeof window === 'undefined'`. |
+| `shared` | Schemas available in both environments. |
+| `server` | Server-only schemas. |
+| `clientPrefix` | Required prefix for client variable names. |
+| `client` | Client-only schemas. |
+| `runtimeEnv` | Runtime values that are validated. |
+| `deriveEnv` | Optional function that derives extra values from validated env data. |
+| `emptyStringAsUndefined` | Converts `''` to `undefined` before validation. |
+| `skipValidation` | Skips runtime validation. |
+
+The returned object is a proxy. Reading a server-only key from the client throws an explicit error.

@@ -1,20 +1,12 @@
 ---
 title: useImmer
-description: A custom React hook for managing immutable state
+description: A custom React hook that integrates Immer for immutable state management
 source: hooks/use-immer.ts
 ---
 
-<Tabs items={['Preview', 'Code']}>
+`useImmer` provides an Immer-like mutation workflow without adding the Immer dependency. The hook clones the previous value with `structuredClone`, passes the clone to an updater, and stores the updated clone.
 
-<Tab value='Preview'>
-  <PreviewComponent comp='use-immer-demo' />
-</Tab>
-
-<Tab value='Code'>
-  <ComponentSource comp='use-immer-demo' />
-</Tab>
-
-</Tabs>
+`useImmerReducer` uses the same model for reducer-style updates.
 
 ## Installation
 
@@ -24,4 +16,81 @@ source: hooks/use-immer.ts
 
 ### Manual
 
+Copy and paste the following code into your project.
+
 <ComponentSource comp='use-immer' />
+
+## Usage
+
+```tsx
+import { useImmer } from '@/hooks/use-immer'
+
+export function Counter() {
+  const [state, updateState] = useImmer({
+    count: 0,
+    history: [] as number[],
+  })
+
+  return (
+    <button
+      onClick={() =>
+        updateState((draft) => {
+          draft.count += 1
+          draft.history.push(draft.count)
+        })
+      }
+    >
+      {state.count}
+    </button>
+  )
+}
+```
+
+## Nested data
+
+Because `structuredClone` creates a deep clone of the previous state, nested properties can be updated with normal assignment syntax.
+
+```tsx
+updateState((draft) => {
+  draft.profile.name = 'Tiến'
+  draft.preferences.darkMode = true
+})
+```
+
+The state must be cloneable by `structuredClone`.
+
+## `useImmerReducer`
+
+Use the reducer helper when updates are better expressed as actions:
+
+```tsx
+const [state, dispatch] = useImmerReducer(
+  (draft, action: 'increment' | 'decrement') => {
+    if (action === 'increment') draft.count += 1
+    else draft.count -= 1
+  },
+  { count: 0 }
+)
+```
+
+
+## API Reference
+
+### `useImmer`
+
+```ts
+function useImmer<T>(
+  initialValue: T
+): [T, (updater: (draft: T) => void) => void]
+```
+
+### `useImmerReducer`
+
+```ts
+function useImmerReducer<TValue, TAction>(
+  reducer: (draft: TValue, action: TAction) => void,
+  initialValue: TValue
+): [TValue, (action: TAction) => void]
+```
+
+Both helpers use `structuredClone` rather than the Immer package. Methods/classes or values that `structuredClone` cannot serialize are therefore not suitable as state values for these hooks.

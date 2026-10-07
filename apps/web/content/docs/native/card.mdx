@@ -1,8 +1,10 @@
 ---
 title: Card
 description: A set of components for grouping related content into a card layout.
-source: registry/native/card.tsx
+source: native/card.tsx
 ---
+
+`Card` is the React Native implementation shipped by the `native-card` registry item. The component adapts the registry's web-facing composition to native primitives and touch-based interaction.
 
 The native `Card` component is a composable surface for grouping related content. It mirrors the structure of the shadcn card while using React Native `View` and the native `Typography` component.
 
@@ -29,6 +31,8 @@ Copy and paste the following code into your project.
 - Uses native `View` and `Typography` components.
 - Applies a shared typography context to card content.
 - Every primitive accepts a `className` for customization.
+
+> **Registry dependencies:** This component depends on `native-typography`.
 
 ## Usage
 

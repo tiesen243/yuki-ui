@@ -1,8 +1,10 @@
 ---
 title: Nvim Statusline
-description: A customizable statusline component for Neovim, inspired by the nvim-lualine plugin.
+description: A customizable statusline component for Neovim, inspired by the nvim-lualine plugin
 source: ui/nvim-statusline.tsx
 ---
+
+`NvimStatusline` is a composable Neovim-inspired statusline for web applications. The provider owns the current editor mode and exposes it to the statusline sections so the same layout can react to `normal`, `visual`, `replace`, `insert`, `terminal`, and `command` modes.
 
 import '@/styles/nvim.css'
 
@@ -203,3 +205,35 @@ If you don't use sections B or Y, add this class to `NvimStatusline` to hide the
 ## References
 
 - [nvim-lualine/lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) - A blazing fast and easy to configure Neovim statusline plugin
+
+## API Reference
+
+### `NvimStatuslineProvider`
+
+```ts
+{
+  children: React.ReactNode
+}
+```
+
+Provides the mode state used by the statusline and its section components. The initial mode is `normal`.
+
+### `useNvimStatusline`
+
+```ts
+useNvimStatusline(): {
+  mode: 'normal' | 'visual' | 'replace' | 'insert' | 'terminal' | 'command'
+  modes: readonly ['normal', 'visual', 'replace', 'insert', 'terminal', 'command']
+  setMode: React.Dispatch<React.SetStateAction<Mode>>
+}
+```
+
+The hook throws when used outside `NvimStatuslineProvider`.
+
+### `NvimStatusline`
+
+Accepts Base UI `useRender` component props for a `footer`, including `render`, `className`, and standard footer props.
+
+### Section components
+
+`NvimStatuslineSectionA`, `B`, `C`, `X`, `Y`, `Z`, and `NvimStatuslineSectionSeparator` accept native HTML/SVG props appropriate to their rendered element.

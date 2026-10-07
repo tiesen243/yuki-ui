@@ -1,49 +1,44 @@
 ---
-title: Introduction
+title: Yuki UI Registry
+description: A registry of reusable authentication, UI, hook, library, and React Native components.
 ---
 
-Yuki UI is a collection of reusable components built on top of [shadcn/ui](https://ui.shadcn.com/) that follows a copy-paste methodology. Unlike traditional component libraries, Kaze UI components are meant to be copied directly into your project, giving you complete ownership and control over the code.
+Yuki UI is a shadcn-style registry for application-level utilities and components.
 
-## Philosophy
+The registry is split into focused categories so you can install only the pieces your project needs.
 
-Our library extends the shadcn/ui approach - instead of importing components from a package, you copy the source code directly into your project. This means:
+## Registry categories
 
-- **No version conflicts** - Components evolve with your project
-- **Full customization** - Modify components to fit your exact needs
-- **No dependency bloat** - Only include what you actually use
-- **Complete ownership** - The code is yours to adapt and maintain
+### Authentication
 
-## Getting Started
+The auth registry provides server authentication, OAuth providers, sessions, access/refresh tokens, and database adapters.
 
-Each component page includes:
+See [Authentication](./auth).
 
-1. A live preview to see the component in action
-2. Source code ready to copy into your project
-3. Installation instructions (CLI or manual copy-paste)
-4. Required dependencies
+### Components
 
-### Installation Methods
+Web UI components include the Markdown editor, Neovim-style statusline, Open Graph generator, skeleton loading state, toast system, and typography primitives.
 
-#### CLI Installation
+See the individual pages under `components/`.
 
-We provide installation through the shadcn CLI for quick addition of components:
+### Hooks
 
-<InstallComponent comp='{name}' />
+Reusable React hooks for debouncing, form state, immutable updates, and SSR-safe layout effects.
 
-#### Manual Installation
+See the individual pages under `hooks/`.
 
-Don't want to use the CLI? Each component page includes step-by-step instructions for manual installation.
+### Libraries
 
-## Technology Stack
+Utilities for environment validation, IDs, safe React contexts, cryptography, Effect-based environment validation, forms, and password hashing.
 
-Yuki UI is built with modern web technologies:
+See the individual pages under `lib/`.
 
-- **React** - Component-based UI development
-- **TypeScript** - Type-safe code with enhanced IDE support
-- **Tailwind CSS** - Utility-first styling
-- **shadcn/ui** - Foundational component architecture
-- **Base UI** - Unstyled UI components for building accessible user interfaces
+### React Native
 
-## Customization
+Native counterparts for common shadcn primitives, plus native-only components such as Bottom Sheet and Toast.
 
-Since you own the code, customization is unlimited. Each component uses Tailwind CSS and CSS variables, making theme adjustments straightforward and consistent.
+See the individual pages under `native/`.
+
+## Installation
+
+Every registry-backed page includes both CLI and manual installation instructions. Prefer the CLI when possible because it also resolves declared registry dependencies.

@@ -1,0 +1,59 @@
+---
+title: useIsomorphicLayoutEffect
+description: A custom React hook that behaves like useLayoutEffect on the client and useEffect on the server
+source: hooks/use-isomorphic-layout-effect.ts
+---
+
+`useIsomorphicLayoutEffect` selects `useLayoutEffect` in the browser and falls back to `useEffect` during server rendering.
+
+It is useful for libraries that need layout timing in a browser but must avoid the server-rendering warning caused by calling `useLayoutEffect` during SSR.
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='use-isomorphic-layout-effect' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='use-isomorphic-layout-effect' />
+
+## Usage
+
+```tsx
+import { useIsomorphicLayoutEffect } from '@/hooks/use-isomorphic-layout-effect'
+
+export function Measure() {
+  useIsomorphicLayoutEffect(() => {
+    // Read or update browser layout state.
+  }, [])
+
+  return null
+}
+```
+
+## Server rendering
+
+The selection happens when the module is evaluated:
+
+```ts
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect
+```
+
+On the server it behaves exactly like `useEffect`; in the browser it uses `useLayoutEffect`.
+
+
+## API Reference
+
+### `useIsomorphicLayoutEffect`
+
+The export is an alias with the same signature as React's effects:
+
+```ts
+const useIsomorphicLayoutEffect: typeof useEffect | typeof useLayoutEffect
+```
+
+Use it exactly as you would use `useLayoutEffect`.

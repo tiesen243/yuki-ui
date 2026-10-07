@@ -1,10 +1,12 @@
 ---
 title: Bottom Sheet
-description: A native bottom sheet with snap points, drag gestures, modal presentation, and composable header and footer content.
-source: registry/native/bottom-sheet.tsx
+description: A bottom-sheet with drag, keyboard, and modal support for React Native.
+source: native/bottom-sheet.tsx
 ---
 
-The native `BottomSheet` provides a modal surface that slides from the bottom of the screen. It supports controlled and uncontrolled open state, configurable snap points, drag-to-resize behavior, and swipe-to-dismiss gestures.
+`Bottom Sheet` is the React Native implementation shipped by the `native-bottom-sheet` registry item. The component adapts the registry's web-facing composition to native primitives and touch-based interaction.
+
+The native `BottomSheet` provides a modal surface that slides from the bottom of the screen. It supports controlled and uncontrolled open state, configurable snap points, animated opening and closing, drag-to-resize gestures on the header, and tap-outside dismissal.
 
 The component is intentionally composable. Use `BottomSheetTrigger` to open it, `BottomSheetContent` as the sheet surface, and the header, title, description, and footer components to structure the content.
 
@@ -28,6 +30,8 @@ Copy and paste the following code into your project.
 - Tap outside the sheet to dismiss it.
 - Native `Modal` presentation with transparent backdrop.
 - Dedicated trigger, close, header, title, description, and footer primitives.
+
+> **Registry dependencies:** This component depends on `native-button` and `native-typography`.
 
 ## Usage
 
@@ -161,3 +165,8 @@ Typography wrapper for the sheet title.
 ### BottomSheetDescription
 
 Typography wrapper for supporting sheet text.
+
+
+## Keyboard handling
+
+The current registry implementation does not automatically apply keyboard avoidance. When a sheet contains inputs, handle keyboard insets or keyboard-aware layout at the application level.

@@ -1,11 +1,14 @@
 ---
 title: Skeleton
-description: A versatile skeleton component that provides a visual placeholder for content while it is loading, enhancing user experience by indicating that data is being fetched or processed.
-source: components/skeleton.tsx
+description: A skeleton loading component
+source: ui/skeleton.tsx
 ---
 
-<Tabs items={['Preview', 'Code']}>
+`Skeleton` is a lightweight loading placeholder for web interfaces. It supports text, circular, and rectangular shapes and three animation modes.
 
+The component is presentation-only: it does not manage loading state. Render it conditionally while the real content is being fetched or prepared.
+
+<Tabs items={['Preview', 'Code']}>
 <Tab value='Preview'>
   <PreviewComponent comp='skeleton-demo' />
 </Tab>
@@ -13,7 +16,6 @@ source: components/skeleton.tsx
 <Tab value='Code'>
   <ComponentSource comp='skeleton-demo' />
 </Tab>
-
 </Tabs>
 
 ## Installation
@@ -24,64 +26,75 @@ source: components/skeleton.tsx
 
 ### Manual
 
-<Steps>
-
-<Step>
-Add the following CSS variables to your globals.css file:
-
-```css title="app/globals.css"
-@theme inline {
-  // ... 
-
-  @keyframes shimmer {
-    0% {
-      background-position: 200% 0;
-    }
-    100% {
-      background-position: -200% 0;
-    }
-  }
-}
-```
-
-</Step>
-
-<Step>
 Copy and paste the following code into your project.
 
 <ComponentSource comp='skeleton' />
-</Step>
-
-</Steps>
 
 ## Usage
 
-### Animation
+```tsx
+import { Skeleton } from '@/components/ui/skeleton'
 
-The `animation` prop controls the loading effect style of the skeleton. Choose the one that best fits your UI/UX pattern.
+export function ProfileSkeleton() {
+  return (
+    <div className='flex items-center gap-3'>
+      <Skeleton variant='circular' className='size-10' />
+      <div className='flex-1 space-y-2'>
+        <Skeleton variant='text' className='max-w-48' />
+        <Skeleton variant='text' className='max-w-32' />
+      </div>
+    </div>
+  )
+}
+```
+
+## Variants
+
+### `rectangular`
+
+The default shape for arbitrary blocks.
 
 ```tsx
-// Moving light streak effect, perfect for modern dashboards (default)
+<Skeleton variant='rectangular' className='h-32 w-full' />
+```
+
+### `circular`
+
+Keeps a square aspect ratio and uses a fully rounded shape.
+
+```tsx
+<Skeleton variant='circular' className='size-12' />
+```
+
+### `text`
+
+Uses a text-like inline element and stretches to the available width.
+
+```tsx
+<Skeleton variant='text' className='max-w-sm' />
+```
+
+## Animation
+
+The default animation is `shimmer`.
+
+```tsx
 <Skeleton animation='shimmer' />
-
-// Gentle opacity fading in and out, ideal for soft, non-distracting loading
 <Skeleton animation='pulse' />
-
-// Static solid background block without any animation
 <Skeleton animation='solid' />
 ```
 
-### Shapes
+Use `solid` when motion should be avoided.
 
-The `variant` prop adjusts the shape and sizing strategies of the skeleton to match the content being loaded.
+## API Reference
 
-```tsx
-// Automatically adapts to text layouts with fluid width and fixed height block placeholders
-<Skeleton variant='text' />
+### `Skeleton`
 
-// Ideal for square or rectangular blocks like cards, images, or banners
-<Skeleton variant='rectangular' />
+| Prop        | Type                                    | Default         |
+| ----------- | --------------------------------------- | --------------- |
+| `variant`   | `'text' \| 'circular' \| 'rectangular'` | `'rectangular'` |
+| `animation` | `'pulse' \| 'shimmer' \| 'solid'`       | `'shimmer'`     |
+| `className` | `string`                                | —               |
+| `...props`  | `React.HTMLAttributes<HTMLDivElement>`  | —               |
 
-// Creates a perfect circle layout, commonly used for avatars, profile pictures, or icon buttons
-<Skeleton variant='circular' />
-```
+The rendered element is a `span` for `text` and a `div` for `circular` and `rectangular` variants.

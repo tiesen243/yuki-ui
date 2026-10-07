@@ -1,8 +1,10 @@
 ---
 title: Avatar
-description: A composable avatar component for displaying profile images with a graceful fallback.
-source: registry/native/avatar.tsx
+description: A component for displaying user avatars with an image and fallback content.
+source: native/avatar.tsx
 ---
+
+`Avatar` is the React Native implementation shipped by the `native-avatar` registry item. The component adapts the registry's web-facing composition to native primitives and touch-based interaction.
 
 The native `Avatar` component provides a consistent circular container for profile images. It is composed of `Avatar`, `AvatarImage`, and `AvatarFallback`, allowing the fallback content to appear while an image is loading or when the image fails to load.
 
@@ -29,6 +31,8 @@ Copy and paste the following code into your project.
 - Images are clipped to the avatar shape.
 - Uses the native React Native `Image` and `View` primitives.
 - Provides an image accessibility role on the root avatar.
+
+> **Registry dependencies:** This component also installs `native-typography` through the registry dependency graph.
 
 ## Usage
 

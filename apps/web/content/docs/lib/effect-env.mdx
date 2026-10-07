@@ -1,0 +1,94 @@
+---
+title: Effect Environment Variables Validation
+description: A utility to validate environment variables using Effect Schema
+source: lib/effect-env.ts
+---
+
+`effectEnv` validates environment variables with Effect Schema instead of Standard Schema or Zod. It follows the same server/client separation model as `createEnv`, but its schema types come directly from `effect/Schema`.
+
+This utility is useful in applications that already use Effect and want environment validation to participate in the same schema system.
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='effect-env' />
+
+### Manual
+
+<Steps>
+
+<Step>
+Install the required dependencies:
+
+```package-install
+effect@rc
+```
+
+</Step>
+
+<Step>
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='effect-env' />
+
+</Step>
+
+</Steps>
+
+## Usage
+
+```tsx
+import * as Schema from 'effect/Schema'
+
+import { effectEnv } from '@/lib/effect-env'
+
+export const env = effectEnv({
+  clientPrefix: 'PUBLIC_',
+  shared: {
+    NODE_ENV: Schema.Literal('development', 'production'),
+  },
+  server: {
+    DATABASE_URL: Schema.String,
+  },
+  client: {
+    PUBLIC_API_URL: Schema.URL,
+  },
+})
+```
+
+## Prefix rules
+
+Server variables must not use the configured client prefix. Client variables must use the configured prefix and be uppercase.
+
+The constraints are enforced by the generic types as well as runtime validation.
+
+## Runtime values
+
+`runtimeEnv` defaults to `process.env`. Pass an explicit object when you need tighter control over which values are exposed to the client.
+
+## Skipping validation
+
+`skipValidation` is available for build or test environments where the runtime values are intentionally incomplete. In production, leaving validation enabled is strongly recommended.
+
+
+## API Reference
+
+### `effectEnv`
+
+```ts
+effectEnv<TPrefix, TShared, TServer, TClient>(options): TEnv
+```
+
+| Option | Description |
+| --- | --- |
+| `clientPrefix` | Required prefix for client variables. |
+| `shared` | Optional schemas shared across server and client. |
+| `server` | Server-only Effect schemas. |
+| `client` | Client-only Effect schemas. |
+| `runtimeEnv` | Optional runtime values; defaults to `process.env`. |
+| `isServer` | Override automatic environment detection. |
+| `skipValidation` | Skip runtime validation. |
+
+The returned object is a proxy that prevents server-only keys from being read on the client.

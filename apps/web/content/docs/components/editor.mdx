@@ -1,20 +1,12 @@
 ---
 title: Editor
-description: A React component that renders a Markdown editor with a live preview pane, allowing users to write and preview Markdown content in real-time.
+description: A markdown editor built with Marked.js
 source: ui/editor.tsx
 ---
 
-<Tabs items={['Preview', 'Code']}>
+`Editor` is a controlled Markdown editor with two composable views: `EditorInput` for authoring source text and `EditorPreview` for rendering the current Markdown value.
 
-<Tab value='Preview'>
-  <PreviewComponent comp='editor-demo' />
-</Tab>
-
-<Tab value='Code'>
-  <ComponentSource comp='editor-demo' />
-</Tab>
-
-</Tabs>
+The component keeps the Markdown value outside of the editor and exposes it through `value` and `onValueChange`. The preview is parsed with Marked.js using line breaks, so the same value can be edited and rendered without duplicating state.
 
 ## Installation
 
@@ -27,7 +19,7 @@ source: ui/editor.tsx
 <Steps>
 
 <Step>
-Install the following dependencies:
+Install the required dependencies:
 
 ```package-install
 marked
@@ -36,7 +28,8 @@ marked
 </Step>
 
 <Step>
-Copy and paste the following code into your project:
+
+Copy and paste the following code into your project.
 
 <ComponentSource comp='editor' />
 
@@ -46,25 +39,91 @@ Copy and paste the following code into your project:
 
 ## Usage
 
-1. Create state to hold the Markdown content:
+Use the editor as a controlled component.
+
+```tsx
+import { useState } from 'react'
+
+import {
+  Editor,
+  EditorInput,
+  EditorPreview,
+} from '@/components/ui/editor'
+
+export function MarkdownEditor() {
+  const [value, setValue] = useState('# Hello')
+
+  return (
+    <Editor value={value} onValueChange={setValue}>
+      <EditorInput />
+      <EditorPreview />
+    </Editor>
+  )
+}
+```
+
+`EditorInput` and `EditorPreview` consume the value from the parent `Editor` context. They should be rendered inside an `Editor`.
+
+## Input and preview
+
+The editor is intentionally split into two primitives:
+
+- `EditorInput` renders the textarea used to edit Markdown.
+- `EditorPreview` parses the current value and injects the resulting HTML into the preview pane.
+
+The preview is regenerated whenever `value` changes.
+
+## Parsing Markdown
+
+The parser is also exported as `parseContent`:
+
+```tsx
+import { parseContent } from '@/components/ui/editor'
+
+const html = parseContent('# Hello')
+```
+
+The parser uses Marked.js with `breaks: true`. Parse failures return the literal `Error parsing content` string in development-safe usage rather than throwing from the preview component.
+
+## Controlled state
+
+Do not maintain a second internal value when composing the editor. Keep a single source of truth in the parent:
 
 ```tsx
 const [markdown, setMarkdown] = useState('')
-```
 
-2. Render the `Editor` component and pass the Markdown content and change handler:
-
-```tsx
-<Editor value={markdown} onChange={setMarkdown}>
-  <EditorInput />
-  <EditorPreview />
+<Editor
+  value={markdown}
+  onValueChange={setMarkdown}
+>
+  ...
 </Editor>
 ```
 
-3. Parse the existing Markdown content to HTML:
+## API Reference
 
-```tsx
-const html = parseMarkdown(markdown)
+### `Editor`
 
-<div dangerouslySetInnerHTML={{ __html: html }} />
+| Prop | Type | Default |
+| --- | --- | --- |
+| `value` | `string` | required |
+| `onValueChange` | `(value: string) => unknown` | required |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<'div'>` | — |
+
+### `EditorInput`
+
+Accepts standard `div` props and renders the controlled Markdown textarea.
+
+### `EditorPreview`
+
+Accepts standard `div` props and renders the parsed Markdown HTML.
+
+### `parseContent`
+
+```ts
+function parseContent(content: string): string
 ```
+
+This is the exported alias of the internal `parseMarkdown` helper.

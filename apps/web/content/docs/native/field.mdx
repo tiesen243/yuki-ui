@@ -1,8 +1,10 @@
 ---
 title: Field
 description: A collection of components for building accessible form fields and field groups.
-source: registry/native/field.tsx
+source: native/field.tsx
 ---
+
+`Field` is the React Native implementation shipped by the `native-field` registry item. The component adapts the registry's web-facing composition to native primitives and touch-based interaction.
 
 The native `Field` collection provides the layout and supporting text needed to build structured forms. It separates field layout from the actual input control, making it possible to compose inputs, labels, descriptions, validation messages, and separators consistently.
 
@@ -30,6 +32,8 @@ Copy and paste the following code into your project.
 - Field groups for spacing multiple fields.
 - Optional separators with inline content.
 - Automatic deduplication of repeated validation messages.
+
+> **Registry dependencies:** This component depends on `native-separator` and `native-typography`.
 
 ## Usage
 

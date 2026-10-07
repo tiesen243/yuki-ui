@@ -1,11 +1,14 @@
 ---
 title: Typography
-description: A collection of typography components
-source: components/typography.tsx
+description: A simple typography component
+source: ui/typography.tsx
 ---
 
-<Tabs items={['Preview', 'Code']}>
+`Typography` is the shared text primitive for the web registry. It centralizes semantic text variants while still allowing the rendered element to be overridden with the `as` prop.
 
+The variant controls both styling and, by default, the element rendered to the DOM.
+
+<Tabs items={['Preview', 'Code']}>
 <Tab value='Preview'>
   <PreviewComponent comp='typography-demo' />
 </Tab>
@@ -13,7 +16,6 @@ source: components/typography.tsx
 <Tab value='Code'>
   <ComponentSource comp='typography-demo' />
 </Tab>
-
 </Tabs>
 
 ## Installation
@@ -24,17 +26,89 @@ source: components/typography.tsx
 
 ### Manual
 
+<Steps>
+
+<Step>
+Install the required dependencies:
+
+```package-install
+@base-ui/react
+```
+
+</Step>
+
+<Step>
+
 Copy and paste the following code into your project.
 
 <ComponentSource comp='typography' />
 
-## Features
+</Step>
 
-- **Heading**: A versatile heading component that supports multiple levels (h1-h6) with consistent styling.
-- **Paragraph**: A simple paragraph component that ensures consistent spacing and typography across your application.
-- **Text**: A basic text component for inline text elements, allowing for consistent font sizes
-  and styles.
-- **Responsive Design**: All typography components are designed to be responsive, ensuring they look great
-  on all screen sizes.
-- **Customizable**: Easily customize the typography components with additional props for styling and class names
-  to fit your design needs.
+</Steps>
+
+## Usage
+
+```tsx
+import { Typography } from '@/components/ui/typography'
+
+export function TypographyExample() {
+  return (
+    <div className='space-y-2'>
+      <Typography variant='h1'>Account settings</Typography>
+      <Typography>Update your profile and notification preferences.</Typography>
+    </div>
+  )
+}
+```
+
+## Variants
+
+The shared variant map contains headings, paragraph text, list styles, quotes, code, and captions:
+
+```tsx
+<Typography variant='h1'>Heading 1</Typography>
+<Typography variant='h2'>Heading 2</Typography>
+<Typography variant='h3'>Heading 3</Typography>
+<Typography variant='h4'>Heading 4</Typography>
+<Typography variant='p'>Paragraph</Typography>
+<Typography variant='small'>Small</Typography>
+<Typography variant='ul'>List</Typography>
+<Typography variant='ol'>Ordered list</Typography>
+<Typography variant='blockquote'>Quote</Typography>
+<Typography variant='code'>Code</Typography>
+<Typography variant='caption'>Caption</Typography>
+```
+
+## Changing the rendered element
+
+The component normally renders the element implied by `variant`. Use `as` when you need the styling of one variant with another semantic element:
+
+```tsx
+<Typography variant='h2' as='div'>
+  Non-heading layout text
+</Typography>
+```
+
+## Class merging
+
+`className` is merged after the variant classes, so local styles can override the base typography classes.
+
+## API Reference
+
+### `Typography`
+
+| Prop        | Type                                                                                                    | Default |
+| ----------- | ------------------------------------------------------------------------------------------------------- | ------- |
+| `variant`   | `'h1' \| 'h2' \| 'h3' \| 'h4' \| 'p' \| 'small' \| 'ul' \| 'ol' \| 'blockquote' \| 'code' \| 'caption'` | `'p'`   |
+| `as`        | `React.ElementType`                                                                                     | variant |
+| `className` | `string`                                                                                                | —       |
+| `...props`  | `React.ComponentProps<'p'>`                                                                             | —       |
+
+### `typographyVariants`
+
+The exported CVA helper used by `Typography`:
+
+```ts
+typographyVariants(props?: VariantProps<typeof typographyVariants>)
+```

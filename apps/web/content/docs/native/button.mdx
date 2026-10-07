@@ -1,8 +1,10 @@
 ---
 title: Button
 description: A pressable button component with variants and sizes.
-source: registry/native/button.tsx
+source: native/button.tsx
 ---
+
+`Button` is the React Native implementation shipped by the `native-button` registry item. The component adapts the registry's web-facing composition to native primitives and touch-based interaction.
 
 The native `Button` brings the shadcn button API to React Native using `Pressable`. It reuses the project's button variants and automatically wraps string children in the native `Typography` component.
 
@@ -29,6 +31,8 @@ Copy and paste the following code into your project.
 - Supports the shared button sizes.
 - String children automatically receive native typography styling.
 - Accepts all standard `Pressable` props such as `onPress`, `disabled`, and accessibility props.
+
+> **Registry dependencies:** This component depends on the web `button` registry component and `native-typography`.
 
 ## Usage
 

@@ -1,8 +1,10 @@
 ---
 title: Item
-description: A flexible list item component with media, content, actions, and supporting text.
-source: registry/native/item.tsx
+description: A flexible list item with media, content, actions, and supporting text.
+source: native/item.tsx
 ---
+
+`Item` is the React Native implementation shipped by the `native-item` registry item. The component adapts the registry's web-facing composition to native primitives and touch-based interaction.
 
 The native `Item` collection is designed for settings rows, menus, lists, and compact content blocks. It separates media, content, and actions so each part can be composed independently.
 
@@ -30,6 +32,8 @@ Copy and paste the following code into your project.
 - Optional header and footer rows.
 - List grouping and separators.
 - Built on native `View` and the project's `Typography` component.
+
+> **Registry dependencies:** This component depends on `native-separator` and `native-typography`.
 
 ## Usage
 

@@ -1,8 +1,10 @@
 ---
 title: Toast
 description: Toast notifications for React Native with an imperative API and swipe-to-dismiss gestures.
-source: registry/native/toast.tsx
+source: native/toast.tsx
 ---
+
+`Toast` is the React Native implementation shipped by the `native-toast` registry item. The component adapts the registry's web-facing composition to native primitives and touch-based interaction.
 
 The native `Toast` system provides lightweight, transient notifications without requiring a component instance at every call site. Mount `ToasterProvider` once near the root of the application, then use the exported `toast` API to create notifications.
 

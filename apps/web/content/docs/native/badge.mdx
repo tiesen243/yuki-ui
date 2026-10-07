@@ -1,8 +1,10 @@
 ---
 title: Badge
 description: A small status indicator for highlighting labels, states, and categories.
-source: registry/native/badge.tsx
+source: native/badge.tsx
 ---
+
+`Badge` is the React Native implementation shipped by the `native-badge` registry item. The component adapts the registry's web-facing composition to native primitives and touch-based interaction.
 
 The native `Badge` component is a compact label for status, category, metadata, or short actions. It uses the same variant system as the web badge while rendering with React Native primitives.
 
@@ -29,6 +31,8 @@ Copy and paste the following code into your project.
 - Automatically provides text styling to nested `Typography` content.
 - Supports disabled state and custom press opacity.
 - Accepts native `TouchableOpacity` props.
+
+> **Registry dependencies:** This component depends on the web `badge` registry component and `native-typography`.
 
 ## Usage
 

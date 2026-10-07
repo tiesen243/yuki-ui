@@ -1,0 +1,75 @@
+---
+title: Safe React Context
+description: A utility to create a safe React context with error handling
+source: lib/create-safe-context.ts
+---
+
+`createSafeContext` creates a React context together with a hook that fails loudly when called outside its provider.
+
+It is useful for compound components such as dialogs, selects, and field systems where child components should never silently receive a missing context.
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='create-safe-context' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='create-safe-context' />
+
+## Usage
+
+```tsx
+import { createSafeContext } from '@/lib/create-safe-context'
+
+const [useMenuContext, MenuContext] = createSafeContext<{
+  close: () => void
+}>()
+
+function MenuButton() {
+  const { close } = useMenuContext()
+
+  return <button onClick={close}>Close</button>
+}
+```
+
+A provider can supply the context with the returned `Context` object:
+
+```tsx
+<MenuContext value={{ close }}>
+  <MenuButton />
+</MenuContext>
+```
+
+Calling `useMenuContext` outside of the provider throws `useContext must be used within a Provider` by default.
+
+## Custom error message
+
+```tsx
+const [useAuthContext, AuthContext] = createSafeContext<AuthValue>(
+  'useAuthContext must be used within AuthProvider'
+)
+```
+
+
+## API Reference
+
+### `createSafeContext`
+
+```ts
+function createSafeContext<TValue>(
+  errorMessage?: string
+): readonly [
+  useSafeContext: () => TValue,
+  Context: React.Context<TValue | null>
+]
+```
+
+| Parameter | Default |
+| --- | --- |
+| `errorMessage` | `'useContext must be used within a Provider'` |
+
+The hook only succeeds when the context value is non-null.
