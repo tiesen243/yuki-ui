@@ -82,8 +82,8 @@ export const HeroSection: React.FC = () => (
     <Card className='overflow-hidden bg-card/80 shadow-2xl'>
       <CardHeader className='flex items-center justify-between gap-4 border-b'>
         <div className='flex items-center gap-3'>
-          <div className='rounded-lg border bg-muted'>
-            <Code2Icon />
+          <div className='flex size-8 items-center justify-center rounded-lg border bg-muted'>
+            <Code2Icon className='size-4 shrink-0' />
           </div>
           <div className='flex flex-col'>
             <Typography variant='h4' as='h2'>

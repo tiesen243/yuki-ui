@@ -102,7 +102,7 @@ export const ShowcaseSection: React.FC = () => (
 
       <div className='grid gap-4 sm:grid-cols-2'>
         {features.map((feature) => (
-          <div key={feature.title} className='flex gap-3'>
+          <div key={feature.title} className='flex items-baseline gap-3'>
             <feature.icon className='size-4 shrink-0' />
             <div className='flex flex-col gap-1'>
               <Typography variant='h4'>{feature.title}</Typography>
