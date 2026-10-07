@@ -1,18 +1,14 @@
 ---
 title: Avatar
-description: A composable React Native avatar with image loading, error handling, and a fallback.
-source: native/avatar.tsx
+description: A composable avatar component for displaying profile images with a graceful fallback.
+source: registry/native/avatar.tsx
 ---
 
-The `Avatar` component provides a consistent way to display a user's profile image or another visual identity. It manages image loading and error state for you and automatically switches to a fallback when the image cannot be displayed.
+The native `Avatar` component provides a consistent circular container for profile images. It is composed of `Avatar`, `AvatarImage`, and `AvatarFallback`, allowing the fallback content to appear while an image is loading or when the image fails to load.
 
-The component is composed from three primitives:
+The component manages image state internally. When an image successfully loads, the fallback is hidden. When the image cannot be loaded, the fallback remains visible.
 
-- `Avatar` - The root container that owns the image state.
-- `AvatarImage` - Renders the remote or local image.
-- `AvatarFallback` - Renders fallback content while the image is loading or when it fails.
-
-See the [shadcn/ui Avatar documentation](https://ui.shadcn.com/docs/components/base/avatar) for the original component API and additional examples.
+See the [shadcn/ui Avatar documentation](https://ui.shadcn.com/docs/components/base/avatar) for the web component API, concepts, and additional examples.
 
 ## Installation
 
@@ -26,9 +22,15 @@ Copy and paste the following code into your project.
 
 <ComponentSource comp='native-avatar' />
 
-## Usage
+## Features
 
-Use `Avatar` as the parent of `AvatarImage` and `AvatarFallback`.
+- Image loading state is tracked automatically.
+- Fallback content is shown before the image loads and after an image error.
+- Images are clipped to the avatar shape.
+- Uses the native React Native `Image` and `View` primitives.
+- Provides an image accessibility role on the root avatar.
+
+## Usage
 
 ```tsx
 import {
@@ -37,11 +39,11 @@ import {
   AvatarImage,
 } from '@/components/native/avatar'
 
-export function Example() {
+export function AvatarExample() {
   return (
     <Avatar>
       <AvatarImage
-        source={{ uri: 'https://example.com/avatar.jpg' }}
+        source={{ uri: 'https://i.pravatar.cc/160?img=12' }}
       />
       <AvatarFallback>JD</AvatarFallback>
     </Avatar>
@@ -49,112 +51,64 @@ export function Example() {
 }
 ```
 
-`AvatarFallback` is rendered until the image has loaded successfully. If the image emits an error, the fallback remains visible.
+## Fallback content
 
-### Local images
-
-The image component accepts the same `source` prop as React Native's `Image`.
+`AvatarFallback` is rendered until the image reports a successful load. This makes it safe to use the same composition for both remote and local images.
 
 ```tsx
 <Avatar>
-  <AvatarImage source={require('@/assets/avatar.png')} />
+  <AvatarImage source={{ uri: profile.avatarUrl }} />
   <AvatarFallback>JD</AvatarFallback>
 </Avatar>
 ```
 
-### Custom fallback content
+If `source` is missing or the image reports an error, `AvatarImage` renders nothing and the fallback remains visible.
 
-The fallback does not have to be a string. You can provide any React Native content.
+## Custom sizes and styles
 
-```tsx
-<Avatar>
-  <AvatarImage source={{ uri: user.avatar }} />
-  <AvatarFallback>
-    <Typography>JD</Typography>
-  </AvatarFallback>
-</Avatar>
-```
-
-### Custom size
-
-The default avatar is `size-10`. Override it with `className` when a different size is required.
+The native avatar defaults to a `size-10` circular container. Because the components accept native `View`/`Image` props and `className`, you can change the dimensions or appearance.
 
 ```tsx
 <Avatar className='size-12'>
-  <AvatarImage source={{ uri: user.avatar }} />
-  <AvatarFallback>JD</AvatarFallback>
+  <AvatarImage source={require('@/assets/avatar.png')} />
+  <AvatarFallback>TS</AvatarFallback>
 </Avatar>
 ```
 
-## Image loading behavior
+## API Reference
 
-The native implementation keeps two pieces of state:
+### Avatar
 
-- `isLoaded` - Set to `true` after the image fires `onLoad`.
-- `hasError` - Set to `true` after the image fires `onError`.
+The root container for an avatar.
 
-The fallback is hidden only when the image has loaded successfully and has not reported an error. This means an image that fails after being mounted will correctly reveal the fallback.
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
 
-You can still provide `onLoad` and `onError` handlers to `AvatarImage`. The native component updates its internal state first and then invokes your callback.
+### AvatarImage
 
-```tsx
-<Avatar>
-  <AvatarImage
-    source={{ uri: user.avatar }}
-    onLoad={() => console.log('Avatar loaded')}
-    onError={() => console.log('Avatar failed')}
-  />
-  <AvatarFallback>JD</AvatarFallback>
-</Avatar>
-```
+Displays the image when a source is available and no loading error has occurred.
 
-## Structure
+| Prop | Type | Default |
+| --- | --- | --- |
+| `source` | `ImageSourcePropType` | — |
+| `onLoad` | `ImageProps['onLoad']` | — |
+| `onError` | `ImageProps['onError']` | — |
+| `className` | `string` | — |
+| `...props` | `React.ComponentProps<typeof Image>` | — |
 
-The recommended structure is:
+`AvatarImage` must be rendered inside `Avatar`.
 
-```text
-Avatar
-├── AvatarImage
-└── AvatarFallback
-```
+### AvatarFallback
 
-`AvatarImage` and `AvatarFallback` must be descendants of `Avatar`. Both components consume the state provided by the root context.
+Displays fallback content while the image is loading or when the image fails.
 
-## API reference
+| Prop | Type | Default |
+| --- | --- | --- |
+| `children` | `React.ReactNode` | — |
+| `className` | `string` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
 
-### `Avatar`
-
-Accepts the standard React Native `View` props.
-
-| Prop | Description |
-| --- | --- |
-| `children` | Avatar image and fallback content. |
-| `className` | Tailwind/NativeWind classes applied to the root container. |
-| `...props` | Any supported `View` props. |
-
-### `AvatarImage`
-
-Accepts React Native `Image` props.
-
-| Prop | Description |
-| --- | --- |
-| `source` | Image source passed to React Native `Image`. |
-| `onLoad` | Called after the image successfully loads. |
-| `onError` | Called when the image fails to load. |
-| `className` | Additional classes applied to the image. |
-
-### `AvatarFallback`
-
-Accepts React Native `View` props.
-
-| Prop | Description |
-| --- | --- |
-| `children` | Text or custom fallback content. |
-| `className` | Additional classes applied to the fallback. |
-| `...props` | Any supported `View` props. |
-
-<Callout>
-
-`AvatarImage` and `AvatarFallback` must be used inside `Avatar`. They rely on the root context to determine whether the image is ready to be displayed.
-
-</Callout>
+`AvatarFallback` must be rendered inside `Avatar`.

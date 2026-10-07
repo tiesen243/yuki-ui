@@ -1,23 +1,14 @@
 ---
 title: Field
-description: Composable form primitives for labels, descriptions, errors, groups, and keyboard-aware layouts.
-source: native/field.tsx
+description: A collection of components for building accessible form fields and field groups.
+source: registry/native/field.tsx
 ---
 
-The native `Field` component is a collection of composable primitives for building accessible and consistent forms.
+The native `Field` collection provides the layout and supporting text needed to build structured forms. It separates field layout from the actual input control, making it possible to compose inputs, labels, descriptions, validation messages, and separators consistently.
 
-It provides layout and semantic building blocks for:
+`FieldSet` additionally provides a keyboard-aware scroll container for forms, while `FieldError` can derive its message content from an array of validation errors.
 
-- Field grouping and spacing.
-- Labels and supporting descriptions.
-- Horizontal and vertical field layouts.
-- Keyboard-aware scrolling.
-- Field separators and content regions.
-- Invalid/error presentation.
-
-The implementation is designed to work with other native form controls such as `Input`, `Checkbox`, `Switch`, and `RadioGroup`.
-
-See the [shadcn/ui Field documentation](https://ui.shadcn.com/docs/components/base/field) for the original component API and additional examples.
+See the [shadcn/ui Field documentation](https://ui.shadcn.com/docs/components/base/field) for the web component API, concepts, and additional examples.
 
 ## Installation
 
@@ -31,34 +22,44 @@ Copy and paste the following code into your project.
 
 <ComponentSource comp='native-field' />
 
-## Usage
+## Features
 
-A simple form can be composed from `FieldSet`, `FieldGroup`, `Field`, `FieldLabel`, and `FieldDescription`.
+- Vertical, horizontal, and responsive field layouts.
+- Field labels, titles, descriptions, and error messages.
+- Keyboard-aware `FieldSet` form container.
+- Field groups for spacing multiple fields.
+- Optional separators with inline content.
+- Automatic deduplication of repeated validation messages.
+
+## Usage
 
 ```tsx
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldSet,
 } from '@/components/native/field'
 import { Input } from '@/components/native/input'
 
-export function Example() {
+export function FieldExample() {
   return (
     <FieldSet>
       <FieldGroup>
         <Field>
           <FieldLabel>Email</FieldLabel>
-          <Input
-            placeholder='you@example.com'
-            keyboardType='email-address'
-            autoCapitalize='none'
-          />
+          <Input placeholder='name@example.com' />
           <FieldDescription>
-            We will never share your email.
+            We'll never share your email.
           </FieldDescription>
+        </Field>
+
+        <Field>
+          <FieldLabel>Password</FieldLabel>
+          <Input secureTextEntry />
+          <FieldError errors={[{ message: 'Password is required.' }]} />
         </Field>
       </FieldGroup>
     </FieldSet>
@@ -66,85 +67,9 @@ export function Example() {
 }
 ```
 
-### Horizontal fields
-
-Use the `orientation` prop when a field should place its label and control side by side.
-
-```tsx
-<Field orientation='horizontal'>
-  <FieldLabel>Username</FieldLabel>
-  <Input className='flex-1' placeholder='tiesen' />
-</Field>
-```
-
-### Field content
-
-Use `FieldContent` when the control needs a separate content region.
-
-```tsx
-<Field orientation='horizontal'>
-  <FieldLabel>
-    <Typography>Notifications</Typography>
-  </FieldLabel>
-
-  <FieldContent>
-    <Typography variant='small'>Enable push notifications.</Typography>
-    <Switch />
-  </FieldContent>
-</Field>
-```
-
-### Grouping multiple fields
-
-`FieldGroup` provides consistent spacing between fields.
-
-```tsx
-<FieldSet>
-  <FieldGroup>
-    <Field>
-      <FieldLabel>First name</FieldLabel>
-      <Input />
-    </Field>
-
-    <Field>
-      <FieldLabel>Last name</FieldLabel>
-      <Input />
-    </Field>
-  </FieldGroup>
-</FieldSet>
-```
-
-### Keyboard-aware forms
-
-`FieldSet` is backed by `KeyboardAvoidingView` and `ScrollView`. It is intended for forms where the keyboard can otherwise cover lower fields.
-
-```tsx
-<FieldSet>
-  <FieldGroup>
-    {/* many fields */}
-  </FieldGroup>
-</FieldSet>
-```
-
-The implementation uses `padding` behavior on iOS and `height` behavior on other platforms. It also enables `keyboardShouldPersistTaps='handled'`.
-
-## Layout primitives
-
-The field module contains several primitives:
-
-- `FieldSet` - Keyboard-aware scroll container.
-- `FieldLegend` - Legend/title text.
-- `FieldGroup` - Vertical collection of fields.
-- `Field` - Individual field container.
-- `FieldContent` - Flexible content region.
-- `FieldLabel` - Label text.
-- `FieldTitle` - Compact title text.
-- `FieldDescription` - Supporting/help text.
-- `FieldSeparator` - Separator between field sections.
-
 ## Orientation
 
-`Field` supports three orientations:
+`Field` supports three layout modes:
 
 ```tsx
 <Field orientation='vertical'>...</Field>
@@ -152,38 +77,87 @@ The field module contains several primitives:
 <Field orientation='responsive'>...</Field>
 ```
 
-`vertical` is the default and stacks the content. `horizontal` places the label and content in a row. `responsive` starts vertically and can adapt at the configured container breakpoint.
+Use `horizontal` for compact settings rows and `vertical` for standard mobile forms.
 
-## API reference
+## Field errors
 
-### `FieldSet`
+`FieldError` can render explicit children or derive content from an `errors` array.
 
-Extends React Native `ScrollView` props and adds `containerClassName`.
+```tsx
+<FieldError
+  errors={[
+    { message: 'Email is invalid.' },
+    { message: 'Email is invalid.' },
+    { message: 'Email is already registered.' },
+  ]}
+/>
+```
 
-| Prop | Description |
-| --- | --- |
-| `containerClassName` | Classes applied to the keyboard-aware outer container. |
-| `className` | Classes applied to the scroll content container. |
-| `...props` | React Native `ScrollView` props. |
+Duplicate messages are removed before rendering.
 
-### `Field`
+## Field separators
 
-| Prop | Default | Description |
+Use `FieldSeparator` to visually divide groups of controls. Optional children are rendered as a label over the separator.
+
+```tsx
+<FieldSeparator>Or continue with</FieldSeparator>
+```
+
+## Keyboard-aware forms
+
+`FieldSet` is backed by a React Native `ScrollView` and `KeyboardAvoidingView`. This is useful for forms where the keyboard would otherwise cover lower fields.
+
+## API Reference
+
+### FieldSet
+
+A keyboard-aware scroll container.
+
+| Prop | Type | Default |
 | --- | --- | --- |
-| `orientation` | `vertical` | Field layout direction. |
-| `className` | — | Additional classes. |
-| `...props` | — | React Native `View` props. |
+| `containerClassName` | `string` | — |
+| `className` | `string` | — |
+| `...props` | `React.ComponentProps<typeof ScrollView>` | — |
 
-### Text primitives
+### Field
 
-`FieldLegend`, `FieldLabel`, `FieldTitle`, and `FieldDescription` extend native `Typography` props, excluding the `variant` prop where appropriate.
+| Prop | Type | Default |
+| --- | --- | --- |
+| `orientation` | `"vertical" \| "horizontal" \| "responsive"` | `"vertical"` |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
 
-### `FieldGroup` and `FieldContent`
+### FieldContent
 
-Both extend React Native `View` props.
+A flex container for the main field content.
 
-<Callout>
+### FieldLabel
 
-Use `FieldSet` as the outer container for long forms. It provides keyboard-aware scrolling so fields remain usable when the software keyboard is open.
+A typography wrapper intended for labels.
 
-</Callout>
+### FieldTitle
+
+A typography wrapper for a compact field title.
+
+### FieldDescription
+
+A typography wrapper for supporting text.
+
+### FieldSeparator
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `children` | `React.ReactNode` | — |
+| `className` | `string` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
+
+### FieldError
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `errors` | `({ message?: string } \| undefined)[]` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
+
+If `children` is supplied, it takes precedence over `errors`.

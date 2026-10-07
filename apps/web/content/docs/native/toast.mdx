@@ -1,25 +1,12 @@
 ---
 title: Toast
-description: Imperative toast notifications for React Native with automatic dismissal, animations, and swipe-to-dismiss gestures.
-source: native/toast.tsx
+description: Toast notifications for React Native with an imperative API and swipe-to-dismiss gestures.
+source: registry/native/toast.tsx
 ---
 
-The native `Toast` implementation provides an imperative notification API for React Native applications.
+The native `Toast` system provides lightweight, transient notifications without requiring a component instance at every call site. Mount `ToasterProvider` once near the root of the application, then use the exported `toast` API to create notifications.
 
-Unlike the web toast implementation, this component does not depend on Base UI. It maintains a small in-memory listener registry and renders notifications through `ToasterProvider`.
-
-The system supports:
-
-- Default notifications.
-- Success, info, warning, and error variants.
-- Optional descriptions.
-- Custom icons.
-- Configurable duration.
-- Top or bottom positioning.
-- Animated entry and exit.
-- Horizontal swipe-to-dismiss gestures.
-
-This is a native-specific component and does not have a direct shadcn/ui base component.
+Toasts animate into view, automatically dismiss after their configured duration, and can be swiped horizontally to dismiss.
 
 ## Installation
 
@@ -33,156 +20,39 @@ Copy and paste the following code into your project.
 
 <ComponentSource comp='native-toast' />
 
-## Basic setup
+## Features
 
-Mount `ToasterProvider` near the root of the application.
+- Imperative `toast.show`, `success`, `error`, `info`, and `warning` methods.
+- Top or bottom placement.
+- Automatic dismissal with a configurable duration per toast.
+- Horizontal swipe-to-dismiss gesture.
+- Built-in icons for semantic toast types.
+- Custom icon support.
+
+## Usage
 
 ```tsx
-import { ToasterProvider } from '@/components/native/toast'
+import {
+  ToasterProvider,
+  toast,
+} from '@/components/native/toast'
 
 export function App() {
   return (
     <ToasterProvider>
-      <Screen />
+      <YourApp />
     </ToasterProvider>
   )
 }
-```
-
-The provider renders your application and places the toast viewport above it.
-
-## Usage
-
-The global `toast` object exposes convenience methods.
-
-```tsx
-import { toast } from '@/components/native/toast'
-
-toast.show('This is a simple notification.')
-toast.success('Saved successfully!')
-toast.info('Your account has been updated.')
-toast.warning('This action may have side effects.')
-toast.error('Something went wrong.')
-```
-
-Each method accepts:
-
-```ts
-toast.show(title, description?, options?)
-toast.success(title, description?, options?)
-toast.info(title, description?, options?)
-toast.warning(title, description?, options?)
-toast.error(title, description?, options?)
-```
-
-### Description
-
-```tsx
-toast.success(
-  'Profile saved',
-  'Your changes have been saved successfully.'
-)
-```
-
-### Duration
-
-The default duration is `3000ms`. Override it per toast.
-
-```tsx
-toast.show(
-  'Long notification',
-  'This notification stays visible longer.',
-  { duration: 8000 }
-)
-```
-
-### Custom icon
-
-Pass an icon renderer through `options`.
-
-```tsx
-toast.show(
-  'New message',
-  'You have received a new message.',
-  {
-    icon: (props) => <MessageCircleIcon {...props} />,
-  }
-)
-```
-
-## Provider position
-
-`ToasterProvider` supports `top` and `bottom`.
-
-```tsx
-<ToasterProvider position='top'>
-  <App />
-</ToasterProvider>
-```
-
-Or:
-
-```tsx
-<ToasterProvider position='bottom'>
-  <App />
-</ToasterProvider>
-```
-
-The viewport is positioned using absolute layout with horizontal insets.
-
-## Swipe to dismiss
-
-Toast cards can be swiped horizontally.
-
-The gesture becomes active after horizontal movement exceeds the gesture threshold. Once the swipe passes roughly 40% of the toast width, the toast dismisses in the swipe direction.
-
-If the swipe does not cross the threshold, the toast springs back to its original position.
-
-Programmatic dismissal is handled by the provider after the exit animation completes.
-
-## Animation lifecycle
-
-When a toast appears:
-
-1. It starts above or below its final position.
-2. Its opacity starts at `0`.
-3. It animates into place over `250ms`.
-4. A timer is started using the configured duration.
-
-When a toast is dismissed:
-
-1. It translates vertically or horizontally depending on the dismissal reason.
-2. Opacity animates to `0`.
-3. The provider removes it from the active list.
-
-## Toast variants
-
-The built-in variants are:
-
-- `default`
-- `success`
-- `info`
-- `warning`
-- `error`
-
-Success, info, warning, and error variants use corresponding Lucide icons by default.
-
-You can replace the icon by providing `options.icon`.
-
-## Using `useToast`
-
-`useToast` exposes the toast manager and the provider's dismiss function.
-
-```tsx
-import { useToast } from '@/components/native/toast'
 
 function SaveButton() {
-  const { toast } = useToast()
-
   return (
     <Button
       onPress={() => {
-        toast.success('Saved')
+        toast.success(
+          'Saved successfully',
+          'Your changes have been saved.'
+        )
       }}
     >
       Save
@@ -191,52 +61,96 @@ function SaveButton() {
 }
 ```
 
-`useToast` must be called underneath `ToasterProvider`.
+## Toast types
 
-## API reference
-
-### `ToasterProvider`
+The exported API provides five semantic methods:
 
 ```tsx
-<ToasterProvider position='top'>
-  {children}
+toast.show('Something happened')
+toast.success('Saved successfully')
+toast.info('New information')
+toast.warning('Check this before continuing')
+toast.error('Something went wrong')
+```
+
+## Duration
+
+Pass `duration` in the options object. The default duration is `3000` milliseconds.
+
+```tsx
+toast.success(
+  'Uploaded',
+  'The file is ready.',
+  { duration: 5000 }
+)
+```
+
+## Custom icons
+
+You can replace the default semantic icon with a custom Lucide icon renderer.
+
+```tsx
+toast.info(
+  'Sync started',
+  undefined,
+  {
+    icon: (props) => <CloudIcon {...props} />,
+  }
+)
+```
+
+## Position
+
+Set the provider position to `top` or `bottom`.
+
+```tsx
+<ToasterProvider position='bottom'>
+  <App />
 </ToasterProvider>
 ```
 
-| Prop | Default | Description |
+## Swipe to dismiss
+
+Toasts respond to horizontal gestures. A swipe of roughly 40% of the toast width dismisses the toast; shorter swipes spring back into place.
+
+## API Reference
+
+### ToasterProvider
+
+| Prop | Type | Default |
 | --- | --- | --- |
-| `children` | — | Application content. |
-| `position` | `top` | Toast viewport position: `top` or `bottom`. |
+| `children` | `React.ReactNode` | — |
+| `position` | `"top" \| "bottom"` | `"top"` |
 
-### `toast`
+### toast.show / toast.success / toast.info / toast.warning / toast.error
 
-```ts
-toast.show(title, description?, options?)
-toast.success(title, description?, options?)
-toast.info(title, description?, options?)
-toast.warning(title, description?, options?)
-toast.error(title, description?, options?)
-```
+Each method has the same signature:
 
-### `ToastOptions`
+| Parameter | Type | Default |
+| --- | --- | --- |
+| `title` | `string` | required |
+| `description` | `string` | — |
+| `options` | `ToastOptions` | — |
 
-```ts
-interface ToastOptions {
-  icon?: (props: LucidePropsWithClassName) => React.ReactNode
-  duration?: number
-}
-```
+`ToastOptions`:
 
-### `useToast`
+| Property | Type | Default |
+| --- | --- | --- |
+| `icon` | `(props: LucidePropsWithClassName) => React.ReactNode` | semantic icon |
+| `duration` | `number` | `3000` |
 
-```ts
+### useToast
+
+Returns the toast API and a `dismiss` function.
+
+```tsx
 const { toast, dismiss } = useToast()
 ```
 
-`dismiss` accepts the internal toast id. Most application code should use the convenience `toast` methods instead.
+`useToast` must be called inside a `ToasterProvider`.
 
-<Callout>
+### Toast types
 
-Mount exactly one `ToasterProvider` at the appropriate application root. Calling `toast.*` before a provider is mounted will not display a notification.
-
-</Callout>
+```ts
+type ToastType = 'default' | 'success' | 'info' | 'error' | 'warning'
+```

@@ -1,22 +1,14 @@
 ---
 title: Select
-description: A native bottom-sheet picker with single and multiple selection support.
-source: native/select.tsx
+description: A select component implemented as a native bottom-sheet picker, with single and multiple selection support.
+source: registry/native/select.tsx
 ---
 
-The native `Select` component provides a picker experience built specifically for React Native. Instead of relying on a browser popover, it opens a native `BottomSheet` containing the available options.
+The native `Select` adapts the familiar shadcn select composition to React Native. Instead of a browser popover, the options are presented inside the native `BottomSheet` component.
 
-It supports:
+It supports both single and multiple selection. The selected value is rendered by `SelectValue`, while `SelectItem` handles selection and closes the sheet automatically in single-select mode.
 
-- Single selection.
-- Multiple selection.
-- Controlled and uncontrolled values.
-- Custom labels and placeholders.
-- Groups and separators.
-- Clear and Done actions for multiple selection.
-- Bottom-sheet snap points and gestures through the underlying sheet.
-
-See the [shadcn/ui Select documentation](https://ui.shadcn.com/docs/components/base/select) for the original component API and additional examples.
+See the [shadcn/ui Select documentation](https://ui.shadcn.com/docs/components/base/select) for the web component API, concepts, and additional examples.
 
 ## Installation
 
@@ -30,9 +22,17 @@ Copy and paste the following code into your project.
 
 <ComponentSource comp='native-select' />
 
-## Usage
+## Features
 
-A single-select is composed from `Select`, `SelectTrigger`, `SelectValue`, `SelectContent`, and `SelectItem`.
+- Native bottom-sheet presentation.
+- Single and multiple selection modes.
+- Controlled and uncontrolled values.
+- Typed option values through generics.
+- Optional groups, labels, and separators.
+- Automatic selected-label rendering.
+- Clear and Done controls in multiple-selection mode.
+
+## Usage
 
 ```tsx
 import {
@@ -43,211 +43,141 @@ import {
   SelectValue,
 } from '@/components/native/select'
 
-export function Example() {
+const items = [
+  { label: 'Light', value: 'light' },
+  { label: 'Dark', value: 'dark' },
+  { label: 'System', value: 'system' },
+]
+
+export function SelectExample() {
+  const [value, setValue] = React.useState('system')
+
   return (
-    <Select defaultValue='apple'>
+    <Select
+      items={items}
+      value={value}
+      onValueChange={setValue}
+    >
       <SelectTrigger>
-        <SelectValue placeholder='Select a fruit' />
+        <SelectValue placeholder='Select a theme' />
       </SelectTrigger>
 
-      <SelectContent>
-        <SelectItem value='apple'>Apple</SelectItem>
-        <SelectItem value='banana'>Banana</SelectItem>
-        <SelectItem value='orange'>Orange</SelectItem>
+      <SelectContent title='Choose a theme'>
+        {items.map((item) => (
+          <SelectItem key={item.value} value={item.value}>
+            {item.label}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   )
 }
 ```
 
-### Controlled value
+## Single selection
 
-Pass `value` and `onValueChange` together to control the selection from the parent.
+The default mode accepts one value. Selecting an item updates the value and closes the bottom sheet.
 
 ```tsx
-const [value, setValue] = React.useState<string | null>(null)
-
-return (
-  <Select
-    value={value}
-    onValueChange={setValue}
-    items={[
-      { label: 'Apple', value: 'apple' },
-      { label: 'Banana', value: 'banana' },
-    ]}
-  >
-    <SelectTrigger>
-      <SelectValue placeholder='Choose a fruit' />
-    </SelectTrigger>
-
-    <SelectContent>
-      <SelectItem value='apple'>Apple</SelectItem>
-      <SelectItem value='banana'>Banana</SelectItem>
-    </SelectContent>
-  </Select>
-)
+<Select
+  value={value}
+  onValueChange={setValue}
+>
+  {/* ... */}
+</Select>
 ```
 
-The `items` array is used by `SelectValue` to convert the selected value into a display label.
+## Multiple selection
 
-### Multiple selection
-
-Set `multiple` to allow more than one value.
+Set `multiple` to allow several values. The sheet stays open while items are toggled; the built-in `Clear` and `Done` actions are displayed.
 
 ```tsx
-const [values, setValues] = React.useState<string[]>([])
-
-return (
-  <Select
-    multiple
-    value={values}
-    onValueChange={setValues}
-    items={[
-      { label: 'Apple', value: 'apple' },
-      { label: 'Banana', value: 'banana' },
-      { label: 'Orange', value: 'orange' },
-    ]}
-  >
-    <SelectTrigger>
-      <SelectValue placeholder='Select fruits' />
-    </SelectTrigger>
-
-    <SelectContent>
-      <SelectItem value='apple'>Apple</SelectItem>
-      <SelectItem value='banana'>Banana</SelectItem>
-      <SelectItem value='orange'>Orange</SelectItem>
-    </SelectContent>
-  </Select>
-)
+<Select
+  multiple
+  value={selected}
+  onValueChange={setSelected}
+>
+  {/* ... */}
+</Select>
 ```
 
-Multiple selection stays open after an item is pressed. The header provides `Clear` and `Done` actions.
+## Groups and separators
 
-### Groups
-
-Use `SelectGroup` and `SelectLabel` to organize options.
+Use `SelectGroup`, `SelectLabel`, and `SelectSeparator` to organize long option lists.
 
 ```tsx
-<SelectContent title='Choose a plan'>
+<SelectContent title='Choose a fruit'>
   <SelectGroup>
-    <SelectLabel>Personal</SelectLabel>
-    <SelectItem value='free'>Free</SelectItem>
-    <SelectItem value='pro'>Pro</SelectItem>
+    <SelectLabel>Fruit</SelectLabel>
+    <SelectItem value='apple'>Apple</SelectItem>
+    <SelectItem value='orange'>Orange</SelectItem>
   </SelectGroup>
 
   <SelectSeparator />
 
   <SelectGroup>
-    <SelectLabel>Business</SelectLabel>
-    <SelectItem value='team'>Team</SelectItem>
-    <SelectItem value='enterprise'>Enterprise</SelectItem>
+    <SelectLabel>Vegetables</SelectLabel>
+    <SelectItem value='carrot'>Carrot</SelectItem>
   </SelectGroup>
 </SelectContent>
 ```
 
-### Disabled options
+## Custom option labels
 
-`SelectItem` inherits the native button's props and supports `disabled`.
+The `items` array is used by `SelectValue` to turn selected values back into labels. If a value is not found in `items`, the raw value is displayed instead.
 
-```tsx
-<SelectItem value='enterprise' disabled>
-  Enterprise
-</SelectItem>
-```
+## API Reference
 
-A disabled item cannot change the selection and exposes its disabled state through accessibility state.
+### Select
 
-### Custom sheet title
+`Select` is generic over the option value type.
 
-Pass `title` to `SelectContent`.
-
-```tsx
-<SelectContent title='Choose a language'>
-  <SelectItem value='en'>English</SelectItem>
-  <SelectItem value='vi'>Vietnamese</SelectItem>
-</SelectContent>
-```
-
-## How selection works
-
-For single selection:
-
-1. The user opens the bottom sheet.
-2. The user presses an item.
-3. `onValueChange` receives the selected value.
-4. The bottom sheet closes.
-
-For multiple selection:
-
-1. The user opens the bottom sheet.
-2. Pressing an item toggles it in the selected array.
-3. The sheet remains open.
-4. `Clear` resets the selected array.
-5. `Done` closes the sheet.
-
-## Display values
-
-`SelectValue` resolves the selected value against the `items` array:
-
-```ts
-{
-  label: string
-  value: TValue
-}
-```
-
-For multiple selection, labels are joined with `, `.
-
-If no value is selected, `placeholder` is displayed. If `placeholder` is omitted, the component uses `Select an option`.
-
-## API reference
-
-### `Select`
-
-| Prop | Description |
-| --- | --- |
-| `value` | Controlled selected value or array. |
-| `onValueChange` | Called when the selection changes. |
-| `items` | Labels and values used by `SelectValue`. |
-| `multiple` | Enables multiple selection. |
-| `children` | Select trigger and content. |
-
-### `SelectTrigger`
-
-Extends the native `BottomSheetTrigger`/`Button` props.
-
-### `SelectValue`
-
-| Prop | Description |
-| --- | --- |
-| `placeholder` | Text displayed when nothing is selected. |
-| `className` | Additional typography classes. |
-| `...props` | Native typography props. |
-
-### `SelectContent`
-
-| Prop | Default | Description |
+| Prop | Type | Default |
 | --- | --- | --- |
-| `title` | `Select an option` | Header title. |
-| `children` | — | Select options. |
-| `...props` | — | Bottom-sheet content props. |
+| `items` | `{ label: string; value: TValue }[]` | — |
+| `value` | `TValue \| TValue[] \| null` | `null` or `[]` |
+| `onValueChange` | `(value: TValue \| TValue[]) => void` | — |
+| `multiple` | `boolean` | `false` |
+| `children` | `React.ReactNode` | — |
 
-### `SelectItem`
+When `multiple` is true, `value` is an array.
 
-| Prop | Description |
-| --- | --- |
-| `value` | Value represented by the item. |
-| `disabled` | Prevents selecting the item. |
-| `onPress` | Additional native press callback. |
-| `className` | Additional classes. |
-| `children` | Visible item label. |
+### SelectTrigger
 
-### `SelectGroup`, `SelectLabel`, `SelectSeparator`
+The trigger is built on `BottomSheetTrigger` and therefore accepts button props.
 
-These are layout primitives based on native `View`, `Typography`, and separator behavior.
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof BottomSheetTrigger>` | — |
 
-<Callout>
+### SelectValue
 
-When using controlled selection, pass `value` and `onValueChange` together. For `SelectValue` to render labels rather than raw values, provide the corresponding `items` array.
+| Prop | Type | Default |
+| --- | --- | --- |
+| `placeholder` | `string` | `"Select an option"` |
+| `className` | `string` | — |
+| `...props` | `React.ComponentProps<typeof Typography>` | — |
 
-</Callout>
+### SelectContent
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `title` | `string` | `"Select an option"` |
+| `className` | `string` | — |
+| `...props` | `React.ComponentProps<typeof BottomSheetContent>` | — |
+
+### SelectItem
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `value` | `TValue` | required |
+| `disabled` | `boolean` | `false` |
+| `onPress` | `Button` press handler | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof Button>` | — |
+
+### SelectGroup / SelectLabel / SelectSeparator
+
+These are layout and labeling primitives. `SelectLabel` accepts typography props, while the group and separator accept native `View` props.

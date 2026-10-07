@@ -1,14 +1,14 @@
 ---
 title: Radio Group
-description: A group of mutually exclusive radio options with controlled and uncontrolled state.
-source: native/radio-group.tsx
+description: A group of mutually exclusive radio options.
+source: registry/native/radio-group.tsx
 ---
 
-The native `RadioGroup` provides a mutually exclusive set of options. It stores the selected value in context and exposes each option through `RadioGroupItem`.
+The native `RadioGroup` provides a simple controlled or uncontrolled selection model for mutually exclusive options. `RadioGroupItem` reads and updates the value through context, so each item only needs a unique `value`.
 
-The implementation supports both controlled and uncontrolled state and maps its state to React Native accessibility roles.
+The component uses native touchable controls and exposes radio accessibility state for each option.
 
-See the [shadcn/ui Radio Group documentation](https://ui.shadcn.com/docs/components/base/radio-group) for the original component API and additional examples.
+See the [shadcn/ui Radio Group documentation](https://ui.shadcn.com/docs/components/base/radio-group) for the web component API, concepts, and additional examples.
 
 ## Installation
 
@@ -22,124 +22,96 @@ Copy and paste the following code into your project.
 
 <ComponentSource comp='native-radio-group' />
 
+## Features
+
+- Single selected value.
+- Controlled and uncontrolled group state.
+- Mutually exclusive radio items.
+- Disabled item support.
+- Native radio accessibility semantics.
+- Optional children for labels or custom content.
+
 ## Usage
 
 ```tsx
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from '@/components/native/radio-group'
+import { RadioGroup, RadioGroupItem } from '@/components/native/radio-group'
 
-export function Example() {
+export function RadioGroupExample() {
+  const [value, setValue] = React.useState('system')
+
   return (
-    <RadioGroup>
-      <RadioGroupItem value='comfortable'>
-        <Typography>Comfortable</Typography>
+    <RadioGroup value={value} onValueChange={setValue}>
+      <RadioGroupItem value='light'>
+        Light
       </RadioGroupItem>
-
-      <RadioGroupItem value='compact'>
-        <Typography>Compact</Typography>
+      <RadioGroupItem value='dark'>
+        Dark
+      </RadioGroupItem>
+      <RadioGroupItem value='system'>
+        System
       </RadioGroupItem>
     </RadioGroup>
   )
 }
 ```
 
-### Default selection
-
-The native implementation does not expose a separate `defaultValue` prop. For an uncontrolled group, initialize it by passing `value` without an `onValueChange` handler.
+## Uncontrolled
 
 ```tsx
-<RadioGroup value='comfortable'>
-  <RadioGroupItem value='comfortable'>
-    <Typography>Comfortable</Typography>
-  </RadioGroupItem>
-
-  <RadioGroupItem value='compact'>
-    <Typography>Compact</Typography>
-  </RadioGroupItem>
+<RadioGroup>
+  <RadioGroupItem value='small'>Small</RadioGroupItem>
+  <RadioGroupItem value='large'>Large</RadioGroupItem>
 </RadioGroup>
 ```
 
-The group owns the subsequent selection changes.
+The group stores the selected value internally when `value` and `onValueChange` are not both supplied.
 
-### Controlled state
-
-Provide both `value` and `onValueChange` when the parent owns the selected value.
+## Controlled
 
 ```tsx
-const [value, setValue] = React.useState('comfortable')
-
-return (
-  <RadioGroup
-    value={value}
-    onValueChange={setValue}
-  >
-    <RadioGroupItem value='comfortable'>
-      <Typography>Comfortable</Typography>
-    </RadioGroupItem>
-
-    <RadioGroupItem value='compact'>
-      <Typography>Compact</Typography>
-    </RadioGroupItem>
-  </RadioGroup>
-)
+<RadioGroup
+  value={size}
+  onValueChange={setSize}
+>
+  <RadioGroupItem value='small'>Small</RadioGroupItem>
+  <RadioGroupItem value='large'>Large</RadioGroupItem>
+</RadioGroup>
 ```
 
-### Disabled option
+The group is controlled when both props are supplied.
+
+## Disabled options
 
 ```tsx
-<RadioGroupItem value='enterprise' disabled>
-  <Typography>Enterprise</Typography>
+<RadioGroupItem value='legacy' disabled>
+  Legacy
 </RadioGroupItem>
 ```
 
-Disabled options cannot change the selected value and are rendered with reduced opacity.
+A disabled item does not update the selected value.
 
-## Accessibility
+## API Reference
 
-The group uses:
+### RadioGroup
 
-```text
-accessibilityRole="radiogroup"
-```
+| Prop | Type | Default |
+| --- | --- | --- |
+| `value` | `string` | `""` when uncontrolled |
+| `onValueChange` | `(value: string) => void` | — |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
 
-Each option uses:
+### RadioGroupItem
 
-```text
-accessibilityRole="radio"
-accessibilityState={{ checked, disabled }}
-aria-checked={checked}
-aria-disabled={disabled}
-```
+| Prop | Type | Default |
+| --- | --- | --- |
+| `value` | `string` | required |
+| `disabled` | `boolean` | `false` |
+| `activeOpacity` | `number` | `0.8` |
+| `onPress` | `TouchableOpacityProps['onPress']` | — |
+| `children` | `React.ReactNode` | — |
+| `className` | `string` | — |
+| `...props` | `React.ComponentProps<typeof TouchableOpacity>` | — |
 
-The selected option is represented by the inner indicator.
-
-## API reference
-
-### `RadioGroup`
-
-| Prop | Description |
-| --- | --- |
-| `value` | Selected value. |
-| `onValueChange` | Called when an item becomes selected. |
-| `className` | Additional classes. |
-| `...props` | React Native `View` props. |
-
-### `RadioGroupItem`
-
-| Prop | Description |
-| --- | --- |
-| `value` | Unique value represented by the option. |
-| `disabled` | Prevents selecting the option. |
-| `activeOpacity` | Touch feedback opacity. |
-| `onPress` | Native press callback. |
-| `children` | Label/content for the option. |
-| `className` | Additional classes. |
-| `...props` | React Native `TouchableOpacity` props. |
-
-<Callout>
-
-Every `RadioGroupItem` must be rendered inside a `RadioGroup`. The item reads and updates its selected value through the group's context.
-
-</Callout>
+`RadioGroupItem` must be rendered inside `RadioGroup`.

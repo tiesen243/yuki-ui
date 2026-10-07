@@ -1,14 +1,14 @@
 ---
 title: Button
-description: A pressable React Native button with shadcn-style variants, sizes, and typography inheritance.
-source: native/button.tsx
+description: A pressable button component with variants and sizes.
+source: registry/native/button.tsx
 ---
 
-The native `Button` is a pressable control built on React Native's `Pressable`. It reuses the shadcn/ui button variant definitions and adds native interaction behavior.
+The native `Button` brings the shadcn button API to React Native using `Pressable`. It reuses the project's button variants and automatically wraps string children in the native `Typography` component.
 
-Button text is automatically rendered with the native `Typography` component, so string children inherit the appropriate text color for the selected button variant.
+The component is intended for actions, navigation triggers, confirmations, and other touch interactions where a consistent visual treatment is required.
 
-See the [shadcn/ui Button documentation](https://ui.shadcn.com/docs/components/base/button) for the original component API and additional examples.
+See the [shadcn/ui Button documentation](https://ui.shadcn.com/docs/components/base/button) for the web component API, concepts, and additional examples.
 
 ## Installation
 
@@ -22,110 +22,81 @@ Copy and paste the following code into your project.
 
 <ComponentSource comp='native-button' />
 
+## Features
+
+- Built on React Native `Pressable`.
+- Supports the shared button variants from the web component.
+- Supports the shared button sizes.
+- String children automatically receive native typography styling.
+- Accepts all standard `Pressable` props such as `onPress`, `disabled`, and accessibility props.
+
 ## Usage
 
 ```tsx
 import { Button } from '@/components/native/button'
 
-export function Example() {
+export function ButtonExample() {
   return (
-    <Button onPress={() => console.log('Pressed')}>
+    <Button variant='outline' size='default'>
       Continue
     </Button>
   )
 }
 ```
 
-### Variants
-
-Use `variant` to communicate the action's importance.
+## Variants
 
 ```tsx
-<Button variant='default'>Continue</Button>
+<Button>Default</Button>
 <Button variant='secondary'>Secondary</Button>
-<Button variant='outline'>Cancel</Button>
-<Button variant='ghost'>More</Button>
-<Button variant='destructive'>Delete</Button>
-<Button variant='success'>Saved</Button>
-<Button variant='info'>Learn more</Button>
-<Button variant='warning'>Review</Button>
-<Button variant='link'>View details</Button>
+<Button variant='outline'>Outline</Button>
+<Button variant='ghost'>Ghost</Button>
+<Button variant='destructive'>Destructive</Button>
+<Button variant='success'>Success</Button>
+<Button variant='info'>Info</Button>
+<Button variant='warning'>Warning</Button>
+<Button variant='link'>Link</Button>
 ```
 
-### Sizes
+## Sizes
 
-Use the `size` prop from the shared button variant definition.
+The exact available sizes are inherited from the project's `buttonVariants` implementation.
 
 ```tsx
-<Button size='default'>Default</Button>
 <Button size='sm'>Small</Button>
+<Button size='default'>Default</Button>
 <Button size='lg'>Large</Button>
 ```
 
-Use the sizes supported by the button implementation in your project. Because the native component re-exports `buttonVariants`, the same variant definition can also be reused when creating related controls.
+Icon-specific sizes are also available when provided by the shared button variant definition.
 
-### Disabled state
+## Disabled and press behavior
 
-React Native's `Pressable` disabled behavior is passed through directly.
-
-```tsx
-<Button disabled>
-  Continue
-</Button>
-```
-
-### Custom content
-
-String children are wrapped in `Typography`. For icons or more complex layouts, pass React nodes directly.
-
-```tsx
-<Button>
-  <Icon className='size-4' />
-  <Typography>Continue</Typography>
-</Button>
-```
-
-## Interaction
-
-The native implementation adds `active:opacity-80` to the button styles, providing visual feedback while the button is pressed.
-
-All normal `Pressable` props remain available, including:
+Because the native component uses `Pressable`, standard press lifecycle props are available:
 
 ```tsx
 <Button
-  onPress={handlePress}
-  onLongPress={handleLongPress}
   disabled={loading}
-  hitSlop={8}
+  onPress={handleSubmit}
 >
   Save
 </Button>
 ```
 
-## Typography inheritance
+The native styles also apply an active opacity effect while the button is pressed.
 
-When the child is a string, `Button` renders it through `Typography` and supplies a context class based on the button variant. This keeps text color synchronized with the button background.
+## API Reference
 
-For custom children, you are responsible for choosing the appropriate icon/text styling.
+### Button
 
-## API reference
+| Prop | Type | Default |
+| --- | --- | --- |
+| `variant` | `ButtonVariant` from `buttonVariants` | `"default"` |
+| `size` | `ButtonSize` from `buttonVariants` | `"default"` |
+| `children` | `React.ReactNode` | — |
+| `onPress` | `PressableProps['onPress']` | — |
+| `disabled` | `boolean` | — |
+| `className` | `string` | — |
+| `...props` | `React.ComponentProps<typeof Pressable>` | — |
 
-### `Button`
-
-`Button` combines `Pressable` props with the shared `buttonVariants` props.
-
-| Prop | Description |
-| --- | --- |
-| `variant` | Button visual variant. |
-| `size` | Button size variant. |
-| `children` | String or React content. |
-| `className` | Additional NativeWind classes. |
-| `onPress` | Called when the button is pressed. |
-| `disabled` | Prevents interaction when true. |
-| `...props` | Other supported `Pressable` props. |
-
-<Callout>
-
-For text-only buttons, pass a string and let `Button` render the `Typography` wrapper automatically. For icon or compound content, render the content yourself.
-
-</Callout>
+The `variant` and `size` types are derived from the project's shared `buttonVariants`, so they stay aligned with the web button implementation.

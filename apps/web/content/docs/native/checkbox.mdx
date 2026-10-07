@@ -1,14 +1,14 @@
 ---
 title: Checkbox
-description: A pressable boolean control with controlled and uncontrolled usage.
-source: native/checkbox.tsx
+description: A pressable checkbox with controlled and uncontrolled state support.
+source: registry/native/checkbox.tsx
 ---
 
-The native `Checkbox` is a pressable boolean control built with React Native's `TouchableOpacity`. It exposes the familiar checked/unchecked model while supporting both controlled and uncontrolled usage.
+The native `Checkbox` is a pressable boolean control. It keeps its own state when used uncontrolled, or synchronizes with `checked` and `onCheckedChange` when the parent owns the state.
 
-The component also exposes accessibility information through the `checkbox` accessibility role and checked/disabled accessibility state.
+The checkbox renders a native touch target, a visual box, and an optional child label. It also exposes `accessibilityRole="checkbox"` and an accessibility checked state.
 
-See the [shadcn/ui Checkbox documentation](https://ui.shadcn.com/docs/components/base/checkbox) for the original component API and additional examples.
+See the [shadcn/ui Checkbox documentation](https://ui.shadcn.com/docs/components/base/checkbox) for the web component API, concepts, and additional examples.
 
 ## Installation
 
@@ -22,114 +22,82 @@ Copy and paste the following code into your project.
 
 <ComponentSource comp='native-checkbox' />
 
+## Features
+
+- Controlled and uncontrolled state.
+- Boolean `onCheckedChange` callback.
+- Disabled state.
+- Configurable press opacity.
+- Native checkbox accessibility semantics.
+- Optional child content for labels or supporting UI.
+
 ## Usage
 
 ```tsx
 import { Checkbox } from '@/components/native/checkbox'
 
-export function Example() {
+export function CheckboxExample() {
+  const [checked, setChecked] = React.useState(false)
+
   return (
     <Checkbox
-      aria-label='Accept terms'
-      onCheckedChange={(checked) => {
-        console.log(checked)
-      }}
-    />
+      checked={checked}
+      onCheckedChange={setChecked}
+    >
+      Accept terms and conditions
+    </Checkbox>
   )
 }
 ```
 
-### With a label
+## Uncontrolled
 
-Because the checkbox accepts children, you can keep the control and its label together.
+When you omit the controlled callback pair, the component maintains its own checked state.
 
 ```tsx
 <Checkbox>
-  <Typography>Remember me</Typography>
+  Remember me
 </Checkbox>
 ```
 
-### Controlled
+## Controlled
 
-Pass both `checked` and `onCheckedChange` when the parent owns the state.
-
-```tsx
-const [checked, setChecked] = React.useState(false)
-
-return (
-  <Checkbox
-    checked={checked}
-    onCheckedChange={setChecked}
-  >
-    <Typography>Enable notifications</Typography>
-  </Checkbox>
-)
-```
-
-### Uncontrolled
-
-For local state, provide an initial `checked` value and omit the change handler.
-
-```tsx
-<Checkbox checked={false}>
-  <Typography>Subscribe to updates</Typography>
-</Checkbox>
-```
-
-The component manages its own state after initialization.
-
-### Disabled
-
-```tsx
-<Checkbox disabled>
-  <Typography>Unavailable option</Typography>
-</Checkbox>
-```
-
-## Interaction model
-
-When pressed, the checkbox toggles its value unless it is disabled.
-
-The native implementation calls `onCheckedChange` with the new boolean value and then invokes the optional `onPress` handler.
+Use both `checked` and `onCheckedChange` when the state belongs to a parent component.
 
 ```tsx
 <Checkbox
-  onCheckedChange={(checked) => {
-    // update application state
-  }}
-  onPress={() => {
-    // respond to the native press event
-  }}
-/>
+  checked={accepted}
+  onCheckedChange={setAccepted}
+>
+  I agree
+</Checkbox>
 ```
 
-## Accessibility
+The component only treats the checkbox as controlled when both the value and callback are supplied.
 
-The root control uses:
+## Disabled
 
-```text
-accessibilityRole="checkbox"
-accessibilityState={{ checked, disabled }}
-aria-checked={checked}
-aria-disabled={disabled}
+```tsx
+<Checkbox disabled>
+  This option is unavailable
+</Checkbox>
 ```
 
-When a checkbox has visible text, prefer placing that text inside the checkbox so the entire row remains a single press target.
+Disabled checkboxes cannot be toggled and receive reduced opacity.
 
-## API reference
+## API Reference
 
-| Prop | Description |
-| --- | --- |
-| `checked` | Current checked value when controlled. |
-| `onCheckedChange` | Called with the next checked value. |
-| `disabled` | Prevents interaction and applies disabled styling. |
-| `activeOpacity` | Native touch feedback opacity. |
-| `onPress` | React Native press callback. |
-| `children` | Optional label or custom content. |
-| `className` | Additional NativeWind classes. |
+### Checkbox
 
-<Callout>
+| Prop | Type | Default |
+| --- | --- | --- |
+| `checked` | `boolean` | `false` |
+| `onCheckedChange` | `(checked: boolean) => void` | — |
+| `disabled` | `boolean` | `false` |
+| `activeOpacity` | `number` | `0.8` |
+| `onPress` | `TouchableOpacityProps['onPress']` | — |
+| `children` | `React.ReactNode` | — |
+| `className` | `string` | — |
+| `...props` | `React.ComponentProps<typeof TouchableOpacity>` | — |
 
-When using a controlled checkbox, provide both `checked` and `onCheckedChange`. The component determines controlled mode from the presence of both props.
-
-</Callout>
+When `checked` and `onCheckedChange` are both supplied, the parent controls the state.

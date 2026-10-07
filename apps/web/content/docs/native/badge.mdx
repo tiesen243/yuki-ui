@@ -1,14 +1,14 @@
 ---
 title: Badge
-description: A compact status indicator for labels, categories, and states.
-source: native/badge.tsx
+description: A small status indicator for highlighting labels, states, and categories.
+source: registry/native/badge.tsx
 ---
 
-The `Badge` component is a small, inline status indicator intended for labels, categories, statuses, and short pieces of metadata.
+The native `Badge` component is a compact label for status, category, metadata, or short actions. It uses the same variant system as the web badge while rendering with React Native primitives.
 
-It follows the same visual language as the shadcn/ui Badge while using React Native primitives.
+A badge can be purely informational or interactive. When `onPress` is provided, the component exposes a button accessibility role and uses the configured press opacity.
 
-See the [shadcn/ui Badge documentation](https://ui.shadcn.com/docs/components/base/badge) for the original component API and additional examples.
+See the [shadcn/ui Badge documentation](https://ui.shadcn.com/docs/components/base/badge) for the web component API, concepts, and additional examples.
 
 ## Installation
 
@@ -22,66 +22,70 @@ Copy and paste the following code into your project.
 
 <ComponentSource comp='native-badge' />
 
-## Usage
+## Features
 
-Render a badge around a short label.
+- Supports the shared shadcn badge variants.
+- Can be used as a non-interactive label or as a pressable control.
+- Automatically provides text styling to nested `Typography` content.
+- Supports disabled state and custom press opacity.
+- Accepts native `TouchableOpacity` props.
+
+## Usage
 
 ```tsx
 import { Badge } from '@/components/native/badge'
 
-export function Example() {
-  return <Badge>New</Badge>
+export function BadgeExample() {
+  return (
+    <Badge variant='success'>
+      Verified
+    </Badge>
+  )
 }
-```
-
-### Status labels
-
-Badges work well for small pieces of state.
-
-```tsx
-<View className='flex-row gap-2'>
-  <Badge variant='default'>Active</Badge>
-  <Badge variant='secondary'>Draft</Badge>
-  <Badge variant='destructive'>Failed</Badge>
-</View>
-```
-
-### Custom styling
-
-Use `className` to extend or override the default styling.
-
-```tsx
-<Badge className='rounded-full px-3'>
-  Recommended
-</Badge>
 ```
 
 ## Variants
 
-Use the component's variants to communicate different states.
+The component supports the variants provided by the web badge styles:
 
 ```tsx
-<Badge variant='default'>Default</Badge>
+<Badge>Default</Badge>
 <Badge variant='secondary'>Secondary</Badge>
+<Badge variant='success'>Success</Badge>
 <Badge variant='destructive'>Destructive</Badge>
+<Badge variant='info'>Info</Badge>
+<Badge variant='warning'>Warning</Badge>
 <Badge variant='outline'>Outline</Badge>
+<Badge variant='ghost'>Ghost</Badge>
+<Badge variant='link'>Link</Badge>
 ```
 
-Choose variants based on meaning rather than using them only for decoration. For example, use a destructive badge for an error state and a secondary badge for neutral metadata.
+## Interactive badges
 
-## API reference
+Pass `onPress` when the badge should behave as a compact action.
 
-`Badge` accepts the props exposed by the native implementation together with its variant props.
+```tsx
+<Badge
+  variant='outline'
+  onPress={() => console.log('pressed')}
+>
+  View details
+</Badge>
+```
 
-| Prop | Description |
-| --- | --- |
-| `variant` | Controls the visual treatment of the badge. |
-| `className` | Additional NativeWind classes. |
-| `children` | Badge content. |
-| `...props` | Supported native props exposed by the implementation. |
+Without `onPress`, the badge exposes a text accessibility role and does not apply the interactive opacity behavior.
 
-<Callout>
+## API Reference
 
-Keep badge content short. A badge is designed for compact labels rather than paragraphs or long-form content.
+### Badge
 
-</Callout>
+| Prop | Type | Default |
+| --- | --- | --- |
+| `variant` | `"default" \| "secondary" \| "success" \| "destructive" \| "info" \| "warning" \| "outline" \| "ghost" \| "link"` | `"default"` |
+| `activeOpacity` | `number` | `0.8` |
+| `disabled` | `boolean` | — |
+| `onPress` | `TouchableOpacityProps['onPress']` | — |
+| `className` | `string` | — |
+| `...props` | `React.ComponentProps<typeof TouchableOpacity>` | — |
+
+The remaining props are forwarded to the underlying `TouchableOpacity`.
