@@ -198,7 +198,7 @@ states, swipe behavior, and visual variants.
 The built-in variants use green, red, blue, and yellow accents for success,
 error, info, and warning, with dark-mode variants included.
 
-## API reference
+## API Reference
 
 ### `ToastProvider`
 
@@ -237,30 +237,3 @@ const toastManager = useToast()
 ```
 
 This is an alias of `ToastPrimitive.useToastManager`.
-
-## API Reference
-
-### `ToastProvider`
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `position` | `'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left'` | `'bottom-right'` |
-| `timeout` | `number` | `5000` |
-| `limit` | `number` | `3` |
-| `children` | `React.ReactNode` | — |
-
-### `toast`
-
-The exported helper exposes the Base UI toast manager plus semantic shortcuts:
-
-```ts
-toast.show(title, options?)
-toast.success(title, options?)
-toast.error(title, options?)
-toast.info(title, options?)
-toast.warning(title, options?)
-```
-
-### `useToast`
-
-Returns Base UI's toast manager hook for consumers that need direct access to the manager.

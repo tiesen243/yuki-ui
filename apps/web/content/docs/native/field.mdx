@@ -113,9 +113,9 @@ Use `FieldSeparator` to visually divide groups of controls. Optional children ar
 
 ## API Reference
 
-### FieldSet
+### `FieldSet`
 
-A keyboard-aware scroll container.
+Keyboard-aware scroll container for grouped fields.
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -123,7 +123,17 @@ A keyboard-aware scroll container.
 | `className` | `string` | — |
 | `...props` | `React.ComponentProps<typeof ScrollView>` | — |
 
-### Field
+### `FieldGroup`
+
+Layout container for related fields.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
+
+### `Field`
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -132,23 +142,49 @@ A keyboard-aware scroll container.
 | `children` | `React.ReactNode` | — |
 | `...props` | `React.ComponentProps<typeof View>` | — |
 
-### FieldContent
+### `FieldContent`
 
-A flex container for the main field content.
+Container for the main field content.
 
-### FieldLabel
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
 
-A typography wrapper intended for labels.
+### `FieldLabel`
 
-### FieldTitle
+Typography wrapper intended for form labels.
 
-A typography wrapper for a compact field title.
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof Text>` | — |
 
-### FieldDescription
+### `FieldTitle`
 
-A typography wrapper for supporting text.
+Typography wrapper for a compact field title.
 
-### FieldSeparator
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof Text>` | — |
+
+### `FieldDescription`
+
+Typography wrapper for supporting field text.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof Text>` | — |
+
+### `FieldSeparator`
+
+Visual separator between field groups.
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -156,12 +192,15 @@ A typography wrapper for supporting text.
 | `className` | `string` | — |
 | `...props` | `React.ComponentProps<typeof View>` | — |
 
-### FieldError
+### `FieldError`
+
+Validation error output.
 
 | Prop | Type | Default |
 | --- | --- | --- |
 | `errors` | `({ message?: string } \| undefined)[]` | — |
 | `children` | `React.ReactNode` | — |
+| `className` | `string` | — |
 | `...props` | `React.ComponentProps<typeof View>` | — |
 
-If `children` is supplied, it takes precedence over `errors`.
+If `children` is supplied, it is rendered instead of derived error messages.

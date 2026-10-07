@@ -92,7 +92,7 @@ The component combines the context class with the component's variant and local 
 
 ## API Reference
 
-### Typography
+### `Typography`
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -101,18 +101,22 @@ The component combines the context class with the component's variant and local 
 | `children` | `React.ReactNode` | — |
 | `...props` | `React.ComponentProps<typeof Text>` | — |
 
-### TypographyContext
+Heading variants automatically expose heading accessibility metadata.
 
-A React context containing additional typography classes.
+### `TypographyContext`
 
 ```ts
 const TypographyContext: React.Context<string>
 ```
 
-### typographyVariants
+Provides inherited typography classes to nested `Typography` components.
 
-The variant helper exported by the component and shared with the web typography implementation.
+### `typographyVariants`
 
 ```ts
-typographyVariants(...)
+typographyVariants(
+  props?: VariantProps<typeof typographyVariants>
+)
 ```
+
+The shared CVA helper used to resolve typography classes.

@@ -118,7 +118,7 @@ ItemGroup
 
 ## API Reference
 
-### Item
+### `Item`
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -127,22 +127,74 @@ ItemGroup
 | `className` | `string` | — |
 | `...props` | `React.ComponentProps<typeof View>` | — |
 
-### ItemMedia
+### `ItemMedia`
 
 | Prop | Type | Default |
 | --- | --- | --- |
 | `variant` | `"default" \| "icon" \| "image"` | `"default"` |
 | `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
 | `...props` | `React.ComponentProps<typeof View>` | — |
 
-### ItemContent / ItemActions / ItemGroup / ItemHeader / ItemFooter
+### `ItemContent`
 
-These components are layout wrappers around `View` and accept `className`, `children`, and native `View` props.
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
 
-### ItemTitle / ItemDescription
+### `ItemTitle`
 
-Typography wrappers for the primary and supporting item text.
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof Text>` | — |
 
-### ItemSeparator
+### `ItemDescription`
 
-A horizontal separator between items. It accepts the native separator props.
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof Text>` | — |
+
+### `ItemActions`
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
+
+### `ItemHeader`
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
+
+### `ItemFooter`
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
+
+### `ItemGroup`
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
+
+### `ItemSeparator`
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `...props` | `React.ComponentProps<typeof Separator>` | — |

@@ -82,7 +82,7 @@ Disabled switches do not respond to presses and receive reduced opacity.
 
 ## API Reference
 
-### Switch
+### `Switch`
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -94,4 +94,4 @@ Disabled switches do not respond to presses and receive reduced opacity.
 | `className` | `string` | — |
 | `...props` | `Omit<React.ComponentProps<typeof TouchableOpacity>, 'children'>` | — |
 
-The switch does not accept `children` because the visual control is rendered internally.
+The switch does not render children; the visual track and thumb are rendered internally.

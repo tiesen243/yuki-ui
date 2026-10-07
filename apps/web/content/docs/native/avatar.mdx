@@ -81,9 +81,9 @@ The native avatar defaults to a `size-10` circular container. Because the compon
 
 ## API Reference
 
-### Avatar
+### `Avatar`
 
-The root container for an avatar.
+The root avatar container.
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -91,9 +91,9 @@ The root container for an avatar.
 | `children` | `React.ReactNode` | — |
 | `...props` | `React.ComponentProps<typeof View>` | — |
 
-### AvatarImage
+### `AvatarImage`
 
-Displays the image when a source is available and no loading error has occurred.
+Renders the image and reports loading/error state to the parent `Avatar`.
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -105,9 +105,9 @@ Displays the image when a source is available and no loading error has occurred.
 
 `AvatarImage` must be rendered inside `Avatar`.
 
-### AvatarFallback
+### `AvatarFallback`
 
-Displays fallback content while the image is loading or when the image fails.
+Fallback content shown while the image is unavailable.
 
 | Prop | Type | Default |
 | --- | --- | --- |

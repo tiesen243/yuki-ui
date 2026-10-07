@@ -106,7 +106,7 @@ The sheet closes when the user taps outside the content or uses the close contro
 
 ## API Reference
 
-### BottomSheet
+### `BottomSheet`
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -116,18 +116,16 @@ The sheet closes when the user taps outside the content or uses the close contro
 | `defaultSnapPoint` | `number` | `0` |
 | `children` | `React.ReactNode` | — |
 
-### BottomSheetTrigger
-
-Uses the native `Button` component and opens the parent sheet before invoking the supplied `onPress`.
+### `BottomSheetTrigger`
 
 | Prop | Type | Default |
 | --- | --- | --- |
 | `onPress` | `PressableProps['onPress']` | — |
 | `...props` | `React.ComponentProps<typeof Button>` | — |
 
-### BottomSheetClose
+Opens the nearest parent `BottomSheet` before invoking the supplied `onPress`.
 
-Closes the parent sheet and then invokes `onPress`.
+### `BottomSheetClose`
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -135,16 +133,18 @@ Closes the parent sheet and then invokes `onPress`.
 | `onPress` | `PressableProps['onPress']` | — |
 | `...props` | `React.ComponentProps<typeof Button>` | — |
 
-### BottomSheetContent
+Closes the nearest parent `BottomSheet` before invoking the supplied `onPress`.
 
-The modal surface.
+### `BottomSheetContent`
+
+The modal sheet surface.
 
 | Prop | Type | Default |
 | --- | --- | --- |
 | `className` | `string` | — |
 | `...props` | `React.ComponentProps<typeof Animated.View>` | — |
 
-### BottomSheetHeader
+### `BottomSheetHeader`
 
 The draggable header region.
 
@@ -154,19 +154,35 @@ The draggable header region.
 | `children` | `React.ReactNode` | — |
 | `...props` | `React.ComponentProps<typeof View>` | — |
 
-### BottomSheetFooter
+### `BottomSheetFooter`
 
-Container for actions at the bottom of the sheet.
+The layout wrapper for actions at the bottom of the sheet.
 
-### BottomSheetTitle
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
 
-Typography wrapper for the sheet title.
+### `BottomSheetTitle`
 
-### BottomSheetDescription
+The sheet title rendered with the native `Typography` component.
 
-Typography wrapper for supporting sheet text.
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof Typography>` | — |
 
+### `BottomSheetDescription`
 
+Supporting text rendered with the native `Typography` component.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof Typography>` | — |
 ## Keyboard handling
 
 The current registry implementation does not automatically apply keyboard avoidance. When a sheet contains inputs, handle keyboard insets or keyboard-aware layout at the application level.

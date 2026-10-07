@@ -103,7 +103,7 @@ Not every section is required. The primitives are simple layout components, so a
 
 ## API Reference
 
-### Card
+### `Card`
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -111,9 +111,7 @@ Not every section is required. The primitives are simple layout components, so a
 | `children` | `React.ReactNode` | — |
 | `...props` | `React.ComponentProps<typeof View>` | — |
 
-### CardHeader / CardAction / CardContent / CardFooter
-
-These components are layout wrappers around `View`.
+### `CardHeader`
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -121,12 +119,42 @@ These components are layout wrappers around `View`.
 | `children` | `React.ReactNode` | — |
 | `...props` | `React.ComponentProps<typeof View>` | — |
 
-### CardTitle / CardDescription
+### `CardAction`
 
-These components wrap the native `Typography` component and accept its text props.
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
+
+### `CardTitle`
 
 | Prop | Type | Default |
 | --- | --- | --- |
 | `className` | `string` | — |
 | `children` | `React.ReactNode` | — |
 | `...props` | `React.ComponentProps<typeof Text>` | — |
+
+### `CardDescription`
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof Text>` | — |
+
+### `CardContent`
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
+
+### `CardFooter`
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |

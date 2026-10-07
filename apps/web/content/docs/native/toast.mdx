@@ -117,42 +117,97 @@ Toasts respond to horizontal gestures. A swipe of roughly 40% of the toast width
 
 ## API Reference
 
-### ToasterProvider
+### `ToasterProvider`
 
 | Prop | Type | Default |
 | --- | --- | --- |
 | `children` | `React.ReactNode` | — |
 | `position` | `"top" \| "bottom"` | `"top"` |
 
-### toast.show / toast.success / toast.info / toast.warning / toast.error
+Mount one `ToasterProvider` near the application root.
 
-Each method has the same signature:
+### `toast.show`
 
-| Parameter | Type | Default |
-| --- | --- | --- |
-| `title` | `string` | required |
-| `description` | `string` | — |
-| `options` | `ToastOptions` | — |
+```ts
+toast.show(
+  title: string,
+  description?: string,
+  options?: ToastOptions
+)
+```
 
-`ToastOptions`:
+Displays a default toast.
+
+### `toast.success`
+
+```ts
+toast.success(
+  title: string,
+  description?: string,
+  options?: ToastOptions
+)
+```
+
+Displays a success toast.
+
+### `toast.info`
+
+```ts
+toast.info(
+  title: string,
+  description?: string,
+  options?: ToastOptions
+)
+```
+
+Displays an informational toast.
+
+### `toast.warning`
+
+```ts
+toast.warning(
+  title: string,
+  description?: string,
+  options?: ToastOptions
+)
+```
+
+Displays a warning toast.
+
+### `toast.error`
+
+```ts
+toast.error(
+  title: string,
+  description?: string,
+  options?: ToastOptions
+)
+```
+
+Displays an error toast.
+
+### `ToastOptions`
 
 | Property | Type | Default |
 | --- | --- | --- |
 | `icon` | `(props: LucidePropsWithClassName) => React.ReactNode` | semantic icon |
 | `duration` | `number` | `3000` |
 
-### useToast
+### `useToast`
 
-Returns the toast API and a `dismiss` function.
-
-```tsx
+```ts
 const { toast, dismiss } = useToast()
 ```
 
-`useToast` must be called inside a `ToasterProvider`.
+Returns the toast API and a `dismiss` function. `useToast` must be called inside `ToasterProvider`.
 
-### Toast types
+### `ToastType`
 
 ```ts
-type ToastType = 'default' | 'success' | 'info' | 'error' | 'warning'
+type ToastType =
+  | 'default'
+  | 'success'
+  | 'info'
+  | 'error'
+  | 'warning'
 ```

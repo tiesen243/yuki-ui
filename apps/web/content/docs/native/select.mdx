@@ -132,9 +132,7 @@ The `items` array is used by `SelectValue` to turn selected values back into lab
 
 ## API Reference
 
-### Select
-
-`Select` is generic over the option value type.
+### `Select`
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -144,11 +142,11 @@ The `items` array is used by `SelectValue` to turn selected values back into lab
 | `multiple` | `boolean` | `false` |
 | `children` | `React.ReactNode` | — |
 
-When `multiple` is true, `value` is an array.
+`Select` is generic over the option value type. When `multiple` is true, `value` is an array.
 
-### SelectTrigger
+### `SelectTrigger`
 
-The trigger is built on `BottomSheetTrigger` and therefore accepts button props.
+The trigger is built on `BottomSheetTrigger`.
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -156,7 +154,7 @@ The trigger is built on `BottomSheetTrigger` and therefore accepts button props.
 | `children` | `React.ReactNode` | — |
 | `...props` | `React.ComponentProps<typeof BottomSheetTrigger>` | — |
 
-### SelectValue
+### `SelectValue`
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -164,7 +162,7 @@ The trigger is built on `BottomSheetTrigger` and therefore accepts button props.
 | `className` | `string` | — |
 | `...props` | `React.ComponentProps<typeof Typography>` | — |
 
-### SelectContent
+### `SelectContent`
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -172,7 +170,7 @@ The trigger is built on `BottomSheetTrigger` and therefore accepts button props.
 | `className` | `string` | — |
 | `...props` | `React.ComponentProps<typeof BottomSheetContent>` | — |
 
-### SelectItem
+### `SelectItem`
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -182,6 +180,33 @@ The trigger is built on `BottomSheetTrigger` and therefore accepts button props.
 | `children` | `React.ReactNode` | — |
 | `...props` | `React.ComponentProps<typeof Button>` | — |
 
-### SelectGroup / SelectLabel / SelectSeparator
+`SelectItem` must be rendered inside `SelectContent`.
 
-These are layout and labeling primitives. `SelectLabel` accepts typography props, while the group and separator accept native `View` props.
+### `SelectGroup`
+
+Groups related options.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |
+
+### `SelectLabel`
+
+Label for a select group.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `children` | `React.ReactNode` | — |
+| `...props` | `React.ComponentProps<typeof Typography>` | — |
+
+### `SelectSeparator`
+
+Visual separator between option groups.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+| `...props` | `React.ComponentProps<typeof View>` | — |

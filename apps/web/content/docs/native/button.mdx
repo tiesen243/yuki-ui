@@ -91,16 +91,16 @@ The native styles also apply an active opacity effect while the button is presse
 
 ## API Reference
 
-### Button
+### `Button`
 
 | Prop | Type | Default |
 | --- | --- | --- |
-| `variant` | `ButtonVariant` from `buttonVariants` | `"default"` |
-| `size` | `ButtonSize` from `buttonVariants` | `"default"` |
+| `variant` | `VariantProps<typeof buttonVariants>['variant']` | `"default"` |
+| `size` | `VariantProps<typeof buttonVariants>['size']` | `"default"` |
 | `children` | `React.ReactNode` | — |
 | `onPress` | `PressableProps['onPress']` | — |
 | `disabled` | `boolean` | — |
 | `className` | `string` | — |
 | `...props` | `React.ComponentProps<typeof Pressable>` | — |
 
-The `variant` and `size` types are derived from the project's shared `buttonVariants`, so they stay aligned with the web button implementation.
+`variant` and `size` are derived from the shared `buttonVariants` definition.
