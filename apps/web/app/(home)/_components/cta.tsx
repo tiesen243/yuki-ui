@@ -5,6 +5,7 @@ import { GithubIcon } from '@/components/icons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { gitConfig } from '@/lib/shared'
 import { Typography } from '@/registry/ui/typography'
 
 export const CTASection: React.FC = () => (
@@ -27,22 +28,20 @@ export const CTASection: React.FC = () => (
 
         <div className='flex flex-wrap gap-3'>
           <Button nativeButton={false} render={<Link href='/docs' />}>
-            Get started
-            <ArrowRightIcon data-icon='inline-end' />
+            Get started <ArrowRightIcon data-icon='inline-end' />
           </Button>
           <Button
             variant='outline'
             nativeButton={false}
             render={
               <Link
-                href='https://github.com'
+                href={`https://github.com/${gitConfig.user}/${gitConfig.repo}`}
                 target='_blank'
                 rel='noopener noreferrer'
               />
             }
           >
-            <GithubIcon data-icon='inline-start' />
-            GitHub
+            <GithubIcon data-icon='inline-start' /> GitHub
           </Button>
         </div>
       </CardContent>
