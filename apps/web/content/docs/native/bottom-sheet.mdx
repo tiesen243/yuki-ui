@@ -1,12 +1,23 @@
 ---
 title: Bottom Sheet
-description: A native bottom-sheet style modal with animated presentation and swipe-to-close support.
-source: registry/native/bottom-sheet.tsx
+description: A native bottom sheet with modal presentation, snap points, drag gestures, and animated transitions.
+source: native/bottom-sheet.tsx
 ---
 
-Bottom Sheet provides a native modal surface with a trigger, content container, header, footer, title, and description. The content is presented as a bottom sheet and can be dismissed by tapping outside or swiping it down.
+`BottomSheet` provides a native-friendly modal surface that slides from the bottom of the screen. It supports animated opening and closing, configurable snap points, drag-to-resize behavior, and drag-to-dismiss gestures.
 
-> See the [shadcn/ui Drawer documentation](https://ui.shadcn.com/docs/components/base/drawer) for the web component API, concepts, and additional examples.
+The component is composed from a root provider and a set of layout primitives:
+
+- `BottomSheet` - Owns open state, snap points, and animation state.
+- `BottomSheetTrigger` - Opens the sheet.
+- `BottomSheetClose` - Closes the sheet.
+- `BottomSheetContent` - The modal surface.
+- `BottomSheetHeader` - Header area and drag handle.
+- `BottomSheetFooter` - Footer actions.
+- `BottomSheetTitle` - Sheet title.
+- `BottomSheetDescription` - Supporting description.
+
+This is a native-specific component and does not have a direct shadcn/ui base component.
 
 ## Installation
 
@@ -22,34 +33,59 @@ Copy and paste the following code into your project.
 
 ## Usage
 
+The simplest sheet uses a trigger and content.
+
 ```tsx
 import {
   BottomSheet,
-  BottomSheetClose,
   BottomSheetContent,
   BottomSheetDescription,
-  BottomSheetFooter,
   BottomSheetHeader,
   BottomSheetTitle,
   BottomSheetTrigger,
 } from '@/components/native/bottom-sheet'
-import { Button } from '@/components/native/button'
 
-;<BottomSheet>
-  <BottomSheetTrigger>Open bottom-sheet</BottomSheetTrigger>
+export function Example() {
+  return (
+    <BottomSheet>
+      <BottomSheetTrigger variant='outline'>
+        Open settings
+      </BottomSheetTrigger>
+
+      <BottomSheetContent>
+        <BottomSheetHeader>
+          <BottomSheetTitle>Settings</BottomSheetTitle>
+          <BottomSheetDescription>
+            Configure your account preferences.
+          </BottomSheetDescription>
+        </BottomSheetHeader>
+      </BottomSheetContent>
+    </BottomSheet>
+  )
+}
+```
+
+### Add actions
+
+Use `BottomSheetFooter` for actions that should stay at the bottom of the sheet.
+
+```tsx
+<BottomSheet>
+  <BottomSheetTrigger>Open</BottomSheetTrigger>
 
   <BottomSheetContent>
     <BottomSheetHeader>
-      <BottomSheetTitle>Delete account?</BottomSheetTitle>
+      <BottomSheetTitle>Edit profile</BottomSheetTitle>
       <BottomSheetDescription>
-        This action cannot be undone.
+        Update your profile information.
       </BottomSheetDescription>
     </BottomSheetHeader>
 
+    {/* Form content */}
+
     <BottomSheetFooter>
-      <Button variant='destructive' onPress={deleteAccount}>
-        Delete
-      </Button>
+      <BottomSheetClose>Cancel</BottomSheetClose>
+      <Button>Save changes</Button>
     </BottomSheetFooter>
   </BottomSheetContent>
 </BottomSheet>
@@ -57,15 +93,121 @@ import { Button } from '@/components/native/button'
 
 ### Controlled state
 
-Use `open` and `onOpenChange` when the bottom-sheet state needs to be controlled by the parent.
+Pass both `open` and `onOpenChange` when the parent should control the sheet.
 
 ```tsx
-const [open, setOpen] = useState(false)
+const [open, setOpen] = React.useState(false)
 
-<BottomSheet open={open} onOpenChange={setOpen}>
-  <BottomSheetTrigger>Open</BottomSheetTrigger>
-  <BottomSheetContent>
-    <BottomSheetTitle>Settings</BottomSheetTitle>
-  </BottomSheetContent>
+return (
+  <BottomSheet open={open} onOpenChange={setOpen}>
+    <BottomSheetTrigger>Open</BottomSheetTrigger>
+
+    <BottomSheetContent>
+      <BottomSheetHeader>
+        <BottomSheetTitle>Controlled sheet</BottomSheetTitle>
+      </BottomSheetHeader>
+    </BottomSheetContent>
+  </BottomSheet>
+)
+```
+
+### Snap points
+
+Snap points are expressed as a fraction of the screen height. The default values are:
+
+```ts
+[0.33, 0.67, 1]
+```
+
+For example, to use 40%, 70%, and 90% of the screen height:
+
+```tsx
+<BottomSheet
+  snapPoints={[0.4, 0.7, 0.9]}
+  defaultSnapPoint={0}
+>
+  {/* ... */}
 </BottomSheet>
 ```
+
+`defaultSnapPoint` is the index into `snapPoints`, not the percentage itself.
+
+## Gestures
+
+`BottomSheetHeader` contains the drag handle and owns the vertical pan gesture.
+
+Dragging upward moves the sheet toward the closest configured snap point. Dragging downward can dismiss the sheet when either of these thresholds is reached:
+
+- The drag distance is greater than `240` pixels.
+- The downward velocity is greater than `3.6`.
+
+When the gesture ends without dismissal, the sheet projects the final position using the gesture velocity and animates to the nearest snap point.
+
+## Modal behavior
+
+The content is rendered inside React Native's `Modal` with a transparent background. Tapping the backdrop closes the sheet.
+
+The modal also responds to Android's `onRequestClose` callback.
+
+## Layout
+
+A typical sheet is structured as:
+
+```text
+BottomSheet
+└── BottomSheetTrigger
+└── BottomSheetContent
+    ├── BottomSheetHeader
+    │   ├── BottomSheetTitle
+    │   └── BottomSheetDescription
+    ├── content
+    └── BottomSheetFooter
+```
+
+`BottomSheetContent` is positioned at the bottom of the screen and animates its height. `BottomSheetHeader` is the recommended place for the drag gesture.
+
+## API reference
+
+### `BottomSheet`
+
+| Prop | Default | Description |
+| --- | --- | --- |
+| `open` | uncontrolled | Controls whether the sheet is open. |
+| `onOpenChange` | — | Called when the open state changes. |
+| `snapPoints` | `[0.33, 0.67, 1]` | Available sheet heights as screen-height fractions. |
+| `defaultSnapPoint` | `0` | Initial snap point index. |
+| `children` | — | Sheet trigger and content. |
+
+### `BottomSheetTrigger`
+
+Extends the native `Button` props and opens the parent sheet before invoking its own `onPress`.
+
+### `BottomSheetClose`
+
+Extends the native `Button` props and closes the parent sheet before invoking its own `onPress`.
+
+### `BottomSheetContent`
+
+Extends `Animated.View` props and renders the modal sheet surface.
+
+### `BottomSheetHeader`
+
+Extends `View` props and provides the drag gesture area.
+
+### `BottomSheetFooter`
+
+Extends `View` props.
+
+### `BottomSheetTitle`
+
+Extends the native `Typography` props.
+
+### `BottomSheetDescription`
+
+Extends the native `Typography` props.
+
+<Callout>
+
+The snap points are fractions of the device screen height. Use values between `0` and `1` for predictable results.
+
+</Callout>

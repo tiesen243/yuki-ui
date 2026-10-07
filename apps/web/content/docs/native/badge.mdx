@@ -1,12 +1,14 @@
 ---
 title: Badge
-description: A native badge component for displaying compact status labels.
-source: registry/native/badge.tsx
+description: A compact status indicator for labels, categories, and states.
+source: native/badge.tsx
 ---
 
-Badge is a compact label that supports the same visual variants as the base badge component while rendering with React Native primitives.
+The `Badge` component is a small, inline status indicator intended for labels, categories, statuses, and short pieces of metadata.
 
-> See the [shadcn/ui Badge documentation](https://ui.shadcn.com/docs/components/base/badge) for the web component API, concepts, and additional examples.
+It follows the same visual language as the shadcn/ui Badge while using React Native primitives.
+
+See the [shadcn/ui Badge documentation](https://ui.shadcn.com/docs/components/base/badge) for the original component API and additional examples.
 
 ## Installation
 
@@ -22,28 +24,64 @@ Copy and paste the following code into your project.
 
 ## Usage
 
+Render a badge around a short label.
+
 ```tsx
 import { Badge } from '@/components/native/badge'
 
-;<Badge>New</Badge>
+export function Example() {
+  return <Badge>New</Badge>
+}
 ```
 
-### Variants
+### Status labels
 
-The `variant` prop supports `default`, `secondary`, `success`, `destructive`, `info`, `warning`, `outline`, `ghost`, and `link`.
+Badges work well for small pieces of state.
 
 ```tsx
-<Badge variant='secondary'>Draft</Badge>
-<Badge variant='success'>Active</Badge>
-<Badge variant='destructive'>Failed</Badge>
-<Badge variant='warning'>Pending</Badge>
-<Badge variant='outline'>Optional</Badge>
+<View className='flex-row gap-2'>
+  <Badge variant='default'>Active</Badge>
+  <Badge variant='secondary'>Draft</Badge>
+  <Badge variant='destructive'>Failed</Badge>
+</View>
 ```
 
 ### Custom styling
 
+Use `className` to extend or override the default styling.
+
 ```tsx
-<Badge variant='info' className='self-start'>
-  Information
+<Badge className='rounded-full px-3'>
+  Recommended
 </Badge>
 ```
+
+## Variants
+
+Use the component's variants to communicate different states.
+
+```tsx
+<Badge variant='default'>Default</Badge>
+<Badge variant='secondary'>Secondary</Badge>
+<Badge variant='destructive'>Destructive</Badge>
+<Badge variant='outline'>Outline</Badge>
+```
+
+Choose variants based on meaning rather than using them only for decoration. For example, use a destructive badge for an error state and a secondary badge for neutral metadata.
+
+## API reference
+
+`Badge` accepts the props exposed by the native implementation together with its variant props.
+
+| Prop | Description |
+| --- | --- |
+| `variant` | Controls the visual treatment of the badge. |
+| `className` | Additional NativeWind classes. |
+| `children` | Badge content. |
+| `...props` | Supported native props exposed by the implementation. |
+
+<Callout>
+
+Keep badge content short. A badge is designed for compact labels rather than paragraphs or long-form content.
+
+</Callout>

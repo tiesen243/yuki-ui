@@ -1,12 +1,12 @@
 ---
 title: Input
-description: A styled native text input that follows the design system input styles.
-source: registry/native/input.tsx
+description: A styled React Native TextInput that follows the shadcn visual language.
+source: native/input.tsx
 ---
 
-Input is a styled wrapper around React Native's `TextInput` and accepts the standard native text input props.
+The native `Input` component is a thin styling wrapper around React Native's `TextInput`. It provides consistent dimensions, borders, colors, focus styling, disabled behavior, and invalid-state styling.
 
-> See the [shadcn/ui Input documentation](https://ui.shadcn.com/docs/components/base/input) for the web component API, concepts, and additional examples.
+See the [shadcn/ui Input documentation](https://ui.shadcn.com/docs/components/base/input) for the original component API and additional examples.
 
 ## Installation
 
@@ -25,36 +25,118 @@ Copy and paste the following code into your project.
 ```tsx
 import { Input } from '@/components/native/input'
 
-;<Input placeholder='Enter your name' />
+export function Example() {
+  return <Input placeholder='Enter your name' />
+}
 ```
 
 ### Controlled input
 
-```tsx
-const [value, setValue] = useState('')
+Because `Input` extends `TextInput`, normal controlled input patterns work as expected.
 
-<Input
-  value={value}
-  onChangeText={setValue}
-  placeholder='Email address'
-/>
+```tsx
+const [value, setValue] = React.useState('')
+
+return (
+  <Input
+    value={value}
+    onChangeText={setValue}
+    placeholder='Your name'
+  />
+)
 ```
 
-### Native props
+### Keyboard types
 
-Because `Input` is based on React Native `TextInput`, native props can be passed directly.
+Pass React Native `TextInput` props directly.
 
 ```tsx
 <Input
-  placeholder='Password'
-  secureTextEntry
+  keyboardType='email-address'
   autoCapitalize='none'
-  autoCorrect={false}
+  placeholder='you@example.com'
 />
 ```
 
-### Custom styling
+### Password input
 
 ```tsx
-<Input className='h-12 rounded-lg' placeholder='Custom input' />
+<Input
+  secureTextEntry
+  placeholder='Password'
+/>
 ```
+
+### Invalid state
+
+Use `invalid` when the input value fails validation.
+
+```tsx
+<Input
+  invalid
+  value={email}
+  onChangeText={setEmail}
+  placeholder='Email'
+/>
+```
+
+The invalid state applies destructive border and text styling and sets `aria-invalid`.
+
+### Disabled input
+
+The native component uses `editable={false}` for the disabled/read-only interaction state.
+
+```tsx
+<Input editable={false} value='Read only' />
+```
+
+This applies reduced opacity and a disabled background.
+
+## Native TextInput props
+
+All normal React Native `TextInput` props remain available.
+
+```tsx
+<Input
+  multiline
+  numberOfLines={4}
+  textAlignVertical='top'
+  placeholder='Write a note...'
+/>
+```
+
+## Styling
+
+The default input has:
+
+- `h-10` height.
+- Full width.
+- Rounded corners.
+- Input border and transparent background.
+- Foreground text color.
+- Ring-based focus border.
+- Dark-mode input background.
+
+Use `className` to customize the component.
+
+```tsx
+<Input className='h-12 rounded-xl' />
+```
+
+## API reference
+
+`Input` extends `React.ComponentProps<typeof TextInput>` and adds the following prop:
+
+| Prop | Default | Description |
+| --- | --- | --- |
+| `invalid` | `false` | Applies invalid styling and accessibility state. |
+| `editable` | `true` | Enables or disables editing. |
+| `placeholderTextColor` | native default from implementation | Custom placeholder color can be supplied. |
+| `className` | — | Additional NativeWind classes. |
+| `...props` | — | Standard React Native `TextInput` props. |
+
+<Callout>
+
+Prefer `invalid` for validation state instead of manually adding destructive classes. This keeps the visual state and accessibility state synchronized.
+
+</Callout>

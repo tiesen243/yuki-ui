@@ -1,12 +1,14 @@
 ---
 title: Card
-description: A composable native card with header, content, footer, title, description, and action primitives.
-source: registry/native/card.tsx
+description: A composable container for grouping related content into a consistent surface.
+source: native/card.tsx
 ---
 
-Card provides a set of composable primitives for grouping related content in a consistent container.
+The native `Card` component provides a composable surface for grouping related information and actions. It follows the shadcn/ui Card structure while using React Native `View` and `Text` primitives.
 
-> See the [shadcn/ui Card documentation](https://ui.shadcn.com/docs/components/base/card) for the web component API, concepts, and additional examples.
+The component is split into small primitives so the layout can be adapted to different screens without relying on a single rigid card template.
+
+See the [shadcn/ui Card documentation](https://ui.shadcn.com/docs/components/base/card) for the original component API and additional examples.
 
 ## Installation
 
@@ -22,6 +24,8 @@ Copy and paste the following code into your project.
 
 ## Usage
 
+Use the header, content, and footer primitives to build a card.
+
 ```tsx
 import {
   Card,
@@ -32,48 +36,120 @@ import {
   CardTitle,
 } from '@/components/native/card'
 
-;<Card>
+export function Example() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Account</CardTitle>
+        <CardDescription>
+          Manage your account settings.
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent>
+        <Typography>Your account content goes here.</Typography>
+      </CardContent>
+
+      <CardFooter>
+        <Button>Save changes</Button>
+      </CardFooter>
+    </Card>
+  )
+}
+```
+
+### Card actions
+
+Use `CardAction` for content that belongs beside or opposite the card heading.
+
+```tsx
+<CardHeader>
+  <View className='w-full flex-row items-center justify-between'>
+    <View className='flex-1'>
+      <CardTitle>Notifications</CardTitle>
+      <CardDescription>Manage notification preferences.</CardDescription>
+    </View>
+
+    <CardAction>
+      <Button size='sm' variant='ghost'>Edit</Button>
+    </CardAction>
+  </View>
+</CardHeader>
+```
+
+### Custom content
+
+`CardContent` and `CardFooter` are ordinary `View` wrappers, so they can contain arbitrary native content.
+
+```tsx
+<Card>
   <CardHeader>
-    <CardTitle>Account</CardTitle>
-    <CardDescription>Manage your account settings.</CardDescription>
+    <CardTitle>Profile</CardTitle>
   </CardHeader>
 
   <CardContent>
-    <Typography>Account details go here.</Typography>
+    <Input placeholder='Name' />
+    <Input placeholder='Email' keyboardType='email-address' />
   </CardContent>
-
-  <CardFooter>
-    <Button>Save changes</Button>
-  </CardFooter>
 </Card>
 ```
 
 ## Structure
 
-The card is composed from the following primitives:
+The component exports:
 
-- `Card` — the outer container.
-- `CardHeader` — header content with spacing and alignment.
-- `CardTitle` — title text.
-- `CardDescription` — supporting description text.
-- `CardAction` — an action area that can be placed in the header.
-- `CardContent` — the main content area.
-- `CardFooter` — the footer area.
-
-### Header action
-
-```tsx
-<Card>
-  <CardHeader>
-    <CardTitle>Notifications</CardTitle>
-    <CardAction>
-      <Button variant='ghost' size='sm'>
-        Settings
-      </Button>
-    </CardAction>
-  </CardHeader>
-  <CardContent>
-    <Typography>Notification preferences.</Typography>
-  </CardContent>
-</Card>
+```text
+Card
+├── CardHeader
+│   ├── CardTitle
+│   ├── CardDescription
+│   └── CardAction
+├── CardContent
+└── CardFooter
 ```
+
+These primitives are optional. You can use only the parts needed for a particular layout.
+
+## Typography
+
+The root `Card` provides a typography context containing the card foreground color and default text size. This makes nested native typography inherit the card's intended text treatment.
+
+`CardTitle` and `CardDescription` apply their own semantic styles on top of this context.
+
+## API reference
+
+### `Card`
+
+Extends React Native `View` props.
+
+### `CardHeader`
+
+Extends React Native `View` props.
+
+### `CardTitle`
+
+Extends React Native `Text`/`Typography` props.
+
+### `CardDescription`
+
+Extends React Native `Text`/`Typography` props.
+
+### `CardAction`
+
+Extends React Native `View` props.
+
+### `CardContent`
+
+Extends React Native `View` props.
+
+### `CardFooter`
+
+Extends React Native `View` props.
+
+All primitives accept `className` for additional styling.
+
+<Callout>
+
+The card primitives are intentionally lightweight. Use them as layout building blocks rather than treating `Card` as a fixed content template.
+
+</Callout>

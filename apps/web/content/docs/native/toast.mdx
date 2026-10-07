@@ -1,10 +1,25 @@
 ---
 title: Toast
-description: A lightweight native toast notification system with animated presentation and swipe-to-dismiss gestures.
-source: registry/native/toast.tsx
+description: Imperative toast notifications for React Native with automatic dismissal, animations, and swipe-to-dismiss gestures.
+source: native/toast.tsx
 ---
 
-The native toast component provides a lightweight global notification API with animated entry, automatic dismissal, and horizontal swipe-to-dismiss gestures.
+The native `Toast` implementation provides an imperative notification API for React Native applications.
+
+Unlike the web toast implementation, this component does not depend on Base UI. It maintains a small in-memory listener registry and renders notifications through `ToasterProvider`.
+
+The system supports:
+
+- Default notifications.
+- Success, info, warning, and error variants.
+- Optional descriptions.
+- Custom icons.
+- Configurable duration.
+- Top or bottom positioning.
+- Animated entry and exit.
+- Horizontal swipe-to-dismiss gestures.
+
+This is a native-specific component and does not have a direct shadcn/ui base component.
 
 ## Installation
 
@@ -20,7 +35,7 @@ Copy and paste the following code into your project.
 
 ## Basic setup
 
-Wrap your application with `ToasterProvider`.
+Mount `ToasterProvider` near the root of the application.
 
 ```tsx
 import { ToasterProvider } from '@/components/native/toast'
@@ -28,61 +43,84 @@ import { ToasterProvider } from '@/components/native/toast'
 export function App() {
   return (
     <ToasterProvider>
-      <YourApp />
+      <Screen />
     </ToasterProvider>
   )
 }
 ```
 
-`ToasterProvider` renders active toasts and exposes the toast manager through `useToast`.
+The provider renders your application and places the toast viewport above it.
 
 ## Usage
 
-The exported `toast` manager can be used directly from event handlers and other application code.
+The global `toast` object exposes convenience methods.
 
 ```tsx
 import { toast } from '@/components/native/toast'
 
-toast.show('This is a simple toast.')
+toast.show('This is a simple notification.')
 toast.success('Saved successfully!')
-toast.error('Something went wrong.')
 toast.info('Your account has been updated.')
 toast.warning('This action may have side effects.')
+toast.error('Something went wrong.')
 ```
 
-Each method accepts a title, an optional description, and optional toast options.
+Each method accepts:
+
+```ts
+toast.show(title, description?, options?)
+toast.success(title, description?, options?)
+toast.info(title, description?, options?)
+toast.warning(title, description?, options?)
+toast.error(title, description?, options?)
+```
+
+### Description
 
 ```tsx
-toast.success('Saved successfully!', 'Your changes have been saved.', {
-  duration: 5000,
-})
+toast.success(
+  'Profile saved',
+  'Your changes have been saved successfully.'
+)
 ```
 
-## Toast types
+### Duration
 
-The renderer supports:
+The default duration is `3000ms`. Override it per toast.
 
-- `default`
-- `success`
-- `info`
-- `error`
-- `warning`
-
-Success, info, error, and warning toasts include a matching Lucide icon by default.
+```tsx
+toast.show(
+  'Long notification',
+  'This notification stays visible longer.',
+  { duration: 8000 }
+)
+```
 
 ### Custom icon
 
-```tsx
-import { CheckCircleIcon } from 'lucide-uniwind'
+Pass an icon renderer through `options`.
 
-toast.show('Completed', undefined, {
-  icon: (props) => <CheckCircleIcon {...props} />,
-})
+```tsx
+toast.show(
+  'New message',
+  'You have received a new message.',
+  {
+    icon: (props) => <MessageCircleIcon {...props} />,
+  }
+)
 ```
 
-## Position
+## Provider position
 
-`ToasterProvider` supports `top` and `bottom` positions.
+`ToasterProvider` supports `top` and `bottom`.
+
+```tsx
+<ToasterProvider position='top'>
+  <App />
+</ToasterProvider>
+```
+
+Or:
 
 ```tsx
 <ToasterProvider position='bottom'>
@@ -90,55 +128,104 @@ toast.show('Completed', undefined, {
 </ToasterProvider>
 ```
 
-## Duration
+The viewport is positioned using absolute layout with horizontal insets.
 
-Set a default duration per toast with the `duration` option. The default is `3000` milliseconds.
+## Swipe to dismiss
 
-```tsx
-toast.info('Syncing data...', undefined, { duration: 8000 })
-```
+Toast cards can be swiped horizontally.
 
-## Gestures
+The gesture becomes active after horizontal movement exceeds the gesture threshold. Once the swipe passes roughly 40% of the toast width, the toast dismisses in the swipe direction.
 
-Toasts can be swiped horizontally. A sufficiently large swipe dismisses the toast; smaller swipes spring back to the original position.
+If the swipe does not cross the threshold, the toast springs back to its original position.
 
-## Using the toast manager
+Programmatic dismissal is handled by the provider after the exit animation completes.
 
-Use `useToast` inside a `ToasterProvider` when you need access to the manager and dismiss function from a component.
+## Animation lifecycle
+
+When a toast appears:
+
+1. It starts above or below its final position.
+2. Its opacity starts at `0`.
+3. It animates into place over `250ms`.
+4. A timer is started using the configured duration.
+
+When a toast is dismissed:
+
+1. It translates vertically or horizontally depending on the dismissal reason.
+2. Opacity animates to `0`.
+3. The provider removes it from the active list.
+
+## Toast variants
+
+The built-in variants are:
+
+- `default`
+- `success`
+- `info`
+- `warning`
+- `error`
+
+Success, info, warning, and error variants use corresponding Lucide icons by default.
+
+You can replace the icon by providing `options.icon`.
+
+## Using `useToast`
+
+`useToast` exposes the toast manager and the provider's dismiss function.
 
 ```tsx
 import { useToast } from '@/components/native/toast'
 
 function SaveButton() {
-  const { toast, dismiss } = useToast()
+  const { toast } = useToast()
 
-  return <Button onPress={() => toast.success('Saved')}>Save</Button>
+  return (
+    <Button
+      onPress={() => {
+        toast.success('Saved')
+      }}
+    >
+      Save
+    </Button>
+  )
 }
 ```
+
+`useToast` must be called underneath `ToasterProvider`.
 
 ## API reference
 
 ### `ToasterProvider`
 
 ```tsx
-<ToasterProvider position='top'>{children}</ToasterProvider>
+<ToasterProvider position='top'>
+  {children}
+</ToasterProvider>
 ```
 
-| Prop       | Default | Description                                                        |
-| ---------- | ------- | ------------------------------------------------------------------ |
-| `position` | `"top"` | Controls whether the toast stack is rendered at the top or bottom. |
+| Prop | Default | Description |
+| --- | --- | --- |
+| `children` | — | Application content. |
+| `position` | `top` | Toast viewport position: `top` or `bottom`. |
 
 ### `toast`
 
 ```ts
 toast.show(title, description?, options?)
 toast.success(title, description?, options?)
-toast.error(title, description?, options?)
 toast.info(title, description?, options?)
 toast.warning(title, description?, options?)
+toast.error(title, description?, options?)
 ```
 
-`options.duration` controls the lifetime of the toast. `options.icon` can replace the default icon.
+### `ToastOptions`
+
+```ts
+interface ToastOptions {
+  icon?: (props: LucidePropsWithClassName) => React.ReactNode
+  duration?: number
+}
+```
 
 ### `useToast`
 
@@ -146,4 +233,10 @@ toast.warning(title, description?, options?)
 const { toast, dismiss } = useToast()
 ```
 
-The hook must be used inside `ToasterProvider`.
+`dismiss` accepts the internal toast id. Most application code should use the convenience `toast` methods instead.
+
+<Callout>
+
+Mount exactly one `ToasterProvider` at the appropriate application root. Calling `toast.*` before a provider is mounted will not display a notification.
+
+</Callout>

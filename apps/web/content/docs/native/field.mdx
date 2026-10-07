@@ -1,12 +1,23 @@
 ---
 title: Field
-description: Composable form field primitives for labels, descriptions, errors, groups, and separators.
-source: registry/native/field.tsx
+description: Composable form primitives for labels, descriptions, errors, groups, and keyboard-aware layouts.
+source: native/field.tsx
 ---
 
-Field provides composable primitives for building accessible and consistently spaced native forms.
+The native `Field` component is a collection of composable primitives for building accessible and consistent forms.
 
-> See the [shadcn/ui Field documentation](https://ui.shadcn.com/docs/components/base/field) for the web component API, concepts, and additional examples.
+It provides layout and semantic building blocks for:
+
+- Field grouping and spacing.
+- Labels and supporting descriptions.
+- Horizontal and vertical field layouts.
+- Keyboard-aware scrolling.
+- Field separators and content regions.
+- Invalid/error presentation.
+
+The implementation is designed to work with other native form controls such as `Input`, `Checkbox`, `Switch`, and `RadioGroup`.
+
+See the [shadcn/ui Field documentation](https://ui.shadcn.com/docs/components/base/field) for the original component API and additional examples.
 
 ## Installation
 
@@ -22,60 +33,157 @@ Copy and paste the following code into your project.
 
 ## Usage
 
-A basic field combines `Field`, `FieldLabel`, and the input control you want to render.
+A simple form can be composed from `FieldSet`, `FieldGroup`, `Field`, `FieldLabel`, and `FieldDescription`.
 
 ```tsx
-import { Field, FieldDescription, FieldLabel } from '@/components/native/field'
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+} from '@/components/native/field'
 import { Input } from '@/components/native/input'
 
-;<Field>
-  <FieldLabel>Email</FieldLabel>
-  <Input placeholder='you@example.com' keyboardType='email-address' />
-  <FieldDescription>
-    We will only use this address for account notifications.
-  </FieldDescription>
-</Field>
+export function Example() {
+  return (
+    <FieldSet>
+      <FieldGroup>
+        <Field>
+          <FieldLabel>Email</FieldLabel>
+          <Input
+            placeholder='you@example.com'
+            keyboardType='email-address'
+            autoCapitalize='none'
+          />
+          <FieldDescription>
+            We will never share your email.
+          </FieldDescription>
+        </Field>
+      </FieldGroup>
+    </FieldSet>
+  )
+}
 ```
 
-## Structure
+### Horizontal fields
 
-The component exports these primitives:
-
-- `FieldSet` — groups a set of related fields.
-- `FieldLegend` — labels a field set.
-- `FieldGroup` — lays out multiple fields.
-- `Field` — the main field container.
-- `FieldContent` — groups a field's content.
-- `FieldLabel` — field label.
-- `FieldTitle` — title text for a field.
-- `FieldDescription` — supporting help text.
-- `FieldSeparator` — visual separator between field groups.
-- `FieldError` — error content.
-
-### Field error
+Use the `orientation` prop when a field should place its label and control side by side.
 
 ```tsx
-<Field>
-  <FieldLabel>Password</FieldLabel>
-  <Input secureTextEntry />
-  <FieldError>Password must be at least 8 characters.</FieldError>
+<Field orientation='horizontal'>
+  <FieldLabel>Username</FieldLabel>
+  <Input className='flex-1' placeholder='tiesen' />
 </Field>
 ```
 
-### Grouped fields
+### Field content
+
+Use `FieldContent` when the control needs a separate content region.
+
+```tsx
+<Field orientation='horizontal'>
+  <FieldLabel>
+    <Typography>Notifications</Typography>
+  </FieldLabel>
+
+  <FieldContent>
+    <Typography variant='small'>Enable push notifications.</Typography>
+    <Switch />
+  </FieldContent>
+</Field>
+```
+
+### Grouping multiple fields
+
+`FieldGroup` provides consistent spacing between fields.
 
 ```tsx
 <FieldSet>
-  <FieldLegend>Profile</FieldLegend>
   <FieldGroup>
     <Field>
-      <FieldLabel>Name</FieldLabel>
+      <FieldLabel>First name</FieldLabel>
       <Input />
     </Field>
+
     <Field>
-      <FieldLabel>Bio</FieldLabel>
-      <Input multiline />
+      <FieldLabel>Last name</FieldLabel>
+      <Input />
     </Field>
   </FieldGroup>
 </FieldSet>
 ```
+
+### Keyboard-aware forms
+
+`FieldSet` is backed by `KeyboardAvoidingView` and `ScrollView`. It is intended for forms where the keyboard can otherwise cover lower fields.
+
+```tsx
+<FieldSet>
+  <FieldGroup>
+    {/* many fields */}
+  </FieldGroup>
+</FieldSet>
+```
+
+The implementation uses `padding` behavior on iOS and `height` behavior on other platforms. It also enables `keyboardShouldPersistTaps='handled'`.
+
+## Layout primitives
+
+The field module contains several primitives:
+
+- `FieldSet` - Keyboard-aware scroll container.
+- `FieldLegend` - Legend/title text.
+- `FieldGroup` - Vertical collection of fields.
+- `Field` - Individual field container.
+- `FieldContent` - Flexible content region.
+- `FieldLabel` - Label text.
+- `FieldTitle` - Compact title text.
+- `FieldDescription` - Supporting/help text.
+- `FieldSeparator` - Separator between field sections.
+
+## Orientation
+
+`Field` supports three orientations:
+
+```tsx
+<Field orientation='vertical'>...</Field>
+<Field orientation='horizontal'>...</Field>
+<Field orientation='responsive'>...</Field>
+```
+
+`vertical` is the default and stacks the content. `horizontal` places the label and content in a row. `responsive` starts vertically and can adapt at the configured container breakpoint.
+
+## API reference
+
+### `FieldSet`
+
+Extends React Native `ScrollView` props and adds `containerClassName`.
+
+| Prop | Description |
+| --- | --- |
+| `containerClassName` | Classes applied to the keyboard-aware outer container. |
+| `className` | Classes applied to the scroll content container. |
+| `...props` | React Native `ScrollView` props. |
+
+### `Field`
+
+| Prop | Default | Description |
+| --- | --- | --- |
+| `orientation` | `vertical` | Field layout direction. |
+| `className` | — | Additional classes. |
+| `...props` | — | React Native `View` props. |
+
+### Text primitives
+
+`FieldLegend`, `FieldLabel`, `FieldTitle`, and `FieldDescription` extend native `Typography` props, excluding the `variant` prop where appropriate.
+
+### `FieldGroup` and `FieldContent`
+
+Both extend React Native `View` props.
+
+<Callout>
+
+Use `FieldSet` as the outer container for long forms. It provides keyboard-aware scrolling so fields remain usable when the software keyboard is open.
+
+</Callout>

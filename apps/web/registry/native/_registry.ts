@@ -2,6 +2,8 @@ import type { RegistryItem } from 'shadcn/schema'
 
 import { getBaseUrl } from '@/lib/utils'
 
+const native = (name: string) => `${getBaseUrl()}/r/native-${name}.json`
+
 export const registryNative = [
   {
     name: 'native-avatar',
@@ -9,7 +11,7 @@ export const registryNative = [
     title: 'Avatar',
     description:
       'A component for displaying user avatars with an image and fallback content.',
-    registryDependencies: [`${getBaseUrl()}/r/native-typography.json`],
+    registryDependencies: [native('typography')],
     files: [
       {
         type: 'registry:ui',
@@ -24,7 +26,7 @@ export const registryNative = [
     title: 'Badge',
     description:
       'A small status indicator for highlighting labels, states, and categories.',
-    registryDependencies: ['badge', `${getBaseUrl()}/r/native-typography.json`],
+    registryDependencies: ['badge', native('typography')],
     files: [
       {
         type: 'registry:ui',
@@ -39,10 +41,7 @@ export const registryNative = [
     title: 'Bottom Sheet',
     description:
       'A bottom-sheet with drag, keyboard, and modal support for React Native.',
-    registryDependencies: [
-      `${getBaseUrl()}/r/native-button.json`,
-      `${getBaseUrl()}/r/native-typography.json`,
-    ],
+    registryDependencies: [native('button'), native('typography')],
     files: [
       {
         type: 'registry:ui',
@@ -56,10 +55,7 @@ export const registryNative = [
     type: 'registry:ui',
     title: 'Button',
     description: 'A pressable button component with variants and sizes.',
-    registryDependencies: [
-      'button',
-      `${getBaseUrl()}/r/native-typography.json`,
-    ],
+    registryDependencies: ['button', native('typography')],
     files: [
       {
         type: 'registry:ui',
@@ -74,7 +70,7 @@ export const registryNative = [
     title: 'Card',
     description:
       'A set of components for grouping related content into a card layout.',
-    registryDependencies: [`${getBaseUrl()}/r/native-typography.json`],
+    registryDependencies: [native('typography')],
     files: [
       {
         type: 'registry:ui',
@@ -89,7 +85,6 @@ export const registryNative = [
     title: 'Checkbox',
     description:
       'A pressable checkbox with controlled and uncontrolled state support.',
-    registryDependencies: [`${getBaseUrl()}/r/native-typography.json`],
     files: [
       {
         type: 'registry:ui',
@@ -104,10 +99,7 @@ export const registryNative = [
     title: 'Field',
     description:
       'A collection of components for building accessible form fields and field groups.',
-    registryDependencies: [
-      `${getBaseUrl()}/r/native-separator.json`,
-      `${getBaseUrl()}/r/native-typography.json`,
-    ],
+    registryDependencies: [native('separator'), native('typography')],
     files: [
       {
         type: 'registry:ui',
@@ -136,10 +128,7 @@ export const registryNative = [
     title: 'Item',
     description:
       'A flexible list item component with media, content, actions, and supporting text.',
-    registryDependencies: [
-      `${getBaseUrl()}/r/native-separator.json`,
-      `${getBaseUrl()}/r/native-typography.json`,
-    ],
+    registryDependencies: [native('separator'), native('typography')],
     files: [
       {
         type: 'registry:ui',
@@ -168,9 +157,9 @@ export const registryNative = [
     description:
       'A select component implemented as a native bottom-sheet picker, with single and multiple selection support.',
     registryDependencies: [
-      `${getBaseUrl()}/r/native-button.json`,
-      `${getBaseUrl()}/r/native-dialog.json`,
-      `${getBaseUrl()}/r/native-typography.json`,
+      native('bottom-sheet'),
+      native('button'),
+      native('typography'),
     ],
     files: [
       {
@@ -195,6 +184,19 @@ export const registryNative = [
     ],
   },
   {
+    name: 'native-switch',
+    type: 'registry:ui',
+    title: 'Switch',
+    description: 'A native switch control for toggling a boolean value.',
+    files: [
+      {
+        type: 'registry:ui',
+        path: 'registry/native/switch.tsx',
+        target: 'components/native/switch.tsx',
+      },
+    ],
+  },
+  {
     name: 'native-toast',
     type: 'registry:ui',
     title: 'Toast',
@@ -214,7 +216,7 @@ export const registryNative = [
     title: 'Typography',
     description:
       'A typography component with semantic variants and consistent text styling.',
-    registryDependencies: [`${getBaseUrl()}/r/native-typography.json`],
+    registryDependencies: ['typography'],
     files: [
       {
         type: 'registry:ui',

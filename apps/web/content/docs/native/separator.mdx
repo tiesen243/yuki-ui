@@ -1,12 +1,12 @@
 ---
 title: Separator
-description: A native horizontal or vertical separator for visually dividing content.
-source: registry/native/separator.tsx
+description: A lightweight visual divider for separating content horizontally or vertically.
+source: native/separator.tsx
 ---
 
-Separator creates a simple visual divider between sections of content.
+The native `Separator` component renders a one-pixel divider using React Native's `View`. It can be oriented horizontally or vertically and is useful for list sections, cards, settings screens, and grouped content.
 
-> See the [shadcn/ui Separator documentation](https://ui.shadcn.com/docs/components/base/separator) for the web component API, concepts, and additional examples.
+See the [shadcn/ui Separator documentation](https://ui.shadcn.com/docs/components/base/separator) for the original component API and additional examples.
 
 ## Installation
 
@@ -25,22 +25,20 @@ Copy and paste the following code into your project.
 The default orientation is horizontal.
 
 ```tsx
-import { Separator } from '@/components/native/separator'
-
-;<View className='gap-4'>
+<View className='gap-4'>
   <Typography>Account</Typography>
   <Separator />
-  <Typography>Preferences</Typography>
+  <Typography>Security</Typography>
 </View>
 ```
 
 ### Vertical separator
 
-Set `orientation='vertical'` when separating content horizontally. The parent should provide a height for the separator to stretch within.
+Use `orientation='vertical'` when separating items in a row.
 
 ```tsx
-<View className='h-8 flex-row items-center gap-4'>
-  <Typography>Profile</Typography>
+<View className='h-6 flex-row items-center gap-3'>
+  <Typography>Home</Typography>
   <Separator orientation='vertical' />
   <Typography>Settings</Typography>
 </View>
@@ -51,3 +49,28 @@ Set `orientation='vertical'` when separating content horizontally. The parent sh
 ```tsx
 <Separator className='bg-primary' />
 ```
+
+For vertical separators, the component uses `self-stretch` so the divider follows the height of its parent.
+
+## Orientation
+
+```tsx
+<Separator orientation='horizontal' />
+<Separator orientation='vertical' />
+```
+
+The horizontal variant uses `h-px w-full`. The vertical variant uses `w-px self-stretch`.
+
+## API reference
+
+| Prop | Default | Description |
+| --- | --- | --- |
+| `orientation` | `horizontal` | Either `horizontal` or `vertical`. |
+| `className` | — | Additional NativeWind classes. |
+| `...props` | — | React Native `View` props. |
+
+<Callout>
+
+For a vertical separator, make sure the parent has a meaningful height. The component uses `self-stretch` rather than an explicit height.
+
+</Callout>

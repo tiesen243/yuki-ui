@@ -1,12 +1,14 @@
 ---
 title: Checkbox
-description: A native checkbox with controlled and uncontrolled state support.
-source: registry/native/checkbox.tsx
+description: A pressable boolean control with controlled and uncontrolled usage.
+source: native/checkbox.tsx
 ---
 
-Checkbox is a pressable native control that supports both controlled and uncontrolled state.
+The native `Checkbox` is a pressable boolean control built with React Native's `TouchableOpacity`. It exposes the familiar checked/unchecked model while supporting both controlled and uncontrolled usage.
 
-> See the [shadcn/ui Checkbox documentation](https://ui.shadcn.com/docs/components/base/checkbox) for the web component API, concepts, and additional examples.
+The component also exposes accessibility information through the `checkbox` accessibility role and checked/disabled accessibility state.
+
+See the [shadcn/ui Checkbox documentation](https://ui.shadcn.com/docs/components/base/checkbox) for the original component API and additional examples.
 
 ## Installation
 
@@ -25,36 +27,109 @@ Copy and paste the following code into your project.
 ```tsx
 import { Checkbox } from '@/components/native/checkbox'
 
-;<Checkbox
-  label='Accept the terms and conditions'
-  onCheckedChange={(checked) => console.log(checked)}
-/>
+export function Example() {
+  return (
+    <Checkbox
+      aria-label='Accept terms'
+      onCheckedChange={(checked) => {
+        console.log(checked)
+      }}
+    />
+  )
+}
 ```
 
-### Default value
+### With a label
 
-Use `defaultChecked` when the component should manage its own initial state.
+Because the checkbox accepts children, you can keep the control and its label together.
 
 ```tsx
-<Checkbox label='Remember me' defaultChecked />
+<Checkbox>
+  <Typography>Remember me</Typography>
+</Checkbox>
 ```
 
 ### Controlled
 
-Pass `checked` and update it from `onCheckedChange` for controlled state.
+Pass both `checked` and `onCheckedChange` when the parent owns the state.
 
 ```tsx
-const [checked, setChecked] = useState(false)
+const [checked, setChecked] = React.useState(false)
 
-<Checkbox
-  label='Enable notifications'
-  checked={checked}
-  onCheckedChange={setChecked}
-/>
+return (
+  <Checkbox
+    checked={checked}
+    onCheckedChange={setChecked}
+  >
+    <Typography>Enable notifications</Typography>
+  </Checkbox>
+)
 ```
+
+### Uncontrolled
+
+For local state, provide an initial `checked` value and omit the change handler.
+
+```tsx
+<Checkbox checked={false}>
+  <Typography>Subscribe to updates</Typography>
+</Checkbox>
+```
+
+The component manages its own state after initialization.
 
 ### Disabled
 
 ```tsx
-<Checkbox label='Unavailable option' disabled />
+<Checkbox disabled>
+  <Typography>Unavailable option</Typography>
+</Checkbox>
 ```
+
+## Interaction model
+
+When pressed, the checkbox toggles its value unless it is disabled.
+
+The native implementation calls `onCheckedChange` with the new boolean value and then invokes the optional `onPress` handler.
+
+```tsx
+<Checkbox
+  onCheckedChange={(checked) => {
+    // update application state
+  }}
+  onPress={() => {
+    // respond to the native press event
+  }}
+/>
+```
+
+## Accessibility
+
+The root control uses:
+
+```text
+accessibilityRole="checkbox"
+accessibilityState={{ checked, disabled }}
+aria-checked={checked}
+aria-disabled={disabled}
+```
+
+When a checkbox has visible text, prefer placing that text inside the checkbox so the entire row remains a single press target.
+
+## API reference
+
+| Prop | Description |
+| --- | --- |
+| `checked` | Current checked value when controlled. |
+| `onCheckedChange` | Called with the next checked value. |
+| `disabled` | Prevents interaction and applies disabled styling. |
+| `activeOpacity` | Native touch feedback opacity. |
+| `onPress` | React Native press callback. |
+| `children` | Optional label or custom content. |
+| `className` | Additional NativeWind classes. |
+
+<Callout>
+
+When using a controlled checkbox, provide both `checked` and `onCheckedChange`. The component determines controlled mode from the presence of both props.
+
+</Callout>

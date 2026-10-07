@@ -1,0 +1,131 @@
+---
+title: Switch
+description: A native boolean switch control with animated thumb movement and controlled or uncontrolled state.
+source: native/switch.tsx
+---
+
+The native `Switch` is a compact boolean control built on React Native's `TouchableOpacity` and `Animated.View`.
+
+It provides:
+
+- Controlled and uncontrolled state.
+- Native switch accessibility semantics.
+- Disabled state.
+- Animated thumb movement.
+- Custom press handling.
+- Native touch feedback.
+
+See the [shadcn/ui Switch documentation](https://ui.shadcn.com/docs/components/base/switch) for the original component API and additional examples.
+
+## Installation
+
+### CLI
+
+<InstallComponent comp='native-switch' />
+
+### Manual
+
+Copy and paste the following code into your project.
+
+<ComponentSource comp='native-switch' />
+
+## Usage
+
+```tsx
+import { Switch } from '@/components/native/switch'
+
+export function Example() {
+  return (
+    <Switch
+      onCheckedChange={(checked) => {
+        console.log('Notifications:', checked)
+      }}
+    />
+  )
+}
+```
+
+### Controlled state
+
+Use `checked` and `onCheckedChange` together when the parent owns the value.
+
+```tsx
+const [checked, setChecked] = React.useState(false)
+
+return (
+  <Switch
+    checked={checked}
+    onCheckedChange={setChecked}
+  />
+)
+```
+
+### Uncontrolled state
+
+When the component is not controlled, it manages its own state.
+
+```tsx
+<Switch checked={false} />
+```
+
+Pressing the switch toggles its local state.
+
+### Disabled
+
+```tsx
+<Switch disabled />
+```
+
+Disabled switches cannot be toggled and render with reduced opacity.
+
+### With a field
+
+```tsx
+<Field orientation='horizontal'>
+  <FieldLabel>Notifications</FieldLabel>
+  <Switch />
+</Field>
+```
+
+## Animation
+
+The thumb moves between the unchecked and checked positions using a 200ms native-driver animation.
+
+The switch dimensions are intentionally compact:
+
+- Track width: `32`
+- Thumb size: `14`
+- Track padding: `2`
+
+The thumb translates between the two positions automatically when pressed.
+
+## Accessibility
+
+The root uses:
+
+```text
+accessibilityRole="switch"
+accessibilityState={{ checked, disabled }}
+aria-checked={checked}
+aria-disabled={disabled}
+```
+
+This allows assistive technologies to identify the control and its current state.
+
+## API reference
+
+| Prop | Default | Description |
+| --- | --- | --- |
+| `checked` | `false` | Current value when controlled. |
+| `onCheckedChange` | — | Called with the next boolean value. |
+| `disabled` | `false` | Disables interaction. |
+| `activeOpacity` | `0.8` | Native touch feedback opacity. |
+| `onPress` | — | React Native press callback. |
+| `className` | — | Additional classes. |
+| `...props` | — | Other `TouchableOpacity` props. |
+
+<Callout>
+
+The component enters controlled mode only when both `checked` and `onCheckedChange` are provided. Keep those props together when managing the value externally.
+
+</Callout>

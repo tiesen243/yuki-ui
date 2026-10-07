@@ -1,10 +1,14 @@
 ---
 title: Typography
-description: Native typography primitives for consistent text styles and accessibility roles.
-source: registry/native/typography.tsx
+description: A native typography primitive with semantic variants, accessibility roles, and inherited text context.
+source: native/typography.tsx
 ---
 
-Typography provides a native `Text` primitive that reuses the design system typography variants while adding appropriate accessibility roles for headings.
+The native `Typography` component is the foundation for text throughout the native component set. It wraps React Native's `Text` component and applies the shared typography variants used by the project.
+
+It also provides `TypographyContext`, which allows compound components such as `Button` and `Card` to pass inherited text styling to nested typography.
+
+This is a custom native implementation. It is intentionally separate from the web typography documentation because React Native uses `Text` and native accessibility semantics rather than HTML heading and paragraph elements.
 
 ## Installation
 
@@ -23,31 +27,128 @@ Copy and paste the following code into your project.
 ```tsx
 import { Typography } from '@/components/native/typography'
 
-;<Typography>Body text</Typography>
+export function Example() {
+  return (
+    <View className='gap-2'>
+      <Typography variant='h1'>Welcome back</Typography>
+      <Typography variant='p'>
+        Manage your account and preferences.
+      </Typography>
+    </View>
+  )
+}
 ```
 
 ## Variants
 
-The `variant` prop is inherited from the base typography component, so the native component uses the same typography scale as the web component.
+`Typography` delegates its variant styles to the shared `typographyVariants` definition.
+
+Common semantic variants include headings and body text.
 
 ```tsx
-<Typography variant='h1'>Page title</Typography>
-<Typography variant='h2'>Section title</Typography>
-<Typography variant='h3'>Subsection title</Typography>
-<Typography variant='h4'>Heading</Typography>
+<Typography variant='h1'>Heading 1</Typography>
+<Typography variant='h2'>Heading 2</Typography>
+<Typography variant='h3'>Heading 3</Typography>
+<Typography variant='h4'>Heading 4</Typography>
 <Typography variant='p'>Paragraph</Typography>
 ```
 
-Heading variants also receive the corresponding native accessibility role and heading level.
+Use the variants according to their semantic meaning rather than only their visual size.
 
-### Custom styling
+## Accessibility
+
+Heading variants `h1` through `h4` use:
+
+```text
+accessibilityRole="header"
+```
+
+and provide the corresponding `aria-level`.
+
+Other variants use:
+
+```text
+accessibilityRole="text"
+```
+
+This allows the component to preserve a semantic hierarchy even though React Native does not have HTML heading elements.
+
+## Native text props
+
+Because `Typography` is built on `Text`, standard React Native text props remain available.
 
 ```tsx
-<Typography variant='h2' className='text-primary'>
-  Account settings
+<Typography
+  numberOfLines={2}
+  ellipsizeMode='tail'
+  selectable
+>
+  A long piece of text that may need to be truncated.
 </Typography>
 ```
 
-### Shared typography context
+## Inherited typography context
 
-Native components such as `Button`, `Badge`, and `Card` use `TypographyContext` internally so text children inherit the appropriate text styles automatically.
+`TypographyContext` is useful for compound components that need to change the text treatment of their descendants.
+
+For example, `Button` supplies a text color based on its selected variant.
+
+```tsx
+<TypographyContext value='text-primary-foreground'>
+  <Typography>Button text</Typography>
+</TypographyContext>
+```
+
+The `Typography` component combines the context class with its own variant and explicit `className`. An explicit `className` can therefore customize the final result.
+
+## Custom styling
+
+Use `className` for local adjustments.
+
+```tsx
+<Typography
+  variant='p'
+  className='text-muted-foreground'
+>
+  Supporting information
+</Typography>
+```
+
+## API reference
+
+### `Typography`
+
+`Typography` combines React Native `Text` props with the project's typography variant props.
+
+| Prop | Description |
+| --- | --- |
+| `variant` | Semantic typography variant. |
+| `className` | Additional NativeWind classes. |
+| `children` | Text or React Native text content. |
+| `...props` | Standard React Native `Text` props. |
+
+### `TypographyContext`
+
+The context stores an inherited class name.
+
+```tsx
+<TypographyContext value='text-muted-foreground'>
+  <Typography>Inherited styling</Typography>
+</TypographyContext>
+```
+
+### `typographyVariants`
+
+The component re-exports the shared variant definition:
+
+```tsx
+import { typographyVariants } from '@/components/native/typography'
+```
+
+Use it when a related component needs to share the exact same typography variant definitions.
+
+<Callout>
+
+Prefer semantic variants such as `h1`, `h2`, and `p` instead of manually reproducing typography classes. This keeps text styling consistent across the native component library.
+
+</Callout>

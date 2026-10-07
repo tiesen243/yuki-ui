@@ -1,12 +1,14 @@
 ---
 title: Item
-description: Composable list item primitives for building settings rows, navigation items, and grouped content.
-source: registry/native/item.tsx
+description: Composable list-item primitives for media, content, actions, and supporting text.
+source: native/item.tsx
 ---
 
-Item provides composable primitives for common list and settings layouts. It supports variants, sizes, media, content, actions, headers, footers, and separators.
+The native `Item` component is a composable list-row primitive for settings screens, menus, notifications, and other collection-based interfaces.
 
-> See the [shadcn/ui Item documentation](https://ui.shadcn.com/docs/components/base/item) for the web component API, concepts, and additional examples.
+Instead of forcing a fixed row structure, it provides primitives for media, content, actions, headers, footers, titles, descriptions, and separators.
+
+See the [shadcn/ui Item documentation](https://ui.shadcn.com/docs/components/base/item) for the original component API and additional examples.
 
 ## Installation
 
@@ -25,58 +27,80 @@ Copy and paste the following code into your project.
 ```tsx
 import {
   Item,
+  ItemActions,
   ItemContent,
   ItemDescription,
   ItemTitle,
 } from '@/components/native/item'
+import { Button } from '@/components/native/button'
 
-;<Item>
-  <ItemContent>
-    <ItemTitle>Notifications</ItemTitle>
-    <ItemDescription>Manage notification preferences.</ItemDescription>
-  </ItemContent>
-</Item>
+export function Example() {
+  return (
+    <Item>
+      <ItemContent>
+        <ItemTitle>Notifications</ItemTitle>
+        <ItemDescription>
+          Receive updates about your account.
+        </ItemDescription>
+      </ItemContent>
+
+      <ItemActions>
+        <Button size='sm' variant='ghost'>Manage</Button>
+      </ItemActions>
+    </Item>
+  )
+}
 ```
 
-## Structure
+### Media
 
-The component exports:
-
-- `ItemGroup` — groups related items.
-- `ItemSeparator` — separates items within a group.
-- `Item` — the main row container.
-- `ItemMedia` — leading media or icon area.
-- `ItemContent` — primary content area.
-- `ItemTitle` — primary label.
-- `ItemDescription` — secondary description.
-- `ItemActions` — trailing actions.
-- `ItemHeader` — header content.
-- `ItemFooter` — footer content.
-
-### Media and actions
+Use `ItemMedia` for icons, avatars, or images.
 
 ```tsx
 <Item>
-  <ItemMedia>
-    <Avatar>
-      <AvatarFallback>TS</AvatarFallback>
-    </Avatar>
+  <ItemMedia variant='icon'>
+    <BellIcon className='size-4' />
   </ItemMedia>
 
   <ItemContent>
-    <ItemTitle>Tiến</ItemTitle>
-    <ItemDescription>Account administrator</ItemDescription>
+    <ItemTitle>Notifications</ItemTitle>
+    <ItemDescription>Receive account updates.</ItemDescription>
   </ItemContent>
-
-  <ItemActions>
-    <Button size='sm' variant='outline'>
-      Edit
-    </Button>
-  </ItemActions>
 </Item>
 ```
 
-### Group and separator
+For images:
+
+```tsx
+<Item>
+  <ItemMedia variant='image'>
+    <Image source={{ uri: user.avatar }} />
+  </ItemMedia>
+
+  <ItemContent>
+    <ItemTitle>{user.name}</ItemTitle>
+    <ItemDescription>{user.email}</ItemDescription>
+  </ItemContent>
+</Item>
+```
+
+### Variants and sizes
+
+```tsx
+<Item variant='default'>...</Item>
+<Item variant='outline'>...</Item>
+<Item variant='muted'>...</Item>
+
+<Item size='default'>...</Item>
+<Item size='sm'>...</Item>
+<Item size='xs'>...</Item>
+```
+
+The variants control the border/background treatment, while size controls padding and spacing.
+
+### Groups
+
+Use `ItemGroup` to organize several items.
 
 ```tsx
 <ItemGroup>
@@ -85,7 +109,9 @@ The component exports:
       <ItemTitle>General</ItemTitle>
     </ItemContent>
   </Item>
+
   <ItemSeparator />
+
   <Item>
     <ItemContent>
       <ItemTitle>Privacy</ItemTitle>
@@ -94,14 +120,68 @@ The component exports:
 </ItemGroup>
 ```
 
-### Variants and sizes
+### Headers and footers
+
+`ItemHeader` and `ItemFooter` span the full row width.
 
 ```tsx
-<Item variant='default'>Default item</Item>
-<Item variant='outline'>Outlined item</Item>
-<Item variant='muted'>Muted item</Item>
+<Item>
+  <ItemHeader>
+    <ItemTitle>Account</ItemTitle>
+    <Typography variant='small'>Updated today</Typography>
+  </ItemHeader>
 
-<Item size='sm'>Compact item</Item>
-<Item size='default'>Default item</Item>
-<Item size='lg'>Large item</Item>
+  <ItemContent>
+    <ItemDescription>
+      Your account information.
+    </ItemDescription>
+  </ItemContent>
+
+  <ItemFooter>
+    <Typography variant='small'>Free plan</Typography>
+  </ItemFooter>
+</Item>
 ```
+
+## Structure
+
+```text
+Item
+├── ItemHeader
+├── ItemMedia
+├── ItemContent
+│   ├── ItemTitle
+│   └── ItemDescription
+├── ItemActions
+└── ItemFooter
+```
+
+You do not need to use every primitive.
+
+## API reference
+
+### `Item`
+
+| Prop | Default | Description |
+| --- | --- | --- |
+| `variant` | `default` | Border/background variant. |
+| `size` | `default` | Spacing and size variant. |
+| `className` | — | Additional classes. |
+| `...props` | — | React Native `View` props. |
+
+### `ItemMedia`
+
+| Prop | Default | Description |
+| --- | --- | --- |
+| `variant` | `default` | Media presentation: `default`, `icon`, or `image`. |
+| `className` | — | Additional classes. |
+
+### Other primitives
+
+`ItemContent`, `ItemActions`, `ItemGroup`, `ItemSeparator`, `ItemTitle`, `ItemDescription`, `ItemHeader`, and `ItemFooter` accept their corresponding native `View`, `Typography`, or `Separator` props.
+
+<Callout>
+
+Use `Item` for repeated rows and settings-style interfaces. Keep the primary action inside `ItemActions` so the content hierarchy remains easy to scan.
+
+</Callout>
