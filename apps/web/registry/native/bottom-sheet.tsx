@@ -152,7 +152,7 @@ function BottomSheetContent({
       transparent
     >
       <TouchableWithoutFeedback onPress={() => setIsOpen(false)}>
-        <View className='absolute inset-0 flex-1 bg-black/10' />
+        <View className='absolute inset-0 flex-1 bg-black/30' />
       </TouchableWithoutFeedback>
 
       <TypographyContext value='text-sm text-popover-foreground'>
