@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/registry/native/button'
@@ -62,6 +63,9 @@ function BottomSheet({
 
   const [isVisible, setIsVisible] = React.useState(isOpen)
 
+  const insets = useSafeAreaInsets()
+  const MAX_HEIGHT = SCREEN_HEIGHT - insets.top
+
   const animatedOpen = React.useCallback(() => {
     setIsVisible(true)
     sheetHeight.setOffset(0)
@@ -69,12 +73,12 @@ function BottomSheet({
     const targetPoint = snapPoints[defaultSnapPoint] ?? snapPoints[0] ?? 0.33
 
     Animated.timing(sheetHeight, {
-      toValue: SCREEN_HEIGHT * targetPoint,
+      toValue: MAX_HEIGHT * targetPoint,
       duration: 300,
       useNativeDriver: false,
       easing: Easing.out(Easing.ease),
     }).start()
-  }, [sheetHeight, snapPoints, defaultSnapPoint])
+  }, [sheetHeight, snapPoints, defaultSnapPoint, MAX_HEIGHT])
 
   const animatedClose = React.useCallback(
     (onComplete?: () => void) =>
@@ -169,14 +173,17 @@ function BottomSheetContent({
 }: React.ComponentProps<typeof Animated.View>) {
   const { isOpen, setIsOpen, sheetHeight } = useBottomSheet()
 
+  const insets = useSafeAreaInsets()
+  const MAX_HEIGHT = SCREEN_HEIGHT - insets.top
+
   const borderRadius = sheetHeight.interpolate({
-    inputRange: [SCREEN_HEIGHT * 0.9, SCREEN_HEIGHT],
+    inputRange: [MAX_HEIGHT * 0.9, MAX_HEIGHT],
     outputRange: [16, 0],
     extrapolate: 'clamp',
   })
 
   const border = sheetHeight.interpolate({
-    inputRange: [SCREEN_HEIGHT * 0.9, SCREEN_HEIGHT],
+    inputRange: [MAX_HEIGHT * 0.9, MAX_HEIGHT],
     outputRange: [1, 0],
     extrapolate: 'clamp',
   })
@@ -219,6 +226,9 @@ function BottomSheetHeader({
 }: React.ComponentProps<typeof View>) {
   const { setIsOpen, sheetHeight, snapPoints } = useBottomSheet()
 
+  const insets = useSafeAreaInsets()
+  const MAX_HEIGHT = SCREEN_HEIGHT - insets.top
+
   const dragAnim = React.useRef(new Animated.Value(0)).current
   const startHeight = React.useRef(0)
 
@@ -260,7 +270,7 @@ function BottomSheetHeader({
 
         const finalHeight =
           sheetHeight._value ?? startHeight.current - gestureState.dy
-        const maxSnapHeight = SCREEN_HEIGHT * (snapPoints.at(-1) ?? 1)
+        const maxSnapHeight = MAX_HEIGHT * (snapPoints.at(-1) ?? 1)
 
         const isDraggedDownDeep = gestureState.dy > DISMISS_DISTANCE
         const isFlickedDownFast = gestureState.vy > DISMISS_VELOCITY
@@ -272,7 +282,7 @@ function BottomSheetHeader({
         let minDiff = Infinity
 
         for (const point of snapPoints) {
-          const targetH = SCREEN_HEIGHT * point
+          const targetH = MAX_HEIGHT * point
           const diff = Math.abs(targetH - projectedHeight)
           if (diff < minDiff) {
             minDiff = diff
@@ -280,10 +290,7 @@ function BottomSheetHeader({
           }
         }
 
-        const targetHeight = Math.min(
-          SCREEN_HEIGHT * closestSnap,
-          maxSnapHeight
-        )
+        const targetHeight = Math.min(MAX_HEIGHT * closestSnap, maxSnapHeight)
 
         Animated.spring(sheetHeight, {
           toValue: targetHeight,
@@ -300,16 +307,13 @@ function BottomSheetHeader({
   return (
     <View
       data-slot='bottom-sheet-header'
-      className={cn(
-        'relative flex shrink-0 flex-col gap-0.5 px-4 pt-6 pb-0',
-        className
-      )}
+      className={cn('flex shrink-0 flex-col gap-0.5 px-4 pt-2 pb-0', className)}
       {...panResponder.panHandlers}
       {...props}
     >
       <Animated.View
         style={{ transform: [{ scaleX }], opacity }}
-        className='absolute inset-0 top-2 left-1/2 h-1.5 w-12 translate-x-1/2 self-center rounded-full bg-muted-foreground'
+        className='mb-1.5 h-1.5 w-12 self-center rounded-full bg-muted-foreground'
       />
 
       {children}

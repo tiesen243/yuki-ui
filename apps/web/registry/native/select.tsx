@@ -144,18 +144,20 @@ function SelectContent({
 
   return (
     <BottomSheetContent data-slot='select-content' {...props}>
-      <BottomSheetHeader className='flex-row items-center'>
-        <BottomSheetTitle className='flex-1'>{title}</BottomSheetTitle>
+      <BottomSheetHeader>
+        <View className='flex-row items-center gap-0.5'>
+          <BottomSheetTitle className='flex-1'>{title}</BottomSheetTitle>
 
-        {isMultiple && (
-          <Button variant='ghost' size='xs' onPress={() => onValueChange([])}>
-            Clear
+          {isMultiple && (
+            <Button variant='ghost' size='xs' onPress={() => onValueChange([])}>
+              Clear
+            </Button>
+          )}
+
+          <Button variant='ghost' size='xs' onPress={() => setIsOpen(false)}>
+            Done
           </Button>
-        )}
-
-        <Button variant='ghost' size='xs' onPress={() => setIsOpen(false)}>
-          Done
-        </Button>
+        </View>
       </BottomSheetHeader>
 
       <ScrollView contentContainerClassName='grow px-4 gap-y-1 py-2'>

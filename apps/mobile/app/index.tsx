@@ -55,16 +55,17 @@ export default function IndexScreen() {
 
         <BottomSheetContent>
           <BottomSheetHeader>
-            <BottomSheetTitle>Bottom Sheet Title</BottomSheetTitle>
+            <View className='flex-row items-center justify-between'>
+              <BottomSheetTitle>Bottom Sheet Title</BottomSheetTitle>
+              <Badge>
+                <ShoppingCartIcon className='size-3.5 shrink-0 text-primary-foreground' />
+                <Typography>Add to Cart</Typography>
+              </Badge>
+            </View>
             <BottomSheetDescription>
               This is a description of the bottom sheet. You can put any content
               you want here, such as text, images, or other components.
             </BottomSheetDescription>
-
-            <Badge className='absolute top-4 right-4'>
-              <ShoppingCartIcon className='size-3.5 shrink-0 text-primary-foreground' />
-              <Typography>Add to Cart</Typography>
-            </Badge>
           </BottomSheetHeader>
 
           <FieldSet className='p-4'>

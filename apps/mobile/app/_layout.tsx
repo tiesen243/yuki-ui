@@ -4,6 +4,7 @@ import { DefaultTheme, ThemeProvider, Tabs } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { MoonIcon, SunIcon } from 'lucide-uniwind'
 import { useEffect } from 'react'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Uniwind, useCSSVariable, useUniwind } from 'uniwind'
 
 import { useGeistFonts } from '@/hooks/use-geist-font'
@@ -54,29 +55,31 @@ export default function RootLayout() {
         dark: colorscheme === 'dark',
       }}
     >
-      <Tabs
-        screenOptions={{
-          headerRight: () => (
-            <Button
-              size='icon'
-              variant='outline'
-              className='mr-4'
-              onPress={() =>
-                Uniwind.setTheme(colorscheme === 'dark' ? 'light' : 'dark')
-              }
-            >
-              {colorscheme === 'dark' ? (
-                <MoonIcon size={16} className='text-foreground' />
-              ) : (
-                <SunIcon size={16} className='text-foreground' />
-              )}
-            </Button>
-          ),
-        }}
-      >
-        <Tabs.Screen name='index' options={{ title: 'Home' }} />
-        <Tabs.Screen name='expo-ui' options={{ title: 'Expo UI' }} />
-      </Tabs>
+      <SafeAreaProvider>
+        <Tabs
+          screenOptions={{
+            headerRight: () => (
+              <Button
+                size='icon'
+                variant='outline'
+                className='mr-4'
+                onPress={() =>
+                  Uniwind.setTheme(colorscheme === 'dark' ? 'light' : 'dark')
+                }
+              >
+                {colorscheme === 'dark' ? (
+                  <MoonIcon size={16} className='text-foreground' />
+                ) : (
+                  <SunIcon size={16} className='text-foreground' />
+                )}
+              </Button>
+            ),
+          }}
+        >
+          <Tabs.Screen name='index' options={{ title: 'Home' }} />
+          <Tabs.Screen name='expo-ui' options={{ title: 'Expo UI' }} />
+        </Tabs>
+      </SafeAreaProvider>
     </ThemeProvider>
   )
 }
