@@ -48,7 +48,7 @@ function Select<TValue, TMultiple extends boolean = false>(
     children: React.ReactNode
   }
 ) {
-  const { items, multiple: isMultiple = false } = props
+  const { items = [], multiple: isMultiple = false } = props
 
   const [isOpen, setIsOpen] = React.useState(false)
   const [localValue, setLocalValue] = React.useState<
@@ -96,34 +96,39 @@ function SelectTrigger({
 function SelectValue<TValue, TMultiple extends boolean = false>({
   placeholder,
   className,
+  children,
   ...props
 }: React.ComponentProps<typeof Typography> & { placeholder?: string }) {
-  const { value, items } = useSelectContext<TValue, TMultiple>()
+  const { value, items = [] } = useSelectContext<TValue, TMultiple>()
 
-  const hasValue =
+  const isEmpty =
     value === null ||
     value === undefined ||
-    (Array.isArray(value) && value.length === 0)
+    (Array.isArray(value) && value.length === 0) ||
+    (typeof value === 'string' && value.trim() === '')
 
   const displayValue = React.useMemo(() => {
-    if (hasValue) return placeholder ?? 'Select an option'
+    if (isEmpty) return placeholder ?? 'Select an option'
 
     if (Array.isArray(value))
       return value
-        .map((val) => items?.find((item) => item.value === val)?.label ?? val)
+        .map((val) => items.find((item) => item.value === val)?.label ?? val)
         .join(', ')
 
-    return items?.find((item) => item.value === value)?.label ?? value
-  }, [hasValue, value, items, placeholder])
+    if (typeof value === 'string')
+      return items.find((item) => item.value === value)?.label ?? value
+
+    return children
+  }, [isEmpty, placeholder, value, items, children])
 
   return (
     <Typography
       data-slot='select-value'
-      className={cn('flex-1', hasValue && 'text-muted-foreground', className)}
+      className={cn('flex-1', isEmpty && 'text-muted-foreground', className)}
       numberOfLines={1}
       {...props}
     >
-      {displayValue.toString()}
+      {displayValue}
     </Typography>
   )
 }
