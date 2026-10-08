@@ -216,7 +216,7 @@ export const registryNative = [
     title: 'Typography',
     description:
       'A typography component with semantic variants and consistent text styling.',
-    registryDependencies: ['typography'],
+    registryDependencies: [`${getBaseUrl()}/r/typography.json`],
     files: [
       {
         type: 'registry:ui',
