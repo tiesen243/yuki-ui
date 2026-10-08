@@ -11,7 +11,7 @@ const typographyVariants = cva('text-base font-normal', {
       h2: 'scroll-m-20 text-2xl font-bold tracking-tight text-balance',
       h3: 'scroll-m-20 text-xl font-semibold tracking-tight text-balance',
       h4: 'scroll-m-20 text-lg font-semibold tracking-tight text-balance',
-      p: 'text-justify leading-7 text-pretty',
+      p: 'leading-7 text-pretty',
       small: 'block text-sm leading-none font-medium tracking-wide',
       ul: 'ml-6 list-disc text-base [&>li]:mt-2 [&>li]:first:mt-0',
       ol: 'ml-6 list-decimal text-base [&>li]:mt-2 [&>li]:first:mt-0',
