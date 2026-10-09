@@ -41,6 +41,7 @@ export const registryNative = [
     title: 'Bottom Sheet',
     description:
       'A bottom-sheet with drag, keyboard, and modal support for React Native.',
+    dependencies: ['react-native-safe-area-context'],
     registryDependencies: [native('button'), native('typography')],
     files: [
       {
@@ -49,6 +50,20 @@ export const registryNative = [
         target: 'components/native/bottom-sheet.tsx',
       },
     ],
+    docs: [
+      'Wrap your app in a `SafeAreaProvider` to ensure proper safe area handling for the bottom sheet.',
+      '```tsx',
+      'import { SafeAreaProvider } from "react-native-safe-area-context"',
+      '',
+      'export default function App() {',
+      '  return (',
+      '    <SafeAreaProvider>',
+      '      <YourApp />',
+      '    </SafeAreaProvider>',
+      '  )',
+      '}',
+      '```',
+    ].join('\n'),
   },
   {
     name: 'native-button',
