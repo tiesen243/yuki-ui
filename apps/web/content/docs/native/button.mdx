@@ -79,10 +79,7 @@ Icon-specific sizes are also available when provided by the shared button varian
 Because the native component uses `Pressable`, standard press lifecycle props are available:
 
 ```tsx
-<Button
-  disabled={loading}
-  onPress={handleSubmit}
->
+<Button disabled={loading} onPress={handleSubmit}>
   Save
 </Button>
 ```
@@ -93,14 +90,14 @@ The native styles also apply an active opacity effect while the button is presse
 
 ### `Button`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `variant` | `VariantProps<typeof buttonVariants>['variant']` | `"default"` |
-| `size` | `VariantProps<typeof buttonVariants>['size']` | `"default"` |
-| `children` | `React.ReactNode` | — |
-| `onPress` | `PressableProps['onPress']` | — |
-| `disabled` | `boolean` | — |
-| `className` | `string` | — |
-| `...props` | `React.ComponentProps<typeof Pressable>` | — |
+| Prop        | Type                                             | Default     |
+| ----------- | ------------------------------------------------ | ----------- |
+| `variant`   | `VariantProps<typeof buttonVariants>['variant']` | `"default"` |
+| `size`      | `VariantProps<typeof buttonVariants>['size']`    | `"default"` |
+| `children`  | `React.ReactNode`                                | —           |
+| `onPress`   | `PressableProps['onPress']`                      | —           |
+| `disabled`  | `boolean`                                        | —           |
+| `className` | `string`                                         | —           |
+| `...props`  | `React.ComponentProps<typeof Pressable>`         | —           |
 
 `variant` and `size` are derived from the shared `buttonVariants` definition.

@@ -55,14 +55,14 @@ This separation is important. An `Account` represents how a user authenticates, 
 
 The `User` record contains the application's canonical identity and profile information.
 
-| Field | Drizzle / SQL | Prisma | Description |
-| --- | --- | --- | --- |
-| `id` | `varchar(24)` | `String @db.VarChar(24)` | Primary key and internal user identifier. |
-| `name` | `varchar(100)` | `String @db.VarChar(100)` | Required display name. |
-| `email` | `varchar(255)` | `String @db.VarChar(255)` | Required email address. Unique in the relational schemas. |
-| `image` | `varchar(500)` nullable | `String? @db.VarChar(500)` | Optional profile image URL. |
-| `createdAt` | `timestamp` | `DateTime` | Time the user was created. |
-| `updatedAt` | `timestamp` | `DateTime` | Time the user was last updated. |
+| Field       | Drizzle / SQL           | Prisma                     | Description                                               |
+| ----------- | ----------------------- | -------------------------- | --------------------------------------------------------- |
+| `id`        | `varchar(24)`           | `String @db.VarChar(24)`   | Primary key and internal user identifier.                 |
+| `name`      | `varchar(100)`          | `String @db.VarChar(100)`  | Required display name.                                    |
+| `email`     | `varchar(255)`          | `String @db.VarChar(255)`  | Required email address. Unique in the relational schemas. |
+| `image`     | `varchar(500)` nullable | `String? @db.VarChar(500)` | Optional profile image URL.                               |
+| `createdAt` | `timestamp`             | `DateTime`                 | Time the user was created.                                |
+| `updatedAt` | `timestamp`             | `DateTime`                 | Time the user was last updated.                           |
 
 ### Primary key
 
@@ -71,10 +71,7 @@ The user ID is the primary key and is referenced by both `Account` and `Session`
 The Drizzle schema generates the ID through the shared `createId` utility:
 
 ```ts
-id: t
-  .varchar({ length: 24 })
-  .$default(createId)
-  .primaryKey()
+id: t.varchar({ length: 24 }).$default(createId).primaryKey()
 ```
 
 The Prisma schema uses a 24-character `cuid()` default:
@@ -116,12 +113,12 @@ user@example.com
 └── credentials
 ```
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `userId` | `varchar(24)` / relation | The user that owns the account. |
-| `provider` | `varchar(50)` | Provider identifier such as `google`, `github`, or `credentials`. |
-| `providerAccountId` | `varchar(100)` | The provider-specific account identifier. |
-| `password` | `text` / nullable | Password value used by credential-based accounts. Null for accounts that do not use a password. |
+| Field               | Type                     | Description                                                                                     |
+| ------------------- | ------------------------ | ----------------------------------------------------------------------------------------------- |
+| `userId`            | `varchar(24)` / relation | The user that owns the account.                                                                 |
+| `provider`          | `varchar(50)`            | Provider identifier such as `google`, `github`, or `credentials`.                               |
+| `providerAccountId` | `varchar(100)`           | The provider-specific account identifier.                                                       |
+| `password`          | `text` / nullable        | Password value used by credential-based accounts. Null for accounts that do not use a password. |
 
 ### Provider identity
 
@@ -136,7 +133,7 @@ Drizzle enforces this with:
 ```ts
 uniqueIndex('accounts_provider_account_id_uq_idx').on(
   t.provider,
-  t.providerAccountId,
+  t.providerAccountId
 )
 ```
 
@@ -149,10 +146,7 @@ Prisma models it as a composite primary key:
 Mongoose creates a unique compound index:
 
 ```ts
-AccountSchema.index(
-  { provider: 1, providerAccountId: 1 },
-  { unique: true },
-)
+AccountSchema.index({ provider: 1, providerAccountId: 1 }, { unique: true })
 ```
 
 Do not replace this with a global unique constraint on `providerAccountId`. Provider account IDs are only unique within their provider.
@@ -195,11 +189,11 @@ The authentication core is responsible for the credential semantics. The databas
 
 A `Session` represents an active authenticated session.
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `id` | `varchar(24)` | Primary session identifier. |
-| `userId` | `varchar(24)` / relation | User that owns the session. |
-| `token` | `varchar(64)` | Session token associated with the session. |
+| Field       | Type                     | Description                                      |
+| ----------- | ------------------------ | ------------------------------------------------ |
+| `id`        | `varchar(24)`            | Primary session identifier.                      |
+| `userId`    | `varchar(24)` / relation | User that owns the session.                      |
+| `token`     | `varchar(64)`            | Session token associated with the session.       |
 | `expiresAt` | `timestamp` / `DateTime` | Time after which the session is no longer valid. |
 
 ### Session ownership
@@ -477,12 +471,12 @@ MongoDB does not receive the same SQL-level foreign-key constraint, so applicati
 
 Use the database adapter that matches the database layer already used by your application:
 
-| Adapter | Database | Best fit |
-| --- | --- | --- |
-| Drizzle | PostgreSQL | Applications already using Drizzle ORM and SQL migrations. |
-| Prisma | PostgreSQL | Applications using Prisma's generated client and schema tooling. |
-| Mongoose | MongoDB | Applications using MongoDB and Mongoose models. |
-| Custom | Any | Applications using another database or persistence strategy. |
+| Adapter  | Database   | Best fit                                                         |
+| -------- | ---------- | ---------------------------------------------------------------- |
+| Drizzle  | PostgreSQL | Applications already using Drizzle ORM and SQL migrations.       |
+| Prisma   | PostgreSQL | Applications using Prisma's generated client and schema tooling. |
+| Mongoose | MongoDB    | Applications using MongoDB and Mongoose models.                  |
+| Custom   | Any        | Applications using another database or persistence strategy.     |
 
 The authentication API remains the same regardless of the adapter. Only the persistence implementation changes.
 

@@ -40,11 +40,7 @@ Copy and paste the following code into your project.
 import { Badge } from '@/components/native/badge'
 
 export function BadgeExample() {
-  return (
-    <Badge variant='success'>
-      Verified
-    </Badge>
-  )
+  return <Badge variant='success'>Verified</Badge>
 }
 ```
 
@@ -69,10 +65,7 @@ The component supports the variants provided by the web badge styles:
 Pass `onPress` when the badge should behave as a compact action.
 
 ```tsx
-<Badge
-  variant='outline'
-  onPress={() => console.log('pressed')}
->
+<Badge variant='outline' onPress={() => console.log('pressed')}>
   View details
 </Badge>
 ```
@@ -83,13 +76,13 @@ Without `onPress`, the badge exposes a text accessibility role and does not appl
 
 ### `Badge`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `variant` | `"default" \| "secondary" \| "success" \| "destructive" \| "info" \| "warning" \| "outline" \| "ghost" \| "link"` | `"default"` |
-| `activeOpacity` | `number` | `0.8` |
-| `disabled` | `boolean` | — |
-| `onPress` | `TouchableOpacityProps['onPress']` | — |
-| `className` | `string` | — |
-| `...props` | `React.ComponentProps<typeof TouchableOpacity>` | — |
+| Prop            | Type                                                                                                              | Default     |
+| --------------- | ----------------------------------------------------------------------------------------------------------------- | ----------- |
+| `variant`       | `"default" \| "secondary" \| "success" \| "destructive" \| "info" \| "warning" \| "outline" \| "ghost" \| "link"` | `"default"` |
+| `activeOpacity` | `number`                                                                                                          | `0.8`       |
+| `disabled`      | `boolean`                                                                                                         | —           |
+| `onPress`       | `TouchableOpacityProps['onPress']`                                                                                | —           |
+| `className`     | `string`                                                                                                          | —           |
+| `...props`      | `React.ComponentProps<typeof TouchableOpacity>`                                                                   | —           |
 
 All remaining props are forwarded to the underlying `TouchableOpacity`.

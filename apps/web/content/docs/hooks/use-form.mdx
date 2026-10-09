@@ -114,7 +114,6 @@ form.reset()
 
 Reset restores the original `defaultValues` and clears stored result/error state.
 
-
 ## API Reference
 
 ### `useForm`
@@ -123,23 +122,23 @@ Reset restores the original `defaultValues` and clears stored result/error state
 useForm<TValues, TData, TError, TSchema, TResults>(options)
 ```
 
-| Option | Description |
-| --- | --- |
-| `defaultValues` | Initial typed form values. |
-| `schema` | Standard Schema or validation function. |
-| `onSubmit` | Callback receiving validated values. May return a value or Promise. |
-| `onSuccess` | Optional callback for successful submission. |
-| `onError` | Optional callback for validation/submission failures. |
+| Option          | Description                                                         |
+| --------------- | ------------------------------------------------------------------- |
+| `defaultValues` | Initial typed form values.                                          |
+| `schema`        | Standard Schema or validation function.                             |
+| `onSubmit`      | Callback receiving validated values. May return a value or Promise. |
+| `onSuccess`     | Optional callback for successful submission.                        |
+| `onError`       | Optional callback for validation/submission failures.               |
 
 Returns:
 
-| Property | Description |
-| --- | --- |
-| `formId` | Stable form identifier used by generated accessibility IDs. |
-| `Field` | Generic field render-prop component. |
-| `handleSubmit` | Submit handler for the native form element. |
-| `state.values` | Current form values. |
-| `state.data` | Last successful submission result. |
-| `state.error` | Last form error. |
-| `state.isPending` | React transition pending state. |
-| `reset` | Restores `defaultValues` and clears result/error state. |
+| Property          | Description                                                 |
+| ----------------- | ----------------------------------------------------------- |
+| `formId`          | Stable form identifier used by generated accessibility IDs. |
+| `Field`           | Generic field render-prop component.                        |
+| `handleSubmit`    | Submit handler for the native form element.                 |
+| `state.values`    | Current form values.                                        |
+| `state.data`      | Last successful submission result.                          |
+| `state.error`     | Last form error.                                            |
+| `state.isPending` | React transition pending state.                             |
+| `reset`           | Restores `defaultValues` and clears result/error state.     |

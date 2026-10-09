@@ -41,22 +41,14 @@ import { Switch } from '@/components/native/switch'
 export function SwitchExample() {
   const [enabled, setEnabled] = React.useState(true)
 
-  return (
-    <Switch
-      checked={enabled}
-      onCheckedChange={setEnabled}
-    />
-  )
+  return <Switch checked={enabled} onCheckedChange={setEnabled} />
 }
 ```
 
 ## Controlled
 
 ```tsx
-<Switch
-  checked={enabled}
-  onCheckedChange={setEnabled}
-/>
+<Switch checked={enabled} onCheckedChange={setEnabled} />
 ```
 
 The switch is controlled when both `checked` and `onCheckedChange` are provided.
@@ -72,10 +64,7 @@ Without the controlled callback pair, the component keeps the checked state inte
 ## Disabled
 
 ```tsx
-<Switch
-  checked={true}
-  disabled
-/>
+<Switch checked={true} disabled />
 ```
 
 Disabled switches do not respond to presses and receive reduced opacity.
@@ -84,14 +73,14 @@ Disabled switches do not respond to presses and receive reduced opacity.
 
 ### `Switch`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `checked` | `boolean` | `false` |
-| `onCheckedChange` | `(checked: boolean) => void` | — |
-| `disabled` | `boolean` | `false` |
-| `activeOpacity` | `number` | `0.8` |
-| `onPress` | `TouchableOpacityProps['onPress']` | — |
-| `className` | `string` | — |
-| `...props` | `Omit<React.ComponentProps<typeof TouchableOpacity>, 'children'>` | — |
+| Prop              | Type                                                              | Default |
+| ----------------- | ----------------------------------------------------------------- | ------- |
+| `checked`         | `boolean`                                                         | `false` |
+| `onCheckedChange` | `(checked: boolean) => void`                                      | —       |
+| `disabled`        | `boolean`                                                         | `false` |
+| `activeOpacity`   | `number`                                                          | `0.8`   |
+| `onPress`         | `TouchableOpacityProps['onPress']`                                | —       |
+| `className`       | `string`                                                          | —       |
+| `...props`        | `Omit<React.ComponentProps<typeof TouchableOpacity>, 'children'>` | —       |
 
 The switch does not render children; the visual track and thumb are rendered internally.

@@ -54,7 +54,6 @@ const [useAuthContext, AuthContext] = createSafeContext<AuthValue>(
 )
 ```
 
-
 ## API Reference
 
 ### `createSafeContext`
@@ -64,12 +63,12 @@ function createSafeContext<TValue>(
   errorMessage?: string
 ): readonly [
   useSafeContext: () => TValue,
-  Context: React.Context<TValue | null>
+  Context: React.Context<TValue | null>,
 ]
 ```
 
-| Parameter | Default |
-| --- | --- |
+| Parameter      | Default                                       |
+| -------------- | --------------------------------------------- |
 | `errorMessage` | `'useContext must be used within a Provider'` |
 
 The hook only succeeds when the context value is non-null.

@@ -41,9 +41,7 @@ import { Typography } from '@/components/native/typography'
 export function TypographyExample() {
   return (
     <View className='gap-2'>
-      <Typography variant='h1'>
-        Account settings
-      </Typography>
+      <Typography variant='h1'>Account settings</Typography>
 
       <Typography variant='p'>
         Update your profile and notification preferences.
@@ -94,12 +92,12 @@ The component combines the context class with the component's variant and local 
 
 ### `Typography`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `variant` | `TypographyVariant` from `typographyVariants` | `"p"` |
-| `className` | `string` | — |
-| `children` | `React.ReactNode` | — |
-| `...props` | `React.ComponentProps<typeof Text>` | — |
+| Prop        | Type                                          | Default |
+| ----------- | --------------------------------------------- | ------- |
+| `variant`   | `TypographyVariant` from `typographyVariants` | `"p"`   |
+| `className` | `string`                                      | —       |
+| `children`  | `React.ReactNode`                             | —       |
+| `...props`  | `React.ComponentProps<typeof Text>`           | —       |
 
 Heading variants automatically expose heading accessibility metadata.
 

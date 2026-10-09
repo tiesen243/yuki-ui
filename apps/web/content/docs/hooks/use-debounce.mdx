@@ -61,7 +61,6 @@ Only the final call executes when the 300 ms delay completes, provided no newer 
 
 The hook does not return a `cancel` method. If you need cancellation outside the next invocation, keep the behavior in your own effect or use a different abstraction.
 
-
 ## API Reference
 
 ### `useDebounce`
@@ -73,9 +72,9 @@ function useDebounce<T>(
 ): (...args: T[]) => void
 ```
 
-| Parameter | Description |
-| --- | --- |
+| Parameter  | Description                                          |
+| ---------- | ---------------------------------------------------- |
 | `callback` | Function executed after the debounce window expires. |
-| `delay` | Delay in milliseconds. |
+| `delay`    | Delay in milliseconds.                               |
 
 The returned function accepts the same argument tuple as `callback`.

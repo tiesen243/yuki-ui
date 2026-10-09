@@ -100,7 +100,6 @@ const env = createEnv({
 
 Use `skipValidation` sparingly; it removes the runtime guarantee that this utility is designed to provide.
 
-
 ## API Reference
 
 ### `createEnv`
@@ -109,16 +108,16 @@ Use `skipValidation` sparingly; it removes the runtime guarantee that this utili
 createEnv(options): TResult & TDeriveEnv
 ```
 
-| Option | Description |
-| --- | --- |
-| `isServer` | Override automatic server/client detection. Defaults to `typeof window === 'undefined'`. |
-| `shared` | Schemas available in both environments. |
-| `server` | Server-only schemas. |
-| `clientPrefix` | Required prefix for client variable names. |
-| `client` | Client-only schemas. |
-| `runtimeEnv` | Runtime values that are validated. |
-| `deriveEnv` | Optional function that derives extra values from validated env data. |
-| `emptyStringAsUndefined` | Converts `''` to `undefined` before validation. |
-| `skipValidation` | Skips runtime validation. |
+| Option                   | Description                                                                              |
+| ------------------------ | ---------------------------------------------------------------------------------------- |
+| `isServer`               | Override automatic server/client detection. Defaults to `typeof window === 'undefined'`. |
+| `shared`                 | Schemas available in both environments.                                                  |
+| `server`                 | Server-only schemas.                                                                     |
+| `clientPrefix`           | Required prefix for client variable names.                                               |
+| `client`                 | Client-only schemas.                                                                     |
+| `runtimeEnv`             | Runtime values that are validated.                                                       |
+| `deriveEnv`              | Optional function that derives extra values from validated env data.                     |
+| `emptyStringAsUndefined` | Converts `''` to `undefined` before validation.                                          |
+| `skipValidation`         | Skips runtime validation.                                                                |
 
 The returned object is a proxy. Reading a server-only key from the client throws an explicit error.

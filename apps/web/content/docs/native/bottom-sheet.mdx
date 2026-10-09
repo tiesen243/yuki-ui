@@ -50,9 +50,7 @@ import {
 export function BottomSheetExample() {
   return (
     <BottomSheet>
-      <BottomSheetTrigger>
-        Open sheet
-      </BottomSheetTrigger>
+      <BottomSheetTrigger>Open sheet</BottomSheetTrigger>
 
       <BottomSheetContent>
         <BottomSheetHeader>
@@ -76,10 +74,7 @@ export function BottomSheetExample() {
 Snap points are fractions of the device screen height. The default values are `0.33`, `0.67`, and `1`.
 
 ```tsx
-<BottomSheet
-  snapPoints={[0.25, 0.5, 0.9]}
-  defaultSnapPoint={1}
->
+<BottomSheet snapPoints={[0.25, 0.5, 0.9]} defaultSnapPoint={1}>
   {/* ... */}
 </BottomSheet>
 ```
@@ -108,30 +103,30 @@ The sheet closes when the user taps outside the content or uses the close contro
 
 ### `BottomSheet`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `open` | `boolean` | `false` when uncontrolled |
-| `onOpenChange` | `(open: boolean) => void` | — |
-| `snapPoints` | `number[]` | `[0.33, 0.67, 1]` |
-| `defaultSnapPoint` | `number` | `0` |
-| `children` | `React.ReactNode` | — |
+| Prop               | Type                      | Default                   |
+| ------------------ | ------------------------- | ------------------------- |
+| `open`             | `boolean`                 | `false` when uncontrolled |
+| `onOpenChange`     | `(open: boolean) => void` | —                         |
+| `snapPoints`       | `number[]`                | `[0.33, 0.67, 1]`         |
+| `defaultSnapPoint` | `number`                  | `0`                       |
+| `children`         | `React.ReactNode`         | —                         |
 
 ### `BottomSheetTrigger`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `onPress` | `PressableProps['onPress']` | — |
-| `...props` | `React.ComponentProps<typeof Button>` | — |
+| Prop       | Type                                  | Default |
+| ---------- | ------------------------------------- | ------- |
+| `onPress`  | `PressableProps['onPress']`           | —       |
+| `...props` | `React.ComponentProps<typeof Button>` | —       |
 
 Opens the nearest parent `BottomSheet` before invoking the supplied `onPress`.
 
 ### `BottomSheetClose`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `variant` | `Button` variant | `"outline"` |
-| `onPress` | `PressableProps['onPress']` | — |
-| `...props` | `React.ComponentProps<typeof Button>` | — |
+| Prop       | Type                                  | Default     |
+| ---------- | ------------------------------------- | ----------- |
+| `variant`  | `Button` variant                      | `"outline"` |
+| `onPress`  | `PressableProps['onPress']`           | —           |
+| `...props` | `React.ComponentProps<typeof Button>` | —           |
 
 Closes the nearest parent `BottomSheet` before invoking the supplied `onPress`.
 
@@ -139,50 +134,51 @@ Closes the nearest parent `BottomSheet` before invoking the supplied `onPress`.
 
 The modal sheet surface.
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `className` | `string` | — |
-| `...props` | `React.ComponentProps<typeof Animated.View>` | — |
+| Prop        | Type                                         | Default |
+| ----------- | -------------------------------------------- | ------- |
+| `className` | `string`                                     | —       |
+| `...props`  | `React.ComponentProps<typeof Animated.View>` | —       |
 
 ### `BottomSheetHeader`
 
 The draggable header region.
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `className` | `string` | — |
-| `children` | `React.ReactNode` | — |
-| `...props` | `React.ComponentProps<typeof View>` | — |
+| Prop        | Type                                | Default |
+| ----------- | ----------------------------------- | ------- |
+| `className` | `string`                            | —       |
+| `children`  | `React.ReactNode`                   | —       |
+| `...props`  | `React.ComponentProps<typeof View>` | —       |
 
 ### `BottomSheetFooter`
 
 The layout wrapper for actions at the bottom of the sheet.
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `className` | `string` | — |
-| `children` | `React.ReactNode` | — |
-| `...props` | `React.ComponentProps<typeof View>` | — |
+| Prop        | Type                                | Default |
+| ----------- | ----------------------------------- | ------- |
+| `className` | `string`                            | —       |
+| `children`  | `React.ReactNode`                   | —       |
+| `...props`  | `React.ComponentProps<typeof View>` | —       |
 
 ### `BottomSheetTitle`
 
 The sheet title rendered with the native `Typography` component.
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `className` | `string` | — |
-| `children` | `React.ReactNode` | — |
-| `...props` | `React.ComponentProps<typeof Typography>` | — |
+| Prop        | Type                                      | Default |
+| ----------- | ----------------------------------------- | ------- |
+| `className` | `string`                                  | —       |
+| `children`  | `React.ReactNode`                         | —       |
+| `...props`  | `React.ComponentProps<typeof Typography>` | —       |
 
 ### `BottomSheetDescription`
 
 Supporting text rendered with the native `Typography` component.
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `className` | `string` | — |
-| `children` | `React.ReactNode` | — |
-| `...props` | `React.ComponentProps<typeof Typography>` | — |
+| Prop        | Type                                      | Default |
+| ----------- | ----------------------------------------- | ------- |
+| `className` | `string`                                  | —       |
+| `children`  | `React.ReactNode`                         | —       |
+| `...props`  | `React.ComponentProps<typeof Typography>` | —       |
+
 ## Keyboard handling
 
 The current registry implementation does not automatically apply keyboard avoidance. When a sheet contains inputs, handle keyboard insets or keyboard-aware layout at the application level.

@@ -72,7 +72,6 @@ The constraints are enforced by the generic types as well as runtime validation.
 
 `skipValidation` is available for build or test environments where the runtime values are intentionally incomplete. In production, leaving validation enabled is strongly recommended.
 
-
 ## API Reference
 
 ### `effectEnv`
@@ -81,14 +80,14 @@ The constraints are enforced by the generic types as well as runtime validation.
 effectEnv<TPrefix, TShared, TServer, TClient>(options): TEnv
 ```
 
-| Option | Description |
-| --- | --- |
-| `clientPrefix` | Required prefix for client variables. |
-| `shared` | Optional schemas shared across server and client. |
-| `server` | Server-only Effect schemas. |
-| `client` | Client-only Effect schemas. |
-| `runtimeEnv` | Optional runtime values; defaults to `process.env`. |
-| `isServer` | Override automatic environment detection. |
-| `skipValidation` | Skip runtime validation. |
+| Option           | Description                                         |
+| ---------------- | --------------------------------------------------- |
+| `clientPrefix`   | Required prefix for client variables.               |
+| `shared`         | Optional schemas shared across server and client.   |
+| `server`         | Server-only Effect schemas.                         |
+| `client`         | Client-only Effect schemas.                         |
+| `runtimeEnv`     | Optional runtime values; defaults to `process.env`. |
+| `isServer`       | Override automatic environment detection.           |
+| `skipValidation` | Skip runtime validation.                            |
 
 The returned object is a proxy that prevents server-only keys from being read on the client.

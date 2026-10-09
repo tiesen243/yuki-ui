@@ -57,11 +57,7 @@ export function SelectExample() {
   const [value, setValue] = React.useState('system')
 
   return (
-    <Select
-      items={items}
-      value={value}
-      onValueChange={setValue}
-    >
+    <Select items={items} value={value} onValueChange={setValue}>
       <SelectTrigger>
         <SelectValue placeholder='Select a theme' />
       </SelectTrigger>
@@ -83,10 +79,7 @@ export function SelectExample() {
 The default mode accepts one value. Selecting an item updates the value and closes the bottom sheet.
 
 ```tsx
-<Select
-  value={value}
-  onValueChange={setValue}
->
+<Select value={value} onValueChange={setValue}>
   {/* ... */}
 </Select>
 ```
@@ -96,11 +89,7 @@ The default mode accepts one value. Selecting an item updates the value and clos
 Set `multiple` to allow several values. The sheet stays open while items are toggled; the built-in `Clear` and `Done` actions are displayed.
 
 ```tsx
-<Select
-  multiple
-  value={selected}
-  onValueChange={setSelected}
->
+<Select multiple value={selected} onValueChange={setSelected}>
   {/* ... */}
 </Select>
 ```
@@ -134,13 +123,13 @@ The `items` array is used by `SelectValue` to turn selected values back into lab
 
 ### `Select`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `items` | `{ label: string; value: TValue }[]` | — |
-| `value` | `TValue \| TValue[] \| null` | `null` or `[]` |
-| `onValueChange` | `(value: TValue \| TValue[]) => void` | — |
-| `multiple` | `boolean` | `false` |
-| `children` | `React.ReactNode` | — |
+| Prop            | Type                                  | Default        |
+| --------------- | ------------------------------------- | -------------- |
+| `items`         | `{ label: string; value: TValue }[]`  | —              |
+| `value`         | `TValue \| TValue[] \| null`          | `null` or `[]` |
+| `onValueChange` | `(value: TValue \| TValue[]) => void` | —              |
+| `multiple`      | `boolean`                             | `false`        |
+| `children`      | `React.ReactNode`                     | —              |
 
 `Select` is generic over the option value type. When `multiple` is true, `value` is an array.
 
@@ -148,37 +137,37 @@ The `items` array is used by `SelectValue` to turn selected values back into lab
 
 The trigger is built on `BottomSheetTrigger`.
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `className` | `string` | — |
-| `children` | `React.ReactNode` | — |
-| `...props` | `React.ComponentProps<typeof BottomSheetTrigger>` | — |
+| Prop        | Type                                              | Default |
+| ----------- | ------------------------------------------------- | ------- |
+| `className` | `string`                                          | —       |
+| `children`  | `React.ReactNode`                                 | —       |
+| `...props`  | `React.ComponentProps<typeof BottomSheetTrigger>` | —       |
 
 ### `SelectValue`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `placeholder` | `string` | `"Select an option"` |
-| `className` | `string` | — |
-| `...props` | `React.ComponentProps<typeof Typography>` | — |
+| Prop          | Type                                      | Default              |
+| ------------- | ----------------------------------------- | -------------------- |
+| `placeholder` | `string`                                  | `"Select an option"` |
+| `className`   | `string`                                  | —                    |
+| `...props`    | `React.ComponentProps<typeof Typography>` | —                    |
 
 ### `SelectContent`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `title` | `string` | `"Select an option"` |
-| `className` | `string` | — |
-| `...props` | `React.ComponentProps<typeof BottomSheetContent>` | — |
+| Prop        | Type                                              | Default              |
+| ----------- | ------------------------------------------------- | -------------------- |
+| `title`     | `string`                                          | `"Select an option"` |
+| `className` | `string`                                          | —                    |
+| `...props`  | `React.ComponentProps<typeof BottomSheetContent>` | —                    |
 
 ### `SelectItem`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `value` | `TValue` | required |
-| `disabled` | `boolean` | `false` |
-| `onPress` | `Button` press handler | — |
-| `children` | `React.ReactNode` | — |
-| `...props` | `React.ComponentProps<typeof Button>` | — |
+| Prop       | Type                                  | Default  |
+| ---------- | ------------------------------------- | -------- |
+| `value`    | `TValue`                              | required |
+| `disabled` | `boolean`                             | `false`  |
+| `onPress`  | `Button` press handler                | —        |
+| `children` | `React.ReactNode`                     | —        |
+| `...props` | `React.ComponentProps<typeof Button>` | —        |
 
 `SelectItem` must be rendered inside `SelectContent`.
 
@@ -186,27 +175,27 @@ The trigger is built on `BottomSheetTrigger`.
 
 Groups related options.
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `className` | `string` | — |
-| `children` | `React.ReactNode` | — |
-| `...props` | `React.ComponentProps<typeof View>` | — |
+| Prop        | Type                                | Default |
+| ----------- | ----------------------------------- | ------- |
+| `className` | `string`                            | —       |
+| `children`  | `React.ReactNode`                   | —       |
+| `...props`  | `React.ComponentProps<typeof View>` | —       |
 
 ### `SelectLabel`
 
 Label for a select group.
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `className` | `string` | — |
-| `children` | `React.ReactNode` | — |
-| `...props` | `React.ComponentProps<typeof Typography>` | — |
+| Prop        | Type                                      | Default |
+| ----------- | ----------------------------------------- | ------- |
+| `className` | `string`                                  | —       |
+| `children`  | `React.ReactNode`                         | —       |
+| `...props`  | `React.ComponentProps<typeof Typography>` | —       |
 
 ### `SelectSeparator`
 
 Visual separator between option groups.
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `className` | `string` | — |
-| `...props` | `React.ComponentProps<typeof View>` | — |
+| Prop        | Type                                | Default |
+| ----------- | ----------------------------------- | ------- |
+| `className` | `string`                            | —       |
+| `...props`  | `React.ComponentProps<typeof View>` | —       |

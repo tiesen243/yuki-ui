@@ -45,7 +45,6 @@ const id = createId(() => 0.5)
 
 A deterministic random function is useful only for tests; do not use one for production IDs.
 
-
 ## API Reference
 
 ### `createId`
@@ -54,8 +53,8 @@ A deterministic random function is useful only for tests; do not use one for pro
 function createId(rand?: () => number): string
 ```
 
-| Parameter | Description |
-| --- | --- |
-| `rand` | Optional random source used by the generator. Defaults to the best available runtime random source. |
+| Parameter | Description                                                                                         |
+| --------- | --------------------------------------------------------------------------------------------------- |
+| `rand`    | Optional random source used by the generator. Defaults to the best available runtime random source. |
 
 The current implementation combines a base-36 timestamp, counter entropy, runtime fingerprint, and additional random salt before hashing with SHA3-512.

@@ -43,15 +43,9 @@ export function RadioGroupExample() {
 
   return (
     <RadioGroup value={value} onValueChange={setValue}>
-      <RadioGroupItem value='light'>
-        Light
-      </RadioGroupItem>
-      <RadioGroupItem value='dark'>
-        Dark
-      </RadioGroupItem>
-      <RadioGroupItem value='system'>
-        System
-      </RadioGroupItem>
+      <RadioGroupItem value='light'>Light</RadioGroupItem>
+      <RadioGroupItem value='dark'>Dark</RadioGroupItem>
+      <RadioGroupItem value='system'>System</RadioGroupItem>
     </RadioGroup>
   )
 }
@@ -71,10 +65,7 @@ The group stores the selected value internally when `value` and `onValueChange` 
 ## Controlled
 
 ```tsx
-<RadioGroup
-  value={size}
-  onValueChange={setSize}
->
+<RadioGroup value={size} onValueChange={setSize}>
   <RadioGroupItem value='small'>Small</RadioGroupItem>
   <RadioGroupItem value='large'>Large</RadioGroupItem>
 </RadioGroup>
@@ -96,24 +87,24 @@ A disabled item does not update the selected value.
 
 ### `RadioGroup`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `value` | `string` | `""` when uncontrolled |
-| `onValueChange` | `(value: string) => void` | — |
-| `className` | `string` | — |
-| `children` | `React.ReactNode` | — |
-| `...props` | `React.ComponentProps<typeof View>` | — |
+| Prop            | Type                                | Default                |
+| --------------- | ----------------------------------- | ---------------------- |
+| `value`         | `string`                            | `""` when uncontrolled |
+| `onValueChange` | `(value: string) => void`           | —                      |
+| `className`     | `string`                            | —                      |
+| `children`      | `React.ReactNode`                   | —                      |
+| `...props`      | `React.ComponentProps<typeof View>` | —                      |
 
 ### `RadioGroupItem`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `value` | `string` | required |
-| `disabled` | `boolean` | `false` |
-| `activeOpacity` | `number` | `0.8` |
-| `onPress` | `TouchableOpacityProps['onPress']` | — |
-| `children` | `React.ReactNode` | — |
-| `className` | `string` | — |
-| `...props` | `React.ComponentProps<typeof TouchableOpacity>` | — |
+| Prop            | Type                                            | Default  |
+| --------------- | ----------------------------------------------- | -------- |
+| `value`         | `string`                                        | required |
+| `disabled`      | `boolean`                                       | `false`  |
+| `activeOpacity` | `number`                                        | `0.8`    |
+| `onPress`       | `TouchableOpacityProps['onPress']`              | —        |
+| `children`      | `React.ReactNode`                               | —        |
+| `className`     | `string`                                        | —        |
+| `...props`      | `React.ComponentProps<typeof TouchableOpacity>` | —        |
 
 `RadioGroupItem` must be rendered inside `RadioGroup`.

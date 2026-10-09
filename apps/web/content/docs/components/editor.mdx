@@ -44,11 +44,7 @@ Use the editor as a controlled component.
 ```tsx
 import { useState } from 'react'
 
-import {
-  Editor,
-  EditorInput,
-  EditorPreview,
-} from '@/components/ui/editor'
+import { Editor, EditorInput, EditorPreview } from '@/components/ui/editor'
 
 export function MarkdownEditor() {
   const [value, setValue] = useState('# Hello')
@@ -104,13 +100,13 @@ const [markdown, setMarkdown] = useState('')
 
 ### `Editor`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `value` | `string` | required |
-| `onValueChange` | `(value: string) => unknown` | required |
-| `className` | `string` | — |
-| `children` | `React.ReactNode` | — |
-| `...props` | `React.ComponentProps<'div'>` | — |
+| Prop            | Type                          | Default  |
+| --------------- | ----------------------------- | -------- |
+| `value`         | `string`                      | required |
+| `onValueChange` | `(value: string) => unknown`  | required |
+| `className`     | `string`                      | —        |
+| `children`      | `React.ReactNode`             | —        |
+| `...props`      | `React.ComponentProps<'div'>` | —        |
 
 ### `EditorInput`
 

@@ -42,10 +42,7 @@ export function CheckboxExample() {
   const [checked, setChecked] = React.useState(false)
 
   return (
-    <Checkbox
-      checked={checked}
-      onCheckedChange={setChecked}
-    >
+    <Checkbox checked={checked} onCheckedChange={setChecked}>
       Accept terms and conditions
     </Checkbox>
   )
@@ -57,9 +54,7 @@ export function CheckboxExample() {
 When you omit the controlled callback pair, the component maintains its own checked state.
 
 ```tsx
-<Checkbox>
-  Remember me
-</Checkbox>
+<Checkbox>Remember me</Checkbox>
 ```
 
 ## Controlled
@@ -67,10 +62,7 @@ When you omit the controlled callback pair, the component maintains its own chec
 Use both `checked` and `onCheckedChange` when the state belongs to a parent component.
 
 ```tsx
-<Checkbox
-  checked={accepted}
-  onCheckedChange={setAccepted}
->
+<Checkbox checked={accepted} onCheckedChange={setAccepted}>
   I agree
 </Checkbox>
 ```
@@ -80,9 +72,7 @@ The component only treats the checkbox as controlled when both the value and cal
 ## Disabled
 
 ```tsx
-<Checkbox disabled>
-  This option is unavailable
-</Checkbox>
+<Checkbox disabled>This option is unavailable</Checkbox>
 ```
 
 Disabled checkboxes cannot be toggled and receive reduced opacity.
@@ -91,15 +81,15 @@ Disabled checkboxes cannot be toggled and receive reduced opacity.
 
 ### `Checkbox`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `checked` | `boolean` | `false` |
-| `onCheckedChange` | `(checked: boolean) => void` | — |
-| `disabled` | `boolean` | `false` |
-| `activeOpacity` | `number` | `0.8` |
-| `onPress` | `TouchableOpacityProps['onPress']` | — |
-| `children` | `React.ReactNode` | — |
-| `className` | `string` | — |
-| `...props` | `React.ComponentProps<typeof TouchableOpacity>` | — |
+| Prop              | Type                                            | Default |
+| ----------------- | ----------------------------------------------- | ------- |
+| `checked`         | `boolean`                                       | `false` |
+| `onCheckedChange` | `(checked: boolean) => void`                    | —       |
+| `disabled`        | `boolean`                                       | `false` |
+| `activeOpacity`   | `number`                                        | `0.8`   |
+| `onPress`         | `TouchableOpacityProps['onPress']`              | —       |
+| `children`        | `React.ReactNode`                               | —       |
+| `className`       | `string`                                        | —       |
+| `...props`        | `React.ComponentProps<typeof TouchableOpacity>` | —       |
 
 When both `checked` and `onCheckedChange` are provided, the parent controls the value.

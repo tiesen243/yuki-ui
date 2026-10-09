@@ -37,18 +37,12 @@ Copy and paste the following code into your project.
 ## Usage
 
 ```tsx
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/native/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/native/avatar'
 
 export function AvatarExample() {
   return (
     <Avatar>
-      <AvatarImage
-        source={{ uri: 'https://i.pravatar.cc/160?img=12' }}
-      />
+      <AvatarImage source={{ uri: 'https://i.pravatar.cc/160?img=12' }} />
       <AvatarFallback>JD</AvatarFallback>
     </Avatar>
   )
@@ -85,23 +79,23 @@ The native avatar defaults to a `size-10` circular container. Because the compon
 
 The root avatar container.
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `className` | `string` | — |
-| `children` | `React.ReactNode` | — |
-| `...props` | `React.ComponentProps<typeof View>` | — |
+| Prop        | Type                                | Default |
+| ----------- | ----------------------------------- | ------- |
+| `className` | `string`                            | —       |
+| `children`  | `React.ReactNode`                   | —       |
+| `...props`  | `React.ComponentProps<typeof View>` | —       |
 
 ### `AvatarImage`
 
 Renders the image and reports loading/error state to the parent `Avatar`.
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `source` | `ImageSourcePropType` | — |
-| `onLoad` | `ImageProps['onLoad']` | — |
-| `onError` | `ImageProps['onError']` | — |
-| `className` | `string` | — |
-| `...props` | `React.ComponentProps<typeof Image>` | — |
+| Prop        | Type                                 | Default |
+| ----------- | ------------------------------------ | ------- |
+| `source`    | `ImageSourcePropType`                | —       |
+| `onLoad`    | `ImageProps['onLoad']`               | —       |
+| `onError`   | `ImageProps['onError']`              | —       |
+| `className` | `string`                             | —       |
+| `...props`  | `React.ComponentProps<typeof Image>` | —       |
 
 `AvatarImage` must be rendered inside `Avatar`.
 
@@ -109,10 +103,10 @@ Renders the image and reports loading/error state to the parent `Avatar`.
 
 Fallback content shown while the image is unavailable.
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `children` | `React.ReactNode` | — |
-| `className` | `string` | — |
-| `...props` | `React.ComponentProps<typeof View>` | — |
+| Prop        | Type                                | Default |
+| ----------- | ----------------------------------- | ------- |
+| `children`  | `React.ReactNode`                   | —       |
+| `className` | `string`                            | —       |
+| `...props`  | `React.ComponentProps<typeof View>` | —       |
 
 `AvatarFallback` must be rendered inside `Avatar`.

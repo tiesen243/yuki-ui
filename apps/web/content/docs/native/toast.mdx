@@ -34,10 +34,7 @@ Copy and paste the following code into your project.
 ## Usage
 
 ```tsx
-import {
-  ToasterProvider,
-  toast,
-} from '@/components/native/toast'
+import { ToasterProvider, toast } from '@/components/native/toast'
 
 export function App() {
   return (
@@ -51,10 +48,7 @@ function SaveButton() {
   return (
     <Button
       onPress={() => {
-        toast.success(
-          'Saved successfully',
-          'Your changes have been saved.'
-        )
+        toast.success('Saved successfully', 'Your changes have been saved.')
       }}
     >
       Save
@@ -80,11 +74,7 @@ toast.error('Something went wrong')
 Pass `duration` in the options object. The default duration is `3000` milliseconds.
 
 ```tsx
-toast.success(
-  'Uploaded',
-  'The file is ready.',
-  { duration: 5000 }
-)
+toast.success('Uploaded', 'The file is ready.', { duration: 5000 })
 ```
 
 ## Custom icons
@@ -92,13 +82,9 @@ toast.success(
 You can replace the default semantic icon with a custom Lucide icon renderer.
 
 ```tsx
-toast.info(
-  'Sync started',
-  undefined,
-  {
-    icon: (props) => <CloudIcon {...props} />,
-  }
-)
+toast.info('Sync started', undefined, {
+  icon: (props) => <CloudIcon {...props} />,
+})
 ```
 
 ## Position
@@ -119,9 +105,9 @@ Toasts respond to horizontal gestures. A swipe of roughly 40% of the toast width
 
 ### `ToasterProvider`
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `children` | `React.ReactNode` | — |
+| Prop       | Type                | Default |
+| ---------- | ------------------- | ------- |
+| `children` | `React.ReactNode`   | —       |
 | `position` | `"top" \| "bottom"` | `"top"` |
 
 Mount one `ToasterProvider` near the application root.
@@ -188,10 +174,10 @@ Displays an error toast.
 
 ### `ToastOptions`
 
-| Property | Type | Default |
-| --- | --- | --- |
-| `icon` | `(props: LucidePropsWithClassName) => React.ReactNode` | semantic icon |
-| `duration` | `number` | `3000` |
+| Property   | Type                                                   | Default       |
+| ---------- | ------------------------------------------------------ | ------------- |
+| `icon`     | `(props: LucidePropsWithClassName) => React.ReactNode` | semantic icon |
+| `duration` | `number`                                               | `3000`        |
 
 ### `useToast`
 
@@ -204,10 +190,5 @@ Returns the toast API and a `dismiss` function. `useToast` must be called inside
 ### `ToastType`
 
 ```ts
-type ToastType =
-  | 'default'
-  | 'success'
-  | 'info'
-  | 'error'
-  | 'warning'
+type ToastType = 'default' | 'success' | 'info' | 'error' | 'warning'
 ```
