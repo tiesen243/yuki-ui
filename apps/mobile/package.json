@@ -7,6 +7,7 @@
   "scripts": {
     "android": "expo run:android",
     "dev": "expo start",
+    "clean": "git clean -xdf .cache .expo android ios node_modules",
     "ios": "expo run:ios",
     "typecheck": "bun check"
   },
