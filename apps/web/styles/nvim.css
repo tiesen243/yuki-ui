@@ -10,19 +10,19 @@
 }
 
 :root {
-  --normal: oklch(0.533 0.188299 256.8803);
-  --visual: oklch(0.5945 0.1522 48.09);
-  --replace: oklch(0.5352 0.1882 2.43);
-  --insert: oklch(0.6273 0.17 149.2);
-  --terminal: oklch(0.4706 0.2205 304.22);
-  --command: oklch(0.6424 0.18 45.27);
+  --normal: oklch(73% 0.147 247.7);
+  --visual: oklch(80.2% 0.171 73.3);
+  --replace: oklch(71.1% 0.182 21.3);
+  --insert: oklch(80.4% 0.214 145.2);
+  --terminal: oklch(72% 0.193 308.6);
+  --command: oklch(80.2% 0.171 73.3);
 }
 
 .dark {
-  --normal: oklch(0.7178 0.1521 250.77);
-  --visual: oklch(0.8535 0.0907 84.06);
-  --replace: oklch(0.6931 0.1891 3.82);
-  --insert: oklch(0.6273 0.17 149.2);
-  --terminal: oklch(0.6986 0.1786 309.44);
-  --command: oklch(0.8124 0.1238 55.54);
+  --normal: oklch(64.9% 0.193 251.8);
+  --visual: oklch(75.1% 0.159 73.9);
+  --replace: oklch(62.6% 0.228 23);
+  --insert: oklch(58% 0.175 146.5);
+  --terminal: oklch(55.5% 0.219 306.2);
+  --command: oklch(75.1% 0.159 73.9);
 }

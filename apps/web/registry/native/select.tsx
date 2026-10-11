@@ -44,16 +44,21 @@ function Select<TValue, TMultiple extends boolean = false>(
     Partial<SelectContextValue<TValue, TMultiple>>,
     'isMultiple' | 'isOpen' | 'setIsOpen'
   > & {
+    defaultValue?: TMultiple extends true ? TValue[] : TValue | null
     multiple?: TMultiple
     children: React.ReactNode
   }
 ) {
-  const { items = [], multiple: isMultiple = false } = props
+  const { defaultValue, items, multiple: isMultiple = false } = props
 
   const [isOpen, setIsOpen] = React.useState(false)
   const [localValue, setLocalValue] = React.useState<
     TMultiple extends true ? TValue[] : TValue | null
-  >(props.value ?? ((isMultiple ? [] : null) as never))
+  >(() => {
+    if (props.value) return props.value
+    if (defaultValue) return defaultValue
+    return (isMultiple ? [] : null) as never
+  })
 
   const isControlled =
     props.value !== undefined && props.onValueChange !== undefined
