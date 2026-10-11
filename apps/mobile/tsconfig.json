@@ -15,6 +15,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
+    "types.d.ts",
     "uniwind-types.d.ts"
   ]
 }
