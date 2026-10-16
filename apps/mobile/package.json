@@ -6,24 +6,23 @@
   "module": "index.ts",
   "scripts": {
     "android": "expo run:android",
-    "dev": "expo start",
     "clean": "git clean -xdf .cache .expo android ios node_modules",
+    "dev": "expo start",
     "ios": "expo run:ios",
     "typecheck": "bun check"
   },
   "dependencies": {
     "@expo-google-fonts/geist": "~0.4.2",
-    "@expo/ui": "~58.0.15",
-    "expo": "~58.0.7",
-    "expo-font": "~58.0.7",
-    "expo-router": "~58.0.17",
-    "expo-splash-screen": "~58.0.7",
-    "lucide-react-native": "^1.55.0",
-    "lucide-uniwind": "^1.55.0",
+    "@expo/ui": "~58.0.18",
+    "expo": "~58.0.11",
+    "expo-font": "~58.0.8",
+    "expo-router": "~58.0.20",
+    "expo-splash-screen": "~58.0.9",
+    "lucide-react-native": "^1.57.0",
     "react": "catalog:react",
     "react-native": "catalog:react",
     "react-native-safe-area-context": "catalog:prod",
-    "react-native-svg": "~15.15.5"
+    "react-native-svg": "~15.16.0"
   },
   "devDependencies": {
     "@types/react": "catalog:react",

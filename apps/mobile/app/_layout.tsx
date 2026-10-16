@@ -2,13 +2,14 @@ import '@/globals.css'
 
 import { DefaultTheme, ThemeProvider, Tabs } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import { MoonIcon, SunIcon } from 'lucide-uniwind'
 import { useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Uniwind, useCSSVariable, useUniwind } from 'uniwind'
 
 import { useGeistFonts } from '@/hooks/use-geist-font'
 import { Button } from '@/registry/native/button'
+import { Icon } from '@/registry/native/icons'
+import { ToasterProvider } from '@/registry/native/toast'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -56,29 +57,27 @@ export default function RootLayout() {
       }}
     >
       <SafeAreaProvider>
-        <Tabs
-          screenOptions={{
-            headerRight: () => (
-              <Button
-                size='icon'
-                variant='outline'
-                className='mr-4'
-                onPress={() =>
-                  Uniwind.setTheme(colorscheme === 'dark' ? 'light' : 'dark')
-                }
-              >
-                {colorscheme === 'dark' ? (
-                  <MoonIcon size={16} className='text-foreground' />
-                ) : (
-                  <SunIcon size={16} className='text-foreground' />
-                )}
-              </Button>
-            ),
-          }}
-        >
-          <Tabs.Screen name='index' options={{ title: 'Home' }} />
-          <Tabs.Screen name='expo-ui' options={{ title: 'Expo UI' }} />
-        </Tabs>
+        <ToasterProvider position='bottom'>
+          <Tabs
+            screenOptions={{
+              headerRight: () => (
+                <Button
+                  size='icon'
+                  variant='outline'
+                  className='mr-4'
+                  onPress={() =>
+                    Uniwind.setTheme(colorscheme === 'dark' ? 'light' : 'dark')
+                  }
+                >
+                  <Icon name={colorscheme === 'dark' ? 'Moon' : 'Sun'} />
+                </Button>
+              ),
+            }}
+          >
+            <Tabs.Screen name='index' options={{ title: 'Home' }} />
+            <Tabs.Screen name='expo-ui' options={{ title: 'Expo UI' }} />
+          </Tabs>
+        </ToasterProvider>
       </SafeAreaProvider>
     </ThemeProvider>
   )

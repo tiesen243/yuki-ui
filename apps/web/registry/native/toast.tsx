@@ -1,12 +1,5 @@
-import type { LucidePropsWithClassName } from 'lucide-uniwind'
 import type { LayoutChangeEvent } from 'react-native'
 
-import {
-  CheckCircleIcon,
-  CircleAlertIcon,
-  InfoIcon,
-  TriangleAlertIcon,
-} from 'lucide-uniwind'
 import * as React from 'react'
 import { Animated, Easing, PanResponder, Text, View } from 'react-native'
 
@@ -15,7 +8,7 @@ import { cn } from '@/lib/utils'
 type ToastType = 'default' | 'success' | 'info' | 'error' | 'warning'
 
 interface ToastOptions {
-  icon?: (props: LucidePropsWithClassName) => React.ReactNode
+  icon?: string
   duration?: number
 }
 
@@ -73,30 +66,30 @@ const toastVariants = {
     description: 'text-popover-foreground/80',
   },
   success: {
-    icon: CheckCircleIcon,
+    icon: 'CircleCheck',
     root: 'bg-[color-mix(in_oklab,var(--success)_10%,var(--popover))] border-success/30',
     title: 'text-success',
     description: 'text-success/80',
   },
   error: {
-    icon: CircleAlertIcon,
+    icon: 'CircleAlert',
     root: 'bg-[color-mix(in_oklab,var(--destructive)_10%,var(--popover))] border-destructive/30',
     title: 'text-destructive',
     description: 'text-destructive/80',
   },
   info: {
-    icon: InfoIcon,
+    icon: 'Info',
     root: 'bg-[color-mix(in_oklab,var(--info)_10%,var(--popover))] border-info/30',
     title: 'text-info',
     description: 'text-info/80',
   },
   warning: {
-    icon: TriangleAlertIcon,
+    icon: 'TriangleAlert',
     root: 'bg-[color-mix(in_oklab,var(--warning)_10%,var(--popover))] border-warning/30',
     title: 'text-warning',
     description: 'text-warning/80',
   },
-}
+} as const
 
 function ToastCard({
   item,
@@ -120,7 +113,7 @@ function ToastCard({
   const toastWidthRef = React.useRef<number>(0)
 
   const variant = toastVariants[item.type] ?? toastVariants.default
-  const Icon = item.options?.icon ?? variant.icon
+  const icon = item.options?.icon ?? variant.icon
 
   const dismiss = React.useCallback(
     (direction: 'up/down' | 'left' | 'right' = 'up/down') => {
@@ -224,12 +217,17 @@ function ToastCard({
       style={{ transform: [{ translateY }, { translateX }], opacity }}
       className={cn(
         'my-1.5 rounded-xl border p-3 shadow-md',
-        Icon ? 'flex-row gap-2' : 'flex-col gap-1',
+        icon ? 'flex-row gap-2' : 'flex-col gap-1',
         variant.root
       )}
     >
-      {Icon && <Icon className={cn('mt-1 size-4', variant.title)} />}
-      {Icon ? <View className='flex-col gap-1'>{Content}</View> : Content}
+      {/* {icon && ( */}
+      {/*   <Icon */}
+      {/*     name={icon as never} */}
+      {/*     className={cn('mt-1 size-4', variant.title)} */}
+      {/*   /> */}
+      {/* )} */}
+      {icon ? <View className='flex-col gap-1'>{Content}</View> : Content}
     </Animated.View>
   )
 }
@@ -239,7 +237,10 @@ interface ToasterProviderProps {
   position?: 'top' | 'bottom'
 }
 
-function ToasterProvider({ children, position = 'top' }: ToasterProviderProps) {
+function ToasterProvider({
+  children,
+  position = 'bottom',
+}: ToasterProviderProps) {
   const [toasts, setToasts] = React.useState<ToastItem[]>([])
 
   const dismiss = React.useCallback((id: string) => {

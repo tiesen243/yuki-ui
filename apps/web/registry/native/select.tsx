@@ -1,4 +1,3 @@
-import { CheckIcon, ChevronDownIcon } from 'lucide-uniwind'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 
@@ -11,6 +10,7 @@ import {
   BottomSheetTitle,
 } from '@/registry/native/bottom-sheet'
 import { Button } from '@/registry/native/button'
+import { Icon } from '@/registry/native/icons'
 import { Typography } from '@/registry/native/typography'
 
 interface SelectContextValue<TValue, TMultiple extends boolean = false> {
@@ -93,7 +93,7 @@ function SelectTrigger({
     >
       {children as React.ReactNode}
 
-      <ChevronDownIcon className='size-4 shrink-0 text-muted-foreground' />
+      <Icon name='ChevronDown' className='text-muted-foreground' />
     </BottomSheetTrigger>
   )
 }
@@ -228,9 +228,7 @@ function SelectItem<TValue>({
         {children as React.ReactNode}
       </Typography>
 
-      {isSelected && (
-        <CheckIcon className='size-4 shrink-0 text-accent-foreground' />
-      )}
+      {isSelected && <Icon name='Check' className='text-accent-foreground' />}
     </Button>
   )
 }

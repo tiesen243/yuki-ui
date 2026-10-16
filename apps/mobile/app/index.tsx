@@ -1,4 +1,3 @@
-import { ShoppingCartIcon } from 'lucide-uniwind'
 import { useState } from 'react'
 import { View } from 'react-native'
 
@@ -16,6 +15,7 @@ import {
 import { Button } from '@/registry/native/button'
 import { Checkbox } from '@/registry/native/checkbox'
 import { Field, FieldLabel, FieldSet } from '@/registry/native/field'
+import { Icon } from '@/registry/native/icons'
 import { Input } from '@/registry/native/input'
 import { RadioGroup, RadioGroupItem } from '@/registry/native/radio-group'
 import {
@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from '@/registry/native/select'
 import { Switch } from '@/registry/native/switch'
+import { toast } from '@/registry/native/toast'
 import { Typography } from '@/registry/native/typography'
 
 const OPTIONS = Array.from({ length: 5 }, (_, i) => ({
@@ -48,7 +49,7 @@ export default function IndexScreen() {
 
   return (
     <View className='flex-1 items-center justify-center gap-4 p-4'>
-      <Typography variant='h1'>Bottom Sheet Demo</Typography>
+      <Button onPress={() => toast.success('helo')}>Show Toast</Button>
 
       <BottomSheet open={isOpen} onOpenChange={setIsOpen}>
         <BottomSheetTrigger>Open Bottom Sheet</BottomSheetTrigger>
@@ -58,7 +59,10 @@ export default function IndexScreen() {
             <View className='flex-row items-center justify-between'>
               <BottomSheetTitle>Bottom Sheet Title</BottomSheetTitle>
               <Badge>
-                <ShoppingCartIcon className='size-3.5 shrink-0 text-primary-foreground' />
+                <Icon
+                  name='ShoppingCart'
+                  className='size-3.5 shrink-0 text-primary-foreground'
+                />
                 <Typography>Add to Cart</Typography>
               </Badge>
             </View>

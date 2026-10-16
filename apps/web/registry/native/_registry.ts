@@ -100,6 +100,7 @@ export const registryNative = [
     title: 'Checkbox',
     description:
       'A pressable checkbox with controlled and uncontrolled state support.',
+    registryDependencies: [native('icons')],
     files: [
       {
         type: 'registry:ui',
@@ -123,6 +124,23 @@ export const registryNative = [
       },
     ],
   },
+
+  {
+    name: 'native-icons',
+    type: 'registry:ui',
+    title: 'Icons',
+    description:
+      'A lucide-react-native wrapper for using icons in React Native with className support.',
+    dependencies: ['lucide-react-native', 'react-native-svg'],
+    files: [
+      {
+        type: 'registry:ui',
+        path: 'registry/native/icons.tsx',
+        target: 'components/native/icons.tsx',
+      },
+    ],
+  },
+
   {
     name: 'native-input',
     type: 'registry:ui',
@@ -152,6 +170,7 @@ export const registryNative = [
       },
     ],
   },
+
   {
     name: 'native-radio-group',
     type: 'registry:ui',
@@ -165,6 +184,7 @@ export const registryNative = [
       },
     ],
   },
+
   {
     name: 'native-select',
     type: 'registry:ui',
@@ -174,6 +194,7 @@ export const registryNative = [
     registryDependencies: [
       native('bottom-sheet'),
       native('button'),
+      native('icons'),
       native('typography'),
     ],
     files: [
@@ -217,6 +238,7 @@ export const registryNative = [
     title: 'Toast',
     description:
       'Toast notifications for React Native with an imperative API and swipe-to-dismiss gestures.',
+    registryDependencies: [native('icons')],
     files: [
       {
         type: 'registry:ui',

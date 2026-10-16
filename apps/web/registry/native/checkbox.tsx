@@ -1,8 +1,8 @@
-import { CheckIcon } from 'lucide-uniwind'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
 import { cn } from '@/lib/utils'
+import { Icon } from '@/registry/native/icons'
 
 function Checkbox({
   className,
@@ -58,9 +58,7 @@ function Checkbox({
           checked && 'border-primary bg-primary text-primary-foreground'
         )}
       >
-        {checked && (
-          <CheckIcon className='size-4 shrink-0 text-primary-foreground' />
-        )}
+        {checked && <Icon name='Check' className='text-primary-foreground' />}
       </View>
 
       {children}
