@@ -1,14 +1,13 @@
 import type { LucideProps } from 'lucide-react-native'
 
 import { cn } from 'cn'
-import * as _icons from 'lucide-react-native/icons'
+import * as lucideIcons from 'lucide-react-native/icons'
 import { createElement } from 'react'
 import { withUniwind, useResolveClassNames } from 'uniwind'
 
-const CLASS_REGEX = /(?:^|\s)(?:[\w-]+:)*(?:w|h|size|text)-/
+const CLASS_REGEX = /(?:^|\s)(?:[\w-]+:)*(?:w|h|size|text)-/u
 
 const customIcons = {
-  // import { Path, Svg } from 'react-native-svg'
   // Github: (props) => (
   //   <Svg {...props} viewBox='0 0 24 24'>
   //     <Path
@@ -19,14 +18,14 @@ const customIcons = {
   // ),
 } satisfies Record<string, (props: LucideProps) => React.ReactElement>
 
-const icons = { ..._icons, ...customIcons }
+const icons = { ...lucideIcons, ...customIcons } as const
+type IconName = keyof typeof lucideIcons | keyof typeof customIcons
 
 function Icon({
   name,
   className: _className = '',
   ...props
-}: LucideProps & { name: keyof typeof icons }) {
-  // oxlint-disable-next-line import/namespace
+}: LucideProps & { name: IconName }): React.ReactElement {
   const Comp = withUniwind(icons[name])
 
   const className = cn(
