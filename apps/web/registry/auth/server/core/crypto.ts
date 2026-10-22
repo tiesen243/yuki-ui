@@ -71,7 +71,7 @@ export function encodeBase64Url(bytes: Uint8Array): string {
   return btoa(binary)
     .replaceAll('+', '-')
     .replaceAll('/', '_')
-    .replaceAll(/=+$/g, '')
+    .replaceAll(/[=]+$/g, '')
 }
 
 export function decodeBase64Url(base64url: string): Uint8Array {

@@ -6,6 +6,14 @@ const native = (name: string) => `${getBaseUrl()}/r/native-${name}.json`
 
 export const registryNative = [
   {
+    name: 'native-alert',
+    type: 'registry:ui',
+    title: 'Alert',
+    description:
+      'A component for displaying important messages with a title, description, and optional actions.',
+    registryDependencies: [native('typography'), native('icons')],
+  },
+  {
     name: 'native-avatar',
     type: 'registry:ui',
     title: 'Avatar',

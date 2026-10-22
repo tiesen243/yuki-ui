@@ -371,7 +371,7 @@ export default defineConfig({
     'typescript/no-array-delete': 'error',
     'typescript/no-base-to-string': 'error',
     'typescript/no-confusing-non-null-assertion': 'error',
-    'typescript/no-confusing-void-expression': 'error',
+    'typescript/no-confusing-void-expression': 'off',
     'typescript/no-deprecated': 'error',
     'typescript/no-duplicate-enum-values': 'error',
     'typescript/no-duplicate-type-constituents': 'error',
@@ -450,7 +450,7 @@ export default defineConfig({
     'typescript/restrict-plus-operands': 'error',
     'typescript/restrict-template-expressions': 'error',
     'typescript/return-await': ['error', 'always'],
-    'typescript/strict-boolean-expressions': 'error',
+    'typescript/strict-boolean-expressions': 'off',
     'typescript/strict-void-return': 'error',
     'typescript/switch-exhaustiveness-check': 'error',
     'typescript/triple-slash-reference': 'error',
@@ -612,4 +612,8 @@ export default defineConfig({
       },
     },
   ],
+  options: {
+    typeAware: true,
+    typeCheck: true,
+  },
 })

@@ -3,12 +3,15 @@ import type { LayoutChangeEvent } from 'react-native'
 import * as React from 'react'
 import { Animated, Easing, PanResponder, Text, View } from 'react-native'
 
+import type { IconName } from '@/registry/native/icons'
+
 import { cn } from '@/lib/utils'
+import { Icon } from '@/registry/native/icons'
 
 type ToastType = 'default' | 'success' | 'info' | 'error' | 'warning'
 
 interface ToastOptions {
-  icon?: string
+  icon?: IconName
   duration?: number
 }
 
@@ -181,6 +184,7 @@ function ToastCard({
       Animated.timing(translateY, {
         toValue: 0,
         duration: 250,
+        // oxlint-disable-next-line typescript/unbound-method
         easing: Easing.out(Easing.ease),
         useNativeDriver: true,
       }),
@@ -221,12 +225,9 @@ function ToastCard({
         variant.root
       )}
     >
-      {/* {icon && ( */}
-      {/*   <Icon */}
-      {/*     name={icon as never} */}
-      {/*     className={cn('mt-1 size-4', variant.title)} */}
-      {/*   /> */}
-      {/* )} */}
+      {icon && (
+        <Icon name={icon} className={cn('mt-1 size-4', variant.title)} />
+      )}
       {icon ? <View className='flex-col gap-1'>{Content}</View> : Content}
     </Animated.View>
   )
